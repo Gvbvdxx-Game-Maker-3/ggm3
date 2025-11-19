@@ -6,53 +6,55 @@ function blockToJSON(block) {
 
   var jsonFields = [];
   var jsonInputs = [];
-  for (var input of block.inputList) {
-    if (input.type == Blockly.DUMMY_INPUT) {
-      //Nothing!
-    } else {
-      var inputjson = {};
-      var childBlock = input.connection.targetBlock();
-      if (input.type == Blockly.INPUT_VALUE) {
-        inputjson.type = "value";
-      } else if (input.type == Blockly.NEXT_STATEMENT) {
-        inputjson.type = "statement";
+  if (block.inputList) {
+    for (var input of block.inputList) {
+      if (input.type == Blockly.DUMMY_INPUT) {
+        //Nothing!
+      } else {
+        var inputjson = {};
+        var childBlock = input.connection.targetBlock();
+        if (input.type == Blockly.INPUT_VALUE) {
+          inputjson.type = "value";
+        } else if (input.type == Blockly.NEXT_STATEMENT) {
+          inputjson.type = "statement";
+        }
+        //var shadow = input.connection.getShadowDom();
+        //if (shadow && (!childBlock || !childBlock.isShadow())) {
+        //
+        //}
+        if (childBlock) {
+          inputjson.name = input.name;
+
+          inputjson.block = blockToJSON(childBlock);
+          jsonInputs.push(inputjson);
+        }
       }
-      //var shadow = input.connection.getShadowDom();
-      //if (shadow && (!childBlock || !childBlock.isShadow())) {
-      //
-      //}
-      if (childBlock) {
-        inputjson.name = input.name;
 
-        inputjson.block = blockToJSON(childBlock);
-        jsonInputs.push(inputjson);
-      }
-    }
+      for (var field of input.fieldRow) {
+        if (field.name && field.SERIALIZABLE) {
+          if (field.referencesVariables()) {
+            var id = field.getValue();
+            if (!id) {
+              field.initModel();
+              id = field.getValue();
+            }
 
-    for (var field of input.fieldRow) {
-      if (field.name && field.SERIALIZABLE) {
-        if (field.referencesVariables()) {
-          var id = field.getValue();
-          if (!id) {
-            field.initModel();
-            id = field.getValue();
-          }
-
-          var variable = field.getVariable();
-          if (variable) {
+            var variable = field.getVariable();
+            if (variable) {
+              jsonFields.push({
+                variable: {
+                  name: variable.name,
+                  id: variable.getId(),
+                },
+                name: field.name,
+              });
+            }
+          } else {
             jsonFields.push({
-              variable: {
-                name: variable.name,
-                id: variable.getId(),
-              },
+              value: field.getValue(),
               name: field.name,
             });
           }
-        } else {
-          jsonFields.push({
-            value: field.getValue(),
-            name: field.name,
-          });
         }
       }
     }
@@ -61,9 +63,11 @@ function blockToJSON(block) {
   myjson.fields = jsonFields;
   myjson.inputs = jsonInputs;
 
-  var nextBlock = block.getNextBlock();
-  if (nextBlock) {
-    myjson.next = blockToJSON(nextBlock);
+  if (block.getNextBlock) {
+    var nextBlock = block.getNextBlock();
+    if (nextBlock) {
+      myjson.next = blockToJSON(nextBlock);
+    }
   }
   return myjson;
 }

@@ -3,8 +3,8 @@ var AElement = require("../gp2/aelement.js");
 
 var engine = require("./curengine.js");
 var blocks = require("./blocks.js");
-var tabs = require("./tabs.js");
 var costumeViewer = require("./costumeviewer.js");
+var compiler = require("../compiler");
 
 var currentSelectedSprite = null;
 var currentSelectedSpriteIndex = null;
@@ -27,23 +27,47 @@ function updateSpritesContainer() {
             elm.setAttribute("selected", "");
           }
         },
-        eventListeners: [
-          {
-            event: "click",
-            func: function (elm) {
-              setCurrentSprite(i);
-            },
-          },
-        ],
         children: [
           {
             element: "span",
             textContent: spr.name,
+            style: {
+              marginRight: "5px",
+            },
+          },
+          {
+            element: "button",
+            className: "greyButtonStyle",
+            textContent: "Select",
+            style: {
+              fontSize: "15px",
+              marginRight: "5px",
+            },
+            eventListeners: [
+              {
+                event: "click",
+                func: function (elm) {
+                  setCurrentSprite(i);
+                },
+              },
+            ],
           },
           {
             element: "button",
             className: "greyButtonStyle",
             textContent: "Delete",
+            style: {
+              fontSize: "15px",
+              marginRight: "5px",
+            },
+            eventListeners: [
+              {
+                event: "click",
+                func: function (elm) {
+                  setCurrentSprite(i);
+                },
+              },
+            ],
           },
         ],
       };
@@ -62,6 +86,9 @@ function loadCode(spr) {
   }
   workspace.addChangeListener(function (e) {
     spr.blocklyXML = Blockly.Xml.workspaceToDom(workspace);
+    if (e.element == "stackclick") {
+      console.log(compiler.compileBlock(workspace.getBlockById(e.blockId)));
+    }
   });
 }
 
@@ -80,19 +107,20 @@ function setCurrentSprite(index) {
   costumeViewer.reloadCostumes(currentSelectedSprite);
 }
 
-spriteNameInput.addEventListener("change", () => {
+spriteNameInput.addEventListener("input", () => {
   if (!currentSelectedSprite) {
     return;
   }
   currentSelectedSprite.name = spriteNameInput.value.trim();
+  updateSpritesContainer();
 });
-spriteXPosInput.addEventListener("change", () => {
+spriteXPosInput.addEventListener("input", () => {
   if (!currentSelectedSprite) {
     return;
   }
   currentSelectedSprite.x = +spriteXPosInput.value || 0;
 });
-spriteYPosInput.addEventListener("change", () => {
+spriteYPosInput.addEventListener("input", () => {
   if (!currentSelectedSprite) {
     return;
   }
@@ -105,6 +133,24 @@ function getCurSprite() {
 function getCurSpriteIndex() {
   return currentSelectedSpriteIndex;
 }
+
+setInterval(() => {
+  if (currentSelectedSprite) {
+    if (spriteNameInput.value !== currentSelectedSprite.name) {
+      spriteNameInput.value = currentSelectedSprite.name;
+    }
+    if (
+      spriteXPosInput.value.trim() !== currentSelectedSprite.x.toString().trim()
+    ) {
+      spriteXPosInput.value = currentSelectedSprite.x.toString().trim();
+    }
+    if (
+      spriteYPosInput.value.trim() !== currentSelectedSprite.y.toString().trim()
+    ) {
+      spriteYPosInput.value = currentSelectedSprite.y.toString().trim();
+    }
+  }
+}, 1000 / 30);
 
 module.exports = {
   setCurrentSprite,

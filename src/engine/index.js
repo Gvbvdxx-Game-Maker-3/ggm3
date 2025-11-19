@@ -9,8 +9,15 @@ var CollisionSprite = require("./mask.js");
 const spriteVertexShader = require("./sprite.vert").default;
 const spriteFragmentShader = require("./sprite.frag").default;
 
+var created = false;
+
 class GGM3Engine {
   constructor(canvas) {
+    if (!created) {
+      created = true;
+    } else {
+      throw new Error("A GGM3Engine was already created.");
+    }
     this.canvas = canvas;
     if (!canvas) {
       this.canvas = document.createElement("canvas");

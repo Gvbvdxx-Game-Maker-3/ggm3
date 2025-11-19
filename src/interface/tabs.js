@@ -62,6 +62,7 @@ function updateTabs() {
       )
     )
   );
+  updateVisibility();
 }
 
 var blocklyDiv = elements.getGPId("blocklyDiv");
@@ -99,7 +100,6 @@ function switchTab(id) {
   }
   currentTab = id;
   updateTabs();
-  updateVisibility();
 }
 
 updateTabs();

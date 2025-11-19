@@ -187,25 +187,18 @@ body {
   border-radius: 5px;
   display: flex;
   padding: 7px 7px;
-  flex-direction: column;
+  flex-direction: row;
   flex-grow: 0;
   flex-shrink: 0;
   color: white;
   font-weight: bold;
   font-size: 20px;
   user-select: none;
-}
-
-.spriteContainer:hover {
-  cursor: pointer;
-  background: #525252;
-  text-decoration: underline;
+  align-items: center;
 }
 
 .spriteContainer[selected] {
-  cursor: unset;
   background: #525252;
-  text-decoration: unset;
 }
 
 .selectedSpriteLabel {
@@ -219,10 +212,6 @@ body {
   width: fit-content;
   color: white;
   width: 100px;
-}
-
-[hidden] {
-  display: none;
 }
 
 .costumesContainer {
@@ -289,4 +278,12 @@ body {
   box-sizing: border-box;
   width: fit-content;
   color: white;
+}
+
+.scratchCategoryMenuItemLabel {
+  color: white;
+}
+
+[hidden] {
+  display: none;
 }
