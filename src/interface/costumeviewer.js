@@ -76,8 +76,18 @@ function reloadCostumes(spr) {
               },
             },
             {
-              element: "span",
-              textContent: costume.name,
+              element: "input",
+              value: costume.name,
+              className: "selectedCostumeInput",
+              eventListeners: [
+                {
+                  event: "change",
+                  func: function () {
+                    costume.name = this.value.trim();
+                    reloadCostumes(spr);
+                  },
+                },
+              ],
             },
             {
               element: "button",

@@ -282,3 +282,11 @@ body {
   background: #b8b8b8;
   cursor: pointer;
 }
+
+.selectedCostumeInput {
+  all: unset;
+  padding: 3px 3px;
+  box-sizing: border-box;
+  width: fit-content;
+  color: white;
+}

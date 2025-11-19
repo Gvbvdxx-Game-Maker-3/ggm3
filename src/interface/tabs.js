@@ -1,6 +1,7 @@
 var elements = require("../gp2/elements.js");
 var AElement = require("../gp2/aelement.js");
 var blocks = require("./blocks.js");
+var selectedSprite = require("./selectedsprite.js");
 
 var tabArea = elements.getGPId("tabArea");
 function createTabElementJSON(label, src, whenClick, isSelected) {
@@ -72,7 +73,12 @@ function setWorkspaceVisibility(visible) {
   if (!workspace) {
     return;
   }
-  workspace.setVisible(visible);
+  if (visible) {
+    blocks.createFreshWorkspace();
+    selectedSprite.loadCode(selectedSprite.getCurSprite());
+  } else {
+    workspace.dispose();
+  }
 }
 
 var costumesContainer = elements.getGPId("costumesContainer");

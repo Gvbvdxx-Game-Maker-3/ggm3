@@ -104,4 +104,5 @@ module.exports = {
   updateSpritesContainer,
   getCurSprite,
   getCurSpriteIndex,
+  loadCode,
 };
