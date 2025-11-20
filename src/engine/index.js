@@ -136,7 +136,8 @@ class GGM3Engine {
     c.height = 1;
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, 1, 1);
-    this._mouseMask = new CollisionSprite(ctx.getImageData(0, 0, 1, 1));
+    this.mouseMask = new CollisionSprite(ctx.getImageData(0, 0, 1, 1));
+    this.mouseMask.isDown = false;
     c.width = 0;
     c.height = 0;
     c.remove();
@@ -225,6 +226,15 @@ class GGM3Engine {
       _this.tickSprite(spr);
       _this.renderSprite(spr);
     });
+  }
+
+  changeMousePosition(cy, cy) {
+    this.mouseMask.x = (+cx || 0) - this.canvas.width / 2;
+    this.mouseMask.y = (+cy || 0) - this.canvas.height / 2;
+  }
+
+  changeMouseDown(down) {
+    this.mouseMask.isDown = !!down;
   }
 
   tickSprite(sprite) {
