@@ -319,10 +319,6 @@ body {
   color: white;
 }
 
-[hidden] {
-  display: none;
-}
-
 .spriteInputContainer {
   display: flex;
   flex-direction: column;
@@ -332,4 +328,9 @@ body {
   border-radius: 5px;
   background: #8f8f8f;
   margin: 3px;
+}
+
+
+[hidden] {
+  display: none;
 }

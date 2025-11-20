@@ -6,7 +6,6 @@ var utilFunctions = require("./blocks/util-functions.js");
 function getInput(blockJson, name, options) {
   for (var input of blockJson.inputs) {
     if (input.name == name) {
-      console.log(input.block);
       return compileBlockFromJSON(input.block, options);
     }
   }
