@@ -33,6 +33,16 @@ uniform float u_mosaic;
 uniform float u_ghost;
 #endif // ENABLE_ghost
 
+// --- ADDED FOR WAVY EFFECT ---
+#ifdef ENABLE_wavy
+uniform float iTime;
+uniform float u_wave_xwave; // Renamed from xwave
+uniform float u_wave_ywave; // Renamed from ywave
+uniform float u_wave_xtime; // Renamed from xtime
+uniform float u_wave_ytime; // Renamed from ytime
+#endif // ENABLE_wavy
+// -----------------------------
+
 #ifdef DRAW_MODE_line
 varying vec4 v_lineColor;
 varying float v_lineThickness;
@@ -158,6 +168,17 @@ void main()
 		texcoord0 = kCenter + r * unit * kCenter;
 	}
 	#endif // ENABLE_fisheye
+
+	// --- ADDED FOR WAVY EFFECT ---
+	// This modifies the texture coordinates just before sampling.
+	#ifdef ENABLE_wavy
+	{
+		// Use epsilon to prevent division by zero if time uniforms are 0
+		texcoord0.x += sin(texcoord0.y * u_wave_xwave + iTime) / (u_wave_xtime + epsilon);
+		texcoord0.y += sin(texcoord0.x * u_wave_ywave + iTime) / (u_wave_ytime + epsilon);
+	}
+	#endif // ENABLE_wavy
+	// -----------------------------
 
 	gl_FragColor = texture2D(u_skin, texcoord0);
 

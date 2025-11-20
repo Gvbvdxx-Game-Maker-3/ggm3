@@ -6,8 +6,7 @@ const calculateMatrix = require("./calculatematrix.js");
 
 var CollisionSprite = require("./mask.js");
 
-const spriteVertexShader = require("./sprite.vert").default;
-const spriteFragmentShader = require("./sprite.frag").default;
+var SHADERS = require("./shaders.js");
 
 var created = false;
 
@@ -26,6 +25,7 @@ class GGM3Engine {
     this.drawables = [];
     this.sprites = [];
     this.frameRate = 60;
+    this._iTime = 0;
     this.initCanvas();
     this.generateMouseMask();
     this.startRenderLoop();
@@ -87,6 +87,8 @@ class GGM3Engine {
       if (delta >= frameDuration) {
         previous = previous + frameDuration;
 
+        _this._iTime += delta;
+
         _this.render(delta);
       }
     }
@@ -144,11 +146,9 @@ class GGM3Engine {
       canvas.getContext("experimental-webgl", contextAttribs) ||
       canvas.getContext("webgl2", contextAttribs);
 
-    var fragmentShader = spriteFragmentShader;
-    fragmentShader +=
-      "\n" + "#define ENABLE_whirl" + "\n" + "#define ENABLE_color";
+    var fragmentShader = SHADERS.FRAGMENT_SHADER;
     this._gl_spriteProgramInfo = twgl.createProgramInfo(gl, [
-      spriteVertexShader,
+      SHADERS.VERTEX_SHADER,
       fragmentShader,
     ]);
 
@@ -226,13 +226,14 @@ class GGM3Engine {
       _gl_spriteProgramInfo,
       _gl_projectionMatrix,
       _gl_quadBufferInfo,
+      _iTime,
     } = this;
     if (spr.costumes[spr.costumeIndex]) {
       var costume = spr.costumes[spr.costumeIndex];
       var drawable = costume.drawable;
       if (costume.drawable) {
         var center = costume.getFinalRotationCenter();
-        const modelMatrix = calculateMatrix({
+        var modelMatrix = calculateMatrix({
           x: spr.x + this.canvas.width / 2,
           y: -spr.y + this.canvas.height / 2,
           rotation: spr.angle * (Math.PI / 180),
@@ -244,6 +245,9 @@ class GGM3Engine {
           scaleY: spr.scaleY * (spr.size / 100),
         });
 
+        //var modelMatrix = twgl.m4.identity();
+        //modelMatrix = twgl.m4.scale(modelMatrix, [100, 100, 1]);
+
         var uniforms = {
           u_modelMatrix: modelMatrix,
           u_skin: drawable.texture,
@@ -251,7 +255,15 @@ class GGM3Engine {
 
           u_whirl: 0,
           u_color: 0,
+          u_ghost: 1,
+          iTime: _iTime / 1000,
+          u_wave_xwave: 3,
+          u_wave_ywave: 4,
+          u_wave_xtime: 10,
+          u_wave_ytime: 20,
         };
+
+        //window.alert(JSON.stringify(uniforms));
 
         gl.useProgram(_gl_spriteProgramInfo.program);
         twgl.setBuffersAndAttributes(

@@ -1,12 +1,15 @@
-const VERTEXT_SHADER = require("./sprite.vert").default;
-const FRAGMENT_SHADER = require("./sprite.frag").default;
+var VERTEX_SHADER = require("./sprite.vert").default;
+var FRAGMENT_SHADER_OG = require("./sprite.frag").default;
 
-FRAGMENT_SHADER += `
+var FRAGMENT_SHADER = `
 #define ENABLE_whirl
 #define ENABLE_color
+#define ENABLE_ghost
+#define ENABLE_wavy
+${FRAGMENT_SHADER_OG}
 `;
 
 module.exports = {
-  VERTEXT_SHADER,
+  VERTEX_SHADER,
   FRAGMENT_SHADER,
 };

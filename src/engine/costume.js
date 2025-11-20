@@ -1,3 +1,5 @@
+var CollisionSprite = require("./mask.js");
+
 class Costume {
   constructor(engine, dataURL, name, resolveFunction) {
     this.engine = engine;
