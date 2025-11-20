@@ -97,17 +97,19 @@ function loadCode(spr) {
   var currentBlocks = {};
   var currentBlockParentIDs = {};
 
-  function compileFromBlockID (blockId) {
-    var thread = spr.runningStacks[blockId];
+  // Helper function to correctly stop and recompile a stack
+  function compileRoot(rootBlock) {
+    if (!rootBlock) return;
+
+    // 1. Find and stop the old thread using the ROOT's ID.
+    var thread = spr.runningStacks[rootBlock.id];
     if (thread) {
       thread.stop();
     }
 
-    //Compile the block if its edited.
-    var block = workspace.getBlockById(blockId);
-    var firstBlock = block.getRootBlock();
-    var code = compiler.compileBlock(firstBlock); //This only generates the block or returns an empty string if its not a event (hat) block.
-    spr.runFunction(code); //Usually this code would generate some type of addEventListener which is safe to run a lot.
+    // 2. Compile and run the new code.
+    var code = compiler.compileBlock(rootBlock);
+    spr.runFunction(code);
   }
 
   workspace.addChangeListener(function (e) {
@@ -120,18 +122,20 @@ function loadCode(spr) {
     if (e.element == "click") {
       var root = workspace.getBlockById(e.blockId).getRootBlock();
       if (!spr.runningStacks[root.id]) {
-        var code = compiler.compileBlockWithThreadForced(
-          root
-        );
+        var code = compiler.compileBlockWithThreadForced(root);
         //window.alert(code);
         spr.runFunction(code);
       } else {
         spr.runningStacks[root.id].stop();
       }
     } else if (e.blockId && e.element !== "stackclick") {
-      if (!workspace.getBlockById(e.blockId)) {
+      // Catches Create, Delete, Change, Move
+
+      var eventBlock = workspace.getBlockById(e.blockId);
+
+      if (!eventBlock) {
+        // --- This is a DELETE event (e.type == "delete" or e instanceof Blockly.Events.Delete) ---
         if (currentBlocks[e.blockId]) {
-          //Stop the block and remove the hat event if it exists.
           var thread = spr.runningStacks[e.blockId];
           if (thread) {
             thread.stop();
@@ -139,19 +143,38 @@ function loadCode(spr) {
         }
         spr.removeStackListener(e.blockId);
         delete currentBlocks[e.blockId];
+
+        // Re-compile the parent stack it was deleted from
+        if (e.oldParentId) {
+          var oldParentBlock = workspace.getBlockById(e.oldParentId);
+          if (oldParentBlock) {
+            compileRoot(oldParentBlock.getRootBlock());
+          }
+        }
       } else {
+        // --- This is a CREATE, CHANGE, or MOVE event ---
         currentBlocks[e.blockId] = true;
 
-        var thread = spr.runningStacks[e.blockId];
-        if (thread) {
-          thread.stop();
-        }
+        // Re-compile the root of the stack that was just modified.
+        var newRoot = eventBlock.getRootBlock();
+        compileRoot(newRoot);
 
-        //Compile the block if its edited.
-        var block = workspace.getBlockById(e.blockId);
-        var firstBlock = block.getRootBlock();
-        currentBlockParentIDs[e.blockId] = firstBlock.id;
-        compileFromBlockID(e.blockId);
+        // **THE FIX**
+        // Use `instanceof` to check for the move event.
+        // This handles "dragging a block out" of the stack.
+        if (
+          (e instanceof Blockly.Events.Move || e.type == "move") &&
+          e.oldParentId
+        ) {
+          var oldParentBlock = workspace.getBlockById(e.oldParentId);
+          if (oldParentBlock) {
+            var oldRoot = oldParentBlock.getRootBlock();
+            // Only recompile if the block moved to a *different* stack
+            if (oldRoot.id !== newRoot.id) {
+              compileRoot(oldRoot);
+            }
+          }
+        }
       }
     }
   });
@@ -168,13 +191,20 @@ function loadCode(spr) {
       workspace.glowStack(id, true);
     }
   };
+  var endTimeouts = {};
   spr.threadEndListener = function (id) {
     if (disposingWorkspace) {
       return;
     }
-    if (workspace.getBlockById(id)) {
-      workspace.glowStack(id, false);
+    if (typeof endTimeouts[id] !== "undefined") {
+      clearTimeout(endTimeouts[id]);
     }
+    endTimeouts[id] = setTimeout(() => { //Breif flash so it indicates its running something (like a block that runs immediatley).
+      delete endTimeouts[id];
+      if (workspace.getBlockById(id)) {
+        workspace.glowStack(id, false);
+      }
+    },1000/30);
   };
 
   setTimeout(function () {
