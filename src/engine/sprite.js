@@ -34,6 +34,22 @@ class Sprite {
     this.threadStartListener = null;
 
     this.direction = 90; //Wrapper around this.angle
+
+    this.alpha = 100;
+  }
+
+  set alpha(v = 0) {
+    this._alpha = v;
+    if (v > 100) {
+      this._alpha = 100;
+    }
+    if (v < 0) {
+      this._alpha = 0;
+    }
+  }
+
+  get alpha() {
+    return this._alpha;
   }
 
   moveSteps(steps) {

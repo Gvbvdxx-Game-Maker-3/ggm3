@@ -268,13 +268,12 @@ class GGM3Engine {
 
         //var modelMatrix = twgl.m4.identity();
         //modelMatrix = twgl.m4.scale(modelMatrix, [100, 100, 1]);
-
         var uniforms = {
           u_modelMatrix: modelMatrix,
           u_skin: drawable.texture,
           u_projectionMatrix: _gl_projectionMatrix,
 
-          u_ghost: 1,
+          u_ghost: spr.alpha / 100,
           /*iTime: _iTime,
           u_wave_xwave: 30,
           u_wave_ywave: 40,
