@@ -93,7 +93,7 @@ body {
 }
 
 .rightPanelContent {
-  width:  fit-content;
+  width: fit-content;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -347,6 +347,11 @@ body {
   margin: 3px;
 }
 
+.projectMouseCoordinates {
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+}
 
 [hidden] {
   display: none;

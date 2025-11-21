@@ -17,6 +17,11 @@ module.exports = {
           className: "projectCanvas",
         },
         {
+          element: "span",
+          className: "projectMouseCoordinates",
+          gid: "projectMouseCoordinates",
+        },
+        {
           element: "div",
           className: "selectedSpriteContainer",
           children: [
@@ -117,8 +122,7 @@ module.exports = {
           gid: "spritesContainer",
           children: [],
         },
-        
       ],
-    }
-  ]
+    },
+  ],
 };

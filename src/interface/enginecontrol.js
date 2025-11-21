@@ -44,7 +44,7 @@ elements.setInnerJSON(elements.getGPId("projectControls"), [
           {
             element: "img",
             src: "icons/grab.svg",
-            className: "projectButtonImg"
+            className: "projectButtonImg",
           },
         ]);
       } else {
@@ -52,7 +52,7 @@ elements.setInnerJSON(elements.getGPId("projectControls"), [
           {
             element: "img",
             src: "icons/nograb.svg",
-            className: "projectButtonImg"
+            className: "projectButtonImg",
           },
         ]);
       }
@@ -72,7 +72,7 @@ elements.setInnerJSON(elements.getGPId("projectControls"), [
               {
                 element: "img",
                 src: "icons/grab.svg",
-                className: "projectButtonImg"
+                className: "projectButtonImg",
               },
             ]);
           } else {
@@ -80,7 +80,7 @@ elements.setInnerJSON(elements.getGPId("projectControls"), [
               {
                 element: "img",
                 src: "icons/nograb.svg",
-                className: "projectButtonImg"
+                className: "projectButtonImg",
               },
             ]);
           }
@@ -89,3 +89,66 @@ elements.setInnerJSON(elements.getGPId("projectControls"), [
     ],
   },
 ]);
+
+var canvas = elements.getGPId("projectCanvas");
+var projectMouseCoordinates = elements.getGPId("projectMouseCoordinates");
+
+function getMousePosition(event, onElement, size) {
+  var client = onElement.getBoundingClientRect();
+
+  var relativeX = event.x - client.x;
+  var relativeY = event.y - client.y;
+
+  var scaleX = client.width / size[0];
+  var realX = relativeX * scaleX;
+
+  var scaleY = client.height / size[1];
+  var realY = relativeY * scaleY;
+
+  if (realX < 0) {
+    realX = 0;
+  }
+  if (realY < 0) {
+    realY = 0;
+  }
+
+  if (realX > size[0]) {
+    realX = size[0];
+  }
+  if (realY > size[1]) {
+    realY = size[1];
+  }
+
+  var pos = {
+    x: realX,
+    y: realY,
+  };
+  return pos;
+}
+
+function updateCoordinates() {
+  projectMouseCoordinates.textContent = `X: ${Math.round(engine.mouseMask.x)} Y: ${Math.round(engine.mouseMask.y)} Down: ${engine.mouseMask.isDown}`;
+}
+
+document.addEventListener("mousemove", (event) => {
+  var pos = getMousePosition(event, canvas, [canvas.width, canvas.height]);
+  engine.changeMousePosition(pos.x, pos.y);
+  updateCoordinates();
+});
+
+canvas.addEventListener("mousedown", (event) => {
+  var pos = getMousePosition(event, canvas, [canvas.width, canvas.height]);
+  engine.changeMousePosition(pos.x, pos.y);
+  engine.changeMouseDown(true);
+  updateCoordinates();
+  event.preventDefault();
+});
+
+document.addEventListener("mouseup", (event) => {
+  var pos = getMousePosition(event, canvas, [canvas.width, canvas.height]);
+  engine.changeMousePosition(pos.x, pos.y);
+  engine.changeMouseDown(false);
+  updateCoordinates();
+});
+
+updateCoordinates();
