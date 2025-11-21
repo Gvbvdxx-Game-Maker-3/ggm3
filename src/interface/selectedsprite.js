@@ -118,7 +118,6 @@ function loadCode(spr) {
       //disposingWorkspace = false;
       return;
     }
-    spr.blocklyXML = Blockly.Xml.workspaceToDom(workspace);
     if (e.element == "click") {
       var root = workspace.getBlockById(e.blockId).getRootBlock();
       if (!spr.runningStacks[root.id]) {
@@ -265,6 +264,7 @@ function setCurrentSprite(index) {
       currentSelectedSprite._editor_scrollX = workspace.scrollX;
       currentSelectedSprite._editor_scrollY = workspace.scrollY;
       currentSelectedSprite._editor_scale = workspace.scale;
+      currentSelectedSprite.blocklyXML = Blockly.Xml.workspaceToDom(workspace);
     }
   }
   currentSelectedSpriteIndex = index;
