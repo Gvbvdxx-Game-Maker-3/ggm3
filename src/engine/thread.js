@@ -53,6 +53,38 @@ class Thread {
     });
   }
 
+  isInt(val) {
+    //Copied and pasted from scratch-vm, but just with some edits.
+    // Values that are already numbers.
+    if (typeof val === "number") {
+      if (isNaN(val)) {
+        // NaN is considered an integer.
+        return true;
+      }
+      // True if it's "round" (e.g., 2.0 and 2).
+      return val === Math.floor(val);
+    } else if (typeof val === "boolean") {
+      return true;
+    } else if (typeof val === "string") {
+      return val.indexOf(".") < 0;
+    }
+    return false;
+  }
+
+  random(from, to) {
+    //Copied and pasted from scratch-vm, but just with some edits.
+    var { isInt } = this;
+
+    var low = from <= to ? from : to;
+    var high = from <= to ? to : from;
+    if (low === high) return low;
+    // If both arguments are ints, truncate the result to an int.
+    if (isInt(from) && isInt(to)) {
+      return low + Math.floor(Math.random() * (high + 1 - low));
+    }
+    return Math.random() * (high - low) + low;
+  }
+
   async repeatTimes(times, func) {
     if (!this.running) {
       return;

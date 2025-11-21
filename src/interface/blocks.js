@@ -5,6 +5,7 @@ window.ScratchBlocks = window.Blockly;
 var blocklyDiv = elements.getGPId("blocklyDiv");
 
 var toolboxGenerator = require("./toolbox.js");
+var dialogs = require("./dialogs.js");
 
 var workspace = null;
 
@@ -72,6 +73,16 @@ function createFreshWorkspace(spr) {
     },
   });
 }
+
+Blockly.alert = function (msg, callback) {
+  dialogs.alert(msg).then(callback);
+};
+Blockly.prompt = function (msg, defaultValue, callback) {
+  dialogs.prompt(msg, defaultValue).then(callback);
+};
+Blockly.confirm = function (msg, callback) {
+  dialogs.confirm(msg).then(callback);
+};
 
 module.exports = {
   getCurrentWorkspace,

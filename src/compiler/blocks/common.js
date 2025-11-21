@@ -11,4 +11,9 @@ JavascriptTranslation["math_angle"] = function (jsonblock, utils, options) {
   return JSON.stringify(+NUM || 0);
 };
 
+JavascriptTranslation["text"] = function (jsonblock, utils, options) {
+  var TEXT = utils.getField(jsonblock, "TEXT");
+  return JSON.stringify(TEXT);
+};
+
 module.exports = JavascriptTranslation;

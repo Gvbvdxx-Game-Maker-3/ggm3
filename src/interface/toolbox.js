@@ -57,6 +57,9 @@ function generateToolbox(defaultX, defaultY) {
         </shadow>
     </value>
     </block>
+    <block type="motion_xposition"></block>
+    <block type="motion_yposition"></block>
+    <block type="motion_direction"></block>
     </category>
     <category name="Events" id="events" colour="${Blockly.Colours.event.primary}" secondaryColour="${Blockly.Colours.event.secondary}">
         <block type="event_whengamestarts"></block>
@@ -64,6 +67,7 @@ function generateToolbox(defaultX, defaultY) {
     <category name="Sensing" id="sensing" colour="${Blockly.Colours.sensing.primary}" secondaryColour="${Blockly.Colours.sensing.secondary}">
         <block type="sensing_mousex"></block>
         <block type="sensing_mousey"></block>
+        <block type="sensing_mousedown"></block>
     </category>
     <category name="Control" id="Control" colour="${Blockly.Colours.control.primary}" secondaryColour="${Blockly.Colours.control.secondary}">
         <block type="control_wait">
@@ -80,8 +84,115 @@ function generateToolbox(defaultX, defaultY) {
                 </shadow>
             </value>
         </block>
+        <block type="control_forever">
+        </block>
+        <block type="control_if">
+        </block>
+        <block type="control_if_else">
+        </block>
+        <block type="control_wait_until">
+        </block>
+        <block type="control_repeat_until">
+        </block>
     </category>
-    <category name="Variables" id="data" colour="#FF8C1A" secondaryColour="#DB6E00" custom="VARIABLE">
+    <category name="Operators" id="operators" colour="${Blockly.Colours.operators.primary}" secondaryColour="${Blockly.Colours.operators.secondary}">
+        <block type="operator_add">
+            <value name="NUM1">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+            <value name="NUM2">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="operator_subtract">
+            <value name="NUM1">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+            <value name="NUM2">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="operator_multiply">
+            <value name="NUM1">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+            <value name="NUM2">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="operator_divide">
+            <value name="NUM1">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+            <value name="NUM2">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="operator_random" gap="30">
+            <value name="FROM">
+                <shadow type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+            <value name="TO">
+                <shadow type="math_number">
+                    <field name="NUM">10</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="operator_equals">
+            <value name="OPERAND1">
+                <shadow type="text"></shadow>
+            </value>
+            <value name="OPERAND2">
+                <shadow type="text"></shadow>
+            </value>
+        </block>
+        <block type="operator_gt">
+            <value name="OPERAND1">
+                <shadow type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+            <value name="OPERAND2">
+                <shadow type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="operator_lt">
+            <value name="OPERAND1">
+                <shadow type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+            <value name="OPERAND2">
+                <shadow type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="operator_and"></block>
+        <block type="operator_or"></block>
+        <block type="operator_not"></block>
+    </category>
+    <category name="Variables" id="data" colour="#FF8C1A" secondaryColour="#DB6E00" custom="GGM3_VARIABLE">
     </category>
     `;
 

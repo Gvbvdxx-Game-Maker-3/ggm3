@@ -16,6 +16,12 @@ var spriteDirectionInput = elements.getGPId("spriteDirectionInput");
 var spriteSizeInput = elements.getGPId("spriteSizeInput");
 
 var spritesContainer = elements.getGPId("spritesContainer");
+var addSpriteButton = elements.getGPId("addSpriteButton");
+
+addSpriteButton.addEventListener("click", () => {
+  engine.createEmptySprite();
+  setCurrentSprite(engine.sprites.length - 1);
+});
 
 function updateSpritesContainer() {
   elements.setInnerJSON(
@@ -31,7 +37,8 @@ function updateSpritesContainer() {
         },
         children: [
           {
-            element: "span",
+            element: "div",
+            className: "spriteTextContainer",
             textContent: spr.name,
             style: {
               marginRight: "5px",
@@ -67,8 +74,13 @@ function updateSpritesContainer() {
                 event: "click",
                 func: function (elm) {
                   if (engine.sprites.length > 1) {
+                    var newIndex = currentSelectedSpriteIndex;
+                    if (currentSelectedSprite == spr.id) {
+                      newIndex -= 1;
+                    }
                     engine.deleteSprite(spr);
-                    setCurrentSprite(0);
+                    setCurrentSprite(newIndex);
+                    updateSpritesContainer();
                   }
                 },
               },
@@ -97,17 +109,9 @@ function loadCode(spr) {
   var currentBlocks = {};
   var currentBlockParentIDs = {};
 
-  // Helper function to correctly stop and recompile a stack
   function compileRoot(rootBlock) {
     if (!rootBlock) return;
-
-    // 1. Find and stop the old thread using the ROOT's ID.
-    var thread = spr.runningStacks[rootBlock.id];
-    if (thread) {
-      thread.stop();
-    }
-
-    // 2. Compile and run the new code.
+    // We don't need to stop it since it automatically stops the previous stack when ran.
     var code = compiler.compileBlock(rootBlock);
     spr.runFunction(code);
   }
@@ -118,6 +122,7 @@ function loadCode(spr) {
       //disposingWorkspace = false;
       return;
     }
+    spr.editorScanVariables(workspace);
     if (e.element == "click") {
       var root = workspace.getBlockById(e.blockId).getRootBlock();
       if (!spr.runningStacks[root.id]) {
@@ -186,6 +191,7 @@ function loadCode(spr) {
 
   var flyoutWorkspace = workspace.getFlyout().getWorkspace();
   flyoutWorkspace.addChangeListener(function (e) {
+    spr.editorScanVariables(workspace);
     if (e.element == "click") {
       var root = workspace.getBlockById(e.blockId).getRootBlock();
       if (!spr.runningStacks[root.id]) {
@@ -209,15 +215,18 @@ function loadCode(spr) {
       workspace.glowStack(id, true);
     }
   }
+  var endTimeouts = {};
   spr.threadStartListener = function (id) {
     if (disposingWorkspace) {
       return;
     }
     if (workspace.getBlockById(id)) {
+      if (typeof endTimeouts[id] !== "undefined") {
+        clearTimeout(endTimeouts[id]);
+      }
       workspace.glowStack(id, true);
     }
   };
-  var endTimeouts = {};
   spr.threadEndListener = function (id) {
     if (disposingWorkspace) {
       return;
@@ -282,7 +291,8 @@ spriteNameInput.addEventListener("input", () => {
   if (!currentSelectedSprite) {
     return;
   }
-  currentSelectedSprite.name = spriteNameInput.value.trim();
+  currentSelectedSprite.name = spriteNameInput.value;
+  engine.makeUniqueSpriteNames();
   updateSpritesContainer();
 });
 spriteXPosInput.addEventListener("input", () => {

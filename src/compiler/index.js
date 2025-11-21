@@ -20,6 +20,14 @@ function getField(blockJson, name, options) {
   }
   return null;
 }
+function getFieldVariableID(blockJson, name, options) {
+  for (var field of blockJson.fields) {
+    if (field.name == name) {
+      return field.variable.id;
+    }
+  }
+  return null;
+}
 
 function compileBlockFromJSON(json, options = {}) {
   if (JavascriptTranslation[json.type]) {
@@ -28,6 +36,7 @@ function compileBlockFromJSON(json, options = {}) {
       {
         getInput,
         getField,
+        getFieldVariableID,
       },
       options
     );

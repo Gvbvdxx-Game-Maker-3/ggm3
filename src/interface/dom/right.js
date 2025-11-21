@@ -122,6 +122,21 @@ module.exports = {
           gid: "spritesContainer",
           children: [],
         },
+        {
+          element: "div",
+          className: "addSpriteButton greyButtonStyle",
+          gid: "addSpriteButton",
+          children: [
+            {
+              element: "img",
+              src: "/icons/add.svg",
+              style: {
+                width: "32px",
+                height: "32px",
+              },
+            },
+          ],
+        },
       ],
     },
   ],

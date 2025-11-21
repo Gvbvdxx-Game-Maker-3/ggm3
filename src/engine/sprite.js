@@ -37,7 +37,58 @@ class Sprite {
 
     this.alpha = 100;
 
+    this._variable_ids_ = [];
     this.variables = {};
+
+    this.costumeMap = {}; //Used to switch costumes by name quickly.
+  }
+
+  ensureUniqueName() {
+    this.engine.makeUniqueSpriteNames();
+  }
+
+  ensureUniqueCostumeNames() {
+    var existingNames = [];
+    var nameCounts = {};
+    this.costumes.forEach((costume) => {
+      if (existingNames.indexOf(costume.name) !== -1) {
+        if (nameCounts[costume.name]) {
+          nameCounts[costume.name] += 1;
+        } else {
+          nameCounts[costume.name] = 1;
+        }
+        costume.name = costume.name + ` (${nameCounts[costume.name]})`;
+      } else {
+        existingNames.push(costume.name);
+      }
+    });
+  }
+
+  getAllVariableIDS() {
+    return Object.keys(this.variables);
+  }
+
+  //Function used by editor that tracks new and old variables.
+  editorScanVariables(workspace) {
+    var ids = this.getAllVariableIDS();
+    var variables = workspace.getVariablesOfType("");
+    variables.sort(Blockly.VariableModel.compareByName);
+
+    var unusedOnes = ids.map((id) => id);
+    for (var blocklyVariable of variables) {
+      var id = blocklyVariable.getId();
+      var exists = ids.indexOf(blocklyVariable.getId()) !== -1;
+
+      if (exists) {
+        unusedOnes = unusedOnes.filter((id2) => id2 !== id);
+      } else {
+        this.variables[id] = 0; //The default value is zero.
+      }
+    }
+
+    for (var unusedId of unusedOnes) {
+      delete this.variables[unusedId];
+    }
   }
 
   set alpha(v = 0) {
@@ -169,6 +220,7 @@ class Sprite {
         }
       );
       _this.costumes.push(costume);
+      _this.ensureUniqueCostumeNames();
     });
   }
 

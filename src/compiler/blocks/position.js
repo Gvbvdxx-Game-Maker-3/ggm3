@@ -1,5 +1,33 @@
 var JavascriptTranslation = {};
 var utilFunctions = require("./util-functions.js");
+var outputBlocks = require("./output_blocks.js");
+
+outputBlocks.push("motion_xposition");
+JavascriptTranslation["motion_xposition"] = function (
+  jsonblock,
+  utils,
+  options
+) {
+  return `sprite.x`;
+};
+
+outputBlocks.push("motion_yposition");
+JavascriptTranslation["motion_yposition"] = function (
+  jsonblock,
+  utils,
+  options
+) {
+  return `sprite.y`;
+};
+
+outputBlocks.push("motion_direction");
+JavascriptTranslation["motion_direction"] = function (
+  jsonblock,
+  utils,
+  options
+) {
+  return `sprite.direction`;
+};
 
 JavascriptTranslation["motion_gotoxy"] = function (jsonblock, utils, options) {
   var X = utils.getInput(jsonblock, "X", options);

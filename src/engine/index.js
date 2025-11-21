@@ -32,11 +32,31 @@ class GGM3Engine {
     this.startRenderLoop();
   }
 
+  makeUniqueSpriteNames() {
+    var existingNames = [];
+    var nameCounts = {};
+    this.sprites.forEach((sprite) => {
+      if (existingNames.indexOf(sprite.name) !== -1) {
+        if (nameCounts[sprite.name]) {
+          nameCounts[sprite.name] += 1;
+        } else {
+          nameCounts[sprite.name] = 1;
+        }
+        sprite.name = sprite.name + ` (${nameCounts[sprite.name]})`;
+      } else {
+        existingNames.push(sprite.name);
+      }
+    });
+  }
+
   get mouseX() {
     return this.mouseMask.x;
   }
   get mouseY() {
     return this.mouseMask.y;
+  }
+  get mouseIsDown() {
+    return this.mouseMask.isDown;
   }
 
   stopGame() {
@@ -71,6 +91,7 @@ class GGM3Engine {
   createEmptySprite() {
     var spr = new Sprite(this, "Sprite " + (this.sprites.length + 1));
     this.sprites.push(spr);
+    this.makeUniqueSpriteNames();
     return spr;
   }
 

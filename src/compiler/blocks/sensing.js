@@ -12,4 +12,13 @@ JavascriptTranslation["sensing_mousey"] = function (jsonblock, utils, options) {
   return `engine.mouseY`;
 };
 
+outputBlocks.push("sensing_mousedown");
+JavascriptTranslation["sensing_mousedown"] = function (
+  jsonblock,
+  utils,
+  options
+) {
+  return `engine.mouseIsDown`;
+};
+
 module.exports = JavascriptTranslation;
