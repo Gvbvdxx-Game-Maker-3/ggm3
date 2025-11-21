@@ -6,6 +6,7 @@ var JavascriptTranslation = {
   ...require("./sensing.js"),
   ...require("./data.js"),
   ...require("./operators.js"),
+  ...require("./looks.js")
 };
 
 module.exports = JavascriptTranslation;

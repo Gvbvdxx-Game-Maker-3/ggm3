@@ -14,6 +14,7 @@ var spriteXPosInput = elements.getGPId("spriteXPosInput");
 var spriteYPosInput = elements.getGPId("spriteYPosInput");
 var spriteDirectionInput = elements.getGPId("spriteDirectionInput");
 var spriteSizeInput = elements.getGPId("spriteSizeInput");
+var spriteHiddenInput = elements.getGPId("spriteHiddenInput");
 
 var spritesContainer = elements.getGPId("spritesContainer");
 var addSpriteButton = elements.getGPId("addSpriteButton");
@@ -321,6 +322,12 @@ spriteSizeInput.addEventListener("input", () => {
   }
   currentSelectedSprite.size = +spriteSizeInput.value || 0;
 });
+spriteHiddenInput.addEventListener("input", () => {
+  if (!currentSelectedSprite) {
+    return;
+  }
+  currentSelectedSprite.hidden = spriteHiddenInput.checked;
+});
 
 function getCurSprite() {
   return currentSelectedSprite;
@@ -357,6 +364,12 @@ setInterval(() => {
       Math.round(currentSelectedSprite.size)
     ) {
       spriteSizeInput.value = Math.round(currentSelectedSprite.size);
+    }
+    if (
+      spriteHiddenInput.checked !==
+      currentSelectedSprite.hidden
+    ) {
+      spriteHiddenInput.checked = currentSelectedSprite.hidden;
     }
   }
 }, 1000 / 30);

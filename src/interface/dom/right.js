@@ -114,6 +114,26 @@ module.exports = {
                 },
               ],
             },
+            {
+              element: "div",
+              className: "spriteInputContainer",
+              style: {
+                display: "flex",
+                flexDirection: "column"
+              },
+              children: [
+                {
+                  element: "span",
+                  className: "selectedSpriteLabel",
+                  textContent: "Hidden:",
+                },
+                {
+                  element: "input",
+                  type: "checkbox",
+                  gid: "spriteHiddenInput",
+                },
+              ],
+            },
           ],
         },
         {

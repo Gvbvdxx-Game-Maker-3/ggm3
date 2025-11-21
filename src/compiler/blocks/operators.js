@@ -143,5 +143,42 @@ JavascriptTranslation["operator_not"] = function (jsonblock, utils, options) {
   return `(!(${OPERAND}))`;
 };
 
+//Constants:
+
+outputBlocks.push("operator_true");
+JavascriptTranslation["operator_true"] = function (jsonblock, utils, options) {
+  return "true";
+};
+
+outputBlocks.push("operator_false");
+JavascriptTranslation["operator_false"] = function (jsonblock, utils, options) {
+  return "false";
+};
+
+outputBlocks.push("operator_nan");
+JavascriptTranslation["operator_nan"] = function (jsonblock, utils, options) {
+  return "NaN";
+};
+
+outputBlocks.push("operator_null");
+JavascriptTranslation["operator_null"] = function (jsonblock, utils, options) {
+  return "null";
+};
+
+outputBlocks.push("operator_infinity");
+JavascriptTranslation["operator_infinity"] = function (jsonblock, utils, options) {
+  return "Infinity";
+};
+
+outputBlocks.push("operator_empty_string");
+JavascriptTranslation["operator_empty_string"] = function (jsonblock, utils, options) {
+  return JSON.stringify("");
+};
+
+outputBlocks.push("operator_newline");
+JavascriptTranslation["operator_newline"] = function (jsonblock, utils, options) {
+  return JSON.stringify("\n");
+};
+
 
 module.exports = JavascriptTranslation;

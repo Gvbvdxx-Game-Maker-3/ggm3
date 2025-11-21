@@ -228,7 +228,8 @@ body {
 }
 
 .selectedSpriteContainer {
-  width: 100%;
+  min-width: 100%;
+  max-width: calc(var(--game-viewport-scale) * var(--game-viewport-width));
   box-sizing: border-box;
   border-width: 5px;
   border-style: solid;
@@ -241,6 +242,7 @@ body {
   flex-shrink: 0;
   flex-grow: 0;
   flex-wrap: wrap;
+  overflow: auto;
 }
 
 .spritesContainer {

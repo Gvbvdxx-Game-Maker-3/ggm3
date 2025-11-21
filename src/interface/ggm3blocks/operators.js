@@ -34,6 +34,84 @@ Blockly.Blocks["operator_fixed"] = {
   },
 };
 
+Blockly.Blocks["operator_true"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "true",
+      args0: [],
+      "category": Blockly.Categories.operators,
+      "extensions": ["colours_operators", "output_boolean"]
+    });
+  },
+};
+
+Blockly.Blocks["operator_false"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "false",
+      args0: [],
+      "category": Blockly.Categories.operators,
+      "extensions": ["colours_operators", "output_boolean"]
+    });
+  },
+};
+
+Blockly.Blocks["operator_nan"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "NaN",
+      args0: [],
+      "category": Blockly.Categories.operators,
+      "extensions": ["colours_operators", "output_number"]
+    });
+  },
+};
+
+
+Blockly.Blocks["operator_null"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "null",
+      args0: [],
+      "category": Blockly.Categories.operators,
+      "extensions": ["colours_operators", "output_string"]
+    });
+  },
+};
+
+Blockly.Blocks["operator_infinity"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "Infinity",
+      args0: [],
+      "category": Blockly.Categories.operators,
+      "extensions": ["colours_operators", "output_number"]
+    });
+  },
+};
+
+Blockly.Blocks["operator_empty_string"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "empty string",
+      args0: [],
+      "category": Blockly.Categories.operators,
+      "extensions": ["colours_operators", "output_string"]
+    });
+  },
+};
+
+Blockly.Blocks["operator_newline"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "New line character",
+      args0: [],
+      "category": Blockly.Categories.operators,
+      "extensions": ["colours_operators", "output_string"]
+    });
+  },
+};
+
 Blockly.Blocks['operator_mathop'] = {
   /**
    * Block for "advanced" math ops on a number.

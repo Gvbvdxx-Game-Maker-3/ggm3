@@ -94,6 +94,8 @@ function generateToolbox(defaultX, defaultY) {
         </block>
         <block type="control_repeat_until">
         </block>
+        <block type="control_while">
+        </block>
     </category>
     <category name="Operators" id="operators" colour="${Blockly.Colours.operators.primary}" secondaryColour="${Blockly.Colours.operators.secondary}">
         <block type="operator_add">
@@ -216,10 +218,35 @@ function generateToolbox(defaultX, defaultY) {
         </block>
         <block type="operator_and"></block>
         <block type="operator_or"></block>
-        <block type="operator_not"></block>
+        <block type="operator_not" gap="30"></block>
+        <block type="operator_true"></block>
+        <block type="operator_false"></block>
+        <block type="operator_nan"></block>
+        <block type="operator_null"></block>
+        <block type="operator_infinity"></block>
+        <block type="operator_empty_string"></block>
+        <block type="operator_newline"></block>
     </category>
     <category name="Looks" id="looks" colour="${Blockly.Colours.looks.primary}" secondaryColour="${Blockly.Colours.looks.secondary}">
-
+        <block type="looks_show"></block>
+        <block type="looks_hide"></block>
+        <block type="looks_hidden"></block>
+        <block type="looks_visible" gap="30"></block>
+        <block type="looks_changesizeby">
+            <value name="CHANGE">
+                <shadow type="math_number">
+                    <field name="NUM">10</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="looks_setsizeto">
+            <value name="SIZE">
+                <shadow type="math_number">
+                    <field name="NUM">100</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="looks_size"></block>
     </category>
     <category name="Variables" id="data" colour="#FF8C1A" secondaryColour="#DB6E00" custom="GGM3_VARIABLE">
     </category>

@@ -35,6 +35,17 @@ JavascriptTranslation["control_repeat_until"] = function (
   return `${utilFunctions.aliveCheck(jsonblock)}while (!(${CONDITION})) {${utilFunctions.aliveCheck(jsonblock)} if (thread.screenRefresh) {await thread.waitForNextFrame();} ${utilFunctions.aliveCheck(jsonblock)} ${SUBSTACK}}${utilFunctions.aliveCheck(jsonblock)}`;
 };
 
+JavascriptTranslation["control_while"] = function (
+  jsonblock,
+  utils,
+  options
+) {
+  var CONDITION = utils.getInput(jsonblock, "CONDITION", options);
+  var SUBSTACK = utils.getInput(jsonblock, "SUBSTACK", options);
+
+  return `${utilFunctions.aliveCheck(jsonblock)}while (${CONDITION}) {${utilFunctions.aliveCheck(jsonblock)} if (thread.screenRefresh) {await thread.waitForNextFrame();} ${utilFunctions.aliveCheck(jsonblock)} ${SUBSTACK}}${utilFunctions.aliveCheck(jsonblock)}`;
+};
+
 JavascriptTranslation["control_if"] = function (jsonblock, utils, options) {
   var CONDITION = utils.getInput(jsonblock, "CONDITION", options);
 
