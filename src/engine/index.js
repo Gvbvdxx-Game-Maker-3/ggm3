@@ -251,7 +251,7 @@ class GGM3Engine {
     this._iTime += elapsed / 1000;
 
     var _this = this;
-    this.sprites.forEach((spr) => {
+    this.getTopSprites().forEach((spr) => {
       _this.tickSprite(spr);
       _this.renderSprite(spr);
     });
@@ -275,18 +275,55 @@ class GGM3Engine {
     sprite.emitFrameListeners();
   }
 
-  getTopSprites () {
+  sortLayers() {
+    var i = 0;
+    var newSprites = [];
+    for (var sprite of this.getTopSprites()) {
+      sprite.zIndex = i;
+      newSprites.push(sprite);
+      i += 1;
+    }
+    this.sprites = newSprites;
+  }
 
+  getTopSprites () {
+    var topSprites = this.sprites.map((s) => s).sort((sprite, sprite2) => sprite2.zIndex - sprite.zIndex);
+    return topSprites;
   }
 
   tickEditMode() {
     if (this._editDragging) {
-
+      if (this.mouseIsDown) {
+        var {sprite,offsetx,offsety} = this._editDragging;
+        sprite.x = this.mouseX+offsetx;
+        sprite.y = this.mouseY+offsety;
+      } else {
+        this._editDragging = null;
+      }
     } else {
+      this._editDragging = null;
       if (this.mouseIsDown) {
         if (!this._previousMouseDown) {
           this._previousMouseDown = true;
-
+          var topSprites = this.getTopSprites();
+          var touchedSprite = null;
+          var mouseMask = this.mouseMask;
+          for (var sprite of topSprites) {
+            sprite.alignMask();
+            var mask = sprite.mask;
+            if (mask && mouseMask) {
+              if (mouseMask.collisionTest(mask)) {
+                touchedSprite = sprite;
+              }
+            }
+          }
+          if (touchedSprite) {
+            this._editDragging = {
+              offsetx: touchedSprite.x - this.mouseX,
+              offsety: touchedSprite.y - this.mouseY,
+              sprite: touchedSprite
+            };  
+          }
         }
       } else {
         this._previousMouseDown = false;

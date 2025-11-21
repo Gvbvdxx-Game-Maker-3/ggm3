@@ -46,6 +46,33 @@ class Sprite {
     this.costumeMap = {}; //Used to switch costumes by name quickly.
   }
 
+  get costume() {
+    if (this.costumes[this.costumeIndex]) {
+      return this.costumes[this.costumeIndex];
+    }
+  }
+
+  get mask() {
+    if (this.costumes[this.costumeIndex]) {
+      return this.costumes[this.costumeIndex].mask;
+    }
+  }
+
+  alignMask () {
+    var costume = this.costume;
+    var mask = this.mask;
+    if (!mask) {
+      return;
+    }
+    mask.scaleX = ((this.size/100)*this.scaleX)/costume.preferedScale;
+    mask.scaleY = ((this.size/100)*this.scaleY)/costume.preferedScale;
+    mask.x = this.x;
+    mask.y = this.y;
+    mask.centerX = costume.rotationCenterX*costume.preferedScale;
+    mask.centerY = costume.rotationCenterY*costume.preferedScale;
+    mask.angle = this.angle;
+  }
+
   ensureUniqueName() {
     this.engine.makeUniqueSpriteNames();
   }

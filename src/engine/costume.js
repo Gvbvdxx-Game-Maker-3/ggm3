@@ -11,12 +11,14 @@ class Costume {
     this.rotationCenterY = 0;
     this.preferedScale = 1;
     this.canvas = document.createElement("canvas");
+    this.id = Date.now() + "_" + Math.round(Math.random() * 9999999);
 
     this.name = name || "Costume";
     this.resolveFunction = resolveFunction;
+    this.mask = null;
   }
 
-  renderImageAtScale(scale) {
+  renderImageAtScale() {
     if (this.drawable) {
       this.engine.disposeDrawable(this.drawable); //Make sure we aren't leaking memory when resetting the drawable.
     }
@@ -24,12 +26,12 @@ class Costume {
     var canvas = this.canvas;
     var ctx = canvas.getContext("2d");
 
-    canvas.width = img.width;
-    canvas.height = img.height;
+    canvas.width = img.width*this.preferedScale;
+    canvas.height = img.height*this.preferedScale;
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    this.mask = new CollisionSprite(ctx.getImageData(0,0,canvas.width,canvas.height));
 
     this.drawable = this.engine.newDrawable(canvas);
-    this.id = Date.now() + "_" + Math.round(Math.random() * 9999999);
   }
 
   getFinalRotationCenter() {
