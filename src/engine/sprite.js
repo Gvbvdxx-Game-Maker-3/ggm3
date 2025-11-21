@@ -36,6 +36,8 @@ class Sprite {
     this.direction = 90; //Wrapper around this.angle
 
     this.alpha = 100;
+
+    this.variables = {};
   }
 
   set alpha(v = 0) {
