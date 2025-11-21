@@ -6,7 +6,6 @@ class Thread {
     this.screenRefresh = true;
     this._hasStopped = false;
     this.withoutRefresh = false;
-    this.output = null;
   }
 
   turnOnWithoutRefresh() {

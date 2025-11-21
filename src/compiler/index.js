@@ -66,7 +66,8 @@ function compileBlockWithThreadForced(block, options) {
     return (
       utilFunctions.newThread(blockjson) +
       `thread.output = ${compileBlockFromJSON(blockjson)};` +
-      utilFunctions.endThread(blockjson)
+      utilFunctions.endThread(blockjson) +
+      "return thread;"
     );
   }
   return (

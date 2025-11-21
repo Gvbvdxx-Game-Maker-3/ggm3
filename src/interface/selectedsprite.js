@@ -122,9 +122,15 @@ function loadCode(spr) {
     if (e.element == "click") {
       var root = workspace.getBlockById(e.blockId).getRootBlock();
       if (!spr.runningStacks[root.id]) {
-        var code = compiler.compileBlockWithThreadForced(root);
-        //window.alert(code);
-        spr.runFunction(code);
+        (async function () {
+          var code = compiler.compileBlockWithThreadForced(root);
+          var outputThread = await spr.runFunction(code);
+          if (outputThread) {
+            if (typeof outputThread.output !== "undefined") {
+              workspace.reportValue(e.blockId, outputThread.output);
+            }
+          }
+        })();
       } else {
         spr.runningStacks[root.id].stop();
       }
@@ -184,9 +190,15 @@ function loadCode(spr) {
     if (e.element == "click") {
       var root = workspace.getBlockById(e.blockId).getRootBlock();
       if (!spr.runningStacks[root.id]) {
-        var code = compiler.compileBlockWithThreadForced(root);
-        //window.alert(code);
-        spr.runFunction(code);
+        (async function () {
+          var code = compiler.compileBlockWithThreadForced(root);
+          var outputThread = await spr.runFunction(code);
+          if (outputThread) {
+            if (typeof outputThread.output !== "undefined") {
+              workspace.reportValue(e.blockId, outputThread.output);
+            }
+          }
+        })();
       } else {
         spr.runningStacks[root.id].stop();
       }
@@ -231,6 +243,13 @@ function loadCode(spr) {
     Blockly.svgResize(workspace);
   }, 0);
 
+  if (typeof spr._editor_scrollX == "number") {
+    workspace.scrollX = spr._editor_scrollX;
+    workspace.scrollY = spr._editor_scrollY;
+    workspace.scale = spr._editor_scale;
+    workspace.resize();
+  }
+
   disposingWorkspace = false;
   Blockly.Events.enable();
 }
@@ -243,10 +262,9 @@ function setCurrentSprite(index) {
     currentSelectedSprite.threadStartListener = null;
     currentSelectedSprite.threadEndListener = null;
     if (workspace) {
-      // Get the current scrollbar positions
-      const metrics = workspace.getMetrics();
-      currentSelectedSprite.scrollX = metrics.scrollLeft;
-      currentSelectedSprite.scrollY = metrics.scrollTop;
+      currentSelectedSprite._editor_scrollX = workspace.scrollX;
+      currentSelectedSprite._editor_scrollY = workspace.scrollY;
+      currentSelectedSprite._editor_scale = workspace.scale;
     }
   }
   currentSelectedSpriteIndex = index;
