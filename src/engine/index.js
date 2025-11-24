@@ -53,7 +53,7 @@ class GGM3Engine {
     return this.mouseMask.x;
   }
   get mouseY() {
-    return this.mouseMask.y;
+    return -this.mouseMask.y;
   }
   get mouseIsDown() {
     return this.mouseMask.isDown;
@@ -264,7 +264,7 @@ class GGM3Engine {
 
   changeMousePosition(cx, cy) {
     this.mouseMask.x = (+cx || 0) - this.canvas.width / 2;
-    this.mouseMask.y = -((+cy || 0) - this.canvas.height / 2);
+    this.mouseMask.y = ((+cy || 0) - this.canvas.height / 2);
   }
 
   changeMouseDown(down) {
