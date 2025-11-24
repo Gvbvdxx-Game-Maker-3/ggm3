@@ -224,6 +224,19 @@ function generateToolbox(defaultX, defaultY) {
         <block type="operator_and"></block>
         <block type="operator_or"></block>
         <block type="operator_not" gap="30"></block>
+		<block type="operator_outputif">
+            <value name="CONDITION"></value>
+            <value name="PASS_OUTPUT">
+                <shadow type="text">
+                    <field name="TEXT">apple</field>
+                </shadow>
+            </value>
+			<value name="FAIL_OUTPUT">
+                <shadow type="text">
+                    <field name="TEXT">orange</field>
+                </shadow>
+            </value>
+        </block>
         <block type="operator_true"></block>
         <block type="operator_false"></block>
         <block type="operator_nan"></block>

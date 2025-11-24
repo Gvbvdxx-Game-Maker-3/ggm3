@@ -143,6 +143,15 @@ JavascriptTranslation["operator_not"] = function (jsonblock, utils, options) {
   return `(!(${OPERAND}))`;
 };
 
+outputBlocks.push("operator_outputif");
+JavascriptTranslation["operator_outputif"] = function (jsonblock, utils, options) {
+  var CONDITION = utils.getInput(jsonblock, "CONDITION", options);
+  
+  var PASS_OUTPUT = utils.getInput(jsonblock, "PASS_OUTPUT", options);
+  var FAIL_OUTPUT = utils.getInput(jsonblock, "FAIL_OUTPUT", options);
+  return `(${CONDITION}) ? (${PASS_OUTPUT}) : (${FAIL_OUTPUT})`;
+};
+
 //Constants:
 
 outputBlocks.push("operator_true");

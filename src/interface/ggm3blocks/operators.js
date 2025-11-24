@@ -158,6 +158,31 @@ Blockly.Blocks["operator_toboolean"] = {
   },
 };
 
+Blockly.Blocks["operator_outputif"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "If %1 output %2 else output %3",
+      args0: [
+		{
+          "type": "input_value",
+          "name": "CONDITION",
+			"check": "Boolean"
+        },
+		  {
+          "type": "input_value",
+          "name": "PASS_OUTPUT"
+        },
+		 {
+          "type": "input_value",
+          "name": "FAIL_OUTPUT"
+        }
+	  ],
+      "category": Blockly.Categories.operators,
+      "extensions": ["colours_operators", "output_string"]
+    });
+  },
+};
+
 Blockly.Blocks['operator_mathop'] = {
   /**
    * Block for "advanced" math ops on a number.
