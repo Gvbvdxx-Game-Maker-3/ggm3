@@ -28,11 +28,11 @@ class GGM3Engine {
     this.frameRate = 60;
     this._iTime = 0;
     this.keyNames = {
-	  " ": "spacebar",
-      "ArrowLeft": "leftarrow",
-      "ArrowRight": "rightarrow",
-      "ArrowUp": "arrowup",
-      "ArrowDown": "arrowdown"
+	  " ": "space-bar",
+      "ArrowLeft": "left-arrow",
+      "ArrowRight": "right-arrow",
+      "ArrowUp": "up-arrow",
+      "ArrowDown": "down-arrow"
     };
     this.keysPressed = {};
     this.initCanvas();
