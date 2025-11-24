@@ -6,7 +6,7 @@ class Thread {
     this.screenRefresh = true;
     this._hasStopped = false;
     this.withoutRefresh = false;
-	this.hadError = false;
+    this.hadError = false;
   }
 
   turnOnWithoutRefresh() {
@@ -86,7 +86,8 @@ class Thread {
     return Math.random() * (high - low) + low;
   }
 
-  async repeatTimes(times, func) { //No need for error handling since that is done by the thread.
+  async repeatTimes(times, func) {
+    //No need for error handling since that is done by the thread.
     if (!this.running) {
       return;
     }

@@ -10,7 +10,7 @@ class CollisionSprite {
     centerY = 0,
     flipX = false,
     flipY = false,
-    collisionTolerance = 0
+    collisionTolerance = 0,
   ) {
     this.imageData = imageData;
     this._x = x;
@@ -212,7 +212,7 @@ class CollisionSprite {
     const { width, height } = this.imageData;
     const { x: fX, y: fY } = this.getFlippedCoordinates(
       Math.round(lX),
-      Math.round(lY)
+      Math.round(lY),
     );
     if (fX < 0 || fY < 0 || fX >= width || fY >= height) return false;
     return this.alphaList[fY * width + fX] === 1;

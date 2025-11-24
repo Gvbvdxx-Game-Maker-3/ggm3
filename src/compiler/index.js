@@ -38,7 +38,7 @@ function compileBlockFromJSON(json, options = {}) {
         getField,
         getFieldVariableID,
       },
-      options
+      options,
     );
     if ("function" === typeof output) {
       if (json.next) {
@@ -51,7 +51,7 @@ function compileBlockFromJSON(json, options = {}) {
     console.warn(
       "Unable to compile block " +
         json.type +
-        " because it doesn't exist in the translator."
+        " because it doesn't exist in the translator.",
     );
     var output = "";
   }

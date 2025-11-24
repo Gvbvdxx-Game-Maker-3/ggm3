@@ -46,15 +46,54 @@ class Sprite {
     this.costumeMap = {}; //Used to switch costumes by name quickly.
   }
 
-	getCostume(v) {
-		if (isNaN(+v)) {
-			
-		}
-	}
+  getCostumeIndex(v) {
+    if (isNaN(+v)) {
+      return this.costumeMap[v];
+    } else {
+      return Math.round(+v + 1);
+    }
+  }
 
-	loadCostume(number) {
-		
-	}
+  getCostume(v) {
+    var costumeIndex = this.getCostumeIndex(v);
+    if (typeof costumeIndex == "number") {
+      return this.costumes[costumeIndex];
+    } else {
+      return null;
+    }
+  }
+
+  isCostumeLoaded(costumeRef) {
+    var costume = this.getCostume(costumeRef);
+    if (costume) {
+      return !!costume.loaded;
+    } else {
+      return false;
+    }
+  }
+
+  async blockLoadCostume(number) {
+    var costume = this.getCostume(number);
+    if (!costume) {
+      return;
+    }
+    await costume.loadCostume();
+  }
+
+  async blockDeloadCostume(number) {
+    var costume = this.getCostume(number);
+    if (!costume) {
+      return;
+    }
+    await costume.deloadCostume();
+  }
+
+  switchCostume(number) {
+    var costumeIndex = this.getCostumeIndex(v);
+    if (typeof costumeIndex == "number") {
+      this.costumeIndex = costumeIndex;
+    }
+  }
 
   get costume() {
     if (this.costumes[this.costumeIndex]) {
@@ -68,18 +107,18 @@ class Sprite {
     }
   }
 
-  alignMask () {
+  alignMask() {
     var costume = this.costume;
     var mask = this.mask;
     if (!mask) {
       return;
     }
-    mask.scaleX = ((this.size/100)*this.scaleX)/costume.preferedScale;
-    mask.scaleY = ((this.size/100)*this.scaleY)/costume.preferedScale;
+    mask.scaleX = ((this.size / 100) * this.scaleX) / costume.preferedScale;
+    mask.scaleY = ((this.size / 100) * this.scaleY) / costume.preferedScale;
     mask.x = this.x;
     mask.y = -this.y; //Negative because Y is inverted in GGM3 coordinates.
-    mask.centerX = costume.rotationCenterX*costume.preferedScale;
-    mask.centerY = costume.rotationCenterY*costume.preferedScale;
+    mask.centerX = costume.rotationCenterX * costume.preferedScale;
+    mask.centerY = costume.rotationCenterY * costume.preferedScale;
     mask.angle = this.angle;
   }
 
@@ -88,9 +127,12 @@ class Sprite {
   }
 
   ensureUniqueCostumeNames() {
+    //This is called alot by the editor and engine, so we can use this to map out costume names.
     var existingNames = [];
     var nameCounts = {};
-    this.costumes.forEach((costume) => {
+    var _this = this;
+    this.costumes.forEach((costume, i) => {
+      _this.costumeMap[costume.name] = i;
       if (existingNames.indexOf(costume.name) !== -1) {
         if (nameCounts[costume.name]) {
           nameCounts[costume.name] += 1;
@@ -184,7 +226,7 @@ class Sprite {
     for (var listener of Object.keys(this.listeners)) {
       if (this.listeners[listener].indexOf(blockID) !== -1) {
         this.listeners[listener] = this.listeners[listener].filter(
-          (id) => id !== blockID
+          (id) => id !== blockID,
         );
       }
     }
@@ -257,7 +299,7 @@ class Sprite {
           } else {
             reject("");
           }
-        }
+        },
       );
       _this.costumes.push(costume);
       _this.ensureUniqueCostumeNames();
@@ -267,6 +309,7 @@ class Sprite {
   deleteCostume(costume) {
     costume.dispose();
     this.costumes = this.costumes.filter((c) => c.id !== costume.id);
+    this.ensureUniqueCostumeNames(); //This also causes the costume mapping to happen.
   }
 
   dispose() {

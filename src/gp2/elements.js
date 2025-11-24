@@ -69,7 +69,7 @@ var elements = {
                 } else if (attriName == "innerHTML") {
                   console.trace(
                     'Warning: The "innerHTML" property is deprecated. ' +
-                      'Please use "dangerouslySetInnerHTML" instead.'
+                      'Please use "dangerouslySetInnerHTML" instead.',
                   );
                   realElm.innerHTML = attributeValue;
                   setattri = false;

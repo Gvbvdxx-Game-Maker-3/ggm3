@@ -85,6 +85,11 @@ function generateToolbox(defaultX, defaultY) {
 				<shadow type="loader_costume"></shadow>
 			</value>
 		</block>
+        <block type="loader_costumeisloaded">
+			<value name="COSTUME">
+				<shadow type="loader_costume"></shadow>
+			</value>
+		</block>
     </category>
     <category name="Control" id="Control" colour="${Blockly.Colours.control.primary}" secondaryColour="${Blockly.Colours.control.secondary}">
         <block type="control_wait">

@@ -6,7 +6,7 @@ outputBlocks.push("motion_xposition");
 JavascriptTranslation["motion_xposition"] = function (
   jsonblock,
   utils,
-  options
+  options,
 ) {
   return `sprite.x`;
 };
@@ -15,7 +15,7 @@ outputBlocks.push("motion_yposition");
 JavascriptTranslation["motion_yposition"] = function (
   jsonblock,
   utils,
-  options
+  options,
 ) {
   return `sprite.y`;
 };
@@ -24,7 +24,7 @@ outputBlocks.push("motion_direction");
 JavascriptTranslation["motion_direction"] = function (
   jsonblock,
   utils,
-  options
+  options,
 ) {
   return `sprite.direction`;
 };
@@ -39,7 +39,7 @@ JavascriptTranslation["motion_gotoxy"] = function (jsonblock, utils, options) {
 JavascriptTranslation["motion_changexby"] = function (
   jsonblock,
   utils,
-  options
+  options,
 ) {
   var DX = utils.getInput(jsonblock, "DX", options);
 
@@ -49,7 +49,7 @@ JavascriptTranslation["motion_changexby"] = function (
 JavascriptTranslation["motion_changeyby"] = function (
   jsonblock,
   utils,
-  options
+  options,
 ) {
   var DY = utils.getInput(jsonblock, "DY", options);
 
@@ -59,7 +59,7 @@ JavascriptTranslation["motion_changeyby"] = function (
 JavascriptTranslation["motion_pointindirection"] = function (
   jsonblock,
   utils,
-  options
+  options,
 ) {
   var DIRECTION = utils.getInput(jsonblock, "DIRECTION", options);
 
@@ -69,7 +69,7 @@ JavascriptTranslation["motion_pointindirection"] = function (
 JavascriptTranslation["motion_turnleft"] = function (
   jsonblock,
   utils,
-  options
+  options,
 ) {
   var DEGREES = utils.getInput(jsonblock, "DEGREES", options);
 
@@ -79,7 +79,7 @@ JavascriptTranslation["motion_turnleft"] = function (
 JavascriptTranslation["motion_turnright"] = function (
   jsonblock,
   utils,
-  options
+  options,
 ) {
   var DEGREES = utils.getInput(jsonblock, "DEGREES", options);
 
@@ -89,7 +89,7 @@ JavascriptTranslation["motion_turnright"] = function (
 JavascriptTranslation["motion_movesteps"] = function (
   jsonblock,
   utils,
-  options
+  options,
 ) {
   var STEPS = utils.getInput(jsonblock, "STEPS", options);
 

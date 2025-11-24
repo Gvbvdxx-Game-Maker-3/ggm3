@@ -16,7 +16,7 @@ outputBlocks.push("operator_subtract");
 JavascriptTranslation["operator_subtract"] = function (
   jsonblock,
   utils,
-  options
+  options,
 ) {
   var NUM1 = utils.getInput(jsonblock, "NUM1", options);
   var NUM2 = utils.getInput(jsonblock, "NUM2", options);
@@ -27,7 +27,7 @@ outputBlocks.push("operator_multiply");
 JavascriptTranslation["operator_multiply"] = function (
   jsonblock,
   utils,
-  options
+  options,
 ) {
   var NUM1 = utils.getInput(jsonblock, "NUM1", options);
   var NUM2 = utils.getInput(jsonblock, "NUM2", options);
@@ -38,7 +38,7 @@ outputBlocks.push("operator_divide");
 JavascriptTranslation["operator_divide"] = function (
   jsonblock,
   utils,
-  options
+  options,
 ) {
   var NUM1 = utils.getInput(jsonblock, "NUM1", options);
   var NUM2 = utils.getInput(jsonblock, "NUM2", options);
@@ -59,28 +59,47 @@ JavascriptTranslation["operator_fixed"] = function (jsonblock, utils, options) {
 };
 
 outputBlocks.push("operator_mathop");
-JavascriptTranslation["operator_mathop"] = function (jsonblock, utils, options) {
+JavascriptTranslation["operator_mathop"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
   var OPERATOR = utils.getField(jsonblock, "OPERATOR", options);
   var NUM = utils.getInput(jsonblock, "NUM", options);
   var numberCode = `(+(${NUM}) || 0)`;
   switch (OPERATOR) {
-    case 'abs': return `Math.abs(${numberCode})`;
-    case 'floor': return `Math.floor(${numberCode})`;
-    case 'ceiling': return `Math.ceil(${numberCode})`;
-    case 'sqrt': return `Math.sqrt(${numberCode})`;
-    case 'sin': return `Math.round(Math.sin((Math.PI * ${numberCode}) / 180) * 1e10) / 1e10`;
-    case 'cos': return `Math.round(Math.cos((Math.PI * ${numberCode}) / 180) * 1e10) / 1e10`;
-    case 'tan': return `MathUtil.tan(${numberCode})`;
-    case 'asin': return `(Math.asin(${numberCode}) * 180) / Math.PI`;
-    case 'acos': return `(Math.acos(${numberCode}) * 180) / Math.PI`;
-    case 'atan': return `(Math.atan(${numberCode}) * 180) / Math.PI`;
-    case 'ln': return `Math.log(${numberCode})`;
-    case 'log': return `Math.log(${numberCode}) / Math.LN10`;
-    case 'e ^': return `Math.exp(${numberCode})`;
-    case '10 ^': return `Math.pow(10, ${numberCode})`;
-    case '20 ^': return `Math.pow(20, ${numberCode})`;
-    }
-    return `0`;
+    case "abs":
+      return `Math.abs(${numberCode})`;
+    case "floor":
+      return `Math.floor(${numberCode})`;
+    case "ceiling":
+      return `Math.ceil(${numberCode})`;
+    case "sqrt":
+      return `Math.sqrt(${numberCode})`;
+    case "sin":
+      return `Math.round(Math.sin((Math.PI * ${numberCode}) / 180) * 1e10) / 1e10`;
+    case "cos":
+      return `Math.round(Math.cos((Math.PI * ${numberCode}) / 180) * 1e10) / 1e10`;
+    case "tan":
+      return `MathUtil.tan(${numberCode})`;
+    case "asin":
+      return `(Math.asin(${numberCode}) * 180) / Math.PI`;
+    case "acos":
+      return `(Math.acos(${numberCode}) * 180) / Math.PI`;
+    case "atan":
+      return `(Math.atan(${numberCode}) * 180) / Math.PI`;
+    case "ln":
+      return `Math.log(${numberCode})`;
+    case "log":
+      return `Math.log(${numberCode}) / Math.LN10`;
+    case "e ^":
+      return `Math.exp(${numberCode})`;
+    case "10 ^":
+      return `Math.pow(10, ${numberCode})`;
+    case "20 ^":
+      return `Math.pow(20, ${numberCode})`;
+  }
+  return `0`;
 };
 
 //Randomizing:
@@ -89,7 +108,7 @@ outputBlocks.push("operator_random");
 JavascriptTranslation["operator_random"] = function (
   jsonblock,
   utils,
-  options
+  options,
 ) {
   var FROM = utils.getInput(jsonblock, "FROM", options);
   var TO = utils.getInput(jsonblock, "TO", options);
@@ -102,7 +121,7 @@ outputBlocks.push("operator_equals");
 JavascriptTranslation["operator_equals"] = function (
   jsonblock,
   utils,
-  options
+  options,
 ) {
   var OPERAND1 = utils.getInput(jsonblock, "OPERAND1", options);
   var OPERAND2 = utils.getInput(jsonblock, "OPERAND2", options);
@@ -144,9 +163,13 @@ JavascriptTranslation["operator_not"] = function (jsonblock, utils, options) {
 };
 
 outputBlocks.push("operator_outputif");
-JavascriptTranslation["operator_outputif"] = function (jsonblock, utils, options) {
+JavascriptTranslation["operator_outputif"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
   var CONDITION = utils.getInput(jsonblock, "CONDITION", options);
-  
+
   var PASS_OUTPUT = utils.getInput(jsonblock, "PASS_OUTPUT", options);
   var FAIL_OUTPUT = utils.getInput(jsonblock, "FAIL_OUTPUT", options);
   return `(${CONDITION}) ? (${PASS_OUTPUT}) : (${FAIL_OUTPUT})`;
@@ -175,36 +198,60 @@ JavascriptTranslation["operator_null"] = function (jsonblock, utils, options) {
 };
 
 outputBlocks.push("operator_infinity");
-JavascriptTranslation["operator_infinity"] = function (jsonblock, utils, options) {
+JavascriptTranslation["operator_infinity"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
   return "Infinity";
 };
 
 outputBlocks.push("operator_empty_string");
-JavascriptTranslation["operator_empty_string"] = function (jsonblock, utils, options) {
+JavascriptTranslation["operator_empty_string"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
   return JSON.stringify("");
 };
 
 outputBlocks.push("operator_newline");
-JavascriptTranslation["operator_newline"] = function (jsonblock, utils, options) {
+JavascriptTranslation["operator_newline"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
   return JSON.stringify("\n");
 };
 
 //Converters:
 
 outputBlocks.push("operator_tostring");
-JavascriptTranslation["operator_tostring"] = function (jsonblock, utils, options) {
+JavascriptTranslation["operator_tostring"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
   var VALUE = utils.getInput(jsonblock, "VALUE", options);
   return `"" + (${VALUE})`;
 };
 
 outputBlocks.push("operator_tonumber");
-JavascriptTranslation["operator_tonumber"] = function (jsonblock, utils, options) {
+JavascriptTranslation["operator_tonumber"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
   var VALUE = utils.getInput(jsonblock, "VALUE", options);
   return `+(${VALUE})`;
 };
 
 outputBlocks.push("operator_toboolean");
-JavascriptTranslation["operator_toboolean"] = function (jsonblock, utils, options) {
+JavascriptTranslation["operator_toboolean"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
   var VALUE = utils.getInput(jsonblock, "VALUE", options);
   return `!!(${VALUE})`;
 };

@@ -31,7 +31,7 @@ class Drawable {
 
     this.texture = twgl.createTexture(this.gl, {
       src: this.canvas,
-      mag: this.gl.NEAREST
+      mag: this.gl.NEAREST,
     });
 
     this.isOutdated = false;

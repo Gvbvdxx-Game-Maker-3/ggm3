@@ -19,8 +19,8 @@ elements.appendElementsFromJSON(document.body, [
         children: [
           require("./left.js"), //Left panel
           require("./right.js"), //Right panel
-        ]
-      }
+        ],
+      },
     ],
   },
 ]);

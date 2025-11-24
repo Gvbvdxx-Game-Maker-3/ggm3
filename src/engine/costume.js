@@ -16,13 +16,13 @@ class Costume {
     this.name = name || "Costume";
     this.resolveFunction = resolveFunction;
     this.mask = null;
-	this.loaded = false;
+    this.loaded = false;
   }
 
   renderImageAtScale() {
-	if (this.disposed) {
-	  return;
-	}
+    if (this.disposed) {
+      return;
+    }
     if (this.drawable) {
       this.engine.disposeDrawable(this.drawable); //Make sure we aren't leaking memory when resetting the drawable.
     }
@@ -30,14 +30,16 @@ class Costume {
     var canvas = this.canvas;
     var ctx = canvas.getContext("2d");
 
-    canvas.width = img.width*this.preferedScale;
-    canvas.height = img.height*this.preferedScale;
+    canvas.width = img.width * this.preferedScale;
+    canvas.height = img.height * this.preferedScale;
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    this.mask = new CollisionSprite(ctx.getImageData(0,0,canvas.width,canvas.height));
+    this.mask = new CollisionSprite(
+      ctx.getImageData(0, 0, canvas.width, canvas.height),
+    );
 
     this.drawable = this.engine.newDrawable(canvas);
-	this.loading = false;
-	this.loaded = true;
+    this.loading = false;
+    this.loaded = true;
   }
 
   getFinalRotationCenter() {
@@ -48,10 +50,10 @@ class Costume {
   }
 
   loadImage() {
-	if (this.disposed) {
-	  return;
-	}
-	this.loading = true;
+    if (this.disposed) {
+      return;
+    }
+    this.loading = true;
     if (this.img) {
       this.img.src = "";
     }
@@ -79,45 +81,46 @@ class Costume {
 
   onDraw() {}
 
-	deloadCostume () {
-		if (this.disposed) {
-			return;
-		}
-		if (this.img) {
-		  this.img.onload = function () {};
-		  this.img.onerror = function () {};
-	      this.img.src = "";
-	      this.img = null;
-	    }
-		if (this.drawable) {
-	      this.engine.disposeDrawable(this.drawable);
-		  this.drawable = null;
-	    }
-		this.loading = false;
-		this.loaded = false;
-	}
+  deloadCostume() {
+    if (this.disposed) {
+      return;
+    }
+    if (this.img) {
+      this.img.onload = function () {};
+      this.img.onerror = function () {};
+      this.img.src = "";
+      this.img = null;
+    }
+    if (this.drawable) {
+      this.engine.disposeDrawable(this.drawable);
+      this.drawable = null;
+    }
+    this.mask = null;
+    this.loading = false;
+    this.loaded = false;
+  }
 
-	loadCostume () {
-		if (this.disposed) {
-			return;
-		}
-		if (this.loading) {
-			return;
-		}
-		if (this.loaded) {
-			return;
-		}
-		this.loadImage();
-	}
+  loadCostume() {
+    if (this.disposed) {
+      return;
+    }
+    if (this.loading) {
+      return;
+    }
+    if (this.loaded) {
+      return;
+    }
+    this.loadImage();
+  }
 
   dispose() {
-	this.disposed = true;
+    this.disposed = true;
     if (this.drawable) {
       this.engine.disposeDrawable(this.drawable);
     }
     if (this.img) {
-	  this.img.onload = function () {};
-	  this.img.onerror = function () {};
+      this.img.onload = function () {};
+      this.img.onerror = function () {};
       this.img.src = "";
       this.img = null;
     }
@@ -125,7 +128,8 @@ class Costume {
     this.canvas.height = 1;
     this.canvas.remove();
     this.resolveFunction = null;
-	this.drawable = null;
+    this.drawable = null;
+    this.mask = null;
   }
 }
 

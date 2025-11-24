@@ -5,7 +5,7 @@ var engine = require("./curengine.js");
 var blocks = require("./blocks.js");
 var costumeViewer = require("./costumeviewer.js");
 var compiler = require("../compiler");
-var {loadBlockMenus} = require("./blockmenuloader.js");
+var { loadBlockMenus } = require("./blockmenuloader.js");
 
 var currentSelectedSprite = null;
 var currentSelectedSpriteIndex = null;
@@ -78,7 +78,10 @@ function updateSpritesContainer() {
                   if (engine.sprites.length > 1) {
                     var newIndex = currentSelectedSpriteIndex;
                     engine.deleteSprite(spr);
-                    if (currentSelectedSpriteIndex > engine.sprites.length - 1) {
+                    if (
+                      currentSelectedSpriteIndex >
+                      engine.sprites.length - 1
+                    ) {
                       newIndex = engine.sprites.length - 1;
                     }
                     setCurrentSprite(newIndex, true);
@@ -88,7 +91,7 @@ function updateSpritesContainer() {
               },
             ],
           },
-			{
+          {
             element: "button",
             className: "greyButtonStyle",
             textContent: "Duplicate",
@@ -111,7 +114,7 @@ function updateSpritesContainer() {
           },
         ],
       };
-    })
+    }),
   );
 }
 
@@ -311,7 +314,7 @@ function setCurrentSprite(index, forced) {
   updateSpritesContainer();
   loadCode(currentSelectedSprite);
   costumeViewer.reloadCostumes(currentSelectedSprite, function () {
-	  setCurrentSprite(index, true);
+    setCurrentSprite(index, true);
   });
 }
 
@@ -390,10 +393,7 @@ setInterval(() => {
     ) {
       spriteSizeInput.value = Math.round(currentSelectedSprite.size);
     }
-    if (
-      spriteHiddenInput.checked !==
-      currentSelectedSprite.hidden
-    ) {
+    if (spriteHiddenInput.checked !== currentSelectedSprite.hidden) {
       spriteHiddenInput.checked = currentSelectedSprite.hidden;
     }
   }

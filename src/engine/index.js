@@ -28,11 +28,11 @@ class GGM3Engine {
     this.frameRate = 60;
     this._iTime = 0;
     this.keyNames = {
-	  " ": "space-bar",
-      "ArrowLeft": "left-arrow",
-      "ArrowRight": "right-arrow",
-      "ArrowUp": "up-arrow",
-      "ArrowDown": "down-arrow"
+      " ": "space-bar",
+      ArrowLeft: "left-arrow",
+      ArrowRight: "right-arrow",
+      ArrowUp: "up-arrow",
+      ArrowDown: "down-arrow",
     };
     this.keysPressed = {};
     this.initCanvas();
@@ -103,28 +103,28 @@ class GGM3Engine {
     return spr;
   }
 
-	duplicateSprite (fromSprite) {
-		var newSprite = this.createEmptySprite();
-		newSprite.name = fromSprite.name;
-		this.makeUniqueSpriteNames();
+  duplicateSprite(fromSprite) {
+    var newSprite = this.createEmptySprite();
+    newSprite.name = fromSprite.name;
+    this.makeUniqueSpriteNames();
 
-		newSprite.x = fromSprite.x + 10;
-		newSprite.y = fromSprite.y - 10;
-		newSprite.angle = fromSprite.angle;
-		newSprite.scaleX = fromSprite.scaleX;
-		newSprite.scaleY = fromSprite.scaleY;
-		newSprite.size = fromSprite.size;
-		newSprite.costumeIndex = fromSprite.costumeIndex;
+    newSprite.x = fromSprite.x + 10;
+    newSprite.y = fromSprite.y - 10;
+    newSprite.angle = fromSprite.angle;
+    newSprite.scaleX = fromSprite.scaleX;
+    newSprite.scaleY = fromSprite.scaleY;
+    newSprite.size = fromSprite.size;
+    newSprite.costumeIndex = fromSprite.costumeIndex;
 
-		fromSprite.costumes.forEach(async (fromCostume) => {
-			var costume = await newSprite.addCostume(fromCostume.dataURL);
-			costume.name = fromCostume.name;
-			costume.rotationCenterX = fromCostume.rotationCenterX;
-			costume.rotationCenterY = fromCostume.rotationCenterY;
-			costume.preferedScale = fromCostume.preferedScale;
-			costume.renderImageAtScale();
-		});
-	}
+    fromSprite.costumes.forEach(async (fromCostume) => {
+      var costume = await newSprite.addCostume(fromCostume.dataURL);
+      costume.name = fromCostume.name;
+      costume.rotationCenterX = fromCostume.rotationCenterX;
+      costume.rotationCenterY = fromCostume.rotationCenterY;
+      costume.preferedScale = fromCostume.preferedScale;
+      costume.renderImageAtScale();
+    });
+  }
 
   startRenderLoop() {
     const _this = this;
@@ -264,7 +264,7 @@ class GGM3Engine {
       gl.canvas.height,
       0,
       -1,
-      1
+      1,
     );
 
     this._gl_projectionMatrix = projectionMatrix;
@@ -295,24 +295,24 @@ class GGM3Engine {
 
   changeMousePosition(cx, cy) {
     this.mouseMask.x = (+cx || 0) - this.canvas.width / 2;
-    this.mouseMask.y = ((+cy || 0) - this.canvas.height / 2);
+    this.mouseMask.y = (+cy || 0) - this.canvas.height / 2;
   }
 
   changeMouseDown(down) {
     this.mouseMask.isDown = !!down;
   }
 
-	changeKeyPressed(key, down) {
-		var keyName = key.toLowerCase();
-		if (this.keyNames[key]) {
-			keyName = this.keyNames[key];
-		}
-		if (down) {
-			this.keysPressed[keyName] = true;
-		} else {
-			delete this.keysPressed[keyName];
-		}
-	}
+  changeKeyPressed(key, down) {
+    var keyName = key.toLowerCase();
+    if (this.keyNames[key]) {
+      keyName = this.keyNames[key];
+    }
+    if (down) {
+      this.keysPressed[keyName] = true;
+    } else {
+      delete this.keysPressed[keyName];
+    }
+  }
 
   tickSprite(sprite) {
     sprite.emitFrameListeners();
@@ -329,43 +329,52 @@ class GGM3Engine {
     this.sprites = newSprites;
   }
 
-  getTopSprites () {
-    var topSprites = this.sprites.map((s) => s).sort((sprite, sprite2) => sprite2.zIndex - sprite.zIndex);
+  getTopSprites() {
+    var topSprites = this.sprites
+      .map((s) => s)
+      .sort((sprite, sprite2) => sprite2.zIndex - sprite.zIndex);
     return topSprites;
   }
 
   tickEditMode() {
     if (this._editDragging) {
       if (this.mouseIsDown) {
-        var {sprite,offsetx,offsety} = this._editDragging;
-        sprite.x = this.mouseX+offsetx;
-        sprite.y = this.mouseY+offsety;
+        var { sprite, offsetx, offsety } = this._editDragging;
+        sprite.x = this.mouseX + offsetx;
+        sprite.y = this.mouseY + offsety;
+        this.canvas.style.cursor = "grabbing";
       } else {
         this._editDragging = null;
       }
     } else {
       this._editDragging = null;
+      var topSprites = this.getTopSprites()
+        .filter((s) => !s.hidden)
+        .filter((s) => s.alpha > 70);
+      var touchedSprite = null;
+      var mouseMask = this.mouseMask;
+      for (var sprite of topSprites) {
+        sprite.alignMask();
+        var mask = sprite.mask;
+        if (mask && mouseMask) {
+          if (mouseMask.collisionTest(mask)) {
+            touchedSprite = sprite;
+          }
+        }
+      }
+      this.canvas.style.cursor = "unset";
+      if (touchedSprite) {
+        this.canvas.style.cursor = "grab";
+      }
       if (this.mouseIsDown) {
         if (!this._previousMouseDown) {
           this._previousMouseDown = true;
-          var topSprites = this.getTopSprites();
-          var touchedSprite = null;
-          var mouseMask = this.mouseMask;
-          for (var sprite of topSprites) {
-            sprite.alignMask();
-            var mask = sprite.mask;
-            if (mask && mouseMask) {
-              if (mouseMask.collisionTest(mask)) {
-                touchedSprite = sprite;
-              }
-            }
-          }
           if (touchedSprite) {
             this._editDragging = {
               offsetx: touchedSprite.x - this.mouseX,
               offsety: touchedSprite.y - this.mouseY,
-              sprite: touchedSprite
-            };  
+              sprite: touchedSprite,
+            };
           }
         }
       } else {
@@ -389,7 +398,7 @@ class GGM3Engine {
       var costume = spr.costumes[spr.costumeIndex];
       var drawable = costume.drawable;
       if (costume.drawable) {
-		costume.drawable.update(); //This updates the costume texture if needed.
+        costume.drawable.update(); //This updates the costume texture if needed.
         var center = costume.getFinalRotationCenter();
         var modelMatrix = calculateMatrix({
           x: spr.x + this.canvas.width / 2,
@@ -424,7 +433,7 @@ class GGM3Engine {
         twgl.setBuffersAndAttributes(
           gl,
           _gl_spriteProgramInfo,
-          _gl_quadBufferInfo
+          _gl_quadBufferInfo,
         );
         twgl.setUniforms(_gl_spriteProgramInfo, uniforms);
         twgl.drawBufferInfo(gl, _gl_quadBufferInfo);

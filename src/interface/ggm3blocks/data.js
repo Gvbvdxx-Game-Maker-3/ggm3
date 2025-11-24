@@ -57,7 +57,7 @@ Blockly.WorkspaceSvg.prototype.registerToolboxCategoryCallback(
       createElement("button", {
         text: "Create variable",
         callbackKey: "GGM3_CREATE_VARIABLE",
-      })
+      }),
     );
 
     workspace.registerButtonCallback("GGM3_CREATE_VARIABLE", (button) => {
@@ -72,7 +72,7 @@ Blockly.WorkspaceSvg.prototype.registerToolboxCategoryCallback(
         createElementXML(`
           <block type="data_variable">
             <field name="VARIABLE" id="${variable.getId()}"></field>
-          </block>`)
+          </block>`),
       );
     }
 
@@ -87,7 +87,7 @@ Blockly.WorkspaceSvg.prototype.registerToolboxCategoryCallback(
                     <field name="NUM">1</field>
                 </shadow>
             </value>
-          </block>`)
+          </block>`),
       );
 
       xmlList.push(
@@ -99,10 +99,10 @@ Blockly.WorkspaceSvg.prototype.registerToolboxCategoryCallback(
                     <field name="NUM">1</field>
                 </shadow>
             </value>
-          </block>`)
+          </block>`),
       );
     }
 
     return xmlList;
-  }
+  },
 );

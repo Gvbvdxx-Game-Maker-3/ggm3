@@ -11,7 +11,7 @@ JavascriptTranslation["data_variable"] = function (jsonblock, utils, options) {
 JavascriptTranslation["data_changevariableby"] = function (
   jsonblock,
   utils,
-  options
+  options,
 ) {
   var VARIABLE = utils.getFieldVariableID(jsonblock, "VARIABLE");
   var VALUE = utils.getInput(jsonblock, "VALUE");
@@ -21,7 +21,7 @@ JavascriptTranslation["data_changevariableby"] = function (
 JavascriptTranslation["data_setvariableto"] = function (
   jsonblock,
   utils,
-  options
+  options,
 ) {
   var VARIABLE = utils.getFieldVariableID(jsonblock, "VARIABLE");
   var VALUE = utils.getInput(jsonblock, "VALUE");

@@ -33,7 +33,7 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
 
                       try {
                         await spr.addCostume(reader.result);
-						reloadTabCallback(spr);
+                        reloadTabCallback(spr);
                         reloadCostumes(spr);
                       } catch (e) {
                         window.alert(e);
@@ -133,7 +133,7 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
             },
           ],
         };
-      })
+      }),
     );
   }
 }

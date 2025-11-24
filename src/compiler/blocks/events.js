@@ -5,7 +5,7 @@ require("./starters.js").push("event_whengamestarts"); //When game starts is a o
 JavascriptTranslation["event_whengamestarts"] = function (
   jsonblock,
   utils,
-  options
+  options,
 ) {
   var X = utils.getInput(jsonblock, "X");
   var Y = utils.getInput(jsonblock, "Y");

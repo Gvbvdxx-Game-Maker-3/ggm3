@@ -46,6 +46,12 @@ const tabs = [
     default: true,
     id: "COSTUMES",
   },
+  {
+    label: "Costume pivots",
+    src: "icons/pivot.svg",
+    default: true,
+    id: "COSTUME_PIVOT",
+  },
 ];
 
 var currentTab = tabs[0].id;
@@ -58,9 +64,9 @@ function updateTabs() {
         tab.label,
         tab.src,
         () => switchTab(tab.id),
-        currentTab == tab.id
-      )
-    )
+        currentTab == tab.id,
+      ),
+    ),
   );
   updateVisibility();
 }
@@ -87,13 +93,16 @@ function setWorkspaceVisibility(visible) {
 var costumesContainer = elements.getGPId("costumesContainer");
 
 function updateVisibility() {
+  setWorkspaceVisibility(false);
+  costumesContainer.hidden = true;
+
   if (currentTab == "SCRIPT") {
     setWorkspaceVisibility(true);
-    costumesContainer.hidden = true;
   }
   if (currentTab == "COSTUMES") {
-    setWorkspaceVisibility(false);
     costumesContainer.hidden = false;
+  }
+  if (currentTab == "COSTUME_PIVOT") {
   }
 }
 

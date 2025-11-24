@@ -110,7 +110,7 @@ img.onload = function () {
     gl.canvas.height,
     0,
     -1,
-    1
+    1,
   );
 
   // --- 6. Create the render loop ---

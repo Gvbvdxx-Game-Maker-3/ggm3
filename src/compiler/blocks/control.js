@@ -10,7 +10,7 @@ JavascriptTranslation["control_wait"] = function (jsonblock, utils, options) {
 JavascriptTranslation["control_forever"] = function (
   jsonblock,
   utils,
-  options
+  options,
 ) {
   var SUBSTACK = utils.getInput(jsonblock, "SUBSTACK", options);
 
@@ -27,7 +27,7 @@ JavascriptTranslation["control_repeat"] = function (jsonblock, utils, options) {
 JavascriptTranslation["control_repeat_until"] = function (
   jsonblock,
   utils,
-  options
+  options,
 ) {
   var CONDITION = utils.getInput(jsonblock, "CONDITION", options);
   var SUBSTACK = utils.getInput(jsonblock, "SUBSTACK", options);
@@ -35,11 +35,7 @@ JavascriptTranslation["control_repeat_until"] = function (
   return `${utilFunctions.aliveCheck(jsonblock)}while (!(${CONDITION})) {${utilFunctions.aliveCheck(jsonblock)} if (thread.screenRefresh) {await thread.waitForNextFrame();} ${utilFunctions.aliveCheck(jsonblock)} ${SUBSTACK}}${utilFunctions.aliveCheck(jsonblock)}`;
 };
 
-JavascriptTranslation["control_while"] = function (
-  jsonblock,
-  utils,
-  options
-) {
+JavascriptTranslation["control_while"] = function (jsonblock, utils, options) {
   var CONDITION = utils.getInput(jsonblock, "CONDITION", options);
   var SUBSTACK = utils.getInput(jsonblock, "SUBSTACK", options);
 
@@ -57,7 +53,7 @@ JavascriptTranslation["control_if"] = function (jsonblock, utils, options) {
 JavascriptTranslation["control_if_else"] = function (
   jsonblock,
   utils,
-  options
+  options,
 ) {
   var CONDITION = utils.getInput(jsonblock, "CONDITION", options);
 
@@ -70,7 +66,7 @@ JavascriptTranslation["control_if_else"] = function (
 JavascriptTranslation["control_wait_until"] = function (
   jsonblock,
   utils,
-  options
+  options,
 ) {
   var CONDITION = utils.getInput(jsonblock, "CONDITION", options);
 

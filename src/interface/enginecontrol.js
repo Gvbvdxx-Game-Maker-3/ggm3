@@ -153,14 +153,13 @@ document.addEventListener("mouseup", (event) => {
 
 document.addEventListener("keydown", (event) => {
   if (document.activeElement == document.body) {
-	  engine.changeKeyPressed(event.key,true);
-	  event.preventDefault();
+    engine.changeKeyPressed(event.key, true);
+    event.preventDefault();
   }
 });
 
 document.addEventListener("keyup", (event) => {
-  engine.changeKeyPressed(event.key,false);
+  engine.changeKeyPressed(event.key, false);
 });
-
 
 updateCoordinates();
