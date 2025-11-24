@@ -286,13 +286,13 @@ class Sprite {
     return await func(this, this.engine);
   }
 
-  addCostume(dataURL) {
+  addCostume(dataURL, name) {
     var _this = this;
     return new Promise(function (resolve, reject) {
       var costume = new Costume(
         _this.engine,
         dataURL,
-        "Costume " + (_this.costumes.length + 1),
+        name ? name : "Costume " + (_this.costumes.length + 1),
         function (success) {
           if (success) {
             resolve(costume);
@@ -301,9 +301,28 @@ class Sprite {
           }
         },
       );
+      costume.loadCostume();
       _this.costumes.push(costume);
       _this.ensureUniqueCostumeNames();
     });
+  }
+
+  addCostumeWithoutLoading(url, name) {
+    var costume = new Costume(
+      this.engine,
+      url,
+      name ? name : "Costume " + (_this.costumes.length + 1),
+      function (success) {
+        if (success) {
+          resolve(costume);
+        } else {
+          reject("");
+        }
+      },
+    );
+    costume.loadCostume();
+    this.costumes.push(costume);
+    this.ensureUniqueCostumeNames();
   }
 
   deleteCostume(costume) {

@@ -18,19 +18,19 @@ module.exports = {
       element: "div",
       className: "menuBarItem",
       textContent: "New",
-      gid: "newProjectButton"
+      gid: "newProjectButton",
     },
     {
       element: "div",
       className: "menuBarItem",
       textContent: "Save",
-      gid: "saveProjectButton"
+      gid: "saveProjectButton",
     },
     {
       element: "div",
       className: "menuBarItem",
       textContent: "Load",
-      gid: "loadProjectButton"
+      gid: "loadProjectButton",
     },
   ],
 };

@@ -4,8 +4,6 @@ class Costume {
   constructor(engine, dataURL, name, resolveFunction) {
     this.engine = engine;
     this.dataURL = dataURL;
-    this.isLoaded = false;
-    this.loadImage();
     this.drawable = null;
     this.rotationCenterX = 0;
     this.rotationCenterY = 0;
@@ -17,6 +15,7 @@ class Costume {
     this.resolveFunction = resolveFunction;
     this.mask = null;
     this.loaded = false;
+    this.willPreload = true;
   }
 
   renderImageAtScale() {
@@ -84,7 +83,7 @@ class Costume {
     };
     img.src = this.dataURL;
   }
-  
+
   deloadCostume() {
     if (this.disposed) {
       return;

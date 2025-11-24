@@ -5,10 +5,8 @@ async function loadDefaultProject() {
   engine.emptyProject();
 
   var sprite = engine.createEmptySprite();
-  sprite.addCostume(logo);
+  var costume = sprite.addCostume(logo);
   sprite.size = 40;
-
-  var sprite = engine.createEmptySprite();
 }
 
 module.exports = {

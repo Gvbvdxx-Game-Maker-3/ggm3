@@ -29,13 +29,11 @@ newProjectButton.addEventListener("click", async function () {
   selectedSprite.setCurrentSprite(0);
 });
 
+var projectSaver = require("./projectzip.js");
+
 var saveProjectButton = elements.getGPId("saveProjectButton");
 var loadProjectButton = elements.getGPId("loadProjectButton");
 
-saveProjectButton.addEventListener("click", async function () {
+saveProjectButton.addEventListener("click", async function () {});
 
-});
-
-loadProjectButton.addEventListener("click", async function () {
-
-});
+loadProjectButton.addEventListener("click", async function () {});
