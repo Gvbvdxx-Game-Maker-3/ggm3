@@ -5,7 +5,7 @@ class Costume {
     this.engine = engine;
     this.dataURL = dataURL;
     this.isLoaded = false;
-    this.loadImage(dataURL);
+    this.loadImage();
     this.drawable = null;
     this.rotationCenterX = 0;
     this.rotationCenterY = 0;
@@ -49,7 +49,7 @@ class Costume {
     ];
   }
 
-  loadImage() {
+  loadImage(whenfinished) {
     if (this.disposed) {
       return;
     }
@@ -69,18 +69,22 @@ class Costume {
         _this.resolveFunction(true);
         _this.resolveFunction = null;
       }
+      if (whenfinished) {
+        whenfinished();
+      }
     };
     img.onerror = function () {
       if (_this.resolveFunction) {
         _this.resolveFunction(false);
         _this.resolveFunction = null;
       }
+      if (whenfinished) {
+        whenfinished();
+      }
     };
     img.src = this.dataURL;
   }
-
-  onDraw() {}
-
+  
   deloadCostume() {
     if (this.disposed) {
       return;
@@ -102,6 +106,18 @@ class Costume {
     this.canvas.height = 1;
   }
 
+  rerenderAtResolution(res) {
+    if (this.disposed) {
+      return;
+    }
+    if (this.loading) {
+      return;
+    }
+    if (this.loaded) {
+      return;
+    }
+  }
+
   loadCostume() {
     if (this.disposed) {
       return;
@@ -112,7 +128,9 @@ class Costume {
     if (this.loaded) {
       return;
     }
-    this.loadImage();
+    return new Promise((resolve) => {
+      this.loadImage(resolve);
+    });
   }
 
   dispose() {

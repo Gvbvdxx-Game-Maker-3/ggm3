@@ -8,6 +8,8 @@ var CollisionSprite = require("./mask.js");
 
 var SHADERS = require("./shaders.js");
 
+var jszip = require("jszip");
+
 var created = false;
 
 class GGM3Engine {
