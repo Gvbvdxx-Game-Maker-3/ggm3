@@ -91,10 +91,12 @@ function setWorkspaceVisibility(visible) {
 }
 
 var costumesContainer = elements.getGPId("costumesContainer");
+var costumePivotContainer = elements.getGPId("costumePivotContainer");
 
 function updateVisibility() {
   setWorkspaceVisibility(false);
   costumesContainer.hidden = true;
+  costumePivotContainer.hidden = true;
 
   if (currentTab == "SCRIPT") {
     setWorkspaceVisibility(true);
@@ -103,6 +105,7 @@ function updateVisibility() {
     costumesContainer.hidden = false;
   }
   if (currentTab == "COSTUME_PIVOT") {
+    costumePivotContainer.hidden = false;
   }
 }
 

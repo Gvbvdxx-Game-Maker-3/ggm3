@@ -34,6 +34,18 @@ module.exports = {
             },
           ],
         },
+        {
+          element: "div",
+          className: "costumePivotContainer",
+          gid: "costumePivotContainer",
+          children: [
+            {
+              element: "div",
+              className: "costumesInPivotContainer",
+              gid: "costumesInPivotContainer",
+            },
+          ],
+        },
       ],
     },
   ],

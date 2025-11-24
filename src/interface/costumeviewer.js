@@ -5,7 +5,10 @@ var costumesContainer = elements.getGPId("costumesContainer");
 var costumesHeaderContainer = elements.getGPId("costumesHeaderContainer");
 var costumesSelectorContainer = elements.getGPId("costumesSelectorContainer");
 
+var costumePivots = require("./costumepivoteditor.js");
+
 function reloadCostumes(spr, reloadTabCallback = function () {}) {
+  costumePivots.reloadCostumes(spr, reloadTabCallback);
   elements.setInnerJSON(costumesHeaderContainer, [
     {
       element: "button",
@@ -22,26 +25,33 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
             input.type = "file";
             input.accept = ".webp, .png, .bmp, .svg, .jpg, .jpeg";
             input.multiple = true;
-            input.onchange = function () {
+            input.onchange = async function () {
               if (input.files[0]) {
+                var p = [];
                 for (var _file of input.files) {
-                  (async function (file) {
-                    var reader = new FileReader();
-                    reader.onload = async function () {
-                      input.value = "";
-                      input.remove();
+                  function load(file) {
+                    return new Promise((resolve) => {
+                      var reader = new FileReader();
+                      reader.onload = async function () {
+                        input.value = "";
+                        input.remove();
 
-                      try {
-                        await spr.addCostume(reader.result);
-                        reloadTabCallback(spr);
-                        reloadCostumes(spr);
-                      } catch (e) {
-                        window.alert(e);
-                      }
-                    };
-                    reader.readAsDataURL(file);
-                  })(_file);
+                        try {
+                          await spr.addCostume(reader.result);
+                          resolve();
+                          reloadCostumes(spr);
+                        } catch (e) {
+                          window.alert(e);
+                        }
+                      };
+                      reader.readAsDataURL(file);
+                    });
+                  }
+                  p.push(load(_file));
                 }
+                Promise.all(p).then(() => {
+                  reloadTabCallback(spr);
+                });
               } else {
                 input.value = "";
                 input.remove();

@@ -308,6 +308,51 @@ body {
   color: white;
 }
 
+.costumePivotContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  color: white;
+}
+
+.costumesInPivotContainer {
+  width: fit-content;
+  height: 100%;
+  flex-grow: 0;
+  flex-shrink: 0;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pivotCostumeButton {
+  min-width: 100px;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 4px 4px;
+  border-radius: 10px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #000000;
+  margin-bottom: 2px;
+  user-select: none;
+  font-weight: bold;
+}
+
+.pivotCostumeButton:hover {
+  border-color: rgb(121, 121, 121);
+  cursor: pointer;
+}
+.pivotCostumeButton[selected] {
+  border-color: #ffffff;
+  cursor: unset;
+}
+
 .costumesHeaderContainer {
   width: 100%;
   display: block;

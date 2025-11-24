@@ -98,6 +98,8 @@ class Costume {
     this.mask = null;
     this.loading = false;
     this.loaded = false;
+    this.canvas.width = 1;
+    this.canvas.height = 1;
   }
 
   loadCostume() {
