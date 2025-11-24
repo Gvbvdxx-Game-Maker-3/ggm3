@@ -28,12 +28,11 @@ class GGM3Engine {
     this.frameRate = 60;
     this._iTime = 0;
     this.keyNames = {
-	  //Use lowercase because that's what it expects.
 	  " ": "spacebar",
-      "arrowleft": "leftarrow",
-      "arrowright": "rightarrow",
-      "arrowup": "arrowup",
-      "arrowdown": "arrowdown"
+      "ArrowLeft": "leftarrow",
+      "ArrowRight": "rightarrow",
+      "ArrowUp": "arrowup",
+      "ArrowDown": "arrowdown"
     };
     this.keysPressed = {};
     this.initCanvas();
@@ -282,8 +281,8 @@ class GGM3Engine {
 
 	changeKeyPressed(key, down) {
 		var keyName = key.toLowerCase();
-		if (this.keyNames[keyName]) {
-			keyName = this.keyNames[keyName];
+		if (this.keyNames[key]) {
+			keyName = this.keyNames[key];
 		}
 		if (down) {
 			this.keysPressed[keyName] = true;
