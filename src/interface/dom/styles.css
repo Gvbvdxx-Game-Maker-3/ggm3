@@ -224,7 +224,6 @@ body {
   width: 100%;
   color: #000000;
   display: block;
-  overflow: auto;
 }
 
 .selectedSpriteContainer {
@@ -360,15 +359,18 @@ body {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  overflow: visible;
+  position: relative;
 }
 
 .pivotEditorMenuBar {
   flex-grow: 0;
   flex-shrink: 0;
-  height: fit-content;
+  height: 32px;
   width: 100%;
-  display: flex;
+  display: block;
   overflow: auto;
+  align-items: center;
 }
 
 .pivotEditorContainer {
@@ -384,6 +386,9 @@ body {
   width: fit-content;
   height: fit-content;
   display: block;
+  background-image: url(editor/transparent.png);
+  background-size: 32px;
+  image-rendering: pixelated;
 }
 
 .pivotEditorMenuInput {
@@ -401,12 +406,13 @@ body {
   box-sizing: border-box;
   border-width: 2px;
   border-radius: 50%;
-  width: 5px;
-  height: 5px;
+  width: 10px;
+  height: 10px;
   position: absolute;
   top: 0px;
   left: 0px;
   transform: translate(-50%, -50%);
+  opacity: 0.5;
 }
 
 .costumesHeaderContainer {

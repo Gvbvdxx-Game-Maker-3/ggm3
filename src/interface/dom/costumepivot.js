@@ -15,6 +15,29 @@ module.exports = {
         children: [
           {
             element: "div",
+            className: "pivotEditorContainer",
+            gid: "pivotEditorContainer",
+            children: [
+              {
+                element: "div",
+                className: "pivotEditorImageContainer",
+                gid: "pivotEditorImageContainer",
+                children: [
+                  {
+                    element: "img",
+                    gid: "pivotEditorImage"
+                  },
+                  {
+                    element: "div",
+                    gid: "pivotEditorDot",
+                    className: "pivotEditorDot"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            element: "div",
             className: "pivotEditorMenuBar",
             gid: "pivotEditorMenuBar",
             children: [
@@ -57,32 +80,14 @@ module.exports = {
                     min: 1,
                     max: 500,
                     gid: "pivotEditorZoomInput"
+                },
+                {
+                    element: "button",
+                    textContent: "Center image",
+                    className: "grayButtonStyle"
                 }
             ]
           },
-          {
-            element: "div",
-            className: "pivotEditorContainer",
-            gid: "pivotEditorContainer",
-            children: [
-              {
-                element: "div",
-                className: "pivotEditorImageContainer",
-                gid: "pivotEditorImageContainer",
-                children: [
-                  {
-                    element: "img",
-                    gid: "pivotEditorImage"
-                  },
-                  {
-                    element: "div",
-                    gid: "pivotEditorDot",
-                    className: "pivotEditorDot"
-                  }
-                ]
-              }
-            ]
-          }
         ]
       }
     ],
