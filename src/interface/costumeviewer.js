@@ -126,6 +126,51 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
             {
               element: "button",
               className: "greyButtonStyle",
+              style: {
+                marginRight: "2px",
+                fontSize: "12px",
+              },
+              GPWhenCreated: function (elm) {
+                if (costume.willPreload) {
+                  elm.textContent = "Disable preloading";
+                } else {
+                  elm.textContent = "Enable preloading";
+                }
+              },
+              eventListeners: [
+                {
+                  event: "click",
+                  func: function () {
+                    costume.willPreload = !costume.willPreload;
+                    if (costume.willPreload) {
+                      this.textContent = "Disable preloading";
+                    } else {
+                      this.textContent = "Enable preloading";
+                    }
+                  },
+                },
+              ],
+            },
+            {
+              element: "button",
+              className: "greyButtonStyle",
+              textContent: "Load",
+              style: {
+                marginRight: "2px",
+                fontSize: "12px",
+              },
+              eventListeners: [
+                {
+                  event: "click",
+                  func: function () {
+                    costume.loadCostume();
+                  },
+                },
+              ],
+            },
+            {
+              element: "button",
+              className: "greyButtonStyle",
               textContent: "Delete",
               style: {
                 marginRight: "2px",

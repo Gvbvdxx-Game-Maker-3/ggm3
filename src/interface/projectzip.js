@@ -18,7 +18,7 @@ async function saveProjectToZip() {
       name: sprite.name,
     };
     var ci = 0;
-    for (var costume of sprite.costume) {
+    for (var costume of sprite.costumes) {
       var costumeObj = {
         name: costume.name,
         id: costume.id,
@@ -30,11 +30,12 @@ async function saveProjectToZip() {
       var response = await fetch(costume.dataURL);
       var arrayBuffer = await response.arrayBuffer();
 
-      var fileName = "sprite_" + i + "_costume_" + ci;
+      var fileName = "sprite_" + i + "_costume_" + ci + ".image";
       zip.file(fileName, arrayBuffer);
+      costumesObj.push(costumeObj);
       ci += 1;
     }
-    spriteObj.costume = costumesObj;
+    spriteObj.costumes = costumesObj;
     spritesArray.push(spriteObj);
     i += 1;
   }
