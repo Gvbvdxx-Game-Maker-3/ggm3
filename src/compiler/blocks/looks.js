@@ -35,6 +35,27 @@ JavascriptTranslation["looks_size"] = function (jsonblock, utils, options) {
     return `sprite.size`;
   };
 
+outputBlocks.push("looks_xstretch");
+JavascriptTranslation["looks_xstretch"] = function (jsonblock, utils, options) {
+    return `(sprite.scaleX * 100)`;
+  };
+
+outputBlocks.push("looks_ystretch");
+JavascriptTranslation["looks_ystretch"] = function (jsonblock, utils, options) {
+    return `(sprite.scaleX * 100)`;
+  };
+
+JavascriptTranslation["looks_xstretch_to"] = function (jsonblock, utils, options) {
+	var VALUE = utils.getInput(jsonblock, "VALUE", options);
+    return `sprite.scaleX = (+(${VALUE}) || 0) / 100;`;
+  };
+
+JavascriptTranslation["looks_ystretch_to"] = function (jsonblock, utils, options) {
+	var VALUE = utils.getInput(jsonblock, "VALUE", options);
+    return `sprite.scaleY = (+(${VALUE}) || 0) / 100;`;
+  };
+
+
 /* Throw error test thats used to check if error handling works, not used by actual game stuff */
 JavascriptTranslation["error_test"] = function (jsonblock, utils, options) {
     return `throw new Error("This is an error reported by the block");`;

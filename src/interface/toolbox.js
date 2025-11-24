@@ -246,8 +246,24 @@ function generateToolbox(defaultX, defaultY) {
                 </shadow>
             </value>
         </block>
-        <block type="looks_size"></block>
-		<!--<block type="error_test"></block>-->
+        <block type="looks_size" gap="30"></block>
+		<block type="looks_xstretch_to">
+            <value name="VALUE">
+                <shadow type="math_number">
+                    <field name="NUM">100</field>
+                </shadow>
+            </value>
+        </block>
+		<block type="looks_ystretch_to">
+            <value name="VALUE">
+                <shadow type="math_number">
+                    <field name="NUM">100</field>
+                </shadow>
+            </value>
+        </block>
+		<block type="looks_xstretch"></block>
+		<block type="looks_ystretch"></block>
+		<!--<block type="error_test"></block>--> <!--This is just a block used to check if error handling works-->
     </category>
     <category name="Variables" id="data" colour="#FF8C1A" secondaryColour="#DB6E00" custom="GGM3_VARIABLE">
     </category>
