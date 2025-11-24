@@ -67,7 +67,12 @@ function generateToolbox(defaultX, defaultY) {
     <category name="Sensing" id="sensing" colour="${Blockly.Colours.sensing.primary}" secondaryColour="${Blockly.Colours.sensing.secondary}">
         <block type="sensing_mousex"></block>
         <block type="sensing_mousey"></block>
-        <block type="sensing_mousedown"></block>
+        <block type="sensing_mousedown" gap="30"></block>
+		<block type="sensing_keypressed">
+			<value name="KEY_OPTION">
+				<shadow type="sensing_keyoptions"></shadow>
+			</value>
+		</block>
     </category>
     <category name="Control" id="Control" colour="${Blockly.Colours.control.primary}" secondaryColour="${Blockly.Colours.control.secondary}">
         <block type="control_wait">

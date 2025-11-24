@@ -3,3 +3,4 @@ require("./data.js");
 require("./operators.js");
 require("./looks.js");
 require("./control.js");
+require("./sensing.js");

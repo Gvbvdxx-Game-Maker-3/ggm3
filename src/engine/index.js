@@ -286,6 +286,9 @@ class GGM3Engine {
 			if (this.keyNames[key.toLowerCase()]) {
 				keyName = this.keyNames[key.toLowerCase()];
 			}
+			this.keysPressed[keyName] = true;
+		} else {
+			delete this.keysPressed[keyName];
 		}
 	}
 
