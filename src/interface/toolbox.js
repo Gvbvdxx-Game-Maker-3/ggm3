@@ -230,7 +230,22 @@ function generateToolbox(defaultX, defaultY) {
         <block type="operator_null"></block>
         <block type="operator_infinity"></block>
         <block type="operator_empty_string"></block>
-        <block type="operator_newline"></block>
+        <block type="operator_newline" gap="30"></block>
+		<block type="operator_tostring">
+            <value name="VALUE">
+                <shadow type="text"></shadow>
+            </value>
+		</block>
+		<block type="operator_tonumber">
+            <value name="VALUE">
+                <shadow type="text"></shadow>
+            </value>
+		</block>
+		<block type="operator_toboolean">
+            <value name="VALUE">
+                <shadow type="text"></shadow>
+            </value>
+		</block>
     </category>
     <category name="Looks" id="looks" colour="${Blockly.Colours.looks.primary}" secondaryColour="${Blockly.Colours.looks.secondary}">
         <block type="looks_show"></block>

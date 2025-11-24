@@ -112,6 +112,52 @@ Blockly.Blocks["operator_newline"] = {
   },
 };
 
+Blockly.Blocks["operator_tostring"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "%1 to string",
+      args0: [
+		{
+          "type": "input_value",
+          "name": "VALUE"
+        }
+	  ],
+      "category": Blockly.Categories.operators,
+      "extensions": ["colours_operators", "output_string"]
+    });
+  },
+};
+Blockly.Blocks["operator_tonumber"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "%1 to number",
+      args0: [
+		{
+          "type": "input_value",
+          "name": "VALUE"
+        }
+	  ],
+      "category": Blockly.Categories.operators,
+      "extensions": ["colours_operators", "output_string"]
+    });
+  },
+};
+Blockly.Blocks["operator_toboolean"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "%1 to boolean",
+      args0: [
+		{
+          "type": "input_value",
+          "name": "VALUE"
+        }
+	  ],
+      "category": Blockly.Categories.operators,
+      "extensions": ["colours_operators", "output_string"]
+    });
+  },
+};
+
 Blockly.Blocks['operator_mathop'] = {
   /**
    * Block for "advanced" math ops on a number.

@@ -180,5 +180,24 @@ JavascriptTranslation["operator_newline"] = function (jsonblock, utils, options)
   return JSON.stringify("\n");
 };
 
+//Converters:
+
+outputBlocks.push("operator_tostring");
+JavascriptTranslation["operator_tostring"] = function (jsonblock, utils, options) {
+  var VALUE = utils.getInput(jsonblock, "VALUE", options);
+  return `"" + (${VALUE})`;
+};
+
+outputBlocks.push("operator_tonumber");
+JavascriptTranslation["operator_tonumber"] = function (jsonblock, utils, options) {
+  var VALUE = utils.getInput(jsonblock, "VALUE", options);
+  return `+(${VALUE})`;
+};
+
+outputBlocks.push("operator_toboolean");
+JavascriptTranslation["operator_toboolean"] = function (jsonblock, utils, options) {
+  var VALUE = utils.getInput(jsonblock, "VALUE", options);
+  return `!!(${VALUE})`;
+};
 
 module.exports = JavascriptTranslation;
