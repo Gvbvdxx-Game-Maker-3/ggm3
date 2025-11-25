@@ -44,6 +44,22 @@ class Sprite {
     this.hidden = false;
 
     this.costumeMap = {}; //Used to switch costumes by name quickly.
+
+    this.customBlockListeners = {};
+    this.customBlockRef = {};
+
+    this.spriteFunctions = {};
+  }
+
+  addCustom(id, ref, func) {
+    this.customBlockRef[ref] = id;
+    this.customBlockListeners[id] = func;
+  }
+  /* @todo find a faster way to call and manage custom blocks. */
+  async callCustom(id, values = {}) {
+    if (this.customBlockRef[id]) {
+      await this.customBlockListeners[this.customBlockRef[id]](values);
+    }
   }
 
   getCostumeIndex(v) {
@@ -249,7 +265,14 @@ class Sprite {
       }
     }
 
+    for (var key of Object.keys(this.customBlockRef)) {
+      if (this.customBlockRef[key] == blockID) {
+        delete this.customBlockRef[key];
+      }
+    }
+    delete this.spriteFunctions[blockID];
     delete this.hatFunctions[blockID];
+    delete this.customBlockListeners[blockID];
   }
 
   addStackListener(name, blockID, func) {
@@ -299,8 +322,18 @@ class Sprite {
     return func.bind(this);
   }
 
+  addFunction(code,blockID) {
+    var func = this.getFunction(code);
+    this.spriteFunctions[blockID] = func;
+  }
+
   async runFunction(code) {
     var func = this.getFunction(code);
+    return await func(this, this.engine);
+  }
+
+  async runFunctionID(blockID) {
+    var func = this.spriteFunctions[blockID];
     return await func(this, this.engine);
   }
 

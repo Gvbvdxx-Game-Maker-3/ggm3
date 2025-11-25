@@ -1,8 +1,24 @@
 function blockToJSON(block) {
   var myjson = {};
-
+  //myjson.blockObject = block;
   myjson.type = block.type;
   myjson.id = block.id;
+
+  if (typeof block.warp_ !== "undefined") {
+    myjson.warp = block.warp;
+  }
+  if (typeof block.procCode_ !== "undefined") {
+    myjson.procCode = block.procCode_;
+  }
+  if (typeof block.argumentIds_ !== "undefined") {
+    myjson.argumentIds = block.argumentIds_;
+  }
+  if (typeof block.displayNames_ !== "undefined") {
+    myjson.displayNames = block.displayNames_;
+  }
+  if (typeof block.argumentDefaults_ !== "undefined") {
+    myjson.argumentDefaults = block.argumentDefaults_;
+  }
 
   var jsonFields = [];
   var jsonInputs = [];
@@ -47,12 +63,14 @@ function blockToJSON(block) {
                   id: variable.getId(),
                 },
                 name: field.name,
+                text: field.getText()
               });
             }
           } else {
             jsonFields.push({
               value: field.getValue(),
               name: field.name,
+              text: field.getText()
             });
           }
         }

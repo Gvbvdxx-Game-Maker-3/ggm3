@@ -136,11 +136,17 @@ function loadCode(spr) {
   var currentBlocks = {};
   var currentBlockParentIDs = {};
 
-  function compileRoot(rootBlock) {
+  async function compileRoot(rootBlock) {
     if (!rootBlock) return;
     // We don't need to stop it since it automatically stops the previous stack when ran.
     var code = compiler.compileBlock(rootBlock);
-    spr.runFunction(code);
+    spr.addFunction(code, rootBlock.id);
+    var thread = await spr.runFunctionID(rootBlock.id);
+    if (thread) {
+      if (thread.hadError) {
+        window.alert(thread.output);
+      }
+    }
   }
 
   workspace.addChangeListener(function (e) {

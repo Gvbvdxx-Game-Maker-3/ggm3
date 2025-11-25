@@ -7,6 +7,7 @@ class Thread {
     this._hasStopped = false;
     this.withoutRefresh = false;
     this.hadError = false;
+    this.customBlockValues = {};
   }
 
   turnOnWithoutRefresh() {

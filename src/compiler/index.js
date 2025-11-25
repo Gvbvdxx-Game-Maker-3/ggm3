@@ -12,10 +12,26 @@ function getInput(blockJson, name, options) {
   }
   return null;
 }
+function getInputBlock(blockJson, name, options) {
+  for (var input of blockJson.inputs) {
+    if (input.name == name) {
+      return input.block;
+    }
+  }
+  return null;
+}
 function getField(blockJson, name, options) {
   for (var field of blockJson.fields) {
     if (field.name == name) {
       return field.value;
+    }
+  }
+  return null;
+}
+function getFieldText(blockJson, name, options) {
+  for (var field of blockJson.fields) {
+    if (field.name == name) {
+      return field.text;
     }
   }
   return null;
@@ -37,6 +53,8 @@ function compileBlockFromJSON(json, options = {}) {
         getInput,
         getField,
         getFieldVariableID,
+        getInputBlock,
+        getFieldText
       },
       options,
     );

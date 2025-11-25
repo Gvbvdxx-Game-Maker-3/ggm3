@@ -1,7 +1,7 @@
 var JavascriptTranslation = {};
 var utilFunctions = require("./util-functions.js");
-
-require("./starters.js").push("event_whengamestarts"); //When game starts is a on-event block.
+var starterBlocks = require("./starters.js");
+starterBlocks.push("event_whengamestarts"); //When game starts is a on-event block.
 JavascriptTranslation["event_whengamestarts"] = function (
   jsonblock,
   utils,
