@@ -398,7 +398,7 @@ class Sprite {
     //Used by compiling.
     //window.alert(code);
     var func = eval("(async function (sprite,engine) {" + code + "})");
-    return func.bind(this);
+    return func;
   }
 
   addFunction(code, blockID) {
