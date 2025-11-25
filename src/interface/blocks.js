@@ -76,6 +76,13 @@ function createFreshWorkspace(spr) {
   var flyoutWorkspace = workspace.getFlyout().getWorkspace();
   Blockly.Procedures.externalProcedureDefCallback =
     customBlocks.showCustomBlockDialog;
+  var procButtonCallback = () => {
+    Blockly.Procedures.createProcedureDefCallback_(workspace);
+  };
+  flyoutWorkspace.registerButtonCallback(
+    "MAKE_A_PROCEDURE",
+    procButtonCallback,
+  );
 }
 
 Blockly.alert = function (msg, callback) {

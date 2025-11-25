@@ -38,12 +38,6 @@ var workspaceConfig = {
   },
 };
 
-const ACTIVATE_CUSTOM_PROCEDURES =
-  "scratch-gui/custom-procedures/ACTIVATE_CUSTOM_PROCEDURES";
-const DEACTIVATE_CUSTOM_PROCEDURES =
-  "scratch-gui/custom-procedures/DEACTIVATE_CUSTOM_PROCEDURES";
-const SET_CALLBACK = "scratch-gui/custom-procedures/SET_CALLBACK";
-
 function showCustomBlockDialog(mutator, callback) {
   var workspaceArea = null;
   var customBlockButtons = null;
@@ -118,10 +112,10 @@ function showCustomBlockDialog(mutator, callback) {
     mutationRoot.onChangeFn();
     Blockly.svgResize(workspace);
     setTimeout(() => {
-        if (!workspace) {
-            return;
-        }
-        Blockly.svgResize(workspace);
+      if (!workspace) {
+        return;
+      }
+      Blockly.svgResize(workspace);
     });
     // Keep the block centered on the workspace
     var metrics = workspace.getMetrics();
@@ -145,7 +139,7 @@ function showCustomBlockDialog(mutator, callback) {
   setTimeout(() => {
     mutationRoot.focusLastEditor_();
     if (!workspace) {
-        return;
+      return;
     }
     Blockly.svgResize(workspace);
   });
@@ -154,18 +148,23 @@ function showCustomBlockDialog(mutator, callback) {
     {
       element: "div",
       style: {
-        display: "flex"
+        display: "flex",
       },
       children: [
         {
-            element: "span",
-            textContent: "Run without screen refresh: "
+          element: "span",
+          textContent: "Run without screen refresh: ",
         },
         {
-            element: "input",
-            type: "checkbox",
-        }
-      ]
+          element: "input",
+          type: "checkbox",
+          GPWhenCreated: function (elm) {
+            elm.oninput = function () {
+                mutationRoot.setWarp(elm.checked);
+            };
+          }
+        },
+      ],
     },
   ]);
   elements.setInnerJSON(customBlockButtons2, [
@@ -175,12 +174,12 @@ function showCustomBlockDialog(mutator, callback) {
       textContent: "Add label",
       eventListeners: [
         {
-            event: "click",
-            func: function () {
-                mutationRoot.addLabelExternal();
-            }
-        }
-      ]
+          event: "click",
+          func: function () {
+            mutationRoot.addLabelExternal();
+          },
+        },
+      ],
     },
     {
       element: "button",
@@ -188,12 +187,12 @@ function showCustomBlockDialog(mutator, callback) {
       textContent: "Add boolean",
       eventListeners: [
         {
-            event: "click",
-            func: function () {
-                mutationRoot.addBooleanExternal();
-            }
-        }
-      ]
+          event: "click",
+          func: function () {
+            mutationRoot.addBooleanExternal();
+          },
+        },
+      ],
     },
     {
       element: "button",
@@ -201,12 +200,12 @@ function showCustomBlockDialog(mutator, callback) {
       textContent: "Add text/number",
       eventListeners: [
         {
-            event: "click",
-            func: function () {
-                mutationRoot.addStringNumberExternal();
-            }
-        }
-      ]
+          event: "click",
+          func: function () {
+            mutationRoot.addStringNumberExternal();
+          },
+        },
+      ],
     },
   ]);
   elements.setInnerJSON(customBlockButtons3, [
@@ -216,14 +215,14 @@ function showCustomBlockDialog(mutator, callback) {
       textContent: "Done",
       eventListeners: [
         {
-            event: "click",
-            func: function () {
-                callback(mutationRoot.mutationToDom(true));
-                workspace.dispose();
-                dialogDiv.remove();
-            }
-        }
-      ]
+          event: "click",
+          func: function () {
+            callback(mutationRoot.mutationToDom(true));
+            workspace.dispose();
+            dialogDiv.remove();
+          },
+        },
+      ],
     },
     {
       element: "button",
@@ -231,14 +230,14 @@ function showCustomBlockDialog(mutator, callback) {
       textContent: "Cancel",
       eventListeners: [
         {
-            event: "click",
-            func: function () {
-                callback();
-                workspace.dispose();
-                dialogDiv.remove();
-            }
-        }
-      ]
+          event: "click",
+          func: function () {
+            callback();
+            workspace.dispose();
+            dialogDiv.remove();
+          },
+        },
+      ],
     },
   ]);
 }
