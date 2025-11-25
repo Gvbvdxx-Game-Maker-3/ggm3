@@ -49,6 +49,27 @@ class Sprite {
     this.customBlockRef = {};
 
     this.spriteFunctions = {};
+    this.isClone = false;
+    this.parent = null; //This is used by clones.
+    this.clones = [];
+  }
+
+  removeCloneFromList (clone) {
+    this.clones = this.clones.filter((otherClone) => clone.id !== otherClone.id);
+  }
+
+  destroyClone () {
+    if (!this.isClone)  {
+      return;
+    }
+    this.stopAllScripts();
+    this.parent.removeCloneFromList(this);
+    this.dispose();
+  }
+
+  createClone () {
+    var sprite = new Sprite(this.engine, this.name);
+    
   }
 
   addCustom(id, ref, func) {
@@ -299,6 +320,14 @@ class Sprite {
     }
   }
 
+  stopAllScriptsExceptThread(thread) {
+    for (var thread2 of Object.keys(this.runningStacks)) {
+      if (thread2.id !== thread.id) {
+        this.stopScript(thread2);
+      }
+    }
+  }
+
   createThread(firstBlockID) {
     this.stopScript(firstBlockID);
     var thread = new Thread(firstBlockID, this);
@@ -338,6 +367,9 @@ class Sprite {
   }
 
   addCostume(dataURL, name) {
+    if (this.isClone) {
+      throw new Error("Clones can't create their own costumes.");
+    }
     var _this = this;
     return new Promise(function (resolve, reject) {
       var costume = new Costume(
@@ -359,6 +391,9 @@ class Sprite {
   }
 
   addCostumeWithoutLoading(url, name) {
+    if (this.isClone) {
+      throw new Error("Clones can't create their own costumes.");
+    }
     var costume = new Costume(
       this.engine,
       url,
@@ -369,6 +404,9 @@ class Sprite {
   }
 
   deleteCostume(costume) {
+    if (this.isClone) {
+      throw new Error("Clones can't delete their own costumes.");
+    }
     costume.dispose();
     this.costumes = this.costumes.filter((c) => c.id !== costume.id);
     this.ensureUniqueCostumeNames(); //This also causes the costume mapping to happen.
@@ -384,6 +422,9 @@ class Sprite {
   }
 
   delete() {
+    if (this.isClone) {
+      throw new Error("This sprite is a clone, use destroyClone instead.");
+    }
     this.engine.deleteSprite(this);
   }
 }
