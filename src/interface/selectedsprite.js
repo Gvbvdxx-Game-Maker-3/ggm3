@@ -284,7 +284,7 @@ function loadCode(spr) {
   Blockly.Events.enable();
 }
 
-function setCurrentSprite(index, forced) {
+function setCurrentSprite(index, forced, dontSave) {
   if (!forced) {
     if (currentSelectedSpriteIndex == index) {
       return;
@@ -297,10 +297,9 @@ function setCurrentSprite(index, forced) {
       currentSelectedSprite._editor_scrollX = workspace.scrollX;
       currentSelectedSprite._editor_scrollY = workspace.scrollY;
       currentSelectedSprite._editor_scale = workspace.scale;
-      if (currentSelectedSprite._editor_loaded) {
+      if (!dontSave) {
         currentSelectedSprite.blocklyXML = Blockly.Xml.workspaceToDom(workspace);
       }
-      currentSelectedSprite._editor_loaded = true;
     }
   }
   currentSelectedSpriteIndex = index;

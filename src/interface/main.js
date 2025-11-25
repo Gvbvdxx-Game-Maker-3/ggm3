@@ -67,7 +67,7 @@ loadProjectButton.addEventListener("click", async function () {
         console.error("Project load error: ",e);
         dialogs.alert("Project load error.");
       }
-      selectedSprite.setCurrentSprite(0, true);
+      selectedSprite.setCurrentSprite(0, true, true);
       loadingScreenContainer.hidden = true;
     };
     reader.readAsArrayBuffer(input.files[0]);
