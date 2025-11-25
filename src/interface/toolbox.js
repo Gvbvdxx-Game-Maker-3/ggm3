@@ -340,6 +340,20 @@ function generateToolbox(defaultX, defaultY) {
                 </shadow>
             </value>
         </block>
+        <block type="looks_xstretch_by">
+            <value name="VALUE">
+                <shadow type="math_number">
+                    <field name="NUM">5</field>
+                </shadow>
+            </value>
+        </block>
+		<block type="looks_ystretch_by">
+            <value name="VALUE">
+                <shadow type="math_number">
+                    <field name="NUM">5</field>
+                </shadow>
+            </value>
+        </block>
 		<block type="looks_xstretch"></block>
 		<block type="looks_ystretch" gap="30"></block>
 
