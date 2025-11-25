@@ -120,4 +120,12 @@ JavascriptTranslation["control_create_clone_of"] = function (
   return `sprite.findSpriteByName(${CLONE_OPTION}).createClone();`;
 };
 
+JavascriptTranslation["control_delete_this_clone"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  return `sprite.destroyClone();`;
+};
+
 module.exports = JavascriptTranslation;
