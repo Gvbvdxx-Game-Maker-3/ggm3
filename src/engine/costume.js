@@ -9,6 +9,7 @@ class Costume {
     this.rotationCenterY = 0;
     this.preferedScale = 1;
     this.currentScale = 1;
+    this.mimeType = null;
     this.canvas = document.createElement("canvas");
     this.id = Date.now() + "_" + Math.round(Math.random() * 9999999);
 

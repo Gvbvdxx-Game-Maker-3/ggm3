@@ -37,7 +37,8 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
                         input.remove();
 
                         try {
-                          await spr.addCostume(reader.result);
+                          var costume = await spr.addCostume(reader.result);
+                          costume.mimeType = file.type;
                           resolve();
                           reloadCostumes(spr);
                         } catch (e) {

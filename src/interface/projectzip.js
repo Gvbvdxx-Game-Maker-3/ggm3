@@ -14,7 +14,7 @@ async function saveProjectToZip() {
       scaleX: sprite.scaleX,
       scaleY: sprite.scaleY,
       size: sprite.size,
-      blocklyXML: sprite.blocklyXML,
+      blocklyXML: sprite.blocklyXML ? Blockly.Xml.domToText(sprite.blocklyXML) : null,
       name: sprite.name,
     };
     var ci = 0;
@@ -26,6 +26,7 @@ async function saveProjectToZip() {
         rotationCenterY: costume.rotationCenterY,
         preferedScale: costume.preferedScale,
         willPreload: costume.willPreload,
+        mimeType: costume.mimeType,
       };
       var response = await fetch(costume.dataURL);
       var arrayBuffer = await response.arrayBuffer();
@@ -76,10 +77,10 @@ async function loadProjectFromZip(arrayBuffer) {
     for (var costumeJson of spriteJson.costumes) {
       var costume = null;
       if (costumeJson.willPreload) {
-        var dataURL = await arrayBufferToDataURL(await zip.file(costumeJson.file).async("arraybuffer"));
+        var dataURL = await arrayBufferToDataURL(await zip.file(costumeJson.file).async("arraybuffer"), costumeJson.mimeType ? costumeJson.mimeType : "image/png");
         costume = await sprite.addCostume(dataURL, costumeJson.name);
       } else {
-        var dataURL = await arrayBufferToDataURL(await zip.file(costumeJson.file).async("arraybuffer"));
+        var dataURL = await arrayBufferToDataURL(await zip.file(costumeJson.file).async("arraybuffer"), costumeJson.mimeType ? costumeJson.mimeType : "image/png");
         costume = sprite.addCostumeWithoutLoading(dataURL, costumeJson.name);
       }
       Object.assign(costume, {
@@ -88,6 +89,7 @@ async function loadProjectFromZip(arrayBuffer) {
         rotationCenterY: costumeJson.rotationCenterY,
         preferedScale: costumeJson.preferedScale,
         willPreload: costumeJson.willPreload,
+        mimeType: costumeJson.mimeType,
       })
     }
     Object.assign(sprite, {
@@ -97,7 +99,7 @@ async function loadProjectFromZip(arrayBuffer) {
       scaleX: spriteJson.scaleX,
       scaleY: spriteJson.scaleY,
       size: spriteJson.size,
-      blocklyXML: spriteJson.blocklyXML,
+      blocklyXML: spriteJson.blocklyXML ? Blockly.Xml.textToDom(spriteJson.blocklyXML) : null,
       name: spriteJson.name,
     });
   }
