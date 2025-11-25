@@ -18,7 +18,7 @@ var workspaceConfig = {
   zoom: {
     controls: false,
     wheel: false,
-    startScale: 0.75,
+    startScale: 1,
     maxScale: 4,
     minScale: 0.25,
     scaleSpeed: 1.1,
@@ -109,14 +109,11 @@ function showCustomBlockDialog(mutator, callback, mainWorkspace) {
   mutationRoot.contextMenu = false;
   var Msg = Blockly.Msg;
   workspace.addChangeListener(() => {
+    workspaceArea.style.width = mutationRoot.width + 40 + "px";
+    workspaceArea.style.height = mutationRoot.height + 40 + "px";
+
     mutationRoot.onChangeFn();
     Blockly.svgResize(workspace);
-    setTimeout(() => {
-      if (!workspace) {
-        return;
-      }
-      Blockly.svgResize(workspace);
-    });
     // Keep the block centered on the workspace
     var metrics = workspace.getMetrics();
     var { x, y } = mutationRoot.getRelativeToSurfaceXY();
@@ -126,10 +123,7 @@ function showCustomBlockDialog(mutator, callback, mainWorkspace) {
     if (mutationRoot.width > metrics.viewWidth) {
       dx = metrics.viewWidth - mutationRoot.width - x;
     }
-    //mutationRoot.moveBy(dx, dy);
-
-    workspaceArea.style.width = mutationRoot.width + 20 + "px";
-    workspaceArea.style.height = mutationRoot.height + 20 + "px";
+    mutationRoot.moveBy(dx, dy);
   });
   mutationRoot.domToMutation(mutator);
   mutationRoot.initSvg();
