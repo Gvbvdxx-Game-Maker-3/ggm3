@@ -10,21 +10,25 @@ var engine = require("./curengine.js");
 var tabs = require("./tabs.js");
 var selectedSprite = require("./selectedsprite.js");
 var defaultProject = require("./defaultproject.js");
+var loadingScreenContainer = elements.getGPId("loadingScreenContainer");
 
 require("./enginecontrol.js");
 
-(async function () {
+async function newProject() {
+  loadingScreenContainer.hidden = false;
   await defaultProject.loadDefaultProject();
   selectedSprite.setCurrentSprite(0);
-})();
+  loadingScreenContainer.hidden = true;
+}
+
+newProject();
 
 var newProjectButton = elements.getGPId("newProjectButton");
 newProjectButton.addEventListener("click", async function () {
   if (!(await dialogs.confirm("Start a new project?"))) {
     return;
   }
-  await defaultProject.loadDefaultProject();
-  selectedSprite.setCurrentSprite(0);
+  newProject();
 });
 
 var projectSaver = require("./projectzip.js");
@@ -43,4 +47,29 @@ saveProjectButton.addEventListener("click", async function () {
   a.click();
 });
 
-loadProjectButton.addEventListener("click", async function () {});
+loadProjectButton.addEventListener("click", async function () {
+  var input = document.createElement("input");
+  input.type = "file";
+  input.accept = ".ggm3";
+  input.click();
+
+  input.addEventListener("change", function () {
+    if (!input.files[0]) {
+      return;
+    }
+    loadingScreenContainer.hidden = false;
+    var reader = new FileReader();
+    reader.onload = async function () {
+      try{
+        await projectSaver.loadProjectFromZip(reader.result);
+      }catch(e){
+        await defaultProject.loadDefaultProject();
+        console.error("Project load error: ",e);
+        dialogs.alert("Project load error.");
+      }
+      selectedSprite.setCurrentSprite(0, true);
+      loadingScreenContainer.hidden = true;
+    };
+    reader.readAsArrayBuffer(input.files[0]);
+  });
+});

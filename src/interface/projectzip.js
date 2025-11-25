@@ -32,6 +32,7 @@ async function saveProjectToZip() {
 
       var fileName = "sprite_" + i + "_costume_" + ci + ".image";
       zip.file(fileName, arrayBuffer);
+      costumeObj.file = fileName;
       costumesObj.push(costumeObj);
       ci += 1;
     }
@@ -48,6 +49,62 @@ async function saveProjectToZip() {
   return zip;
 }
 
+function arrayBufferToDataURL(arrayBuffer, mimeType) {
+  return new Promise((resolve, reject) => {
+    const blob = new Blob([arrayBuffer], { type: mimeType });
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      resolve(reader.result);
+    };
+
+    reader.onerror = (error) => {
+      reject(error);
+    };
+
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function loadProjectFromZip(arrayBuffer) {
+  var zip = await JSZip.loadAsync(arrayBuffer);
+  var decodedJSON = JSON.parse(await zip.file("game.json").async("string"));
+  engine.emptyProject();
+  for (var spriteJson of decodedJSON.sprites) {
+    var sprite = engine.createEmptySprite();
+    for (var costumeJson of spriteJson.costumes) {
+      var costume = null;
+      if (costumeJson.willPreload) {
+        var dataURL = await arrayBufferToDataURL(await zip.file(costumeJson.file).async("arraybuffer"));
+        costume = await sprite.addCostume(dataURL, costumeJson.name);
+      } else {
+        var dataURL = await arrayBufferToDataURL(await zip.file(costumeJson.file).async("arraybuffer"));
+        costume = sprite.addCostumeWithoutLoading(dataURL, costumeJson.name);
+      }
+      Object.assign(costume, {
+        id: costumeJson.id,
+        rotationCenterX: costumeJson.rotationCenterX,
+        rotationCenterY: costumeJson.rotationCenterY,
+        preferedScale: costumeJson.preferedScale,
+        willPreload: costumeJson.willPreload,
+      })
+    }
+    Object.assign(sprite, {
+      x: spriteJson.x,
+      y: spriteJson.y,
+      angle: spriteJson.angle,
+      scaleX: spriteJson.scaleX,
+      scaleY: spriteJson.scaleY,
+      size: spriteJson.size,
+      blocklyXML: spriteJson.blocklyXML,
+      name: spriteJson.name,
+    });
+  }
+  
+}
+
 module.exports = {
   saveProjectToZip,
+  loadProjectFromZip
 };
