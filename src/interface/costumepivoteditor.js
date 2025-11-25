@@ -154,33 +154,33 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
 
       pivotEditorContainer.onclick = function (event) {
         var pos = getMousePosition(event, pivotEditorImage);
-        costume.rotationCenterX = pos.x/zoomScale;
-        costume.rotationCenterY = pos.y/zoomScale;
+        costume.rotationCenterX = pos.x / zoomScale;
+        costume.rotationCenterY = pos.y / zoomScale;
         updateSize();
       };
       var m = false;
       pivotEditorContainer.onmousedown = function (event) {
-         m = true;
+        m = true;
         event.preventDefault();
       };
       pivotEditorContainer.onmouseup = function (event) {
         m = false;
-       event.preventDefault();
-     };
-     pivotEditorContainer.onmousemove = function (event) {
-      if (!m) {
-        return;
-      }
-      var pos = getMousePosition(event, pivotEditorImage);
-      costume.rotationCenterX = pos.x/zoomScale;
-      costume.rotationCenterY = pos.y/zoomScale;
-      pivotEditorDot.style.left = `${costume.rotationCenterX * zoomScale}px`;
-      pivotEditorDot.style.top = `${costume.rotationCenterY * zoomScale}px`;
-    };
+        event.preventDefault();
+      };
+      pivotEditorContainer.onmousemove = function (event) {
+        if (!m) {
+          return;
+        }
+        var pos = getMousePosition(event, pivotEditorImage);
+        costume.rotationCenterX = pos.x / zoomScale;
+        costume.rotationCenterY = pos.y / zoomScale;
+        pivotEditorDot.style.left = `${costume.rotationCenterX * zoomScale}px`;
+        pivotEditorDot.style.top = `${costume.rotationCenterY * zoomScale}px`;
+      };
 
       centerImagePivotEditor.onclick = function (e) {
-        costume.rotationCenterX = tempImg.width/2;
-        costume.rotationCenterY = tempImg.height/2;
+        costume.rotationCenterX = tempImg.width / 2;
+        costume.rotationCenterY = tempImg.height / 2;
         updateSize();
       };
     }

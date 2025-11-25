@@ -337,6 +337,13 @@ function generateToolbox(defaultX, defaultY) {
     </category>
     <category name="Variables" id="data" colour="#FF8C1A" secondaryColour="#DB6E00" custom="GGM3_VARIABLE">
     </category>
+    <category
+        name="My blocks"
+        id="myBlocks"
+        colour="#FF6680"
+        secondaryColour="#FF4D6A"
+        custom="PROCEDURE">
+    </category>
     `;
 
   return xml;

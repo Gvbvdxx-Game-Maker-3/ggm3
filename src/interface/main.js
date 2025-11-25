@@ -36,7 +36,9 @@ var loadProjectButton = elements.getGPId("loadProjectButton");
 
 saveProjectButton.addEventListener("click", async function () {
   var zip = await projectSaver.saveProjectToZip();
-  var objectURL = URL.createObjectURL(await zip.generateAsync({ type: 'blob' }));
+  var objectURL = URL.createObjectURL(
+    await zip.generateAsync({ type: "blob" }),
+  );
   var a = document.createElement("a");
   a.href = objectURL;
   a.download = "project.ggm3";

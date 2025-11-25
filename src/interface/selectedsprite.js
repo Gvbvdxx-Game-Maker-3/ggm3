@@ -166,12 +166,9 @@ function loadCode(spr) {
         spr.runningStacks[root.id].stop();
       }
     } else if (e.blockId && e.element !== "stackclick") {
-      // Catches Create, Delete, Change, Move
-
       var eventBlock = workspace.getBlockById(e.blockId);
 
       if (!eventBlock) {
-        // --- This is a DELETE event (e.type == "delete" or e instanceof Blockly.Events.Delete) ---
         if (currentBlocks[e.blockId]) {
           var thread = spr.runningStacks[e.blockId];
           if (thread) {
@@ -181,7 +178,6 @@ function loadCode(spr) {
         spr.removeStackListener(e.blockId);
         delete currentBlocks[e.blockId];
 
-        // Re-compile the parent stack it was deleted from
         if (e.oldParentId) {
           var oldParentBlock = workspace.getBlockById(e.oldParentId);
           if (oldParentBlock) {
@@ -189,16 +185,11 @@ function loadCode(spr) {
           }
         }
       } else {
-        // --- This is a CREATE, CHANGE, or MOVE event ---
         currentBlocks[e.blockId] = true;
 
-        // Re-compile the root of the stack that was just modified.
         var newRoot = eventBlock.getRootBlock();
         compileRoot(newRoot);
 
-        // **THE FIX**
-        // Use `instanceof` to check for the move event.
-        // This handles "dragging a block out" of the stack.
         if (
           (e instanceof Blockly.Events.Move || e.type == "move") &&
           e.oldParentId
@@ -206,7 +197,6 @@ function loadCode(spr) {
           var oldParentBlock = workspace.getBlockById(e.oldParentId);
           if (oldParentBlock) {
             var oldRoot = oldParentBlock.getRootBlock();
-            // Only recompile if the block moved to a *different* stack
             if (oldRoot.id !== newRoot.id) {
               compileRoot(oldRoot);
             }

@@ -82,7 +82,6 @@ Blockly.Blocks["loader_setrenderscale"] = {
   },
 };
 
-
 Blockly.Blocks["loader_costume_scale"] = {
   init: function () {
     this.jsonInit({

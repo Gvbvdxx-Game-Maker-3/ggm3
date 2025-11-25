@@ -34,7 +34,7 @@ module.exports = {
             },
           ],
         },
-        require("./costumepivot.js")
+        require("./costumepivot.js"),
       ],
     },
   ],

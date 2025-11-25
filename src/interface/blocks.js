@@ -6,6 +6,7 @@ var blocklyDiv = elements.getGPId("blocklyDiv");
 
 var toolboxGenerator = require("./toolbox.js");
 var dialogs = require("./dialogs.js");
+var customBlocks = require("./customblocks.js");
 
 var workspace = null;
 
@@ -72,6 +73,9 @@ function createFreshWorkspace(spr) {
       colour: "#ddd",
     },
   });
+  var flyoutWorkspace = workspace.getFlyout().getWorkspace();
+  Blockly.Procedures.externalProcedureDefCallback =
+    customBlocks.showCustomBlockDialog;
 }
 
 Blockly.alert = function (msg, callback) {

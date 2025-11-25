@@ -63,7 +63,7 @@ class Sprite {
     }
   }
 
-  setCostumeRenderScale (costumeRef,scale) {
+  setCostumeRenderScale(costumeRef, scale) {
     var costume = this.getCostume(costumeRef);
     var scaleNumber = +scale || 0;
     if (scaleNumber < 0.001) {
@@ -74,7 +74,7 @@ class Sprite {
     }
   }
 
-  blockRerenderCostume (costumeRef,scale) {
+  blockRerenderCostume(costumeRef, scale) {
     var costume = this.getCostume(costumeRef);
     if (costume) {
       costume.renderImageAtScale();
@@ -329,7 +329,7 @@ class Sprite {
     var costume = new Costume(
       this.engine,
       url,
-      name ? name : "Costume " + (_this.costumes.length + 1)
+      name ? name : "Costume " + (_this.costumes.length + 1),
     );
     this.costumes.push(costume);
     this.ensureUniqueCostumeNames();
