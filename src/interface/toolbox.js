@@ -341,7 +341,10 @@ function generateToolbox(defaultX, defaultY) {
             </value>
         </block>
 		<block type="looks_xstretch"></block>
-		<block type="looks_ystretch"></block>
+		<block type="looks_ystretch" gap="30"></block>
+
+        <block type="looks_costumenumbername"></block>
+
 		<!--<block type="error_test"></block>--> <!--This is just a block used to check if error handling works-->
     </category>
     <category name="Variables" id="data" colour="#FF8C1A" secondaryColour="#DB6E00" custom="GGM3_VARIABLE">

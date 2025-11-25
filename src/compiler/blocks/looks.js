@@ -2,6 +2,12 @@ var JavascriptTranslation = {};
 var utilFunctions = require("./util-functions.js");
 var outputBlocks = require("./output_blocks.js");
 
+outputBlocks.push("looks_costumenumbername");
+JavascriptTranslation["looks_costumenumbername"] = function (jsonblock, utils, options) {
+  var NUMBER_NAME = utils.getField(jsonblock, "NUMBER_NAME", options);
+  return NUMBER_NAME == "number" ? "sprite.costumeIndex" : "sprite.costume.name";
+};
+
 outputBlocks.push("looks_hidden");
 JavascriptTranslation["looks_hidden"] = function (jsonblock, utils, options) {
   return `sprite.hidden`;
