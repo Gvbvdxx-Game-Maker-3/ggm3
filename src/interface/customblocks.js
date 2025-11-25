@@ -160,9 +160,9 @@ function showCustomBlockDialog(mutator, callback, mainWorkspace) {
           type: "checkbox",
           GPWhenCreated: function (elm) {
             elm.oninput = function () {
-                mutationRoot.setWarp(elm.checked);
+              mutationRoot.setWarp(elm.checked);
             };
-          }
+          },
         },
       ],
     },
