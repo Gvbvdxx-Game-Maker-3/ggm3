@@ -343,6 +343,12 @@ function generateToolbox(defaultX, defaultY) {
 		<block type="looks_xstretch"></block>
 		<block type="looks_ystretch" gap="30"></block>
 
+        <block type="looks_switchcostumeto">
+            <value name="COSTUME">
+                <shadow type="looks_costume"></shadow>
+            </value>
+        </block>
+        <block type="looks_nextcostume"></block>
         <block type="looks_costumenumbername"></block>
 
 		<!--<block type="error_test"></block>--> <!--This is just a block used to check if error handling works-->

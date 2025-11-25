@@ -103,6 +103,7 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
                     costume.name = this.value.trim();
                     spr.ensureUniqueCostumeNames();
                     reloadCostumes(spr);
+                    reloadTabCallback(spr);
                   },
                 },
               ],
@@ -183,6 +184,7 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
                   func: function () {
                     spr.deleteCostume(costume);
                     reloadCostumes(spr);
+                    reloadTabCallback(spr);
                   },
                 },
               ],

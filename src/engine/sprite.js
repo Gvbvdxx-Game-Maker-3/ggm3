@@ -133,7 +133,7 @@ class Sprite {
     if (isNaN(+v)) {
       return this.costumeMap[v];
     } else {
-      return Math.round(+v + 1);
+      return Math.round(+v);
     }
   }
 
