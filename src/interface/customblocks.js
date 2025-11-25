@@ -38,7 +38,7 @@ var workspaceConfig = {
   },
 };
 
-function showCustomBlockDialog(mutator, callback) {
+function showCustomBlockDialog(mutator, callback, mainWorkspace) {
   var workspaceArea = null;
   var customBlockButtons = null;
   var customBlockButtons2 = null;
@@ -220,6 +220,7 @@ function showCustomBlockDialog(mutator, callback) {
             callback(mutationRoot.mutationToDom(true));
             workspace.dispose();
             dialogDiv.remove();
+            mainWorkspace.getToolbox().refreshSelection();
           },
         },
       ],
@@ -235,6 +236,7 @@ function showCustomBlockDialog(mutator, callback) {
             callback();
             workspace.dispose();
             dialogDiv.remove();
+            mainWorkspace.getToolbox().refreshSelection();
           },
         },
       ],
