@@ -81,11 +81,16 @@ class Sprite {
       return this.isTouchingMouse();
     }
     var otherSprite = this.findSpriteByName(otherSpriteName);
-    if (otherSprite) {
+    if (!otherSprite) {
       return false;
     }
+    for (var clone of otherSprite.clones) {
+      if (this.isTouchingSprite(clone)) {
+        return clone;
+      }
+    }
     if (otherSprite.hidden) {
-      return;
+      return false;
     }
     this.alignMask();
     otherSprite.alignMask();
@@ -100,9 +105,7 @@ class Sprite {
     if (mask1.collisionTest(mask2)) {
       return otherSprite;
     }
-    for (var clone of otherSprite.clones) {
-      return this.isTouchingSprite(clone);
-    }
+    return false;
   }
 
   onErrorLog(error) {

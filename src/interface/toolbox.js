@@ -327,6 +327,11 @@ function generateToolbox(defaultX, defaultY) {
                 <shadow type="text"></shadow>
             </value>
 		</block>
+        <block type="operator_round">
+            <value name="NUM">
+                <shadow type="math_number"></shadow>
+            </value>
+		</block>
     </category>
     <category name="Looks" id="looks" colour="${Blockly.Colours.looks.primary}" secondaryColour="${Blockly.Colours.looks.secondary}">
         <block type="looks_show"></block>

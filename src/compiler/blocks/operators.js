@@ -224,6 +224,14 @@ JavascriptTranslation["operator_newline"] = function (
   return JSON.stringify("\n");
 };
 
+//Rounding:
+
+outputBlocks.push("operator_round");
+JavascriptTranslation["operator_round"] = function (jsonblock, utils, options) {
+  var NUM = utils.getInput(jsonblock, "NUM", options);
+  return `(Math.round(+(${NUM}) || 0))`;
+};
+
 //Converters:
 
 outputBlocks.push("operator_tostring");

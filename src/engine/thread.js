@@ -18,14 +18,14 @@ class Thread {
     }
     thread.subThreads[this.id] = this;
     this.inherited = true;
-    if (thread.withoutRefresh) {
-      this.withoutRefresh = true;
+    if (!thread.screenRefresh) {
+      this.screenRefresh = false;
     }
     this.parent = thread;
   }
 
   turnOnWithoutRefresh() {
-    this.withoutRefresh = true;
+    this.screenRefresh = false;
   }
 
   stop() {
@@ -133,7 +133,7 @@ class Thread {
         return;
       }
       await func();
-      if (!this.withoutRefresh) {
+      if (!this.screenRefresh) {
         await this.waitForNextFrame();
       }
       if (!this.running) {
