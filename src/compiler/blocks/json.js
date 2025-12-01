@@ -94,4 +94,16 @@ JavascriptTranslation["json_array_lengthof"] = function (
   return `(${OBJECT}).length`;
 };
 
+outputBlocks.push("json_array_indexof");
+JavascriptTranslation["json_array_indexof"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var OBJECT = utils.getInput(jsonblock, "OBJECT", options);
+  var VALUE = utils.getInput(jsonblock, "VALUE", options);
+
+  return `(${OBJECT}).indexOf(${VALUE})`;
+};
+
 module.exports = JavascriptTranslation;

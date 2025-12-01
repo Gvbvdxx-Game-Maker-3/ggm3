@@ -418,6 +418,13 @@ function generateToolbox(defaultX, defaultY) {
             </value>
         </block>
         <block type="json_array_lengthof"></block>
+        <block type="json_array_indexof">
+            <value name="VALUE">
+                <shadow type="text">
+                    <field name="TEXT">value</field>
+                </shadow>
+            </value>
+        </block>
     </category>
     <category
         name="My blocks"

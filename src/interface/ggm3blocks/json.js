@@ -189,3 +189,23 @@ Blockly.Blocks["json_array_lengthof"] = {
     });
   },
 };
+
+Blockly.Blocks["json_array_indexof"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "Index of %1 in %2",
+      args0: [
+        {
+          type: "input_value",
+          name: "VALUE",
+        },
+        {
+          type: "input_value",
+          name: "OBJECT",
+        },
+      ],
+      colour: "#058fff",
+      extensions: ["output_number"],
+    });
+  },
+};
