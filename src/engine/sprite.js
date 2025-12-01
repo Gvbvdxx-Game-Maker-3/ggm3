@@ -189,6 +189,14 @@ class Sprite {
     await costume.deloadCostume();
   }
 
+  blockGetCostumeScale(number) {
+    var costume = this.getCostume(number);
+    if (!costume) {
+      return;
+    }
+    return costume.preferedScale;
+  }
+
   switchCostume(number) {
     var costumeIndex = this.getCostumeIndex(v);
     if (typeof costumeIndex == "number") {

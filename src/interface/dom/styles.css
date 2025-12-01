@@ -481,7 +481,7 @@ body {
   all: unset;
   padding: 3px 3px;
   box-sizing: border-box;
-  width: fit-content;
+  width: 60px;
   color: white;
 }
 
