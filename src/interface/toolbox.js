@@ -439,6 +439,51 @@ function generateToolbox(defaultX, defaultY) {
                 </shadow>
             </value>
         </block>
+        <block type="json_array_pop"></block>
+        <block type="json_array_contains">
+            <value name="VALUE">
+                <shadow type="text">
+                    <field name="TEXT">value</field>
+                </shadow>
+            </value>
+        </block>
+        <label text="Path / deep ops:"></label>
+        <block type="json_get_path">
+            <value name="PATH">
+                <shadow type="text">
+                    <field name="TEXT">a.b.c</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="json_set_path">
+            <value name="PATH">
+                <shadow type="text">
+                    <field name="TEXT">a.b.c</field>
+                </shadow>
+            </value>
+            <value name="VALUE">
+                <shadow type="text">
+                    <field name="TEXT">value</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="json_delete_path">
+            <value name="PATH">
+                <shadow type="text">
+                    <field name="TEXT">a.b.c</field>
+                </shadow>
+            </value>
+        </block>
+        <label text="Utilities:"></label>
+        <block type="json_clone"></block>
+        <block type="json_parse_safe">
+            <value name="STRING">
+                <shadow type="text">
+                    <field name="TEXT">{"a":1}</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="json_pretty_print"></block>
     </category>
     <category
         name="My blocks"

@@ -209,3 +209,127 @@ Blockly.Blocks["json_array_indexof"] = {
     });
   },
 };
+
+// Additional JSON utility blocks
+
+Blockly.Blocks["json_has_key"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "Has key %1 in %2",
+      args0: [
+        { type: "input_value", name: "NAME" },
+        { type: "input_value", name: "OBJECT" },
+      ],
+      colour: "#058fff",
+      extensions: ["output_boolean"],
+    });
+  },
+};
+
+Blockly.Blocks["json_get_path"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "Get path %1 on %2 default %3",
+      args0: [
+        { type: "input_value", name: "PATH" },
+        { type: "input_value", name: "OBJECT" },
+        { type: "input_value", name: "DEFAULT" },
+      ],
+      colour: "#058fff",
+      extensions: ["output_string"],
+    });
+  },
+};
+
+Blockly.Blocks["json_set_path"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "Set path %1 to %2 on %3",
+      args0: [
+        { type: "input_value", name: "PATH" },
+        { type: "input_value", name: "VALUE" },
+        { type: "input_value", name: "OBJECT" },
+      ],
+      colour: "#058fff",
+      extensions: ["shape_statement"],
+    });
+  },
+};
+
+Blockly.Blocks["json_delete_path"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "Delete path %1 on %2",
+      args0: [
+        { type: "input_value", name: "PATH" },
+        { type: "input_value", name: "OBJECT" },
+      ],
+      colour: "#058fff",
+      extensions: ["shape_statement"],
+    });
+  },
+};
+
+Blockly.Blocks["json_array_pop"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "Remove last element from %1 and report it",
+      args0: [{ type: "input_value", name: "OBJECT" }],
+      colour: "#058fff",
+      extensions: ["output_string"],
+    });
+  },
+};
+
+Blockly.Blocks["json_array_contains"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "Contains %1 in %2",
+      args0: [
+        { type: "input_value", name: "VALUE" },
+        { type: "input_value", name: "OBJECT" },
+      ],
+      colour: "#058fff",
+      extensions: ["output_boolean"],
+    });
+  },
+};
+
+Blockly.Blocks["json_clone"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "Clone %1",
+      args0: [{ type: "input_value", name: "OBJECT" }],
+      colour: "#058fff",
+      extensions: ["output_string"],
+    });
+  },
+};
+
+Blockly.Blocks["json_parse_safe"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "Parse JSON %1 fallback %2",
+      args0: [
+        { type: "input_value", name: "STRING" },
+        { type: "input_value", name: "DEFAULT" },
+      ],
+      colour: "#058fff",
+      extensions: ["output_string"],
+    });
+  },
+};
+
+Blockly.Blocks["json_pretty_print"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "Pretty print %1 indent %2",
+      args0: [
+        { type: "input_value", name: "OBJECT" },
+        { type: "input_value", name: "INDENT" },
+      ],
+      colour: "#058fff",
+      extensions: ["output_string"],
+    });
+  },
+};
