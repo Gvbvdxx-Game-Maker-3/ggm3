@@ -48,7 +48,7 @@ class GGM3Engine {
   }
 
   updateCanvasSize() {
-    var {canvas, gameWidth, gameHeight, screenScale} = this;
+    var { canvas, gameWidth, gameHeight, screenScale } = this;
     canvas.width = gameWidth * screenScale;
     canvas.height = gameHeight * screenScale;
     this.calculateGLStuff();
@@ -308,7 +308,7 @@ class GGM3Engine {
 
     this._gl_projectionMatrix = projectionMatrix;
 
-    this.render(1/this.frameRate);
+    this.render(1 / this.frameRate);
   }
 
   render(elapsed) {
@@ -349,8 +349,8 @@ class GGM3Engine {
   }
 
   changeMousePosition(cx, cy) {
-    this.mouseMask.x = ((+cx || 0) / this.screenScale) - this.gameWidth / 2;
-    this.mouseMask.y = ((+cy || 0) / this.screenScale) - this.gameHeight / 2;
+    this.mouseMask.x = (+cx || 0) / this.screenScale - this.gameWidth / 2;
+    this.mouseMask.y = (+cy || 0) / this.screenScale - this.gameHeight / 2;
   }
 
   changeMouseDown(down) {
@@ -470,15 +470,19 @@ class GGM3Engine {
         costume.drawable.update(); //This updates the costume texture if needed.
         var center = costume.getFinalRotationCenter();
         var modelMatrix = calculateMatrix({
-          x: (spr.x * this.screenScale) + this.canvas.width / 2,
-          y: (-spr.y * this.screenScale) + this.canvas.height / 2,
+          x: spr.x * this.screenScale + this.canvas.width / 2,
+          y: -spr.y * this.screenScale + this.canvas.height / 2,
           rotation: spr.angle * (Math.PI / 180),
           rotationCenterX: center[0],
           rotationCenterY: center[1],
           textureWidth: costume.canvas.width,
           textureHeight: costume.canvas.height,
-          scaleX: ((spr.scaleX * (spr.size / 100)) / costume.currentScale) * this.screenScale,
-          scaleY: ((spr.scaleY * (spr.size / 100)) / costume.currentScale) * this.screenScale,
+          scaleX:
+            ((spr.scaleX * (spr.size / 100)) / costume.currentScale) *
+            this.screenScale,
+          scaleY:
+            ((spr.scaleY * (spr.size / 100)) / costume.currentScale) *
+            this.screenScale,
         });
 
         //var modelMatrix = twgl.m4.identity();

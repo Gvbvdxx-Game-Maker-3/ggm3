@@ -8,7 +8,9 @@ var isFullscreen = false;
 var fullscreenModeContainer = elements.getGPId("fullscreenModeContainer");
 var projectControls = elements.getGPId("projectControls");
 var projectContainer = elements.getGPId("projectContainer");
-var fullscreenModeContainerMain = elements.getGPId("fullscreenModeContainerMain");
+var fullscreenModeContainerMain = elements.getGPId(
+  "fullscreenModeContainerMain",
+);
 function switchFullscreenMode() {
   canvas.remove();
   projectControls.remove();
@@ -18,13 +20,14 @@ function switchFullscreenMode() {
     fullscreenModeContainer.append(canvas);
     function handleResize() {
       var controlsRect = projectControls.getBoundingClientRect();
-      var scale = (window.innerHeight - controlsRect.height) / engine.gameHeight;
+      var scale =
+        (window.innerHeight - controlsRect.height) / engine.gameHeight;
       var scaleHorizontal = window.innerWidth / engine.gameWidth;
       if (scale > scaleHorizontal) {
         scale = scaleHorizontal;
       }
-      canvas.style.width = (scale*engine.gameWidth)+"px";
-      canvas.style.height = (scale*engine.gameHeight)+"px";
+      canvas.style.width = scale * engine.gameWidth + "px";
+      canvas.style.height = scale * engine.gameHeight + "px";
       engine.screenScale = scale;
       engine.updateCanvasSize();
     }

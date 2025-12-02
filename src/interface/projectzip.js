@@ -140,7 +140,7 @@ async function loadProjectFromZip(arrayBuffer) {
       costumeIndex: spriteJson.costumeIndex,
       zIndex: sprite.zIndex,
       variables: spriteJson.variables,
-      hidden: spriteJson.hidden
+      hidden: spriteJson.hidden,
     });
 
     selectedSprite.compileSpriteXML(sprite);

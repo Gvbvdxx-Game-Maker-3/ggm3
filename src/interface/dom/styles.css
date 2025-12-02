@@ -117,6 +117,60 @@ body {
   cursor: pointer;
 }
 
+/* Dropdown menu styles */
+.menuBarMenus {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.menuParent {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+}
+.menuBarItemLabel {
+  color: #ffffff;
+  font-weight: bold;
+  user-select: none;
+}
+.menuParent.open > .menuBarItemLabel {
+  color: #ffffff;
+}
+.menuDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #444444;
+  min-width: 160px;
+  border-radius: 6px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+  padding: 6px 4px;
+  z-index: 9999;
+  display: block; /* hidden attribute controls visibility */
+}
+.menuDropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  color: #ffffff;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+}
+.menuDropdownItem:hover {
+  background: #5a5a5a;
+}
+.menuIcon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+.menuDropdownItemLabel {
+  color: #ffffff;
+}
+
 .panelContainer {
   display: flex;
   flex-direction: row;

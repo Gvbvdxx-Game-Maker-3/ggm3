@@ -110,11 +110,12 @@ function loadGlobalVariableBlocks(spr) {
       var _this = this;
       for (var name of Object.keys(engine.globalVariables)) {
         options.push({
-          text: "Use variable "+name,
-          enabled: true,
+          text: "Use variable " + name,
+          enabled: this.isInFlyout,
           callback: function () {
+            console.log(_this);
             _this.setField("VARIABLE", name);
-          }
+          },
         });
       }
     }
@@ -207,9 +208,9 @@ function getSpriteMenuFunction(spr, defaultOptions) {
   return function () {
     var allSpritesExceptSelf = sprites.filter((spr2) => spr.id !== spr2.id);
     var spriteOptions = allSpritesExceptSelf.map((s) => [s.name, s.name]);
-    
+
     return defaultOptions.concat(spriteOptions);
-  }
+  };
 }
 
 function getCostumeMenuFunction(spr) {
@@ -218,12 +219,7 @@ function getCostumeMenuFunction(spr) {
       return [costume.name, costume.name];
     });
     if (costumeMenu.length < 1) {
-      costumeMenu = [
-        [
-          "(No costumes)",
-          ""
-        ]
-      ];
+      costumeMenu = [["(No costumes)", ""]];
     }
     return costumeMenu;
   };
@@ -239,7 +235,7 @@ function loadBlockMenus(spr) {
             type: "field_dropdown",
             name: "TOUCHINGOBJECTMENU",
             options: getSpriteMenuFunction(spr, [
-              ["mouse pointer", "__mouse_pointer__"]
+              ["mouse pointer", "__mouse_pointer__"],
             ]),
           },
         ],
@@ -255,9 +251,7 @@ function loadBlockMenus(spr) {
           {
             type: "field_dropdown",
             name: "CLONE_OPTION",
-            options: getSpriteMenuFunction(spr, [
-              ["myself", "_myself_"]
-            ]),
+            options: getSpriteMenuFunction(spr, [["myself", "_myself_"]]),
           },
         ],
         extensions: ["colours_control", "output_string"],

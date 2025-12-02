@@ -11,17 +11,17 @@ module.exports = {
           className: "projectContainer",
           gid: "projectContainer",
           children: [
-                    {
-          element: "div",
-          className: "projectControls",
-          gid: "projectControls",
-        },
-        {
-          element: "canvas",
-          gid: "projectCanvas",
-          className: "projectCanvas",
-        },
-          ]
+            {
+              element: "div",
+              className: "projectControls",
+              gid: "projectControls",
+            },
+            {
+              element: "canvas",
+              gid: "projectCanvas",
+              className: "projectCanvas",
+            },
+          ],
         },
         {
           element: "span",

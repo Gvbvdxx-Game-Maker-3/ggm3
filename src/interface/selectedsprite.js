@@ -383,15 +383,15 @@ function loadCode(spr) {
   setTimeout(function () {
     Blockly.svgResize(workspace);
   }, 0);
-  
+
   scrollToPrevious();
 
   disposingWorkspace = false;
   Blockly.Events.enable();
   workspace.getToolbox().refreshSelection();
-  return {scrollToPrevious};
+  return { scrollToPrevious };
 }
-function scrollToPrevious () {
+function scrollToPrevious() {
   if (!workspace) {
     return;
   }
@@ -407,7 +407,7 @@ function scrollToPrevious () {
     flyoutWorkspace.scrollY = spr._flyout_scrollY || 0;
     flyoutWorkspace.scale = spr._flyout_scale || 0;
     flyoutWorkspace.resize();
-  
+
     workspace.resize();
     Blockly.svgResize(workspace);
   }
@@ -654,5 +654,5 @@ module.exports = {
   compileSpriteXML,
   saveCurrentSpriteCode,
   saveScroll,
-  scrollToPrevious
+  scrollToPrevious,
 };

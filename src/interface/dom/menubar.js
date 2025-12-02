@@ -1,3 +1,6 @@
+var elements = require("../../gp2/elements.js");
+
+// Menubar JSON descriptor with builtin API to add dropdown menus at runtime.
 module.exports = {
   element: "div",
   className: "menuBar",
@@ -16,21 +19,8 @@ module.exports = {
     },
     {
       element: "div",
-      className: "menuBarItem",
-      textContent: "New",
-      gid: "newProjectButton",
-    },
-    {
-      element: "div",
-      className: "menuBarItem",
-      textContent: "Save",
-      gid: "saveProjectButton",
-    },
-    {
-      element: "div",
-      className: "menuBarItem",
-      textContent: "Load",
-      gid: "loadProjectButton",
+      className: "menuBarMenus",
+      gid: "menuBarMenus",
     },
   ],
 };
