@@ -10,7 +10,7 @@ module.exports = {
   mode: "production",
   devServer: {
     allowedHosts: "all",
-    port: 9854,
+    port: 3829,
     client: {
       overlay: {
         errors: true, // Keep displaying errors
