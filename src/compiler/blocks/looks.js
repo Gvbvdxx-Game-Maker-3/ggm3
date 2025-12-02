@@ -38,12 +38,12 @@ JavascriptTranslation["looks_costumenumbername"] = function (
 
 outputBlocks.push("looks_hidden");
 JavascriptTranslation["looks_hidden"] = function (jsonblock, utils, options) {
-  return `sprite.hidden`;
+  return `(!!sprite.hidden)`;
 };
 
 outputBlocks.push("looks_visible");
 JavascriptTranslation["looks_visible"] = function (jsonblock, utils, options) {
-  return `!sprite.hidden`;
+  return `(!sprite.hidden)`;
 };
 
 JavascriptTranslation["looks_show"] = function (jsonblock, utils, options) {
