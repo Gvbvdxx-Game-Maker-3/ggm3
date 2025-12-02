@@ -77,6 +77,11 @@ function generateToolbox(defaultX, defaultY) {
     </category>
     <category name="Events" id="events" colour="${Blockly.Colours.event.primary}" secondaryColour="${Blockly.Colours.event.secondary}">
         <block type="event_whengamestarts"></block>
+        <block type="event_broadcast">
+            <value name="BROADCAST_INPUT">
+                <shadow type="event_broadcast"></shadow>
+            </value>
+        </block>
     </category>
     <category name="Sensing" id="sensing" colour="${Blockly.Colours.sensing.primary}" secondaryColour="${Blockly.Colours.sensing.secondary}">
         <block type="sensing_touchingobject" id="sensing_touchingobject">

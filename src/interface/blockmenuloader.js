@@ -106,6 +106,17 @@ function loadGlobalVariableBlocks(spr) {
           );
         },
       });
+
+      var _this = this;
+      for (var name of Object.keys(engine.globalVariables)) {
+        options.push({
+          text: "Use variable "+name,
+          enabled: true,
+          callback: function () {
+            _this.setField("VARIABLE", name);
+          }
+        });
+      }
     }
   }
   Blockly.Blocks["globaldata_get"] = {
@@ -191,8 +202,29 @@ function loadGlobalVariableBlocks(spr) {
   };
 }
 
-function loadBlockMenus(spr) {
+function getSpriteMenuFunction(spr, defaultOptions) {
   var sprites = engine.sprites;
+  return function () {
+    var allSpritesExceptSelf = sprites.filter((spr2) => spr.id !== spr2.id);
+    var spriteOptions = allSpritesExceptSelf.map((s) => [s.name, s.name]);
+    
+    return defaultOptions.concat(spriteOptions);
+  }
+}
+
+function getCostumeMenuFunction(spr) {
+  return function () {
+    var costumeMenu = spr.costumes.map((costume, i) => {
+      return [costume.name, costume.name];
+    });
+    if (costumeMenu.length < 1) {
+      costumeMenu = [["(No Costumes)", ""]];
+    }
+    return costumeMenu;
+  };
+}
+
+function loadBlockMenus(spr) {
   Blockly.Blocks["sensing_touchingobjectmenu"] = {
     init: function () {
       this.jsonInit({
@@ -201,9 +233,9 @@ function loadBlockMenus(spr) {
           {
             type: "field_dropdown",
             name: "TOUCHINGOBJECTMENU",
-            options: [["mouse pointer", "__mouse_pointer__"]].concat(
-              sprites.map((s) => [s.name, s.name]),
-            ),
+            options: getSpriteMenuFunction(spr, [
+              ["mouse pointer", "__mouse_pointer__"]
+            ]),
           },
         ],
         extensions: ["colours_sensing", "output_string"],
@@ -211,10 +243,6 @@ function loadBlockMenus(spr) {
     },
   };
   Blockly.Blocks["control_create_clone_of_menu"] = {
-    /**
-     * Create-clone drop-down menu.
-     * @this Blockly.Block
-     */
     init: function () {
       this.jsonInit({
         message0: "%1",
@@ -222,9 +250,9 @@ function loadBlockMenus(spr) {
           {
             type: "field_dropdown",
             name: "CLONE_OPTION",
-            options: [["myself", "_myself_"]].concat(
-              sprites.map((s) => [s.name, s.name]),
-            ),
+            options: getSpriteMenuFunction(spr, [
+              ["myself", "_myself_"]
+            ]),
           },
         ],
         extensions: ["colours_control", "output_string"],
@@ -233,19 +261,13 @@ function loadBlockMenus(spr) {
   };
   Blockly.Blocks["looks_costume"] = {
     init: function () {
-      var costumeMenu = spr.costumes.map((costume, i) => {
-        return [costume.name, costume.name];
-      });
-      if (costumeMenu.length < 1) {
-        costumeMenu = [["(No Costumes)", null]];
-      }
       this.jsonInit({
         message0: "%1",
         args0: [
           {
             type: "field_dropdown",
             name: "COSTUME",
-            options: costumeMenu,
+            options: getCostumeMenuFunction(spr),
           },
         ],
         colour: Blockly.Colours.looks.secondary,
@@ -258,19 +280,13 @@ function loadBlockMenus(spr) {
   };
   Blockly.Blocks["loader_costume"] = {
     init: function () {
-      var costumeMenu = spr.costumes.map((costume, i) => {
-        return [costume.name, costume.name];
-      });
-      if (costumeMenu.length < 1) {
-        costumeMenu = [["(No Costumes)", null]];
-      }
       this.jsonInit({
         message0: "%1",
         args0: [
           {
             type: "field_dropdown",
             name: "COSTUME",
-            options: costumeMenu,
+            options: getCostumeMenuFunction(spr),
           },
         ],
         colour: "#0066a1",
