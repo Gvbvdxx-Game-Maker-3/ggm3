@@ -14,7 +14,7 @@ module.exports = {
         {
           element: "canvas",
           gid: "projectCanvas",
-          className: "projectCanvas",
+          className: "projectCanvas"
         },
         {
           element: "span",
