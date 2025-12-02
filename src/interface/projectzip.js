@@ -36,6 +36,7 @@ async function saveProjectToZip() {
       zIndex: sprite.zIndex,
       costumeIndex: sprite.costumeIndex,
       variables: getSaveableVariables(sprite.variables),
+      hidden: sprite.hidden,
     };
     var ci = 0;
     for (var costume of sprite.costumes) {

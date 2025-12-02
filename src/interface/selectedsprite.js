@@ -400,6 +400,7 @@ function loadCode(spr) {
 
   disposingWorkspace = false;
   Blockly.Events.enable();
+  workspace.getToolbox().refreshSelection();
 }
 
 function getErrorLogDiv(error) {

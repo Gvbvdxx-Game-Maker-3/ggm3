@@ -102,11 +102,15 @@ var costumesContainer = elements.getGPId("costumesContainer");
 var costumePivotContainer = elements.getGPId("costumePivotContainer");
 var errorLogsContainer = elements.getGPId("errorLogsContainer");
 
-function updateVisibility() {
+function hideEverything() {
   setWorkspaceVisibility(false);
   costumesContainer.hidden = true;
   costumePivotContainer.hidden = true;
   errorLogsContainer.hidden = true;
+}
+
+function updateVisibility() {
+  hideEverything();
 
   if (currentTab == "SCRIPT") {
     setWorkspaceVisibility(true);
@@ -133,4 +137,4 @@ function switchTab(id) {
 
 updateTabs();
 
-module.exports = { updateTabs, updateVisibility };
+module.exports = { updateTabs, updateVisibility, hideEverything };

@@ -1,7 +1,8 @@
 var elements = require("../gp2/elements.js");
 var AElement = require("../gp2/aelement.js");
 var engine = require("./curengine.js");
-var canvas = engine.canvas;
+var canvas = elements.getGPId("projectCanvas");
+var tabs = require("./tabs.js");
 
 var isFullscreen = false;
 var fullscreenModeContainer = elements.getGPId("fullscreenModeContainer");
@@ -28,6 +29,7 @@ function switchFullscreenMode() {
     }
     window.onresize = handleResize;
     handleResize();
+    tabs.hideEverything();
   } else {
     projectContainer.append(projectControls);
     projectContainer.append(canvas);
@@ -36,6 +38,7 @@ function switchFullscreenMode() {
     canvas.style.height = "unset";
     engine.screenScale = 1;
     engine.updateCanvasSize();
+    tabs.updateTabs();
   }
 }
 
@@ -178,8 +181,6 @@ elements.setInnerJSON(projectControls, [
     ],
   },
 ]);
-
-var canvas = elements.getGPId("projectCanvas");
 var projectMouseCoordinates = elements.getGPId("projectMouseCoordinates");
 
 function getMousePosition(event, onElement, size) {

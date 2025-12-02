@@ -348,8 +348,8 @@ class GGM3Engine {
   }
 
   changeMousePosition(cx, cy) {
-    this.mouseMask.x = (+cx || 0) - this.canvas.width / 2;
-    this.mouseMask.y = (+cy || 0) - this.canvas.height / 2;
+    this.mouseMask.x = ((+cx || 0) / this.screenScale) - this.gameWidth / 2;
+    this.mouseMask.y = ((+cy || 0) / this.screenScale) - this.gameHeight / 2;
   }
 
   changeMouseDown(down) {
