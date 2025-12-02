@@ -124,15 +124,20 @@ body {
   position: relative;
 }
 .menuParent {
-  position: relative;
+  position: fixed;
   display: flex;
   align-items: center;
   padding: 0 8px;
+  z-index: 9999;
+  cursor: unset;
 }
 .menuBarItemLabel {
   color: #ffffff;
   font-weight: bold;
   user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .menuParent.open > .menuBarItemLabel {
   color: #ffffff;
@@ -145,9 +150,9 @@ body {
   min-width: 160px;
   border-radius: 6px;
   box-shadow: 0 6px 14px rgba(0,0,0,0.3);
-  padding: 6px 4px;
   z-index: 9999;
   display: block; /* hidden attribute controls visibility */
+  cursor: unset;
 }
 .menuDropdownItem {
   display: flex;
@@ -156,11 +161,12 @@ body {
   padding: 6px 8px;
   color: #ffffff;
   border-radius: 4px;
-  cursor: pointer;
   user-select: none;
 }
 .menuDropdownItem:hover {
   background: #5a5a5a;
+  cursor: pointer;
+  box-sizing: border-box;
 }
 .menuIcon {
   width: 16px;

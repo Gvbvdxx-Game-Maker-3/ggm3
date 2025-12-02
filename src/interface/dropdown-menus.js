@@ -2,8 +2,8 @@ var elements = require("../gp2/elements.js");
 var AElement = require("../gp2/aelement.js");
 
 module.exports = {
-  addAppMenu: function (title, items) {
-    var menuId = "menu-" + title.toLowerCase().replace(/\s+/g, "-");
+  addAppMenu: function (id, titleChildren, items) {
+    var menuId = "menu-" + id.toLowerCase().replace(/\s+/g, "-");
     var dropdownId = menuId + "-dropdown";
 
     var menuJSON = [
@@ -12,7 +12,11 @@ module.exports = {
         className: "menuBarItem menuParent",
         gid: menuId,
         children: [
-          { element: "div", className: "menuBarItemLabel", textContent: title },
+          {
+            element: "div",
+            className: "menuBarItemLabel",
+            children: titleChildren,
+          },
           {
             element: "div",
             className: "menuDropdown",
