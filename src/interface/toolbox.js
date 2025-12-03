@@ -395,6 +395,38 @@ function generateToolbox(defaultX, defaultY) {
         <block type="looks_nextcostume"></block>
         <block type="looks_costumenumbername" gap="30"></block>
 
+        <block type="looks_alpha"></block>
+        <block type="looks_alpha_to">
+            <value name="VALUE">
+                <shadow type="math_number">
+                    <field name="NUM">100</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="looks_alpha_by" gap="30">
+            <value name="VALUE">
+                <shadow type="math_number">
+                    <field name="NUM">5</field>
+                </shadow>
+            </value>
+        </block>
+
+        <block type="looks_zindex"></block>
+        <block type="looks_zindex_to">
+            <value name="VALUE">
+                <shadow type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="looks_zindex_by" gap="30">
+            <value name="VALUE">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+        </block>
+
         <block type="looks_seteffectto">
             <value name="VALUE">
                 <shadow type="math_number">
