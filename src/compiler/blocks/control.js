@@ -4,7 +4,7 @@ var starterBlocks = require("./starters.js");
 var outputBlocks = require("./output_blocks.js");
 
 JavascriptTranslation["control_wait"] = function (jsonblock, utils, options) {
-  var DURATION = utils.getInput(jsonblock, "DURATION", options);
+  var DURATION = utils.getInput(jsonblock, "DURATION", options, "0");
 
   return `${utilFunctions.aliveCheck(jsonblock)}await thread.waitSeconds(${DURATION});${utilFunctions.aliveCheck(jsonblock)}`;
 };
@@ -20,8 +20,8 @@ JavascriptTranslation["control_forever"] = function (
 };
 
 JavascriptTranslation["control_repeat"] = function (jsonblock, utils, options) {
-  var TIMES = utils.getInput(jsonblock, "TIMES", options);
-  var SUBSTACK = utils.getInput(jsonblock, "SUBSTACK", options);
+  var TIMES = utils.getInput(jsonblock, "TIMES", options, "0");
+  var SUBSTACK = utils.getInput(jsonblock, "SUBSTACK", options, "");
 
   return `${utilFunctions.aliveCheck(jsonblock)}await thread.repeatTimes(${TIMES},async function (){${SUBSTACK}});${utilFunctions.aliveCheck(jsonblock)}`;
 };
@@ -31,21 +31,21 @@ JavascriptTranslation["control_repeat_until"] = function (
   utils,
   options,
 ) {
-  var CONDITION = utils.getInput(jsonblock, "CONDITION", options);
+  var CONDITION = utils.getInput(jsonblock, "CONDITION", options, "false");
   var SUBSTACK = utils.getInput(jsonblock, "SUBSTACK", options);
 
   return `${utilFunctions.aliveCheck(jsonblock)}while (!(${CONDITION})) {${utilFunctions.aliveCheck(jsonblock)}${utilFunctions.aliveCheck(jsonblock)} ${SUBSTACK} if (thread.screenRefresh) {await thread.waitForNextFrame();}}${utilFunctions.aliveCheck(jsonblock)}`;
 };
 
 JavascriptTranslation["control_while"] = function (jsonblock, utils, options) {
-  var CONDITION = utils.getInput(jsonblock, "CONDITION", options);
+  var CONDITION = utils.getInput(jsonblock, "CONDITION", options, "false");
   var SUBSTACK = utils.getInput(jsonblock, "SUBSTACK", options);
 
   return `${utilFunctions.aliveCheck(jsonblock)}while (${CONDITION}) {${utilFunctions.aliveCheck(jsonblock)} ${utilFunctions.aliveCheck(jsonblock)} ${SUBSTACK} if (thread.screenRefresh) {await thread.waitForNextFrame();}}${utilFunctions.aliveCheck(jsonblock)}`;
 };
 
 JavascriptTranslation["control_if"] = function (jsonblock, utils, options) {
-  var CONDITION = utils.getInput(jsonblock, "CONDITION", options);
+  var CONDITION = utils.getInput(jsonblock, "CONDITION", options, "false");
 
   var SUBSTACK = utils.getInput(jsonblock, "SUBSTACK", options);
 
@@ -57,7 +57,7 @@ JavascriptTranslation["control_if_else"] = function (
   utils,
   options,
 ) {
-  var CONDITION = utils.getInput(jsonblock, "CONDITION", options);
+  var CONDITION = utils.getInput(jsonblock, "CONDITION", options, "false");
 
   var SUBSTACK = utils.getInput(jsonblock, "SUBSTACK", options);
   var SUBSTACK2 = utils.getInput(jsonblock, "SUBSTACK2", options);
@@ -70,7 +70,7 @@ JavascriptTranslation["control_wait_until"] = function (
   utils,
   options,
 ) {
-  var CONDITION = utils.getInput(jsonblock, "CONDITION", options);
+  var CONDITION = utils.getInput(jsonblock, "CONDITION", options, "false");
 
   return `${utilFunctions.aliveCheck(jsonblock)}while (!(${CONDITION})) {${utilFunctions.aliveCheck(jsonblock)}await thread.waitForNextFrame();}${utilFunctions.aliveCheck(jsonblock)}`;
 };

@@ -144,21 +144,21 @@ JavascriptTranslation["operator_lt"] = function (jsonblock, utils, options) {
 
 outputBlocks.push("operator_and");
 JavascriptTranslation["operator_and"] = function (jsonblock, utils, options) {
-  var OPERAND1 = utils.getInput(jsonblock, "OPERAND1", options);
-  var OPERAND2 = utils.getInput(jsonblock, "OPERAND2", options);
+  var OPERAND1 = utils.getInput(jsonblock, "OPERAND1", options, "false");
+  var OPERAND2 = utils.getInput(jsonblock, "OPERAND2", options, "false");
   return `((${OPERAND1}) && (${OPERAND2}))`;
 };
 
 outputBlocks.push("operator_or");
 JavascriptTranslation["operator_or"] = function (jsonblock, utils, options) {
-  var OPERAND1 = utils.getInput(jsonblock, "OPERAND1", options);
-  var OPERAND2 = utils.getInput(jsonblock, "OPERAND2", options);
+  var OPERAND1 = utils.getInput(jsonblock, "OPERAND1", options, "false");
+  var OPERAND2 = utils.getInput(jsonblock, "OPERAND2", options, "false");
   return `((${OPERAND1}) || (${OPERAND2}))`;
 };
 
 outputBlocks.push("operator_not");
 JavascriptTranslation["operator_not"] = function (jsonblock, utils, options) {
-  var OPERAND = utils.getInput(jsonblock, "OPERAND", options);
+  var OPERAND = utils.getInput(jsonblock, "OPERAND", options, "false");
   return `(!(${OPERAND}))`;
 };
 
@@ -168,10 +168,10 @@ JavascriptTranslation["operator_outputif"] = function (
   utils,
   options,
 ) {
-  var CONDITION = utils.getInput(jsonblock, "CONDITION", options);
+  var CONDITION = utils.getInput(jsonblock, "CONDITION", options, "false");
 
-  var PASS_OUTPUT = utils.getInput(jsonblock, "PASS_OUTPUT", options);
-  var FAIL_OUTPUT = utils.getInput(jsonblock, "FAIL_OUTPUT", options);
+  var PASS_OUTPUT = utils.getInput(jsonblock, "PASS_OUTPUT", options, null);
+  var FAIL_OUTPUT = utils.getInput(jsonblock, "FAIL_OUTPUT", options, null);
   return `(${CONDITION}) ? (${PASS_OUTPUT}) : (${FAIL_OUTPUT})`;
 };
 

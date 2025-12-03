@@ -4,13 +4,13 @@ var StarterBlocks = require("./blocks/starters.js");
 var outputBlocks = require("./blocks/output_blocks.js");
 var utilFunctions = require("./blocks/util-functions.js");
 
-function getInput(blockJson, name, options) {
+function getInput(blockJson, name, options, fallback) {
   for (var input of blockJson.inputs) {
     if (input.name == name) {
       return compileBlockFromJSON(input.block, options);
     }
   }
-  return "";
+  return fallback || "";
 }
 function getInputBlock(blockJson, name, options) {
   for (var input of blockJson.inputs) {
