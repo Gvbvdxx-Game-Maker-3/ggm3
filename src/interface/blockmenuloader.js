@@ -108,15 +108,17 @@ function loadGlobalVariableBlocks(spr) {
       });
 
       var _this = this;
-      for (var name of Object.keys(engine.globalVariables)) {
-        options.push({
-          text: name,
-          enabled: !this.isInFlyout,
-          callback: function () {
-            _this.setFieldValue(name, "VARIABLE");
-          },
-        });
-      }
+      Object.keys(engine.globalVariables).forEach(function (name) {
+        if (name !== variableName) {
+          options.push({
+            text: name,
+            enabled: !this.isInFlyout,
+            callback: function () {
+              _this.setFieldValue(name, "VARIABLE");
+            },
+          });
+        }
+      });
     }
   }
   Blockly.Blocks["globaldata_get"] = {

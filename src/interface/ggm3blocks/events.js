@@ -100,6 +100,49 @@ function getBroadcastMenuFunction() {
   }
 }
 
+function contextMenuFunction(options) {
+    var broadcastField = this.getField("BROADCAST_NAME");
+    if (broadcastField) {
+      var broadcastName = broadcastField.getValue();
+      // Try to get main workspace from flyout/toolbox
+      var mainWorkspace = null;
+      if (this.workspace && this.workspace.targetWorkspace) {
+        mainWorkspace = this.workspace.targetWorkspace;
+      } else if (
+        this.workspace &&
+        this.workspace.options &&
+        this.workspace.options.parentWorkspace
+      ) {
+        mainWorkspace = this.workspace.options.parentWorkspace;
+      } else if (window.Blockly && Blockly.getMainWorkspace) {
+        mainWorkspace = Blockly.getMainWorkspace();
+      }
+
+      options.push({
+        text: "Delete broadcast message",
+        enabled: true,
+        callback: function () {
+          Blockly.confirm(
+            `Delete broadcast message "${broadcastName}"?`,
+            function (accepted) {
+              if (accepted) {
+                engine.removeBroadcastName(broadcastName);
+
+                if (
+                  mainWorkspace &&
+                  mainWorkspace.getToolbox &&
+                  mainWorkspace.getToolbox()
+                ) {
+                  mainWorkspace.getToolbox().refreshSelection();
+                }
+              }
+            },
+          );
+        },
+      });
+    }
+  }
+
 Blockly.Blocks["event_ggm3_broadcast_menu"] = {
   init: function () {
     this.jsonInit({
@@ -113,9 +156,10 @@ Blockly.Blocks["event_ggm3_broadcast_menu"] = {
       ],
       category: Blockly.Categories.control,
       extensions: ["output_string"],
-      colour: "#bf9c00"
+      colour: "#bf9c00",
     });
   },
+  customContextMenu: contextMenuFunction,
 };
 
 Blockly.Blocks["event_ggm3_broadcast"] = {
@@ -148,7 +192,8 @@ Blockly.Blocks["event_ggm3_whenbroadcasted"] = {
       ],
       category: Blockly.Categories.control,
       colour: "#bf9c00",
-      extensions: ["shape_hat"]
+      extensions: ["shape_hat"],
     });
   },
+  customContextMenu: contextMenuFunction,
 };
