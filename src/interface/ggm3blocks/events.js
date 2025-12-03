@@ -179,6 +179,23 @@ Blockly.Blocks["event_ggm3_broadcast"] = {
   },
 };
 
+Blockly.Blocks["event_ggm3_broadcast_and_wait"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "broadcast %1 and wait to finish",
+      args0: [
+        {
+          type: "input_value",
+          name: "BROADCAST_NAME",
+        },
+      ],
+      category: Blockly.Categories.control,
+      extensions: ["shape_statement"],
+      colour: "#bf9c00"
+    });
+  },
+};
+
 Blockly.Blocks["event_ggm3_whenbroadcasted"] = {
   init: function () {
     this.jsonInit({

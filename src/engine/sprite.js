@@ -477,13 +477,15 @@ class Sprite {
   }
 
   emitBroadcastListener(name, ...args) {
+    var promises = [];
     if (this.broadcastListeners[name]) {
       for (var blockID of this.broadcastListeners[name]) {
         if (this.hatFunctions[blockID]) {
-          this.hatFunctions[blockID](...args);
+          promises.push(this.hatFunctions[blockID](...args));
         }
       }
     }
+    return Promise.all(promises);
   }
 
   stopAllScripts() {

@@ -54,6 +54,14 @@ class GGM3Engine {
     });
   }
 
+  async broadcastAndWait (name) {
+    var promises = [];
+    this.getAllTopSprites().forEach((sprite) => {
+      promises.push(sprite.emitBroadcastListener(name));
+    });
+    await Promise.all(promises);
+  }
+
   getBroadcastNames () {
     return this.broadcastNames;
   }
