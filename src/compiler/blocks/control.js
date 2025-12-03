@@ -16,7 +16,7 @@ JavascriptTranslation["control_forever"] = function (
 ) {
   var SUBSTACK = utils.getInput(jsonblock, "SUBSTACK", options);
 
-  return `${utilFunctions.aliveCheck(jsonblock)}while (true) {${utilFunctions.aliveCheck(jsonblock)}${utilFunctions.aliveCheck(jsonblock)}${SUBSTACK}if (thread.screenRefresh) {await thread.waitForNextFrame();}}${utilFunctions.aliveCheck(jsonblock)}`;
+  return `${utilFunctions.aliveCheck(jsonblock)}while (true) {${utilFunctions.aliveCheck(jsonblock)}${SUBSTACK}if (thread.screenRefresh) {await thread.waitForNextFrame();};${utilFunctions.aliveCheck(jsonblock)}}${utilFunctions.aliveCheck(jsonblock)}`;
 };
 
 JavascriptTranslation["control_repeat"] = function (jsonblock, utils, options) {
