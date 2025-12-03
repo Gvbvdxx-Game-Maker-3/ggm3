@@ -135,6 +135,7 @@ class GGM3Engine {
   }
 
   stopGame() {
+    this.broadcastQueue = [];
     for (var sprite of this.sprites) {
       sprite.stopAllScripts();
       sprite.deleteClones();
