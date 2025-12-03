@@ -667,10 +667,8 @@ makeSortable(spritesContainer, ".spriteContainer", (oldIndex, newIndex) => {
     currentSelectedSpriteIndex = engine.sprites.indexOf(currentSelectedSprite);
   }
 
-  // 3. Redraw (optional if you want to ensure state consistency)
-  // Because the dragManager actually moved the DOM elements already,
-  // updateSpritesContainer is theoretically optional here, but good practice
-  // to ensure IDs/Indices are fresh.
+  engine.makeUniqueSpriteNames();
+
   updateSpritesContainer();
 });
 

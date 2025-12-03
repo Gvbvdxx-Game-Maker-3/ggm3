@@ -318,6 +318,7 @@ class Sprite {
     var existingNames = [];
     var nameCounts = {};
     var _this = this;
+    this.costumeMap = {};
     this.costumes.forEach((costume, i) => {
       _this.costumeMap[costume.name] = i;
       if (existingNames.indexOf(costume.name) !== -1) {
