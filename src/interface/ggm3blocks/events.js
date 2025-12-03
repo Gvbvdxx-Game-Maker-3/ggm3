@@ -239,8 +239,9 @@ Blockly.Blocks["event_ggm3_whenbroadcasted"] = {
       message0: "when %1 broadcasted",
       args0: [
         {
-          type: "field_label_serializable",
+          type: "field_dropdown",
           name: "BROADCAST_NAME",
+          options: getBroadcastMenuFunction()
         },
       ],
       category: Blockly.Categories.control,
