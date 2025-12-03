@@ -57,6 +57,15 @@ JavascriptTranslation["event_ggm3_broadcast"] = function (
   return `engine.broadcast("" + (${BROADCAST_NAME}));`;
 };
 
+JavascriptTranslation["event_ggm3_broadcast_and_wait"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var BROADCAST_NAME = utils.getInput(jsonblock, "BROADCAST_NAME", options);
+  return `${utilFunctions.aliveCheck()}await engine.broadcastAndWait("" + (${BROADCAST_NAME}));${utilFunctions.aliveCheck()}`;
+};
+
 JavascriptTranslation["event_ggm3_broadcast_menu"] = function (
   jsonblock,
   utils,
