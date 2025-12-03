@@ -67,6 +67,7 @@ async function saveProjectToZip() {
     JSON.stringify({
       sprites: spritesArray,
       globalVariables: getSaveableVariables(engine.globalVariables),
+      broadcastNames: engine.broadcastNames,
       frameRate: engine.frameRate,
     }),
   );
@@ -97,6 +98,7 @@ async function loadProjectFromZip(arrayBuffer) {
   engine.emptyProject();
   Object.assign(engine, {
     globalVariables: decodedJSON.globalVariables || {},
+    broadcastNames: decodedJSON.broadcastNames || [],
     frameRate: decodedJSON.frameRate || 60,
   });
 
