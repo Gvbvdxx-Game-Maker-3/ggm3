@@ -175,3 +175,87 @@ Blockly.Blocks["looks_geteffect"] = {
     });
   },
 };
+
+Blockly.Blocks["looks_zindex_to"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "change z index to %1",
+      args0: [
+        {
+          type: "input_value",
+          name: "VALUE",
+        },
+      ],
+      category: Blockly.Categories.looks,
+      extensions: ["colours_looks", "shape_statement"],
+    });
+  },
+};
+
+Blockly.Blocks["looks_zindex_by"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "change z index by %1",
+      args0: [
+        {
+          type: "input_value",
+          name: "VALUE",
+        },
+      ],
+      category: Blockly.Categories.looks,
+      extensions: ["colours_looks", "shape_statement"],
+    });
+  },
+};
+
+Blockly.Blocks["looks_zindex"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "z index",
+      category: Blockly.Categories.looks,
+      extensions: ["colours_looks", "output_number"],
+    });
+  },
+};
+
+Blockly.Blocks["looks_alpha_to"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "change alpha to %1",
+      args0: [
+        {
+          type: "input_value",
+          name: "VALUE",
+        },
+      ],
+      category: Blockly.Categories.looks,
+      extensions: ["colours_looks", "shape_statement"],
+    });
+  },
+};
+
+Blockly.Blocks["looks_alpha_by"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "change alpha by %1",
+      args0: [
+        {
+          type: "input_value",
+          name: "VALUE",
+        },
+      ],
+      category: Blockly.Categories.looks,
+      extensions: ["colours_looks", "shape_statement"],
+    });
+  },
+};
+
+Blockly.Blocks["looks_alpha"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "alpha",
+      category: Blockly.Categories.looks,
+      extensions: ["colours_looks", "output_number"],
+    });
+  },
+};

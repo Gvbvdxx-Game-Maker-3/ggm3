@@ -154,9 +154,51 @@ JavascriptTranslation["looks_geteffect"] = function (
   return `sprite.effects.${EFFECT}`;
 };
 
-/* Throw error test thats used to check if error handling works, so that when something fails unexpectedly then the threads won't leak memory */
-JavascriptTranslation["error_test"] = function (jsonblock, utils, options) {
-  return `throw new Error("This is an error reported by the block");`;
+JavascriptTranslation["looks_zindex_to"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var VALUE = utils.getInput(jsonblock, "VALUE", options);
+  return `sprite.zIndex = (+(${VALUE}) || 0);`;
 };
+JavascriptTranslation["looks_zindex_by"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var VALUE = utils.getInput(jsonblock, "VALUE", options);
+  return `sprite.zIndex += (+(${VALUE}) || 0);`;
+};
+outputBlocks.push("looks_zindex");
+JavascriptTranslation["looks_zindex"] = function (jsonblock, utils, options) {
+  return `(sprite.zIndex)`;
+};
+
+JavascriptTranslation["looks_alpha_to"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var VALUE = utils.getInput(jsonblock, "VALUE", options);
+  return `sprite.alpha = (+(${VALUE}) || 0);`;
+};
+JavascriptTranslation["looks_alpha_by"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var VALUE = utils.getInput(jsonblock, "VALUE", options);
+  return `sprite.alpha += (+(${VALUE}) || 0);`;
+};
+outputBlocks.push("looks_alpha");
+JavascriptTranslation["looks_alpha"] = function (jsonblock, utils, options) {
+  return `(sprite.alpha)`;
+};
+
+/* Throw error test thats used to check if error handling works, so that when something fails unexpectedly then the threads won't leak memory */
+/*JavascriptTranslation["error_test"] = function (jsonblock, utils, options) {
+  return `throw new Error("This is an error reported by the block");`;
+};*/
 
 module.exports = JavascriptTranslation;
