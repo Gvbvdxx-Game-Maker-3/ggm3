@@ -192,7 +192,7 @@ Blockly.Blocks["event_ggm3_broadcast"] = {
 Blockly.Blocks["event_ggm3_broadcast_and_wait"] = {
   init: function () {
     this.jsonInit({
-      message0: "broadcast %1 and wait to finish",
+      message0: "broadcast %1 and wait",
       args0: [
         {
           type: "input_value",
