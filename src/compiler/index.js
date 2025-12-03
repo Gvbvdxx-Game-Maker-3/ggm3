@@ -20,13 +20,13 @@ function getInputBlock(blockJson, name, options) {
   }
   return null;
 }
-function getField(blockJson, name, options) {
+function getField(blockJson, name, options, fallback) {
   for (var field of blockJson.fields) {
     if (field.name == name) {
       return field.value;
     }
   }
-  return null;
+  return fallback || null;
 }
 function getFieldText(blockJson, name, options) {
   for (var field of blockJson.fields) {
