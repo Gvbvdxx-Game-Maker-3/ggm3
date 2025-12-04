@@ -14,6 +14,7 @@ class Sound {
     this.willPreload = true;
     this.playingOn = {};
     this.mimeType = "audio/mp3";
+    this.loading = false;
   }
 
   get dataURL () {
@@ -123,15 +124,21 @@ class Sound {
   }
 
   async loadSound () {
+    if (this.loading) {
+      return;
+    }
+    this.loading = true;
     var data = await AudioEngine.loadSoundFromURL(this.src);
     this.data = data;
     if (this.onread) {
       this.onread(true);
     }
+    this.loading = false;
   }
 
   deloadSound () {
     this.data = null;
+    this.loading = false;
   }
 
   dispose () {

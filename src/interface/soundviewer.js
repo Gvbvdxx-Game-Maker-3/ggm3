@@ -166,6 +166,23 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
                       {
                         element: "button",
                         className: "greyButtonStyle",
+                        textContent: "Deload",
+                        style: {
+                          marginRight: "2px",
+                          fontSize: "12px",
+                        },
+                        eventListeners: [
+                          {
+                            event: "click",
+                            func: function () {
+                              sound.deloadSound();
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        element: "button",
+                        className: "greyButtonStyle",
                         textContent: "Delete",
                         style: {
                           marginRight: "2px",
