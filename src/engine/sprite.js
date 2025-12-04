@@ -704,6 +704,7 @@ class Sprite {
     );
     this.costumes.push(costume);
     this.ensureUniqueCostumeNames();
+    return costume;
   }
 
   addSound(dataURL, name) {
@@ -743,6 +744,7 @@ class Sprite {
     s.name = name ? name : "Sound " + (this.sounds.length + 1);
     this.sounds.push(s);
     this.ensureUniqueSoundNames();
+    return s;
   }
 
   deleteCostume(costume) {
