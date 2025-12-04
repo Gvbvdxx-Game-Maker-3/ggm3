@@ -11,7 +11,8 @@ var JavascriptTranslation = {
   ...require("./custom.js"),
   ...require("./json.js"),
   ...require("./global_data.js"),
-  ...require("./sounds.js")
+  ...require("./sounds.js"),
+  ...require("./engine.js")
 };
 
 module.exports = JavascriptTranslation;
