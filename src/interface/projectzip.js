@@ -204,7 +204,6 @@ async function loadProjectFromZip(arrayBuffer, progressJSON = function(){}) {
   markProgress();
   for (var spriteJson of decodedJSON.sprites) {
     var sprite = engine.createEmptySprite();
-    var sounds = spriteJson.sounds ? spriteJson.sounds : []; //Some very early versions don't provide sounds.
     for (var costumeJson of spriteJson.costumes) {
       loaded += 1;
       markProgress();
@@ -231,7 +230,8 @@ async function loadProjectFromZip(arrayBuffer, progressJSON = function(){}) {
         mimeType: costumeJson.mimeType,
       });
     }
-    for (var soundJson of spriteJson.sounds) {
+    var sounds = spriteJson.sounds ? spriteJson.sounds : []; //Some very early versions don't provide sounds.
+    for (var soundJson of sounds) {
       loaded += 1;
       markProgress();
       var sound = null;
