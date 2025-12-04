@@ -60,6 +60,29 @@ async function newProject() {
   loadingScreenContainer.hidden = true;
 }
 
+function loadProjectFile(file) {
+    if (!file) {
+        return;
+    }
+    loadingScreenContainer.hidden = false;
+    elements.setInnerJSON(loadingScreenContent, []);
+    var reader = new FileReader();
+    reader.onload = async function () {
+        try {
+            await projectSaver.loadProjectFromZip(reader.result, (json) => {
+                elements.setInnerJSON(loadingScreenContent, json);
+            });
+        } catch (e) {
+            await defaultProject.loadDefaultProject();
+            console.error("Project load error: ", e);
+            dialogs.alert("Project load error: " + e.message);
+        }
+        selectedSprite.setCurrentSprite(0, true, true);
+        loadingScreenContainer.hidden = true;
+    };
+    reader.readAsArrayBuffer(file);
+}
+
 if (available()) {
     var menuBar = elements.getGPId("menuBar");
     elements.appendElementsFromJSON(menuBar,[
@@ -82,18 +105,45 @@ if (available()) {
 
     editFileQuick.textContent = "Save now";
 
-    async function loadFile() {
-        
-    }
+    function createProgessBarJSON(decimal = 0) {
+        return {
+            element: "div",
+            className: "loadingProgressMain",
+            style: {
+                height: "15px",
+                width: "70px"
+            },
+            children: [
+                {
+                element: "div",
+                className: "loadingProgressInner",
+                style: {
+                    width: Math.round(decimal*100) + "%"
+                }
+                }
+            ]
+            };
+        }
 
     newFileMenus.push({
       label: "Load and edit",
       icon: "icons/import.svg",
       action: async function () {
         try{
-            fileHandle = await showOpenFilePicker("game.ggm3");
+            fileHandle = await showOpenFilePicker();
         }catch(e){
             fileHandle = null;
+        }
+        if (fileHandle) {
+            loadingScreenContainer.hidden = false;
+            elements.setInnerJSON(loadingScreenContent, [
+                {
+                    element: "span",
+                    textContent: "Reading file..."
+                }
+            ]);
+            var file = await fileHandle.getFile();
+            loadProjectFile(file);
         }
       },
     });
@@ -103,21 +153,39 @@ if (available()) {
             return;
         }
         var previousTextContent = editFileQuick.textContent;
-        if (fileHandle) {
-            editFileQuick.textContent = "Saving...";
-            isSaving = true;
+        if (!fileHandle) {
             try{
-                var writable = await createWritable(fileHandle);
-                var zip = await projectSaver.saveProjectToZip();
-                var objectURL = await zip.generateAsync({ type: "blob" });
-                await writeToWritable(writable, objectURL);
+                fileHandle = await showSaveFilePicker("game.ggm3");
             }catch(e){
-                console.error(e);
-                dialogs.alert("Project save error "+e);
+                fileHandle = null;
             }
-            editFileQuick.textContent = previousTextContent;
-            isSaving = false;
         }
+        editFileQuick.textContent = "Saving...";
+        isSaving = true;
+        try{
+            var writable = await createWritable(fileHandle);
+            var zip = await projectSaver.saveProjectToZip((progressDecimal) => {
+                editFileQuick.textContent = "";
+                elements.setInnerJSON(editFileQuick, [
+                    {
+                        element: "span",
+                        textContent: "Saving..."
+                    },
+                    {
+                        element: "br",
+                    },
+                    createProgessBarJSON(progressDecimal)
+                ]);
+            });
+            var content = await zip.generateAsync({ type: "blob" });
+            await writeToWritable(writable, content);
+        }catch(e){
+            console.error(e);
+            dialogs.alert("Project save error "+e);
+        }
+        closeWritable(writable);
+        editFileQuick.textContent = previousTextContent;
+        isSaving = false;
     };
 }
 
@@ -145,7 +213,7 @@ addAppMenu(
       },
     },
     {
-      label: "Save",
+      label: "Save as",
       icon: "icons/export.svg",
       action: async function () {
         var zip = await projectSaver.saveProjectToZip();
@@ -171,23 +239,7 @@ addAppMenu(
           if (!input.files[0]) {
             return;
           }
-          loadingScreenContainer.hidden = false;
-          elements.setInnerJSON(loadingScreenContent, []);
-          var reader = new FileReader();
-          reader.onload = async function () {
-            try {
-              await projectSaver.loadProjectFromZip(reader.result, (json) => {
-                elements.setInnerJSON(loadingScreenContent, json);
-              });
-            } catch (e) {
-              await defaultProject.loadDefaultProject();
-              console.error("Project load error: ", e);
-              dialogs.alert("Project load error: " + e.message);
-            }
-            selectedSprite.setCurrentSprite(0, true, true);
-            loadingScreenContainer.hidden = true;
-          };
-          reader.readAsArrayBuffer(input.files[0]);
+          loadProjectFile(input.files[0]);
         });
       },
     },

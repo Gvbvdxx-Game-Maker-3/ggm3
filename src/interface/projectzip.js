@@ -63,6 +63,7 @@ async function saveProjectToZip(progressBar = function () {}) {
   var saved = 0;
   for (var sprite of engine.sprites) {
     var costumesObj = [];
+    var soundsObj = [];
     var spriteObj = {
       x: sprite.x,
       y: sprite.y,
@@ -101,7 +102,27 @@ async function saveProjectToZip(progressBar = function () {}) {
       costumesObj.push(costumeObj);
       ci += 1;
     }
+    var si = 0;
+    for (var sound of sprite.sounds) {
+      saved += 1;
+      progressBar(saved/needed);
+      var obj = {
+        name: sound.name,
+        id: sound.id,
+        willPreload: sound.willPreload,
+        mimeType: sound.mimeType,
+      };
+      var response = await fetch(sound.dataURL);
+      var arrayBuffer = await response.arrayBuffer();
+
+      var fileName = "sprite_" + i + "_sound_" + si + ".mp3";
+      zip.file(fileName, arrayBuffer);
+      obj.file = fileName;
+      soundsObj.push(obj);
+      si += 1;
+    }
     spriteObj.costumes = costumesObj;
+    spriteObj.sounds = soundsObj;
     spritesArray.push(spriteObj);
     i += 1;
   }
@@ -208,6 +229,30 @@ async function loadProjectFromZip(arrayBuffer, progressJSON = function(){}) {
         preferedScale: costumeJson.preferedScale,
         willPreload: costumeJson.willPreload,
         mimeType: costumeJson.mimeType,
+      });
+    }
+    for (var soundJson of spriteJson.sounds) {
+      loaded += 1;
+      markProgress();
+      var sound = null;
+      if (soundJson.willPreload) {
+        var dataURL = await arrayBufferToDataURL(
+          await zip.file(soundJson.file).async("arraybuffer"),
+          soundJson.mimeType ? soundJson.mimeType : "image/png",
+        );
+        sound = await sprite.addSound(dataURL, soundJson.name);
+      } else {
+        var dataURL = await arrayBufferToDataURL(
+          await zip.file(soundJson.file).async("arraybuffer"),
+          soundJson.mimeType ? soundJson.mimeType : "image/png",
+        );
+        sound = sprite.addSoundWithoutLoading(dataURL, soundJson.name);
+      }
+      Object.assign(costume, {
+        id: costumeJson.id,
+        preferedScale: costumeJson.preferedScale,
+        willPreload: costumeJson.willPreload,
+        mimeType: soundJson.mimeType,
       });
     }
     Object.assign(sprite, {

@@ -24,6 +24,9 @@ module.exports = {
         {
           element: "div",
           gid: "loadingScreenContent",
+          style: {
+            textAlign: "center"
+          }
         }
       ],
     },
