@@ -112,7 +112,7 @@ async function saveProjectToZip(progressBar = function () {}) {
         willPreload: sound.willPreload,
         mimeType: sound.mimeType,
       };
-      var response = await fetch(sound.dataURL);
+      var response = await fetch(sound.src);
       var arrayBuffer = await response.arrayBuffer();
 
       var fileName = "sprite_" + i + "_sound_" + si + ".mp3";

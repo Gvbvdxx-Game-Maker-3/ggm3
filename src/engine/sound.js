@@ -16,6 +16,14 @@ class Sound {
     this.mimeType = "audio/mp3";
   }
 
+  get dataURL () {
+    return this.src;
+  }
+
+  set dataURL (v) {
+    this.src = v;
+  }
+
   stopForSpriteID(spriteid) {
     var _this = this;
     var sound = this.playingOn[spriteid];
