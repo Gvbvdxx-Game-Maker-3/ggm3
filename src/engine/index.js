@@ -226,7 +226,7 @@ class GGM3Engine {
     let lag = 0.0;
 
     function loop(now) {
-      requestAnimationFrame(loop);
+      setTimeout(loop,1);
 
       const frameDuration = 1000 / _this.frameRate;
 
@@ -250,7 +250,7 @@ class GGM3Engine {
       }
     }
 
-    requestAnimationFrame(loop);
+    setTimeout(loop,1);
   }
 
   newDrawable(canvas) {
