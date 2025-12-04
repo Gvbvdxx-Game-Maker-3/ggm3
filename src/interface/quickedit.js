@@ -107,12 +107,10 @@ if (available()) {
             editFileQuick.textContent = "Saving...";
             isSaving = true;
             try{
-                var writable = await FileSystemAPI.createWritable(fileHandle);
+                var writable = await createWritable(fileHandle);
                 var zip = await projectSaver.saveProjectToZip();
-                    var objectURL = URL.createObjectURL(
-                    await zip.generateAsync({ type: "blob" }),
-                    );
-                await FileSystemAPI.writeToWritable(writable, content);
+                var objectURL = await zip.generateAsync({ type: "blob" });
+                await writeToWritable(writable, objectURL);
             }catch(e){
                 console.error(e);
                 dialogs.alert("Project save error "+e);
