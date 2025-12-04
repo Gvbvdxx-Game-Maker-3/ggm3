@@ -22,7 +22,6 @@ class Sound {
     if (!sound) {
       return;
     }
-    sound.onended = function () {};
     sound.stop();
     sound.dispose();
     delete this.playingOn[spriteid];

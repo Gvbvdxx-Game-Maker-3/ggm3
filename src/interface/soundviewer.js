@@ -200,7 +200,7 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
         if (oldIndex === newIndex) return;
 
         // 1. Move data in the engine
-        var soundToMove = spr.sound[oldIndex];
+        var soundToMove = spr.sounds[oldIndex];
         spr.sounds.splice(oldIndex, 1);
         spr.sounds.splice(newIndex, 0, soundToMove);
 

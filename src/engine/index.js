@@ -50,7 +50,7 @@ class GGM3Engine {
   }
 
   stopAllSounds () {
-    for (var sprite of this.sprites) {
+    for (var sprite of this.getAllTopSprites()) {
       sprite.stopAllSounds();
     }
   }
@@ -462,6 +462,7 @@ class GGM3Engine {
     } else {
       this._editDragging = null;
       var topSprites = this.getAllTopSprites()
+        .reverse()
         .filter((s) => !s.hidden)
         .filter((s) => s.alpha > 70);
       var touchedSprite = null;

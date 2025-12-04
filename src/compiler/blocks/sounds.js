@@ -2,8 +2,8 @@ var JavascriptTranslation = {};
 var utilFunctions = require("./util-functions.js");
 var outputBlocks = require("./output_blocks.js");
 
-outputBlocks.push("sounds_sound_menu");
-JavascriptTranslation["sounds_sound_menu"] = function (jsonblock, utils, options) {
+outputBlocks.push("sound_sound_menu");
+JavascriptTranslation["sound_sound_menu"] = function (jsonblock, utils, options) {
   var SOUND_MENU = utils.getField(jsonblock, "SOUND_MENU", options);
   return JSON.stringify(SOUND_MENU);
 };
@@ -18,5 +18,17 @@ JavascriptTranslation["sound_playuntildone"] = function (jsonblock, utils, optio
   return `await sprite.playSoundUntilDone(${SOUND_MENU});${utilFunctions.aliveCheck(jsonblock)}`;
 };
 
+JavascriptTranslation["sound_stopsound"] = function (jsonblock, utils, options) {
+  var SOUND_MENU = utils.getInput(jsonblock, "SOUND_MENU", options, '0');
+  return `sprite.stopSound(${SOUND_MENU});`;
+};
+
+JavascriptTranslation["sound_stopallsounds"] = function (jsonblock, utils, options) {
+  return `engine.stopAllSounds();`;
+};
+
+JavascriptTranslation["sound_stopallsoundsinsprite"] = function (jsonblock, utils, options) {
+  return `sprite.stopAllSounds();`;
+};
 
 module.exports = JavascriptTranslation;

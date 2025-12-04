@@ -497,22 +497,9 @@ function generateToolbox(defaultX, defaultY) {
                 </shadow>
             </value>
         </block>
-        <block type="sound_play">
-            <value name="SOUND_MENU">
-                <shadow type="sound_sounds_menu"></shadow>
-            </value>
-        </block>
-        <block type="sound_stopallsounds">
-            <value name="SOUND_MENU">
-                <shadow type="sound_sounds_menu"></shadow>
-            </value>
-        </block>
-        <block type="sound_stopallsoundsinsprite">
-            <value name="SOUND_MENU">
-                <shadow type="sound_sounds_menu"></shadow>
-            </value>
-        </block>
-        <block type="sound_stopallsoundsinsprite">
+        <block type="sound_stopallsounds"></block>
+        <block type="sound_stopallsoundsinsprite"></block>
+        <block type="sound_stopsound">
             <value name="SOUND_MENU">
                 <shadow type="sound_sounds_menu"></shadow>
             </value>
