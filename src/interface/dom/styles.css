@@ -821,3 +821,18 @@ body {
 .blocklyFlyoutButton:hover > .blocklyText {
   font-weight: bold;
 }
+
+.loadingProgressMain {
+  width: 200px;
+  height: 30px;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.3);
+  border-style: solid;
+  border-radius: 3px;
+  border-width: 3px;
+  border-color: rgba(0, 0, 0, 0.7);
+}
+.loadingProgressInner {
+  height: 100%;
+  background: rgba(255, 255, 255, 0.5);
+}

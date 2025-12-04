@@ -11,6 +11,7 @@ var tabs = require("./tabs.js");
 var selectedSprite = require("./selectedsprite.js");
 var defaultProject = require("./defaultproject.js");
 var loadingScreenContainer = elements.getGPId("loadingScreenContainer");
+var loadingScreenContent = elements.getGPId("loadingScreenContent");
 
 require("./enginecontrol.js");
 
@@ -77,10 +78,13 @@ addAppMenu(
             return;
           }
           loadingScreenContainer.hidden = false;
+          elements.setInnerJSON(loadingScreenContent, []);
           var reader = new FileReader();
           reader.onload = async function () {
             try {
-              await projectSaver.loadProjectFromZip(reader.result);
+              await projectSaver.loadProjectFromZip(reader.result, (json) => {
+                elements.setInnerJSON(loadingScreenContent, json);
+              });
             } catch (e) {
               await defaultProject.loadDefaultProject();
               console.error("Project load error: ", e);

@@ -2,6 +2,22 @@ var JSZip = require("jszip");
 var engine = require("./curengine.js");
 var selectedSprite = require("./selectedsprite.js");
 
+function createProgessBarJSON(decimal = 0) {
+  return {
+      element: "div",
+      className: "loadingProgressMain",
+      children: [
+        {
+          element: "div",
+          className: "loadingProgressInner",
+          style: {
+            width: Math.round(decimal*100) + "%"
+          }
+        }
+      ]
+    };
+}
+
 function getSaveableVariables(variables) {
   var saveableVars = {};
   for (var varName in variables) {
@@ -28,11 +44,23 @@ function getSaveableVariablesGlobal(variables) {
   return saveableVars;
 }
 
-async function saveProjectToZip() {
+async function saveProjectToZip(progressBar = function () {}) {
   var zip = new JSZip();
   var spritesArray = [];
   var i = 0;
   selectedSprite.saveCurrentSpriteCode();
+  progressBar(0);
+  function calculateNeeded() {
+    var needed = 0;
+    for (var spriteJson of engine.sprites) {
+      var costumes = spriteJson.costumes;
+      var sounds = spriteJson.sounds ? spriteJson.sounds : [];
+      needed += spriteJson.costumes.length + sounds.length;
+    }
+    return needed;
+  }
+  var needed = calculateNeeded() + 1; //add 1 to count for saving project json.
+  var saved = 0;
   for (var sprite of engine.sprites) {
     var costumesObj = [];
     var spriteObj = {
@@ -53,6 +81,8 @@ async function saveProjectToZip() {
     };
     var ci = 0;
     for (var costume of sprite.costumes) {
+      saved += 1;
+      progressBar(saved/needed);
       var costumeObj = {
         name: costume.name,
         id: costume.id,
@@ -84,6 +114,8 @@ async function saveProjectToZip() {
       frameRate: engine.frameRate,
     }),
   );
+  saved += 1;
+  progressBar(saved/needed);
   return zip;
 }
 
@@ -105,8 +137,20 @@ function arrayBufferToDataURL(arrayBuffer, mimeType) {
   });
 }
 
-async function loadProjectFromZip(arrayBuffer) {
+async function loadProjectFromZip(arrayBuffer, progressJSON = function(){}) {
+  progressJSON([
+    {
+      element: "span",
+      textContent: "Loading file..."
+    }
+  ]);
   var zip = await JSZip.loadAsync(arrayBuffer);
+  progressJSON([
+    {
+      element: "span",
+      textContent: "Reading data..."
+    }
+  ]);
   var decodedJSON = JSON.parse(await zip.file("game.json").async("string"));
   engine.stopGame();
   engine.emptyProject();
@@ -116,9 +160,33 @@ async function loadProjectFromZip(arrayBuffer) {
     frameRate: decodedJSON.frameRate || 60,
   });
 
+  function calculateNeeded() {
+    var needed = 0;
+    for (var spriteJson of decodedJSON.sprites) {
+      var costumes = spriteJson.costumes;
+      var sounds = spriteJson.sounds ? spriteJson.sounds : [];
+      needed += spriteJson.costumes.length + sounds.length;
+    }
+    return needed;
+  }
+  var needed = calculateNeeded();
+  var loaded = 0;
+  function markProgress() {
+    progressJSON([
+        {
+          element: "span",
+          textContent: "Loading resources..."
+        },
+        createProgessBarJSON(loaded/needed)
+      ]);
+  }
+  markProgress();
   for (var spriteJson of decodedJSON.sprites) {
     var sprite = engine.createEmptySprite();
+    var sounds = spriteJson.sounds ? spriteJson.sounds : []; //Some very early versions don't provide sounds.
     for (var costumeJson of spriteJson.costumes) {
+      loaded += 1;
+      markProgress();
       var costume = null;
       if (costumeJson.willPreload) {
         var dataURL = await arrayBufferToDataURL(
@@ -161,6 +229,12 @@ async function loadProjectFromZip(arrayBuffer) {
 
     selectedSprite.compileSpriteXML(sprite);
   }
+  progressJSON([
+    {
+      element: "span",
+      textContent: "Finishing up..."
+    }
+  ]);
 }
 
 module.exports = {

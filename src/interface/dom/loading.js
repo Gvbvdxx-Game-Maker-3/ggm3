@@ -21,6 +21,10 @@ module.exports = {
           },
           textContent: "Loading...",
         },
+        {
+          element: "div",
+          gid: "loadingScreenContent",
+        }
       ],
     },
   ],
