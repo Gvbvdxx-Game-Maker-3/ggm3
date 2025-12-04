@@ -505,6 +505,16 @@ function generateToolbox(defaultX, defaultY) {
             </value>
         </block>
     </category>
+    <category name="Game" id="engine" colour="#77a1b5" secondaryColour="#77a1b5">
+        <block type="engine_framerate_to">
+            <value name="FPS">
+                <shadow type="math_number">
+                    <field name="NUM">60</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="engine_framerate"></block>
+    </category>
     <category name="Variables" id="data" colour="#FF8C1A" secondaryColour="#DB6E00" custom="GGM3_VARIABLE">
     </category>
     <category name="Global Variables" id="data_global" colour="#00c756" secondaryColour="#00c756" custom="GGM3_GLOBAL_VARIABLE">

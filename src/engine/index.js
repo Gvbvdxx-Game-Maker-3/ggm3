@@ -49,6 +49,16 @@ class GGM3Engine {
     this.updateCanvasSize();
   }
 
+  setFramerate(v = 60) { //Used by blocks
+    this.frameRate = +v || 60;
+    if (this.frameRate > 1000) {
+      this.frameRate = 1000;
+    }
+    if (this.frameRate < 1) {
+      this.frameRate = 1;
+    }
+  }
+
   stopAllSounds () {
     for (var sprite of this.getAllTopSprites()) {
       sprite.stopAllSounds();

@@ -8,3 +8,4 @@ require("./loader.js");
 require("./json.js");
 require("./global-data.js");
 require("./sounds.js");
+require("./engine.js");
