@@ -700,7 +700,7 @@ class Sprite {
     var costume = new Costume(
       this.engine,
       url,
-      name ? name : "Costume " + (_this.costumes.length + 1),
+      name ? name : "Costume " + (this.costumes.length + 1),
     );
     this.costumes.push(costume);
     this.ensureUniqueCostumeNames();
@@ -740,9 +740,9 @@ class Sprite {
       this,
       url
     );
-    s.name = name ? name : "Sound " + (_this.sounds.length + 1);
-    _this.sounds.push(s);
-    _this.ensureUniqueSoundNames();
+    s.name = name ? name : "Sound " + (this.sounds.length + 1);
+    this.sounds.push(s);
+    this.ensureUniqueSoundNames();
   }
 
   deleteCostume(costume) {
