@@ -164,6 +164,13 @@ function loadCode(spr) {
     }
   }
 
+  function compileAll() {
+    var blocks = workspace.getTopBlocks(true);
+    for (var block of blocks) {
+      compileRoot(block.getRootBlock());
+    }
+  }
+
   function unglowErrorOnBlock(blockId) {
     try {
       var changedBlock = workspace.getBlockById(blockId);
@@ -247,14 +254,16 @@ function loadCode(spr) {
           var oldParentBlock = workspace.getBlockById(e.oldParentId);
           if (oldParentBlock) {
             unglowErrorOnBlock(oldParentBlock.getRootBlock().id);
-            compileRoot(oldParentBlock.getRootBlock());
+            //compileRoot(oldParentBlock.getRootBlock());
+            compileAll();
           }
         }
       } else {
         currentBlocks[e.blockId] = true;
 
         var newRoot = eventBlock.getRootBlock();
-        compileRoot(newRoot);
+        //compileRoot(newRoot);
+        compileAll();
 
         if (
           (e instanceof Blockly.Events.Move || e.type == "move") &&
@@ -265,7 +274,8 @@ function loadCode(spr) {
             var oldRoot = oldParentBlock.getRootBlock();
             if (oldRoot.id !== newRoot.id) {
               unglowErrorOnBlock(oldRoot.id);
-              compileRoot(oldRoot);
+              //compileRoot(oldRoot);
+              compileAll();
             }
           }
         }
