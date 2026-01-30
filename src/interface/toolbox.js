@@ -294,28 +294,28 @@ function generateToolbox(defaultX, defaultY) {
             </value>
 		</block>
 		<block type="operator_stringlength">
-			<value name="VALUE1">
+			<value name="VALUE">
                 <shadow type="text">
 					<field name="TEXT">apple</field>
 				</shadow>
             </value>
 		</block>
 		<block type="operator_stringtrim">
-			<value name="VALUE1">
+			<value name="VALUE">
                 <shadow type="text">
 					<field name="TEXT">apple</field>
 				</shadow>
             </value>
 		</block>
 		<block type="operator_stringlowercase">
-			<value name="VALUE1">
+			<value name="VALUE">
                 <shadow type="text">
 					<field name="TEXT">apple</field>
 				</shadow>
             </value>
 		</block>
 		<block type="operator_stringuppercase" gap="30">
-			<value name="VALUE1">
+			<value name="VALUE">
                 <shadow type="text">
 					<field name="TEXT">apple</field>
 				</shadow>
