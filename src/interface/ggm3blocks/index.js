@@ -9,3 +9,4 @@ require("./json.js");
 require("./global-data.js");
 require("./sounds.js");
 require("./engine.js");
+require("./xmlfix.js");
