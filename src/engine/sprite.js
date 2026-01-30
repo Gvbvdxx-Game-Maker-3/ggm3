@@ -25,6 +25,8 @@ class Sprite {
     this.scaleX = 1;
     this.scaleY = 1;
     this.size = 100;
+	this.skewX = 0;
+	this.skewY = 0;
     this.x = 0;
     this.y = 0;
     this.angle = 0;
@@ -70,6 +72,20 @@ class Sprite {
 
     this.playingSounds = {};
   }
+
+	set skewX(v) {
+		this._skewX = +v || 0;
+	}
+	get skewX() {
+		return this._skewX;
+	}
+
+	set skewY(v) {
+		this._skewY = +v || 0;
+	}
+	get skewY() {
+		return this._skewY;
+	}
 
   stopAllSounds () {
     for (var sound of this.sounds) {
@@ -218,6 +234,8 @@ class Sprite {
     sprite.scaleY = this.scaleY;
     sprite.size = this.size;
     sprite.zIndex = this.zIndex;
+	sprite.skewX = this.skewX;
+	sprite.skewY = this.skewY;
 
     sprite.spriteFunctions = this.spriteFunctions;
 
@@ -617,6 +635,17 @@ class Sprite {
       sound.stopForSprite(this);
     }
   }
+
+	stopAllScriptsExceptThreads(threadIds = []) {
+		for (var thread2 of Object.keys(this.runningStacks)) {
+	      if (!threadIds.includes(thread2)) {
+	        this.stopScript(thread2);
+	      }
+	    }
+	    for (var sound of this.sounds) {
+	      sound.stopForSprite(this);
+	    }
+	}
 
   createThread(firstBlockID) {
     this.stopScript(firstBlockID);

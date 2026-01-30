@@ -13,6 +13,10 @@ class Thread {
   }
 
   stopEverythingButMe() {
+	  if (this.inherited) {
+		this.sprite.stopAllScriptsExceptThreads(Object.keys(this.parent.subThreads)); //Subthreads aren't stopped.
+		  return;
+	  }
     this.sprite.stopAllScriptsExceptThread(this);
   }
 

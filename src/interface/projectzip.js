@@ -70,6 +70,8 @@ async function saveProjectToZip(progressBar = function () {}) {
       angle: sprite.angle,
       scaleX: sprite.scaleX,
       scaleY: sprite.scaleY,
+		skewX: sprite.skewX,
+		skewY: sprite.skewY,
       size: sprite.size,
       blocklyXML: sprite.blocklyXML
         ? Blockly.Xml.domToText(sprite.blocklyXML)
@@ -260,6 +262,8 @@ async function loadProjectFromZip(arrayBuffer, progressJSON = function(){}) {
       angle: spriteJson.angle,
       scaleX: spriteJson.scaleX,
       scaleY: spriteJson.scaleY,
+		skewX: spriteJson.skewX || 0,
+		skewY: spriteJson.skewY || 0,
       size: spriteJson.size,
       blocklyXML: spriteJson.blocklyXML
         ? Blockly.Xml.textToDom(spriteJson.blocklyXML)

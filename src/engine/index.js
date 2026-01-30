@@ -321,7 +321,7 @@ class GGM3Engine {
     gl.disable(gl.CULL_FACE);
 
     gl.enable(gl.BLEND);
-    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     this._gl_position = [-0, -0, 1, -0, -0, 1, -0, 1, 1, -0, 1, 1];
     this._gl_texcoord = [
@@ -542,6 +542,8 @@ class GGM3Engine {
           scaleY:
             ((spr.scaleY * (spr.size / 100)) / costume.currentScale) *
             this.screenScale,
+			skewX: spr.skewX * (Math.PI / 180),
+			skewY: spr.skewY * (Math.PI / 180)
         });
 
         //var modelMatrix = twgl.m4.identity();

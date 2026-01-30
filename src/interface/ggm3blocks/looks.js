@@ -115,6 +115,7 @@ var effectTypes = [
   ["wave y time", "waveYTime"],
   ["wave x multiplier", "waveX"],
   ["wave y multiplier", "waveY"],
+	["brightness", "brightness"]
 ];
 
 Blockly.Blocks["looks_seteffectto"] = {
