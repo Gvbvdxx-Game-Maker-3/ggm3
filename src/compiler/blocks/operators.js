@@ -275,4 +275,44 @@ JavascriptTranslation["operator_joinstring"] = function (
   return `(("" + (${VALUE1})) + ("" +(${VALUE2})))`;
 };
 
+outputBlocks.push("operator_stringlength");
+JavascriptTranslation["operator_stringlength"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var VALUE = utils.getInput(jsonblock, "VALUE", options, "''");
+  return `(("" + (${VALUE})).length)`;
+};
+
+outputBlocks.push("operator_stringtrim");
+JavascriptTranslation["operator_stringtrim"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var VALUE = utils.getInput(jsonblock, "VALUE", options, "''");
+  return `(("" + (${VALUE})).trim())`;
+};
+
+outputBlocks.push("operator_stringlowercase");
+JavascriptTranslation["operator_stringlowercase"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var VALUE = utils.getInput(jsonblock, "VALUE", options, "''");
+  return `(("" + (${VALUE})).toLowerCase())`;
+};
+
+outputBlocks.push("operator_stringuppercase");
+JavascriptTranslation["operator_stringuppercase"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var VALUE = utils.getInput(jsonblock, "VALUE", options, "''");
+  return `(("" + (${VALUE})).toUpperCase())`;
+};
+
 module.exports = JavascriptTranslation;

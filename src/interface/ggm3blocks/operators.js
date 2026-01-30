@@ -225,7 +225,7 @@ Blockly.Blocks["operator_mathop"] = {
 Blockly.Blocks["operator_joinstring"] = {
   init: function () {
     this.jsonInit({
-      message0: "join string %1 %2",
+      message0: "join %1 %2",
       args0: [
         {
           type: "input_value",
@@ -237,7 +237,55 @@ Blockly.Blocks["operator_joinstring"] = {
         },
       ],
       category: Blockly.Categories.operators,
+      extensions: ["colours_operators", "output_string"],
+    });
+  },
+};
+
+Blockly.Blocks["operator_stringlength"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "length of %1",
+      args0: [
+        {
+          type: "input_value",
+          name: "VALUE",
+        },
+      ],
+      category: Blockly.Categories.operators,
       extensions: ["colours_operators", "output_number"],
+    });
+  },
+};
+
+Blockly.Blocks["operator_stringtrim"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "trim %1",
+      args0: [
+        {
+          type: "input_value",
+          name: "VALUE",
+        },
+      ],
+      category: Blockly.Categories.operators,
+      extensions: ["colours_operators", "output_string"],
+    });
+  },
+};
+
+Blockly.Blocks["operator_stringlowercase"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "%1 to lower case",
+      args0: [
+        {
+          type: "input_value",
+          name: "VALUE",
+        },
+      ],
+      category: Blockly.Categories.operators,
+      extensions: ["colours_operators", "output_string"],
     });
   },
 };
