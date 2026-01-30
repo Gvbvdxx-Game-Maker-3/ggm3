@@ -289,3 +289,19 @@ Blockly.Blocks["operator_stringlowercase"] = {
     });
   },
 };
+
+Blockly.Blocks["operator_stringuppercase"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "%1 to upper case",
+      args0: [
+        {
+          type: "input_value",
+          name: "VALUE",
+        },
+      ],
+      category: Blockly.Categories.operators,
+      extensions: ["colours_operators", "output_string"],
+    });
+  },
+};

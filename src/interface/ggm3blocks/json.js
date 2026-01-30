@@ -355,3 +355,14 @@ Blockly.Blocks["json_array_split"] = {
     });
   },
 };
+
+Blockly.Blocks["json_array_join"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "join %1 using separator %2",
+      args0: [{ type: "input_value", name: "ARRAY" }, { type: "input_value", name: "USING" }],
+      colour: "#058fff",
+      extensions: ["output_string"],
+    });
+  },
+};

@@ -300,7 +300,21 @@ function generateToolbox(defaultX, defaultY) {
 				</shadow>
             </value>
 		</block>
-		<block type="operator_stringtrim" gap="30">
+		<block type="operator_stringtrim">
+			<value name="VALUE1">
+                <shadow type="text">
+					<field name="TEXT">apple</field>
+				</shadow>
+            </value>
+		</block>
+		<block type="operator_stringlowercase">
+			<value name="VALUE1">
+                <shadow type="text">
+					<field name="TEXT">apple</field>
+				</shadow>
+            </value>
+		</block>
+		<block type="operator_stringuppercase" gap="30">
 			<value name="VALUE1">
                 <shadow type="text">
 					<field name="TEXT">apple</field>
@@ -696,6 +710,14 @@ function generateToolbox(defaultX, defaultY) {
                     <field name="TEXT">apple,banana</field>
                 </shadow>
             </value>
+			<value name="USING">
+                <shadow type="text">
+                    <field name="TEXT">,</field>
+                </shadow>
+            </value>
+        </block>
+		<block type="json_array_join">
+            <value name="ARRAY"></value>
 			<value name="USING">
                 <shadow type="text">
                     <field name="TEXT">,</field>
