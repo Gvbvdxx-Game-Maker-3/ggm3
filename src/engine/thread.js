@@ -14,7 +14,9 @@ class Thread {
 
   stopEverythingButMe() {
 	  if (this.inherited) {
-		this.sprite.stopAllScriptsExceptThreads(Object.keys(this.parent.subThreads)); //Subthreads aren't stopped.
+		  var allThreads = Object.keys(this.parent.subThreads); //Stop the subthreads.
+		  allThreads.push(this.parent.id); //Including the main thread.
+		this.sprite.stopAllScriptsExceptThreads(allThreads);
 		  return;
 	  }
     this.sprite.stopAllScriptsExceptThread(this);
