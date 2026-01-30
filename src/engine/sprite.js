@@ -74,14 +74,14 @@ class Sprite {
   }
 
 	set skewX(v) {
-		this._skewX = +v || 0;
+		this._skewX = this.wrapClamp(v+90, -179, 180)-90;
 	}
 	get skewX() {
 		return this._skewX;
 	}
 
 	set skewY(v) {
-		this._skewY = +v || 0;
+		this._skewY = this.wrapClamp(v+90, -179, 180)-90;
 	}
 	get skewY() {
 		return this._skewY;

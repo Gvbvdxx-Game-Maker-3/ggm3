@@ -145,3 +145,51 @@ Blockly.Blocks["loader_soundisloaded"] = {
     });
   },
 };
+
+Blockly.Blocks["loader_costumeisloaded"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "Is costume %1 loaded?",
+      args0: [
+        {
+          type: "input_value",
+          name: "COSTUME",
+        },
+      ],
+      colour: "#0066a1",
+      extensions: ["output_boolean"],
+    });
+  },
+};
+
+Blockly.Blocks["loader_loadsound"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "Load sound %1",
+      args0: [
+        {
+          type: "input_value",
+          name: "SOUND",
+        },
+      ],
+      colour: "#0066a1",
+      extensions: ["shape_statement"],
+    });
+  },
+};
+
+Blockly.Blocks["loader_deloadsound"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "Deload sound %1",
+      args0: [
+        {
+          type: "input_value",
+          name: "SOUND",
+        },
+      ],
+      colour: "#0066a1",
+      extensions: ["shape_statement"],
+    });
+  },
+};

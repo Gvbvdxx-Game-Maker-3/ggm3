@@ -357,6 +357,18 @@ function generateToolbox(defaultX, defaultY) {
             </value>
         </block>
         <block type="looks_size" gap="30"></block>
+		<block type="looks_stretch_to">
+            <value name="XVALUE">
+                <shadow type="math_number">
+                    <field name="NUM">100</field>
+                </shadow>
+            </value>
+			<value name="YVALUE">
+                <shadow type="math_number">
+                    <field name="NUM">100</field>
+                </shadow>
+            </value>
+        </block>
 		<block type="looks_xstretch_to">
             <value name="VALUE">
                 <shadow type="math_number">
@@ -387,14 +399,16 @@ function generateToolbox(defaultX, defaultY) {
         </block>
 		<block type="looks_xstretch"></block>
 		<block type="looks_ystretch" gap="30"></block>
-
+	
         <block type="looks_switchcostumeto">
             <value name="COSTUME">
                 <shadow type="looks_costume"></shadow>
             </value>
         </block>
         <block type="looks_nextcostume"></block>
-        <block type="looks_costumenumbername" gap="30"></block>
+        <block type="looks_costumenumbername"></block>
+		<block type="looks_costumenames"></block>
+		<block type="looks_costumes" gap="30"></block>
 
         <block type="looks_alpha"></block>
         <block type="looks_alpha_to">
@@ -443,7 +457,52 @@ function generateToolbox(defaultX, defaultY) {
             </value>
         </block>
         <block type="looks_geteffect"></block>
-
+			
+		
+		<label text="These do NOT affect collison:"></label>
+		<block type="looks_skew_to">
+            <value name="XVALUE">
+                <shadow type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+			<value name="YVALUE">
+                <shadow type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+        </block>
+		<block type="looks_xskew_to">
+            <value name="VALUE">
+                <shadow type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+        </block>
+		<block type="looks_yskew_to">
+            <value name="VALUE">
+                <shadow type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="looks_xskew_by">
+            <value name="VALUE">
+                <shadow type="math_number">
+                    <field name="NUM">15</field>
+                </shadow>
+            </value>
+        </block>
+		<block type="looks_yskew_by">
+            <value name="VALUE">
+                <shadow type="math_number">
+                    <field name="NUM">15</field>
+                </shadow>
+            </value>
+        </block>
+		<block type="looks_xskew"></block>
+		<block type="looks_yskew" gap="30"></block>
+		
 		<!--<block type="error_test"></block>--> <!--This is just a block used to check if error handling works-->
     </category>
     <category name="Sounds" id="sounds" colour="${Blockly.Colours.sounds.primary}" secondaryColour="${Blockly.Colours.sounds.secondary}">
@@ -627,6 +686,7 @@ function generateToolbox(defaultX, defaultY) {
             </value>
         </block>
         <block type="json_pretty_print"></block>
+		<block type="json_typeof"></block>
     </category>
     `;
 

@@ -333,3 +333,16 @@ Blockly.Blocks["json_pretty_print"] = {
     });
   },
 };
+
+Blockly.Blocks["json_typeof"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "typeof %1",
+      args0: [
+        { type: "input_value", name: "OBJECT" },
+      ],
+      colour: "#058fff",
+      extensions: ["output_string"],
+    });
+  },
+};

@@ -88,6 +88,16 @@ JavascriptTranslation["looks_ystretch"] = function (jsonblock, utils, options) {
   return `(sprite.scaleY * 100)`; //Lol this was stretch x value instead of y, so fixed here.
 };
 
+JavascriptTranslation["looks_stretch_to"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var XVALUE = utils.getInput(jsonblock, "XVALUE", options);
+  var YVALUE = utils.getInput(jsonblock, "YVALUE", options);
+  return `sprite.scaleX = (+(${XVALUE}) || 0) / 100;sprite.scaleY = (+(${YVALUE}) || 0) / 100;`;
+};
+
 JavascriptTranslation["looks_xstretch_to"] = function (
   jsonblock,
   utils,
@@ -187,6 +197,88 @@ JavascriptTranslation["looks_alpha_by"] = function (jsonblock, utils, options) {
 outputBlocks.push("looks_alpha");
 JavascriptTranslation["looks_alpha"] = function (jsonblock, utils, options) {
   return `(sprite.alpha)`;
+};
+
+JavascriptTranslation["looks_skew_to"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var XVALUE = utils.getInput(jsonblock, "XVALUE", options);
+  var YVALUE = utils.getInput(jsonblock, "YVALUE", options);
+  return `sprite.skewX = +(${XVALUE}) || 0;sprite.skewY = +(${YVALUE}) || 0;`;
+};
+
+JavascriptTranslation["looks_xskew_to"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var VALUE = utils.getInput(jsonblock, "VALUE", options);
+  return `sprite.skewX = +(${VALUE}) || 0;`;
+};
+
+JavascriptTranslation["looks_yskew_to"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var VALUE = utils.getInput(jsonblock, "VALUE", options);
+  return `sprite.skewY = +(${VALUE}) || 0;`;
+};
+
+JavascriptTranslation["looks_xskew_by"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var VALUE = utils.getInput(jsonblock, "VALUE", options);
+  return `sprite.skewX += +(${VALUE}) || 0;`;
+};
+
+JavascriptTranslation["looks_yskew_by"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var VALUE = utils.getInput(jsonblock, "VALUE", options);
+  return `sprite.skewY += +(${VALUE}) || 0;`;
+};
+
+outputBlocks.push("looks_xskew");
+JavascriptTranslation["looks_xskew"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  return `sprite.skewX`;
+};
+
+outputBlocks.push("looks_yskew");
+JavascriptTranslation["looks_yskew"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  return `sprite.skewY`;
+};
+
+outputBlocks.push("looks_costumenames");
+JavascriptTranslation["looks_costumenames"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  return `sprite.costumes.map((c) => c.name)`;
+};
+
+outputBlocks.push("looks_costumes");
+JavascriptTranslation["looks_costumes"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  return `sprite.costumes.length`;
 };
 
 /* Throw error test thats used to check if error handling works, so that when something fails unexpectedly then the threads won't leak memory */

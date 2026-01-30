@@ -18,6 +18,26 @@ Blockly.Blocks["looks_visible"] = {
   },
 };
 
+Blockly.Blocks["looks_stretch_to"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "set stretch to x: %1 y: %2",
+      args0: [
+        {
+          type: "input_value",
+          name: "XVALUE",
+        },
+		  {
+          type: "input_value",
+          name: "YVALUE",
+        },
+      ],
+      category: Blockly.Categories.looks,
+      extensions: ["colours_looks", "shape_statement"],
+    });
+  },
+};
+
 Blockly.Blocks["looks_xstretch_to"] = {
   init: function () {
     this.jsonInit({
@@ -257,6 +277,127 @@ Blockly.Blocks["looks_alpha"] = {
       message0: "alpha",
       category: Blockly.Categories.looks,
       extensions: ["colours_looks", "output_number"],
+    });
+  },
+};
+
+Blockly.Blocks["looks_skew_to"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "set skew to x: %1 y: %2",
+      args0: [
+        {
+          type: "input_value",
+          name: "XVALUE",
+        },
+		  {
+          type: "input_value",
+          name: "YVALUE",
+        },
+      ],
+      category: Blockly.Categories.looks,
+      extensions: ["colours_looks", "shape_statement"],
+    });
+  },
+};
+
+Blockly.Blocks["looks_xskew_to"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "set x skew to %1",
+      args0: [
+        {
+          type: "input_value",
+          name: "VALUE",
+        },
+      ],
+      category: Blockly.Categories.looks,
+      extensions: ["colours_looks", "shape_statement"],
+    });
+  },
+};
+Blockly.Blocks["looks_yskew_to"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "set y skew to %1",
+      args0: [
+        {
+          type: "input_value",
+          name: "VALUE",
+        },
+      ],
+      category: Blockly.Categories.looks,
+      extensions: ["colours_looks", "shape_statement"],
+    });
+  },
+};
+
+Blockly.Blocks["looks_xskew_by"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "change x skew by %1",
+      args0: [
+        {
+          type: "input_value",
+          name: "VALUE",
+        },
+      ],
+      category: Blockly.Categories.looks,
+      extensions: ["colours_looks", "shape_statement"],
+    });
+  },
+};
+Blockly.Blocks["looks_yskew_by"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "change y skew by %1",
+      args0: [
+        {
+          type: "input_value",
+          name: "VALUE",
+        },
+      ],
+      category: Blockly.Categories.looks,
+      extensions: ["colours_looks", "shape_statement"],
+    });
+  },
+};
+
+Blockly.Blocks["looks_xskew"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "x skew",
+      category: Blockly.Categories.looks,
+      extensions: ["colours_looks", "output_number"],
+    });
+  },
+};
+Blockly.Blocks["looks_yskew"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "y skew",
+      category: Blockly.Categories.looks,
+      extensions: ["colours_looks", "output_number"],
+    });
+  },
+};
+
+Blockly.Blocks["looks_costumenames"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "costume name array",
+      category: Blockly.Categories.looks,
+      extensions: ["colours_looks", "output_string"],
+    });
+  },
+};
+
+Blockly.Blocks["looks_costumes"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "costumes",
+      category: Blockly.Categories.looks,
+      extensions: ["colours_looks", "output_string"],
     });
   },
 };

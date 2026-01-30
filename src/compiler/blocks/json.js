@@ -192,4 +192,14 @@ JavascriptTranslation["json_pretty_print"] = function (
   return `(JSON.stringify(${OBJECT}, null, (${INDENT}) || 2))`;
 };
 
+outputBlocks.push("json_typeof");
+JavascriptTranslation["json_typeof"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var OBJECT = utils.getInput(jsonblock, "OBJECT", options, "undefined");
+  return `(typeof ${OBJECT})`;
+};
+
 module.exports = JavascriptTranslation;
