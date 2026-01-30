@@ -306,25 +306,41 @@ function loadBlockMenus(spr) {
       });
     },
   };
-  Blockly.Blocks['sound_sounds_menu'] = {
-  init: function() {
-    this.jsonInit({
-      "message0": "%1",
-      "args0": [
-        {
-          "type": "field_dropdown",
-          "name": "SOUND_MENU",
-          "options": getSoundMenuFunction(spr)
-        }
-      ],
-      "colour": Blockly.Colours.sounds.secondary,
-      "colourSecondary": Blockly.Colours.sounds.secondary,
-      "colourTertiary": Blockly.Colours.sounds.tertiary,
-      "colourQuaternary": Blockly.Colours.sounds.quaternary,
-      "extensions": ["output_string"]
-    });
-  }
-};
+  Blockly.Blocks["loader_sound"] = {
+    init: function () {
+      this.jsonInit({
+        message0: "%1",
+        args0: [
+          {
+            type: "field_dropdown",
+            name: "SOUND",
+            options: getSoundMenuFunction(spr),
+          },
+        ],
+        colour: "#0066a1",
+        extensions: ["output_string"],
+      });
+    },
+  };
+  Blockly.Blocks["sound_sounds_menu"] = {
+    init: function () {
+      this.jsonInit({
+        message0: "%1",
+        args0: [
+          {
+            type: "field_dropdown",
+            name: "SOUND_MENU",
+            options: getSoundMenuFunction(spr),
+          },
+        ],
+        colour: Blockly.Colours.sounds.secondary,
+        colourSecondary: Blockly.Colours.sounds.secondary,
+        colourTertiary: Blockly.Colours.sounds.tertiary,
+        colourQuaternary: Blockly.Colours.sounds.quaternary,
+        extensions: ["output_string"],
+      });
+    },
+  };
   loadGlobalVariableBlocks(spr);
 }
 

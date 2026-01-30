@@ -128,9 +128,19 @@ function generateToolbox(defaultX, defaultY) {
 				<shadow type="loader_costume"></shadow>
 			</value>
 		</block>
-        <block type="loader_costume_scale">
+        <block type="loader_costume_scale" gap="30">
             <value name="COSTUME">
 				<shadow type="loader_costume"></shadow>
+			</value>
+		</block>
+		<block type="loader_loadsound">
+			<value name="SOUND">
+				<shadow type="loader_sound"></shadow>
+			</value>
+		</block>
+		<block type="loader_deloadsound" gap="30">
+			<value name="SOUND">
+				<shadow type="loader_sound"></shadow>
 			</value>
 		</block>
     </category>
@@ -259,13 +269,25 @@ function generateToolbox(defaultX, defaultY) {
                 <shadow type="math_number"></shadow>
             </value>
 		</block>
-        <block type="operator_mathop" gap="30">
+        <block type="operator_mathop">
             <value name="NUM">
                 <shadow type="math_number">
                     <field name="NUM">0</field>
                 </shadow>
             </value>
         </block>
+		<block type="operator_joinstring" gap="30">
+			<value name="VALUE1">
+                <shadow type="text">
+					<field name="TEXT">apple</field>
+				</shadow>
+            </value>
+            <value name="VALUE2">
+                <shadow type="text">
+					<field name="TEXT">banana</field>
+				</shadow>
+            </value>
+		</block>
         <block type="operator_equals">
             <value name="OPERAND1">
                 <shadow type="text"></shadow>

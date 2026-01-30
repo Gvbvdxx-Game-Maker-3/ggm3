@@ -4,18 +4,18 @@ var selectedSprite = require("./selectedsprite.js");
 
 function createProgessBarJSON(decimal = 0) {
   return {
-      element: "div",
-      className: "loadingProgressMain",
-      children: [
-        {
-          element: "div",
-          className: "loadingProgressInner",
-          style: {
-            width: Math.round(decimal*100) + "%"
-          }
-        }
-      ]
-    };
+    element: "div",
+    className: "loadingProgressMain",
+    children: [
+      {
+        element: "div",
+        className: "loadingProgressInner",
+        style: {
+          width: Math.round(decimal * 100) + "%",
+        },
+      },
+    ],
+  };
 }
 
 function getSaveableVariables(variables) {
@@ -70,8 +70,8 @@ async function saveProjectToZip(progressBar = function () {}) {
       angle: sprite.angle,
       scaleX: sprite.scaleX,
       scaleY: sprite.scaleY,
-		skewX: sprite.skewX,
-		skewY: sprite.skewY,
+      skewX: sprite.skewX,
+      skewY: sprite.skewY,
       size: sprite.size,
       blocklyXML: sprite.blocklyXML
         ? Blockly.Xml.domToText(sprite.blocklyXML)
@@ -85,7 +85,7 @@ async function saveProjectToZip(progressBar = function () {}) {
     var ci = 0;
     for (var costume of sprite.costumes) {
       saved += 1;
-      progressBar(saved/needed);
+      progressBar(saved / needed);
       var costumeObj = {
         name: costume.name,
         id: costume.id,
@@ -107,7 +107,7 @@ async function saveProjectToZip(progressBar = function () {}) {
     var si = 0;
     for (var sound of sprite.sounds) {
       saved += 1;
-      progressBar(saved/needed);
+      progressBar(saved / needed);
       var obj = {
         name: sound.name,
         id: sound.id,
@@ -138,7 +138,7 @@ async function saveProjectToZip(progressBar = function () {}) {
     }),
   );
   saved += 1;
-  progressBar(saved/needed);
+  progressBar(saved / needed);
   return zip;
 }
 
@@ -160,19 +160,19 @@ function arrayBufferToDataURL(arrayBuffer, mimeType) {
   });
 }
 
-async function loadProjectFromZip(arrayBuffer, progressJSON = function(){}) {
+async function loadProjectFromZip(arrayBuffer, progressJSON = function () {}) {
   progressJSON([
     {
       element: "span",
-      textContent: "Loading file..."
-    }
+      textContent: "Loading file...",
+    },
   ]);
   var zip = await JSZip.loadAsync(arrayBuffer);
   progressJSON([
     {
       element: "span",
-      textContent: "Reading data..."
-    }
+      textContent: "Reading data...",
+    },
   ]);
   var decodedJSON = JSON.parse(await zip.file("game.json").async("string"));
   engine.stopGame();
@@ -196,12 +196,12 @@ async function loadProjectFromZip(arrayBuffer, progressJSON = function(){}) {
   var loaded = 0;
   function markProgress() {
     progressJSON([
-        {
-          element: "span",
-          textContent: "Loading resources..."
-        },
-        createProgessBarJSON(loaded/needed)
-      ]);
+      {
+        element: "span",
+        textContent: "Loading resources...",
+      },
+      createProgessBarJSON(loaded / needed),
+    ]);
   }
   markProgress();
   for (var spriteJson of decodedJSON.sprites) {
@@ -262,8 +262,8 @@ async function loadProjectFromZip(arrayBuffer, progressJSON = function(){}) {
       angle: spriteJson.angle,
       scaleX: spriteJson.scaleX,
       scaleY: spriteJson.scaleY,
-		skewX: spriteJson.skewX || 0,
-		skewY: spriteJson.skewY || 0,
+      skewX: spriteJson.skewX || 0,
+      skewY: spriteJson.skewY || 0,
       size: spriteJson.size,
       blocklyXML: spriteJson.blocklyXML
         ? Blockly.Xml.textToDom(spriteJson.blocklyXML)
@@ -280,8 +280,8 @@ async function loadProjectFromZip(arrayBuffer, progressJSON = function(){}) {
   progressJSON([
     {
       element: "span",
-      textContent: "Finishing up..."
-    }
+      textContent: "Finishing up...",
+    },
   ]);
 }
 

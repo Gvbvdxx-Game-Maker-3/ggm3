@@ -41,7 +41,11 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
                         try {
                           var costume = await spr.addCostume(reader.result);
                           costume.mimeType = file.type;
-                          costume.name = file.name.split(".").slice(0,file.name.split(".").length-1).join(".").trim();
+                          costume.name = file.name
+                            .split(".")
+                            .slice(0, file.name.split(".").length - 1)
+                            .join(".")
+                            .trim();
                           spr.ensureUniqueCostumeNames();
                           resolve();
                           reloadCostumes(spr);

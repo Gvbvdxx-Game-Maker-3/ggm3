@@ -264,4 +264,15 @@ JavascriptTranslation["operator_toboolean"] = function (
   return `!!(${VALUE})`;
 };
 
+outputBlocks.push("operator_joinstring");
+JavascriptTranslation["operator_joinstring"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var VALUE1 = utils.getInput(jsonblock, "VALUE1", options, "''");
+  var VALUE2 = utils.getInput(jsonblock, "VALUE2", options, "''");
+  return `(("" + (${VALUE1})) + ("" +(${VALUE2})))`;
+};
+
 module.exports = JavascriptTranslation;

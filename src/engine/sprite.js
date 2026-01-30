@@ -25,8 +25,8 @@ class Sprite {
     this.scaleX = 1;
     this.scaleY = 1;
     this.size = 100;
-	this.skewX = 0;
-	this.skewY = 0;
+    this.skewX = 0;
+    this.skewY = 0;
     this.x = 0;
     this.y = 0;
     this.angle = 0;
@@ -73,21 +73,21 @@ class Sprite {
     this.playingSounds = {};
   }
 
-	set skewX(v) {
-		this._skewX = this.wrapClamp(v+90, -179, 180)-90;
-	}
-	get skewX() {
-		return this._skewX;
-	}
+  set skewX(v) {
+    this._skewX = this.wrapClamp(v + 90, -179, 180) - 90;
+  }
+  get skewX() {
+    return this._skewX;
+  }
 
-	set skewY(v) {
-		this._skewY = this.wrapClamp(v+90, -179, 180)-90;
-	}
-	get skewY() {
-		return this._skewY;
-	}
+  set skewY(v) {
+    this._skewY = this.wrapClamp(v + 90, -179, 180) - 90;
+  }
+  get skewY() {
+    return this._skewY;
+  }
 
-  stopAllSounds () {
+  stopAllSounds() {
     for (var sound of this.sounds) {
       sound.stopForSprite(this);
     }
@@ -122,15 +122,18 @@ class Sprite {
     sound.play(this, time, volume, playbackRate);
   }
 
-  async playSoundUntilDone(identifier = "", time = 0, volume = 1, playbackRate = 1) {
+  async playSoundUntilDone(
+    identifier = "",
+    time = 0,
+    volume = 1,
+    playbackRate = 1,
+  ) {
     var sound = this.getSound(identifier);
     if (!sound) {
       return;
     }
     await sound.play(this, time, volume, playbackRate);
   }
-
-  
 
   toString() {
     if (this.isClone) {
@@ -234,8 +237,8 @@ class Sprite {
     sprite.scaleY = this.scaleY;
     sprite.size = this.size;
     sprite.zIndex = this.zIndex;
-	sprite.skewX = this.skewX;
-	sprite.skewY = this.skewY;
+    sprite.skewX = this.skewX;
+    sprite.skewY = this.skewY;
 
     sprite.spriteFunctions = this.spriteFunctions;
 
@@ -453,7 +456,7 @@ class Sprite {
     });
   }
 
-  getSound (v) {
+  getSound(v) {
     if (isNaN(+v)) {
       return this.sounds[this.soundMap[v]];
     } else {
@@ -636,16 +639,16 @@ class Sprite {
     }
   }
 
-	stopAllScriptsExceptThreads(threadIds = []) {
-		for (var thread2 of Object.keys(this.runningStacks)) {
-	      if (!threadIds.includes(thread2)) {
-	        this.stopScript(thread2);
-	      }
-	    }
-	    for (var sound of this.sounds) {
-	      sound.stopForSprite(this);
-	    }
-	}
+  stopAllScriptsExceptThreads(threadIds = []) {
+    for (var thread2 of Object.keys(this.runningStacks)) {
+      if (!threadIds.includes(thread2)) {
+        this.stopScript(thread2);
+      }
+    }
+    for (var sound of this.sounds) {
+      sound.stopForSprite(this);
+    }
+  }
 
   createThread(firstBlockID) {
     this.stopScript(firstBlockID);
@@ -742,18 +745,13 @@ class Sprite {
     }
     var _this = this;
     return new Promise(function (resolve, reject) {
-      var s = new Sound(
-        _this.engine,
-        _this,
-        dataURL,
-        function (success) {
-          if (success) {
-            resolve(s);
-          } else {
-            reject("");
-          }
-        },
-      );
+      var s = new Sound(_this.engine, _this, dataURL, function (success) {
+        if (success) {
+          resolve(s);
+        } else {
+          reject("");
+        }
+      });
       s.loadSound();
       s.name = name ? name : "Sound " + (_this.sounds.length + 1);
       _this.sounds.push(s);
@@ -765,11 +763,7 @@ class Sprite {
     if (this.isClone) {
       throw new Error("Clones can't create their own sounds.");
     }
-    var s = new Sound(
-      this.engine,
-      this,
-      url
-    );
+    var s = new Sound(this.engine, this, url);
     s.name = name ? name : "Sound " + (this.sounds.length + 1);
     this.sounds.push(s);
     this.ensureUniqueSoundNames();

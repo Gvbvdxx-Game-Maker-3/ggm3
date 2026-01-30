@@ -1,5 +1,6 @@
 // Use a shared Float32Array if none is provided to avoid garbage collection
-const MatrixArrayType = typeof Float32Array !== 'undefined' ? Float32Array : Array;
+const MatrixArrayType =
+  typeof Float32Array !== "undefined" ? Float32Array : Array;
 
 function calculateMatrix(sprite, dst) {
   // 1. Setup: Ensure we have a destination array
@@ -10,16 +11,16 @@ function calculateMatrix(sprite, dst) {
   // --- STEP 1: GATHER VARIABLES ---
   const x = sprite.x;
   const y = sprite.y;
-  const rotation = sprite.rotation; 
-  
+  const rotation = sprite.rotation;
+
   // Default to 0 if skew properties don't exist on the sprite
   // These should be in RADIANS, just like rotation
-  const skewX = sprite.skewX || 0; 
+  const skewX = sprite.skewX || 0;
   const skewY = sprite.skewY || 0;
 
   const width = sprite.textureWidth * sprite.scaleX;
   const height = sprite.textureHeight * sprite.scaleY;
-   
+
   const pivotU = sprite.rotationCenterX / sprite.textureWidth;
   const pivotV = sprite.rotationCenterY / sprite.textureHeight;
 
@@ -44,12 +45,12 @@ function calculateMatrix(sprite, dst) {
 
   // 2b. Rotate the Vectors (Apply Rotation)
   // Formula: x' = x*cos - y*sin, y' = x*sin + y*cos
-  
+
   const rightX = localX_x * c - localX_y * s;
   const rightY = localX_x * s + localX_y * c;
 
-  const downX  = localY_x * c - localY_y * s;
-  const downY  = localY_x * s + localY_y * c;
+  const downX = localY_x * c - localY_y * s;
+  const downY = localY_x * s + localY_y * c;
 
   // 2c. Calculate Final Position (Translate)
   // Start at sprite.x,y and subtract the rotated/skewed pivot offset
@@ -57,7 +58,7 @@ function calculateMatrix(sprite, dst) {
   const posY = y - (rightY * pivotU + downY * pivotV);
 
   // --- STEP 3: FILL THE MATRIX ---
-  
+
   // Column 0: X-Axis
   dst[0] = rightX;
   dst[1] = rightY;

@@ -12,6 +12,7 @@ class SpriteEffects {
     this.waveYTime = 0;
     this.waveX = 0;
     this.waveY = 0;
+    this.brightness = 0;
   }
 
   set waveTime(v) {
@@ -64,6 +65,17 @@ class SpriteEffects {
     return this._waveY;
   }
 
+  set brightness(v) {
+    var value = +v || 0;
+    if (value < -100) value = -100;
+    if (value > 100) value = 100;
+
+    this._brightness = value;
+  }
+  get brightness() {
+    return this._brightness;
+  }
+
   getRenderableEffects() {
     return {
       iTime: this.waveTime,
@@ -71,6 +83,7 @@ class SpriteEffects {
       u_wave_ywave: this.waveY,
       u_wave_xtime: this.waveXTime,
       u_wave_ytime: this.waveYTime,
+      u_brightness: this.brightness / 100,
     };
   }
 }

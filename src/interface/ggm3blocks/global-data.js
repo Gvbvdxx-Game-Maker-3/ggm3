@@ -40,15 +40,15 @@ Blockly.WorkspaceSvg.prototype.registerToolboxCategoryCallback(
 
     workspace._ggm3_createVariable = (button) => {
       Blockly.prompt("New global variable name: ", "", function (output) {
-          if (!output) {
-            return;
-          }
-          var name = output.trim();
-          if (!engine.hasGlobalVariable(name)) {
-            engine.addGlobalVariable(name);
-          }
-          workspace.getToolbox().refreshSelection();
-        });
+        if (!output) {
+          return;
+        }
+        var name = output.trim();
+        if (!engine.hasGlobalVariable(name)) {
+          engine.addGlobalVariable(name);
+        }
+        workspace.getToolbox().refreshSelection();
+      });
     };
 
     workspace.registerButtonCallback(

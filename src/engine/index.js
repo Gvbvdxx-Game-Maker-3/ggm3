@@ -49,7 +49,8 @@ class GGM3Engine {
     this.updateCanvasSize();
   }
 
-  setFramerate(v = 60) { //Used by blocks
+  setFramerate(v = 60) {
+    //Used by blocks
     this.frameRate = +v || 60;
     if (this.frameRate > 1000) {
       this.frameRate = 1000;
@@ -59,7 +60,7 @@ class GGM3Engine {
     }
   }
 
-  stopAllSounds () {
+  stopAllSounds() {
     for (var sprite of this.getAllTopSprites()) {
       sprite.stopAllSounds();
     }
@@ -226,7 +227,7 @@ class GGM3Engine {
     let lag = 0.0;
 
     function loop() {
-      setTimeout(loop,1);
+      setTimeout(loop, 1);
       var now = performance.now();
 
       const frameDuration = 1000 / _this.frameRate;
@@ -251,7 +252,7 @@ class GGM3Engine {
       }
     }
 
-    setTimeout(loop,1);
+    setTimeout(loop, 1);
   }
 
   newDrawable(canvas) {
@@ -379,10 +380,12 @@ class GGM3Engine {
       var broadcastFunc = this.broadcastQueue.shift();
       broadcastFunc();
     }
-    this.getAllTopSprites().reverse().forEach((spr) => {
-      _this.tickSprite(spr);
-      _this.renderSprite(spr);
-    });
+    this.getAllTopSprites()
+      .reverse()
+      .forEach((spr) => {
+        _this.tickSprite(spr);
+        _this.renderSprite(spr);
+      });
     if (this.editMode) {
       this.tickEditMode();
     } else {
@@ -542,8 +545,8 @@ class GGM3Engine {
           scaleY:
             ((spr.scaleY * (spr.size / 100)) / costume.currentScale) *
             this.screenScale,
-			skewX: spr.skewX * (Math.PI / 180),
-			skewY: spr.skewY * (Math.PI / 180)
+          skewX: spr.skewX * (Math.PI / 180),
+          skewY: spr.skewY * (Math.PI / 180),
         });
 
         //var modelMatrix = twgl.m4.identity();

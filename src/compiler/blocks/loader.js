@@ -65,4 +65,10 @@ JavascriptTranslation["loader_setrenderscale"] = function (
   return `sprite.blockRerenderCostume(${COSTUME});`;
 };
 
+outputBlocks.push("loader_sound");
+JavascriptTranslation["loader_sound"] = function (jsonblock, utils, options) {
+  var SOUND = utils.getField(jsonblock, "SOUND", options);
+  return JSON.stringify(SOUND);
+};
+
 module.exports = JavascriptTranslation;

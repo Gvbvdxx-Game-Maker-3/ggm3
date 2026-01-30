@@ -38,7 +38,11 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
                         try {
                           var sound = await spr.addSound(reader.result);
                           sound.mimeType = file.type;
-                          sound.name = file.name.split(".").slice(0,file.name.split(".").length-1).join(".").trim();
+                          sound.name = file.name
+                            .split(".")
+                            .slice(0, file.name.split(".").length - 1)
+                            .join(".")
+                            .trim();
                           spr.ensureUniqueSoundNames();
                           resolve();
                           reloadSounds(spr);
@@ -93,115 +97,114 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
               },
             },
             {
-                element: "br"
+              element: "br",
             },
             {
-                element: "div",
-                style: {
-                    display: "flex",
-                    flexDirection: "row"
-                },
-                children: [
+              element: "div",
+              style: {
+                display: "flex",
+                flexDirection: "row",
+              },
+              children: [
+                {
+                  element: "input",
+                  value: sound.name,
+                  className: "selectedCostumeInput",
+                  eventListeners: [
                     {
-                        element: "input",
-                        value: sound.name,
-                        className: "selectedCostumeInput",
-                        eventListeners: [
-                          {
-                            event: "change",
-                            func: function () {
-                              sound.name = this.value.trim();
-                              spr.ensureUniqueSoundNames();
-                              reloadSounds(spr);
-                              reloadTabCallback(spr);
-                            },
-                          },
-                        ],
+                      event: "change",
+                      func: function () {
+                        sound.name = this.value.trim();
+                        spr.ensureUniqueSoundNames();
+                        reloadSounds(spr);
+                        reloadTabCallback(spr);
                       },
-                      {
-                        element: "button",
-                        className: "greyButtonStyle",
-                        style: {
-                          marginRight: "2px",
-                          fontSize: "12px",
-                        },
-                        GPWhenCreated: function (elm) {
-                          if (sound.willPreload) {
-                            elm.textContent = "Disable preloading";
-                          } else {
-                            elm.textContent = "Enable preloading";
-                          }
-                        },
-                        eventListeners: [
-                          {
-                            event: "click",
-                            func: function () {
-                              sound.willPreload = !sound.willPreload;
-                              if (sound.willPreload) {
-                                this.textContent = "Disable preloading";
-                              } else {
-                                this.textContent = "Enable preloading";
-                              }
-                            },
-                          },
-                        ],
+                    },
+                  ],
+                },
+                {
+                  element: "button",
+                  className: "greyButtonStyle",
+                  style: {
+                    marginRight: "2px",
+                    fontSize: "12px",
+                  },
+                  GPWhenCreated: function (elm) {
+                    if (sound.willPreload) {
+                      elm.textContent = "Disable preloading";
+                    } else {
+                      elm.textContent = "Enable preloading";
+                    }
+                  },
+                  eventListeners: [
+                    {
+                      event: "click",
+                      func: function () {
+                        sound.willPreload = !sound.willPreload;
+                        if (sound.willPreload) {
+                          this.textContent = "Disable preloading";
+                        } else {
+                          this.textContent = "Enable preloading";
+                        }
                       },
-                      {
-                        element: "button",
-                        className: "greyButtonStyle",
-                        textContent: "Load",
-                        style: {
-                          marginRight: "2px",
-                          fontSize: "12px",
-                        },
-                        eventListeners: [
-                          {
-                            event: "click",
-                            func: function () {
-                              sound.loadSound();
-                            },
-                          },
-                        ],
+                    },
+                  ],
+                },
+                {
+                  element: "button",
+                  className: "greyButtonStyle",
+                  textContent: "Load",
+                  style: {
+                    marginRight: "2px",
+                    fontSize: "12px",
+                  },
+                  eventListeners: [
+                    {
+                      event: "click",
+                      func: function () {
+                        sound.loadSound();
                       },
-                      {
-                        element: "button",
-                        className: "greyButtonStyle",
-                        textContent: "Deload",
-                        style: {
-                          marginRight: "2px",
-                          fontSize: "12px",
-                        },
-                        eventListeners: [
-                          {
-                            event: "click",
-                            func: function () {
-                              sound.deloadSound();
-                            },
-                          },
-                        ],
+                    },
+                  ],
+                },
+                {
+                  element: "button",
+                  className: "greyButtonStyle",
+                  textContent: "Deload",
+                  style: {
+                    marginRight: "2px",
+                    fontSize: "12px",
+                  },
+                  eventListeners: [
+                    {
+                      event: "click",
+                      func: function () {
+                        sound.deloadSound();
                       },
-                      {
-                        element: "button",
-                        className: "greyButtonStyle",
-                        textContent: "Delete",
-                        style: {
-                          marginRight: "2px",
-                          fontSize: "12px",
-                        },
-                        eventListeners: [
-                          {
-                            event: "click",
-                            func: function () {
-                              spr.deleteSound(sound);
-                              reloadSounds(spr);
-                              reloadTabCallback(spr);
-                            },
-                          },
-                        ],
+                    },
+                  ],
+                },
+                {
+                  element: "button",
+                  className: "greyButtonStyle",
+                  textContent: "Delete",
+                  style: {
+                    marginRight: "2px",
+                    fontSize: "12px",
+                  },
+                  eventListeners: [
+                    {
+                      event: "click",
+                      func: function () {
+                        spr.deleteSound(sound);
+                        reloadSounds(spr);
+                        reloadTabCallback(spr);
                       },
-                ]
-            }
-            
+                    },
+                  ],
+                },
+              ],
+            },
           ],
         };
       }),

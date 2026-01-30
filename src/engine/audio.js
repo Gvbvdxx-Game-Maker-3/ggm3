@@ -283,7 +283,7 @@ class AudioBufferPlayer {
     this.onended = null;
   }
 
-  dispose () {
+  dispose() {
     this.destroy();
   }
 

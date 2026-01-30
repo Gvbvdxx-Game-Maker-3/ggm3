@@ -27,7 +27,7 @@ Blockly.Blocks["looks_stretch_to"] = {
           type: "input_value",
           name: "XVALUE",
         },
-		  {
+        {
           type: "input_value",
           name: "YVALUE",
         },
@@ -135,7 +135,7 @@ var effectTypes = [
   ["wave y time", "waveYTime"],
   ["wave x multiplier", "waveX"],
   ["wave y multiplier", "waveY"],
-	["brightness", "brightness"]
+  ["brightness", "brightness"],
 ];
 
 Blockly.Blocks["looks_seteffectto"] = {
@@ -290,7 +290,7 @@ Blockly.Blocks["looks_skew_to"] = {
           type: "input_value",
           name: "XVALUE",
         },
-		  {
+        {
           type: "input_value",
           name: "YVALUE",
         },

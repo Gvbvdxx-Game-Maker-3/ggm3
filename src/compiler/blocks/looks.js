@@ -199,67 +199,39 @@ JavascriptTranslation["looks_alpha"] = function (jsonblock, utils, options) {
   return `(sprite.alpha)`;
 };
 
-JavascriptTranslation["looks_skew_to"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
+JavascriptTranslation["looks_skew_to"] = function (jsonblock, utils, options) {
   var XVALUE = utils.getInput(jsonblock, "XVALUE", options);
   var YVALUE = utils.getInput(jsonblock, "YVALUE", options);
   return `sprite.skewX = +(${XVALUE}) || 0;sprite.skewY = +(${YVALUE}) || 0;`;
 };
 
-JavascriptTranslation["looks_xskew_to"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
+JavascriptTranslation["looks_xskew_to"] = function (jsonblock, utils, options) {
   var VALUE = utils.getInput(jsonblock, "VALUE", options);
   return `sprite.skewX = +(${VALUE}) || 0;`;
 };
 
-JavascriptTranslation["looks_yskew_to"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
+JavascriptTranslation["looks_yskew_to"] = function (jsonblock, utils, options) {
   var VALUE = utils.getInput(jsonblock, "VALUE", options);
   return `sprite.skewY = +(${VALUE}) || 0;`;
 };
 
-JavascriptTranslation["looks_xskew_by"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
+JavascriptTranslation["looks_xskew_by"] = function (jsonblock, utils, options) {
   var VALUE = utils.getInput(jsonblock, "VALUE", options);
   return `sprite.skewX += +(${VALUE}) || 0;`;
 };
 
-JavascriptTranslation["looks_yskew_by"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
+JavascriptTranslation["looks_yskew_by"] = function (jsonblock, utils, options) {
   var VALUE = utils.getInput(jsonblock, "VALUE", options);
   return `sprite.skewY += +(${VALUE}) || 0;`;
 };
 
 outputBlocks.push("looks_xskew");
-JavascriptTranslation["looks_xskew"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
+JavascriptTranslation["looks_xskew"] = function (jsonblock, utils, options) {
   return `sprite.skewX`;
 };
 
 outputBlocks.push("looks_yskew");
-JavascriptTranslation["looks_yskew"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
+JavascriptTranslation["looks_yskew"] = function (jsonblock, utils, options) {
   return `sprite.skewY`;
 };
 
@@ -273,11 +245,7 @@ JavascriptTranslation["looks_costumenames"] = function (
 };
 
 outputBlocks.push("looks_costumes");
-JavascriptTranslation["looks_costumes"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
+JavascriptTranslation["looks_costumes"] = function (jsonblock, utils, options) {
   return `sprite.costumes.length`;
 };
 

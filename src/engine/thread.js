@@ -13,12 +13,12 @@ class Thread {
   }
 
   stopEverythingButMe() {
-	  if (this.inherited) {
-		  var allThreads = Object.keys(this.parent.subThreads); //Stop the subthreads.
-		  allThreads.push(this.parent.id); //Including the main thread.
-		this.sprite.stopAllScriptsExceptThreads(allThreads);
-		  return;
-	  }
+    if (this.inherited) {
+      var allThreads = Object.keys(this.parent.subThreads); //Stop the subthreads.
+      allThreads.push(this.parent.id); //Including the main thread.
+      this.sprite.stopAllScriptsExceptThreads(allThreads);
+      return;
+    }
     this.sprite.stopAllScriptsExceptThread(this);
   }
 

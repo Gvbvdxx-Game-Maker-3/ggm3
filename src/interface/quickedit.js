@@ -5,40 +5,37 @@ var dialogs = require("./dialogs.js");
 //This stuff is used from GM2 (Gvbvdxx Mod 2 - Modified TurboWarp), edited to fit GGM3.
 
 var GGM3Type = {
-    description: 'GGM3 game',
-    accept: {
-        'application/x.ggm3.ggm3': '.ggm3'
-    }
+  description: "GGM3 game",
+  accept: {
+    "application/x.ggm3.ggm3": ".ggm3",
+  },
 };
 
-const showSaveFilePicker = fileName => window.showSaveFilePicker({
+const showSaveFilePicker = (fileName) =>
+  window.showSaveFilePicker({
     suggestedName: fileName,
-    types: [
-		GGM3Type
-    ],
-    excludeAcceptAllOption: true
-});
+    types: [GGM3Type],
+    excludeAcceptAllOption: true,
+  });
 
 const showOpenFilePicker = async () => {
-    const [handle] = await window.showOpenFilePicker({
-        multiple: false,
-        types: [
-			GGM3Type
-        ]
-    });
-    return handle;
+  const [handle] = await window.showOpenFilePicker({
+    multiple: false,
+    types: [GGM3Type],
+  });
+  return handle;
 };
 
 const available = () => !!window.showSaveFilePicker;
 
-const createWritable = handle => handle.createWritable();
+const createWritable = (handle) => handle.createWritable();
 
-const closeWritable = async writable => {
-    await writable.close();
+const closeWritable = async (writable) => {
+  await writable.close();
 };
 
 const writeToWritable = async (writable, content) => {
-    await writable.write(content);
+  await writable.write(content);
 };
 
 //GGM3 Stuff:
@@ -61,132 +58,132 @@ async function newProject() {
 }
 
 function loadProjectFile(file) {
-    if (!file) {
-        return;
+  if (!file) {
+    return;
+  }
+  loadingScreenContainer.hidden = false;
+  elements.setInnerJSON(loadingScreenContent, []);
+  var reader = new FileReader();
+  reader.onload = async function () {
+    try {
+      await projectSaver.loadProjectFromZip(reader.result, (json) => {
+        elements.setInnerJSON(loadingScreenContent, json);
+      });
+    } catch (e) {
+      await defaultProject.loadDefaultProject();
+      console.error("Project load error: ", e);
+      dialogs.alert("Project load error: " + e.message);
     }
-    loadingScreenContainer.hidden = false;
-    elements.setInnerJSON(loadingScreenContent, []);
-    var reader = new FileReader();
-    reader.onload = async function () {
-        try {
-            await projectSaver.loadProjectFromZip(reader.result, (json) => {
-                elements.setInnerJSON(loadingScreenContent, json);
-            });
-        } catch (e) {
-            await defaultProject.loadDefaultProject();
-            console.error("Project load error: ", e);
-            dialogs.alert("Project load error: " + e.message);
-        }
-        selectedSprite.setCurrentSprite(0, true, true);
-        loadingScreenContainer.hidden = true;
-    };
-    reader.readAsArrayBuffer(file);
+    selectedSprite.setCurrentSprite(0, true, true);
+    loadingScreenContainer.hidden = true;
+  };
+  reader.readAsArrayBuffer(file);
 }
 
 if (available()) {
-    var menuBar = elements.getGPId("menuBar");
-    elements.appendElementsFromJSON(menuBar,[
-        {
-            element: "div",
-            style: {
-                marginRight: "auto"
-            }
-        },
-        {
-            element: "div",
-            className: "menuBarItem",
-            gid: "editFileQuick",
-        },
-    ]);
-
-    var editFileQuick = elements.getGPId("editFileQuick");
-    var fileHandle = null;
-    var isSaving = false;
-
-    editFileQuick.textContent = "Save now";
-
-    function createProgessBarJSON(decimal = 0) {
-        return {
-            element: "div",
-            className: "loadingProgressMain",
-            style: {
-                height: "15px",
-                width: "70px"
-            },
-            children: [
-                {
-                element: "div",
-                className: "loadingProgressInner",
-                style: {
-                    width: Math.round(decimal*100) + "%"
-                }
-                }
-            ]
-            };
-        }
-
-    newFileMenus.push({
-      label: "Load and edit",
-      icon: "icons/import.svg",
-      action: async function () {
-        try{
-            fileHandle = await showOpenFilePicker();
-        }catch(e){
-            fileHandle = null;
-        }
-        if (fileHandle) {
-            loadingScreenContainer.hidden = false;
-            elements.setInnerJSON(loadingScreenContent, [
-                {
-                    element: "span",
-                    textContent: "Reading file..."
-                }
-            ]);
-            var file = await fileHandle.getFile();
-            loadProjectFile(file);
-        }
+  var menuBar = elements.getGPId("menuBar");
+  elements.appendElementsFromJSON(menuBar, [
+    {
+      element: "div",
+      style: {
+        marginRight: "auto",
       },
-    });
+    },
+    {
+      element: "div",
+      className: "menuBarItem",
+      gid: "editFileQuick",
+    },
+  ]);
 
-    editFileQuick.onclick = async function () {
-        if (isSaving) {
-            return;
-        }
-        var previousTextContent = editFileQuick.textContent;
-        if (!fileHandle) {
-            try{
-                fileHandle = await showSaveFilePicker("game.ggm3");
-            }catch(e){
-                fileHandle = null;
-            }
-        }
-        editFileQuick.textContent = "Saving...";
-        isSaving = true;
-        try{
-            var writable = await createWritable(fileHandle);
-            var zip = await projectSaver.saveProjectToZip((progressDecimal) => {
-                editFileQuick.textContent = "";
-                elements.setInnerJSON(editFileQuick, [
-                    {
-                        element: "span",
-                        textContent: "Saving..."
-                    },
-                    {
-                        element: "br",
-                    },
-                    createProgessBarJSON(progressDecimal)
-                ]);
-            });
-            var content = await zip.generateAsync({ type: "blob" });
-            await writeToWritable(writable, content);
-        }catch(e){
-            console.error(e);
-            dialogs.alert("Project save error "+e);
-        }
-        closeWritable(writable);
-        editFileQuick.textContent = previousTextContent;
-        isSaving = false;
+  var editFileQuick = elements.getGPId("editFileQuick");
+  var fileHandle = null;
+  var isSaving = false;
+
+  editFileQuick.textContent = "Save now";
+
+  function createProgessBarJSON(decimal = 0) {
+    return {
+      element: "div",
+      className: "loadingProgressMain",
+      style: {
+        height: "15px",
+        width: "70px",
+      },
+      children: [
+        {
+          element: "div",
+          className: "loadingProgressInner",
+          style: {
+            width: Math.round(decimal * 100) + "%",
+          },
+        },
+      ],
     };
+  }
+
+  newFileMenus.push({
+    label: "Load and edit",
+    icon: "icons/import.svg",
+    action: async function () {
+      try {
+        fileHandle = await showOpenFilePicker();
+      } catch (e) {
+        fileHandle = null;
+      }
+      if (fileHandle) {
+        loadingScreenContainer.hidden = false;
+        elements.setInnerJSON(loadingScreenContent, [
+          {
+            element: "span",
+            textContent: "Reading file...",
+          },
+        ]);
+        var file = await fileHandle.getFile();
+        loadProjectFile(file);
+      }
+    },
+  });
+
+  editFileQuick.onclick = async function () {
+    if (isSaving) {
+      return;
+    }
+    var previousTextContent = editFileQuick.textContent;
+    if (!fileHandle) {
+      try {
+        fileHandle = await showSaveFilePicker("game.ggm3");
+      } catch (e) {
+        fileHandle = null;
+      }
+    }
+    editFileQuick.textContent = "Saving...";
+    isSaving = true;
+    try {
+      var writable = await createWritable(fileHandle);
+      var zip = await projectSaver.saveProjectToZip((progressDecimal) => {
+        editFileQuick.textContent = "";
+        elements.setInnerJSON(editFileQuick, [
+          {
+            element: "span",
+            textContent: "Saving...",
+          },
+          {
+            element: "br",
+          },
+          createProgessBarJSON(progressDecimal),
+        ]);
+      });
+      var content = await zip.generateAsync({ type: "blob" });
+      await writeToWritable(writable, content);
+    } catch (e) {
+      console.error(e);
+      dialogs.alert("Project save error " + e);
+    }
+    closeWritable(writable);
+    editFileQuick.textContent = previousTextContent;
+    isSaving = false;
+  };
 }
 
 addAppMenu(

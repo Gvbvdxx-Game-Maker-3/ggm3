@@ -221,3 +221,23 @@ Blockly.Blocks["operator_mathop"] = {
     });
   },
 };
+
+Blockly.Blocks["operator_joinstring"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "join string %1 %2",
+      args0: [
+        {
+          type: "input_value",
+          name: "VALUE1",
+        },
+        {
+          type: "input_value",
+          name: "VALUE2",
+        },
+      ],
+      category: Blockly.Categories.operators,
+      extensions: ["colours_operators", "output_number"],
+    });
+  },
+};

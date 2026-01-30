@@ -17,11 +17,11 @@ class Sound {
     this.loading = false;
   }
 
-  get dataURL () {
+  get dataURL() {
     return this.src;
   }
 
-  set dataURL (v) {
+  set dataURL(v) {
     this.src = v;
   }
 
@@ -77,7 +77,7 @@ class Sound {
     }
   }
 
-  play (spriteContext, time = 0, volume = 1, playbackRate = 1) {
+  play(spriteContext, time = 0, volume = 1, playbackRate = 1) {
     var sprite = spriteContext || this.sprite;
 
     if (this.data) {
@@ -123,7 +123,7 @@ class Sound {
     }
   }
 
-  async loadSound () {
+  async loadSound() {
     if (this.loading) {
       return;
     }
@@ -136,12 +136,12 @@ class Sound {
     this.loading = false;
   }
 
-  deloadSound () {
+  deloadSound() {
     this.data = null;
     this.loading = false;
   }
 
-  dispose () {
+  dispose() {
     this.data = null;
     this.stopAll();
   }
