@@ -1,0 +1,23 @@
+//Constant generator for Sprite Master category.
+//Need this because many properties and may add more later.
+
+var SPRITE_MASTER_VALUES = {
+        "x position": "x",
+        "y position": "y",
+        "direction": "direction",
+        "angle": "angle",
+        "costume name": "costume.name",
+        "costume index/number": "costumeIndex",
+        "alpha": "alpha",
+        "x stretch": "scaleX",
+        "y stretch": "scaleY",
+        "skew x": "skewX",
+        "skew y": "skewY"
+    };
+var SPRITE_MASTER_DROPDOWN = Object.keys(SPRITE_MASTER_VALUES).map((name) => [name]);
+
+var SPRITE_MASTER_CODE = {};
+Object.keys(SPRITE_MASTER_VALUES).forEach((name) => {
+    //This would generate into: sprite.x, sprite.y, sprite.direction, etc.
+    SPRITE_MASTER_CODE[name] = `sprite.${SPRITE_MASTER_VALUES[name]}`;
+});

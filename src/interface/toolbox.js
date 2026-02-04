@@ -149,6 +149,13 @@ function generateToolbox(defaultX, defaultY) {
 			</value>
 		</block>
     </category>
+    <category name="Sprite master" id="spritemaster" colour="#c70000" secondaryColour="#c70000">
+        <block type="spritemaster_spriteobjectof" gap="30">
+			<value name="SPRITE">
+				<shadow type="spritemaster_sprite"></shadow>
+			</value>
+		</block>
+    </category>
     <category name="Control" id="Control" colour="${Blockly.Colours.control.primary}" secondaryColour="${Blockly.Colours.control.secondary}">
         <block type="control_wait">
             <value name="DURATION">

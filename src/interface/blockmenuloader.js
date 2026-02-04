@@ -453,6 +453,24 @@ function getSoundMenuFunction(spr) {
 }
 
 function loadBlockMenus(spr) {
+  Blockly.Blocks["spritemaster_sprite"] = {
+    init: function () {
+      this.jsonInit({
+        message0: "%1",
+        args0: [
+          {
+            type: "field_dropdown",
+            name: "SPRITE",
+            options: getSpriteMenuFunction(spr, [
+              ["myself", "__myself__"],
+            ]),
+          },
+        ],
+        extensions: ["output_string"],
+        colour: "#c70000"
+      });
+    },
+  };
   Blockly.Blocks["propertydata_sprite"] = {
     init: function () {
       this.jsonInit({

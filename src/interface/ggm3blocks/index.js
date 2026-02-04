@@ -11,3 +11,4 @@ require("./sounds.js");
 require("./engine.js");
 require("./xmlfix.js");
 require("./properties.js");
+require("./spritemaster.js");
