@@ -283,37 +283,43 @@ class Sprite {
     }
   }
 
-  createClone() {
+  createClone(inheritSprite) {
+    var spriteOrigin = inheritSprite;
+    if (!inheritSprite) {
+      spriteOrigin = this;
+    }
     if (this.isClone) {
-      return this.parent.createClone();
+      return this.parent.createClone(this);
     }
     var sprite = new Sprite(this.engine, "Clone of " + this.name);
     sprite.isClone = true;
     sprite.parent = this;
-    sprite.x = this.x;
-    sprite.y = this.y;
+    sprite.x = spriteOrigin.x;
+    sprite.y = spriteOrigin.y;
     sprite.costumes = this.costumes;
     sprite.costumeMap = this.costumeMap;
-    sprite.costumeIndex = this.costumeIndex;
-    sprite.hidden = this.hidden;
-    sprite.alpha = this.alpha;
-    sprite.angle = this.angle;
-    sprite.scaleX = this.scaleX;
-    sprite.scaleY = this.scaleY;
-    sprite.size = this.size;
-    sprite.zIndex = this.zIndex;
-    sprite.skewX = this.skewX;
-    sprite.skewY = this.skewY;
+    sprite.costumeIndex = spriteOrigin.costumeIndex;
+    sprite.hidden = spriteOrigin.hidden;
+    sprite.alpha = spriteOrigin.alpha;
+    sprite.angle = spriteOrigin.angle;
+    sprite.scaleX = spriteOrigin.scaleX;
+    sprite.scaleY = spriteOrigin.scaleY;
+    sprite.size = spriteOrigin.size;
+    sprite.zIndex = spriteOrigin.zIndex;
+    sprite.skewX = spriteOrigin.skewX;
+    sprite.skewY = spriteOrigin.skewY;
+    sprite.sounds = this.sounds;
+    sprite.soundMap = this.soundMap;
 
-    sprite.spriteFunctions = this.spriteFunctions;
+    sprite.spriteFunctions = spriteOrigin.spriteFunctions;
 
-    for (var variable of Object.keys(this.variables)) {
+    for (var variable of Object.keys(spriteOrigin.variables)) {
       try {
         sprite.variables[variable] = JSON.parse(
-          JSON.stringify(this.variables[variable]),
+          JSON.stringify(spriteOrigin.variables[variable]),
         ); //This clones the variable value, including json values.
       } catch (e) {
-        sprite.variables[variable] = this.variables[variable]; //If it fails, just assign directly.
+        sprite.variables[variable] = spriteOrigin.variables[variable]; //If it fails, just assign directly.
       }
     }
 

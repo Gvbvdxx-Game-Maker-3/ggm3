@@ -160,14 +160,14 @@ function generateToolbox(defaultX, defaultY) {
 				<shadow type="spritemaster_sprite"></shadow>
 			</value>
 		</block>
-        <block type="spritemaster_spritepropertyset" gap="30">
+        <block type="spritemaster_getclonesofsprite">
 			<value name="SPRITE">
 				<shadow type="spritemaster_sprite"></shadow>
 			</value>
-            <value name="VALUE">
-				<shadow type="math_number">
-                    <field name="NUM">10</field>
-                </shadow>
+		</block>
+        <block type="spritemaster_getclonecountofsprite">
+			<value name="SPRITE">
+				<shadow type="spritemaster_sprite"></shadow>
 			</value>
 		</block>
     </category>
