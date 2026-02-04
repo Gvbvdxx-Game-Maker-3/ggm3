@@ -160,6 +160,16 @@ function generateToolbox(defaultX, defaultY) {
 				<shadow type="spritemaster_sprite"></shadow>
 			</value>
 		</block>
+        <block type="spritemaster_spritepropertyset" gap="30">
+			<value name="SPRITE">
+				<shadow type="spritemaster_sprite"></shadow>
+			</value>
+            <value name="VALUE">
+				<shadow type="math_number">
+                    <field name="NUM">10</field>
+                </shadow>
+			</value>
+		</block>
     </category>
     <category name="Control" id="Control" colour="${Blockly.Colours.control.primary}" secondaryColour="${Blockly.Colours.control.secondary}">
         <block type="control_wait">

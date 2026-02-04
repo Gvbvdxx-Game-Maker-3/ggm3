@@ -80,6 +80,13 @@ class Sprite {
     this.spriteMaster = new SpriteMaster(this);
   }
 
+  get costumeName() {
+    if (!this.costume) {
+      return;
+    }
+    return this.costume.name;
+  }
+
   removeProperty (name) {
     delete this.spriteProperties[name];
   }
@@ -734,7 +741,7 @@ class Sprite {
   getFunction(code) {
     //Used by compiling.
     //window.alert(code);
-    var func = eval("(async function (sprite,engine) {" + code + "})");
+    var func = eval("(async function (sprite,engine,spriteMaster) {" + code + "})");
     return func;
   }
 
@@ -743,14 +750,18 @@ class Sprite {
     this.spriteFunctions[blockID] = func;
   }
 
+  async callCompiledFunction(func) {
+    return await func(this, this.engine, this.spriteMaster);
+  }
+
   async runFunction(code) {
     var func = this.getFunction(code);
-    return await func(this, this.engine);
+    return await this.callCompiledFunction(func);
   }
 
   async runFunctionID(blockID) {
     var func = this.spriteFunctions[blockID];
-    return await func(this, this.engine);
+    return await this.callCompiledFunction(func);
   }
 
   addCostume(dataURL, name) {

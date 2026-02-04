@@ -5,8 +5,7 @@ var SPRITE_MASTER_VALUES = {
         "x position": "x",
         "y position": "y",
         "direction": "direction",
-        "angle": "angle",
-        "costume name": "costume.name",
+        "costume name": "costumeName",
         "costume index/number": "costumeIndex",
         "alpha": "alpha",
         "x stretch": "scaleX",
@@ -14,12 +13,11 @@ var SPRITE_MASTER_VALUES = {
         "skew x": "skewX",
         "skew y": "skewY"
     };
-var SPRITE_MASTER_DROPDOWN = Object.keys(SPRITE_MASTER_VALUES).map((name) => [name]);
+var SPRITE_MASTER_DROPDOWN = Object.keys(SPRITE_MASTER_VALUES).map((name) => [name, name]);
 
 var SPRITE_MASTER_CODE = {};
 Object.keys(SPRITE_MASTER_VALUES).forEach((name) => {
-    //This would generate into: sprite.x, sprite.y, sprite.direction, etc.
-    SPRITE_MASTER_CODE[name] = `sprite.${SPRITE_MASTER_VALUES[name]}`;
+    SPRITE_MASTER_CODE[name] = `${SPRITE_MASTER_VALUES[name]}`;
 });
 
 module.exports = {

@@ -1,16 +1,6 @@
+var SpriteMasterConsts = require("../sprmaster.js");
+
 class SpriteMaster { //Blocks for sprite master
-    static SPRITE_MASTER_VALUES = {
-        "x position": "x",
-        "y position": "y",
-        "direction": "direction",
-        "costume name": "costume.name",
-        "costume index/number": "costumeIndex",
-        "alpha": "alpha",
-        "x stretch": "scaleX",
-        "y stretch": "scaleY",
-        "skew x": "skewX",
-        "skew y": "skewY"
-    };
 
     constructor (originSprite) {
         this.sprite = originSprite;
@@ -20,8 +10,46 @@ class SpriteMaster { //Blocks for sprite master
         this.sprite.findSpriteByName(spriteName);
     }
 
+    getSpriteSafe(spriteName, option) {
+        var targetSprite = this.findSpriteByName(spriteName);
+        if (!targetSprite) {
+            return {};
+        }
+
+        return targetSprite;
+    }
+
+    getClonesOf(spriteName, option) {
+        var targetSprite = this.findSpriteByName(spriteName);
+        if (!targetSprite) {
+            return [];
+        }
+
+        if (targetSprite.isClone) {
+            //Get the parent sprite since this is running in a clone.
+            return Array.from(targetSprite.parent.clones);
+        }
+        //Clone the clones array so that editing it
+        // won't rearrange clones and stuff.
+        return Array.from(targetSprite.clones); 
+    }
+
+    getCloneCountOf(spriteName, option) {
+        var targetSprite = this.findSpriteByName(spriteName);
+        if (!targetSprite) {
+            return 0;
+        }
+
+        if (targetSprite.isClone) {
+            //Get the parent sprite since this is running in a clone.
+            return targetSprite.parent.clones.length;
+        }
+
+        return targetSprite.clones.length;
+    }
+
     dispose() {
-        
+
     }
 }
 
