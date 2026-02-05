@@ -128,7 +128,11 @@ async function loadProjectZip(zipSource, progress = new ProgressMonitor()) {
     for (var spriteJson of engineJson.sprites) {
         var sprite = engine.createEmptySprite();
         for (var costumeJson of spriteJson.costumes) {
-            var 
+            
+
+            var costume = await loadCostume(
+                
+            );
         }
     }
 }
