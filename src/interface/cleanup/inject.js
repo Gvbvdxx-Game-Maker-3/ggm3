@@ -7,3 +7,4 @@ Blockly.WorkspaceSvg.prototype.cleanUp = function () {
 
 require("./makespace.js");
 require("./block-duplicate.js");
+require("./jumptodef.js");
