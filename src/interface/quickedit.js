@@ -66,9 +66,19 @@ function loadProjectFile(file) {
   var reader = new FileReader();
   reader.onload = async function () {
     try {
-      await projectSaver.loadProjectFromZip(reader.result, (json) => {
-        elements.setInnerJSON(loadingScreenContent, json);
+      var monitor = new projectSaver.ProgressMonitor();
+
+      monitor.on("progress", (event) => {
+        elements.setInnerJSON(loadingScreenContent, [
+          {
+            element: "span",
+            textContent: "Loading...",
+          },
+          createProgessBarJSON(event.current/event.max),
+        ]);
       });
+
+      await projectSaver.loadProjectZip(reader.result, monitor);
     } catch (e) {
       await defaultProject.loadDefaultProject();
       console.error("Project load error: ", e);
@@ -162,7 +172,7 @@ if (available()) {
     try {
       var writable = await createWritable(fileHandle);
       var monitor = new projectSaver.ProgressMonitor();
-      monitor.on("progress", (progressDecimal) => {
+      monitor.on("progress", (event) => {
         editFileQuick.textContent = "";
         elements.setInnerJSON(editFileQuick, [
           {
@@ -172,10 +182,10 @@ if (available()) {
           {
             element: "br",
           },
-          createProgessBarJSON(progressDecimal),
+          createProgessBarJSON(event.current/event.max),
         ]);
       });
-      monitor.on("finish", (progressDecimal) => {
+      monitor.on("finish", () => {
         editFileQuick.textContent = "";
         elements.setInnerJSON(editFileQuick, [
           {

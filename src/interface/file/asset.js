@@ -52,8 +52,7 @@ var { fromCostumeJSON, fromSoundJSON } = require("./from-to.js");
 async function loadCostume(
     sprite,
     costumeJson,
-    fileDataURL,
-    mimeType
+    fileDataURL
 ) {
     if (costumeJson.willPreload) {
         var costume = await sprite.addCostume(fileDataURL, costumeJson.name);
@@ -67,8 +66,7 @@ async function loadCostume(
 async function loadSound(
     sprite,
     soundJson,
-    fileDataURL,
-    mimeType
+    fileDataURL
 ) {
     if (soundJson.willPreload) {
         var sound = await sprite.addSound(fileDataURL, soundJson.name);

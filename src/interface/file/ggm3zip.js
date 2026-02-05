@@ -2,12 +2,15 @@ var JSZip = require("jszip");
 var engine = require("../curengine.js");
 
 const RESOURCE_FOLDER = "resources";
+const RESOURCE_SOUNDS_FOLDER = "sounds";
+const RESOURCE_COSTUMES_FOLDER = "costumes";
 const GAME_FILE = "game.json";
 
 var {ProgressMonitor} = require("./progressmonitor.js");
 var {arrayBufferToDataURL, dataURLToArrayBuffer} = require("./dataurl.js");
 
 var {getCostumeData, getSoundData, loadCostume, loadSound} = require("./asset.js");
+
 const {
     toEngineJSON,
     toSpriteJSON,
@@ -19,6 +22,8 @@ const {
     fromCostumeJSON,
     fromSoundJSON
 } = require("./from-to.js");
+
+var {compileSprite} = require("./compile.js");
 
 function calculateProjectSaveMax() {
     var max = 0;
@@ -44,13 +49,18 @@ async function saveProjectZip(progress = new ProgressMonitor()) {
     for (var sprite of engine.sprites) {
         var spriteJson = toSpriteJSON(sprite); //add the sprite properties, without the sound and costume properties.
 
+        //Some bit of organizing the folders.
+        zip.folder(`${RESOURCE_FOLDER}/${spriteIndex}`);
+        zip.folder(`${RESOURCE_FOLDER}/${spriteIndex}/${RESOURCE_COSTUMES_FOLDER}`);
+        zip.folder(`${RESOURCE_FOLDER}/${spriteIndex}/${RESOURCE_SOUNDS_FOLDER}`);
+
         //Manually create the costumes array.
         var costumeData = getCostumeData(sprite, spriteIndex);
         spriteJson.costumes = [];
         for (var file of costumeData) {
             
             var arrayBuffer = await dataURLToArrayBuffer(file.dataURL);
-            var filePath = `${RESOURCE_FOLDER}/${file.fileName}`;
+            var filePath = `${RESOURCE_FOLDER}/${spriteIndex}/${RESOURCE_COSTUMES_FOLDER}/${file.fileName}`;
             zip.file(filePath, arrayBuffer);
             progress.current += 1;
             
@@ -98,7 +108,7 @@ async function saveProjectZipBlob(progress = new ProgressMonitor()) {
 //Loading an entire game file.
 
 async function loadProjectZip(zipSource, progress = new ProgressMonitor()) {
-    var zip = JSZip.loadAsync(zipSource);
+    var zip = await JSZip.loadAsync(zipSource);
 
     var gameFile = zip.file(GAME_FILE);
     if (!gameFile) {
@@ -123,21 +133,70 @@ async function loadProjectZip(zipSource, progress = new ProgressMonitor()) {
 
     //Load everything
 
+    engine.emptyProject(); //Start from empty project
+
     fromEngineJSON(engineJson);
 
     for (var spriteJson of engineJson.sprites) {
         var sprite = engine.createEmptySprite();
-        for (var costumeJson of spriteJson.costumes) {
-            
+        
+        //Load costumes
 
-            var costume = await loadCostume(
-                
+        for (var costumeJson of spriteJson.costumes) {
+            var mimeType = costumeJson.mimeType ? costumeJson.mimeType : "image/png"; //Fallback to PNG file type if it doesn't have a mime type.
+            var filePath = costumeJson.file;
+
+            var file = zip.file(filePath); //Find the file
+            if (!file) {
+                throw new Error(`Unable to locate file path "${filePath}" in the ggm3 file.`);
+                return;
+            }
+            var arrayBuffer = await file.async("arraybuffer");
+            var dataURL = await arrayBufferToDataURL(arrayBuffer, mimeType);
+
+            await loadCostume(
+                sprite,
+                costumeJson,
+                dataURL
             );
+            progress.current += 1;
         }
+
+        //Load sounds
+
+        for (var soundJson of spriteJson.sounds) {
+            var mimeType = soundJson.mimeType ? soundJson.mimeType : "audio/mp3"; //Fallback to MP3 file type if it doesn't have a mime type.
+            var filePath = soundJson.file;
+
+            var file = zip.file(filePath); //Find the file
+            if (!file) {
+                throw new Error(`Unable to locate file path "${filePath}" in the ggm3 file.`);
+                return;
+            }
+            var arrayBuffer = await file.async("arraybuffer");
+            var dataURL = await arrayBufferToDataURL(arrayBuffer, mimeType);
+
+            await loadSound(
+                sprite,
+                soundJson,
+                dataURL
+            );
+            progress.current += 1;
+        }
+
+        //Add sprite properties.
+        fromSpriteJSON(sprite, spriteJson);
+
+        //Compile the sprite so that code works.
+        compileSprite(sprite);
     }
+
+    progress.finish();
 }
 
 module.exports = {
     saveProjectZip,
-    saveProjectZipBlob
+    saveProjectZipBlob,
+
+    loadProjectZip
 };
