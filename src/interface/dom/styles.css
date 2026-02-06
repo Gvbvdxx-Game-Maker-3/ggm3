@@ -822,26 +822,31 @@ body {
     transform: translate(0, 0) scale(2, 2);
     animation-timing-function: ease-out;
     opacity: 0;
+    transform-origin: center;
   }
   40% {
     transform: translate(0, 0) scale(2, 2);
     animation-timing-function: ease-out;
     opacity: 0;
+    transform-origin: center;
   }
   45% {
     transform: translate(0, 0) scale(1, 1);
     animation-timing-function: ease-out;
     opacity: 1;
+    transform-origin: center;
   }
   85% {
     transform: translate(0, 0) scale(1, 1);
     animation-timing-function: ease-out;
     opacity: 1;
+    transform-origin: center;
   }
   100% {
     transform: translate(0, 0) scale(2, 2);
     animation-timing-function: ease-out;
     opacity: 0;
+    transform-origin: center;
   }
 }
 

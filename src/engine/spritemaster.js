@@ -50,6 +50,10 @@ class SpriteMaster {
     return targetSprite.clones.length;
   }
 
+  isTouchingSpriteWithPropertySet(...args) {
+    return this.sprite.isTouchingSpriteWithPropertySet(...args);
+  }
+
   dispose() {}
 }
 

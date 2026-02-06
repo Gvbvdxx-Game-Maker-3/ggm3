@@ -45,6 +45,28 @@ JavascriptTranslation["operator_divide"] = function (
   return `((+(${NUM1}) || 0) / (+(${NUM2}) || 0))`;
 };
 
+outputBlocks.push("operator_scratch_mod");
+JavascriptTranslation["operator_scratch_mod"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var NUM1 = utils.getInput(jsonblock, "NUM1", options, "undefined");
+  var NUM2 = utils.getInput(jsonblock, "NUM2", options, "undefined");
+  return `engine.sMath.mod(+(${NUM1}) || 0, +(${NUM2}) || 0)`;
+};
+
+outputBlocks.push("operator_js_mod");
+JavascriptTranslation["operator_js_mod"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var NUM1 = utils.getInput(jsonblock, "NUM1", options, "undefined");
+  var NUM2 = utils.getInput(jsonblock, "NUM2", options, "undefined");
+  return `(+(${NUM1}) || 0) % (+(${NUM2}) || 0)`;
+};
+
 outputBlocks.push("operator_sign");
 JavascriptTranslation["operator_sign"] = function (jsonblock, utils, options) {
   var NUM = utils.getInput(jsonblock, "NUM", options, "undefined");

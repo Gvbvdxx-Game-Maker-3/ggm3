@@ -252,6 +252,43 @@ class Sprite {
     return false;
   }
 
+  isTouchingSpriteWithPropertySet(otherSpriteName, propName, propValue) {
+    if (otherSpriteName == "__mouse_pointer__") {
+      return this.isTouchingMouse();
+    }
+    if (this.hidden) {
+      return false;
+    }
+    var otherSprite = this.findSpriteByName(otherSpriteName);
+    if (!otherSprite) {
+      return false;
+    }
+    for (var clone of otherSprite.clones) {
+      if (this.isTouchingSpriteWithPropertySet(clone, propName, propValue)) {
+        return clone;
+      }
+    }
+    if (otherSprite.hidden) {
+      return false;
+    }
+    this.alignMask();
+    otherSprite.alignMask();
+    var mask1 = this.mask;
+    var mask2 = otherSprite.mask;
+    if (!mask1) {
+      return false;
+    }
+    if (!mask2) {
+      return false;
+    }
+    if (otherSprite.spriteProperties[propName] == propValue) {
+      if (mask1.collisionTest(mask2)) {
+        return otherSprite;
+      }
+    }
+    return false;
+  }
+
   onErrorLog(error) {
     //Expected to be overridden by the editor.
 

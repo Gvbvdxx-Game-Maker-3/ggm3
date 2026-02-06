@@ -3,6 +3,7 @@ const twgl = require("twgl.js");
 const Drawable = require("./drawable.js");
 const Sprite = require("./sprite.js");
 const calculateMatrix = require("./calculatematrix.js");
+var sMath = require("./smath.js");
 var EventEmitter = require("eventemitter3");
 
 var CollisionSprite = require("./mask.js");
@@ -15,7 +16,6 @@ class GGM3Engine extends EventEmitter {
   static SPRITE_CREATED = "SPRITE_CREATED";
   static SPRITE_DELETED = "SPRITE_DELETED";
   static OPTIONS_UPDATED = "OPTIONS_UPDATED";
-
   constructor(canvas) {
     super();
     if (!created) {
@@ -35,6 +35,7 @@ class GGM3Engine extends EventEmitter {
     this.sprites = [];
     this.frameRate = 60;
     this._iTime = 0;
+    this.sMath = sMath;
     this.keyNames = {
       " ": "space-bar",
       ArrowLeft: "left-arrow",

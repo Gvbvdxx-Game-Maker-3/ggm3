@@ -305,3 +305,43 @@ Blockly.Blocks["operator_stringuppercase"] = {
     });
   },
 };
+
+Blockly.Blocks["operator_js_mod"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "%1 % %2",
+      args0: [
+        {
+          type: "input_value",
+          name: "NUM1",
+        },
+        {
+          type: "input_value",
+          name: "NUM2",
+        },
+      ],
+      category: Blockly.Categories.operators,
+      extensions: ["colours_operators", "output_number"],
+    });
+  },
+};
+
+Blockly.Blocks["operator_scratch_mod"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "%1 mod (scratch) %2",
+      args0: [
+        {
+          type: "input_value",
+          name: "NUM1",
+        },
+        {
+          type: "input_value",
+          name: "NUM2",
+        },
+      ],
+      category: Blockly.Categories.operators,
+      extensions: ["colours_operators", "output_number"],
+    });
+  },
+};

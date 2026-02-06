@@ -79,4 +79,19 @@ JavascriptTranslation["spritemaster_getclonecountofsprite"] = function (
   return `spriteMaster.getCloneCountOf(${SPRITE})`;
 };
 
+outputBlocks.push("spritemaster_checktouchingsprite_equals_propertyvalue");
+JavascriptTranslation["spritemaster_checktouchingsprite_equals_propertyvalue"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var SPRITE = utils.getInput(jsonblock, "SPRITE", options, "null");
+  var VARIABLE = utils.getField(jsonblock, "VARIABLE", options, "null");
+  var VALUE = utils.getInput(jsonblock, "VALUE", options, "null");
+  if (SPRITE == MYSELF_INPUT) {
+    return `true`;
+  }
+  return `spriteMaster.isTouchingSpriteWithPropertySet(${SPRITE}, ${JSON.stringify(VARIABLE)}, ${VALUE})`;
+};
+
 module.exports = JavascriptTranslation;

@@ -170,6 +170,17 @@ function generateToolbox(defaultX, defaultY) {
 				<shadow type="spritemaster_sprite"></shadow>
 			</value>
 		</block>
+        <block type="spritemaster_checktouchingsprite_equals_propertyvalue" >
+            <value name="SPRITE">
+				<shadow type="spritemaster_sprite"></shadow>
+			</value>
+
+            <value name="VALUE">
+				<shadow type="text">
+                    <field name="TEXT">value</field>
+                </shadow>
+			</value>
+        </block>
     </category>
     <category name="Control" id="Control" colour="${Blockly.Colours.control.primary}" secondaryColour="${Blockly.Colours.control.secondary}">
         <block type="control_wait">
@@ -303,6 +314,22 @@ function generateToolbox(defaultX, defaultY) {
                 </shadow>
             </value>
         </block>
+        <block type="operator_js_mod">
+            <value name="NUM1">
+                <shadow type="math_number"></shadow>
+            </value>
+            <value name="NUM2">
+                <shadow type="math_number"></shadow>
+            </value>
+		</block>
+        <block type="operator_scratch_mod">
+            <value name="NUM1">
+                <shadow type="math_number"></shadow>
+            </value>
+            <value name="NUM2">
+                <shadow type="math_number"></shadow>
+            </value>
+		</block>
 		<block type="operator_joinstring">
 			<value name="VALUE1">
                 <shadow type="text">
