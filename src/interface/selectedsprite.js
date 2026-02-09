@@ -204,7 +204,11 @@ function updateSpritesContainer() {
               {
                 event: "click",
                 func: function (elm) {
-                  setCurrentSprite(i);
+                  try{
+                    setCurrentSprite(i);
+                  }catch(e){
+                    window.alert("Error selecting sprite: " + e.message);
+                  }
                 },
               },
             ],
@@ -251,9 +255,28 @@ function updateSpritesContainer() {
                 func: function (elm) {
                   saveCurrentSpriteCode();
                   var newSprite = engine.duplicateSprite(spr);
+                  if (spr && spr.blocklyXML) {
+                    try {
+                      newSprite.blocklyXML = Blockly.Xml.textToDom(
+                        Blockly.Xml.domToText(spr.blocklyXML),
+                      );
+                    } catch (e) {
+                      console.warn("Failed to copy blockly XML:", e);
+                    }
+                  }
                   compileSpriteXML(newSprite);
                   engine.makeUniqueSpriteNames();
-                  updateSpritesContainer();
+                  // Select the newly duplicated sprite so the editor/workspace stays in sync
+                  try {
+                    var newIndex = engine.sprites.indexOf(newSprite);
+                    if (newIndex !== -1) {
+                      setCurrentSprite(newIndex, true);
+                    } else {
+                      updateSpritesContainer();
+                    }
+                  } catch (e) {
+                    updateSpritesContainer();
+                  }
                 },
               },
             ],

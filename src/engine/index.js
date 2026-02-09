@@ -283,7 +283,6 @@ class GGM3Engine extends EventEmitter {
     newSprite.scaleY = fromSprite.scaleY;
     newSprite.size = fromSprite.size;
     newSprite.costumeIndex = fromSprite.costumeIndex;
-    newSprite.blocklyXML = fromSprite.blocklyXML;
     newSprite.alpha = fromSprite.alpha;
     newSprite.skewX = fromSprite.skewX;
     newSprite.skewY = fromSprite.skewY;
