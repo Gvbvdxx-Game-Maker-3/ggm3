@@ -62,10 +62,10 @@ elements.setInnerJSON(projectControls, [
     title: "Start/play game",
     children: [
       {
-            element: "img",
-            src: "icons/playcircle.svg",
-            className: "projectButtonImg",
-          },
+        element: "img",
+        src: "icons/playcircle.svg",
+        className: "projectButtonImg",
+      },
     ],
     eventListeners: [
       {
@@ -82,10 +82,10 @@ elements.setInnerJSON(projectControls, [
     title: "Stop/end game",
     children: [
       {
-            element: "img",
-            src: "icons/stopcircle.svg",
-            className: "projectButtonImg",
-          },
+        element: "img",
+        src: "icons/stopcircle.svg",
+        className: "projectButtonImg",
+      },
     ],
     eventListeners: [
       {

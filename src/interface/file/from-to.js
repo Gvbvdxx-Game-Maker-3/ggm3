@@ -24,8 +24,11 @@ function fromEngineJSON(mainJSON) {
     globalVariables: mainJSON.globalVariables || {},
     broadcastNames: mainJSON.broadcastNames || [],
     frameRate: mainJSON.frameRate || 60,
+    gameWidth: mainJSON.gameWidth || engine.DEFAULT_WIDTH,
+    gameHeight: mainJSON.gameHeight || engine.DEFAULT_HEIGHT,
   });
   _fromEnginePropertyNames(mainJSON.spriteProperties);
+  engine.updateCanvasSize();
 }
 
 function toEngineJSON() {
@@ -34,6 +37,8 @@ function toEngineJSON() {
     broadcastNames: engine.broadcastNames,
     frameRate: engine.frameRate,
     spriteProperties: _toEnginePropertyNames(),
+    gameWidth: engine.gameWidth,
+    gameHeight: engine.gameHeight,
   };
 }
 

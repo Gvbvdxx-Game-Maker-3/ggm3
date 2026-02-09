@@ -70,11 +70,7 @@ function loadProjectFile(file) {
 
       monitor.on("progress", (event) => {
         elements.setInnerJSON(loadingScreenContent, [
-          {
-            element: "span",
-            textContent: "Loading...",
-          },
-          createProgessBarJSON(event.current / event.max),
+          createProgessBarJSON(event.current / event.max, true),
         ]);
       });
 
@@ -102,6 +98,13 @@ if (available()) {
     {
       element: "div",
       className: "menuBarItem",
+      style: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
+        flexWarp: "none",
+      },
       gid: "editFileQuick",
     },
   ]);
@@ -110,16 +113,34 @@ if (available()) {
   var fileHandle = null;
   var isSaving = false;
 
-  editFileQuick.textContent = "Save now";
+  const TEXT_SAVENOW = "Save now";
+  const TEXT_SAVING = "Saving...";
 
-  function createProgessBarJSON(decimal = 0) {
+  function changeSaveNowContent(text) {
+    elements.setInnerJSON(editFileQuick, [
+      {
+        element: "div",
+        style: {
+          width: "fit-content",
+          height: "fit-content",
+        },
+        textContent: text,
+      },
+    ]);
+  }
+
+  changeSaveNowContent(TEXT_SAVENOW);
+
+  function createProgessBarJSON(decimal = 0, large = false) {
     return {
       element: "div",
       className: "loadingProgressMain",
-      style: {
-        height: "15px",
-        width: "70px",
-      },
+      style: large
+        ? {}
+        : {
+            height: "15px",
+            width: "70px",
+          },
       children: [
         {
           element: "div",
@@ -159,7 +180,6 @@ if (available()) {
     if (isSaving) {
       return;
     }
-    var previousTextContent = editFileQuick.textContent;
     if (!fileHandle) {
       try {
         fileHandle = await showSaveFilePicker("game.ggm3");
@@ -167,7 +187,7 @@ if (available()) {
         fileHandle = null;
       }
     }
-    editFileQuick.textContent = "Saving...";
+    changeSaveNowContent(TEXT_SAVING);
     isSaving = true;
     try {
       var writable = await createWritable(fileHandle);
@@ -176,8 +196,12 @@ if (available()) {
         editFileQuick.textContent = "";
         elements.setInnerJSON(editFileQuick, [
           {
-            element: "span",
-            textContent: "Saving...",
+            element: "div",
+            textContent: TEXT_SAVING,
+            style: {
+              width: "fit-content",
+              height: "5px",
+            },
           },
           {
             element: "br",
@@ -187,12 +211,7 @@ if (available()) {
       });
       monitor.on("finish", () => {
         editFileQuick.textContent = "";
-        elements.setInnerJSON(editFileQuick, [
-          {
-            element: "span",
-            textContent: "Saving...",
-          },
-        ]);
+        changeSaveNowContent(TEXT_SAVING);
       });
       var zipBlob = await projectSaver.saveProjectZipBlob(monitor);
       await writeToWritable(writable, zipBlob);
@@ -201,7 +220,7 @@ if (available()) {
       dialogs.alert("Project save error " + e);
     }
     closeWritable(writable);
-    editFileQuick.textContent = previousTextContent;
+    changeSaveNowContent(TEXT_SAVENOW);
     isSaving = false;
   };
 }

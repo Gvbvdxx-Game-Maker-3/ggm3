@@ -693,7 +693,7 @@ function compileSpriteXML(spr) {
   div.remove();
 }
 
-function compileAllSprites() {
+async function compileAllSprites() {
   async function compileRoot(rootBlock, spr) {
     if (!rootBlock) return;
     // We don't need to stop it since it automatically stops the previous stack when ran.
@@ -724,6 +724,8 @@ function compileAllSprites() {
     trashcan: false,
     sounds: false,
   });
+  tempWorkspace.setVisible(false);
+  div.style.display = "none";
 
   for (var spr of engine.sprites) {
     tempWorkspace.clear();
@@ -735,7 +737,9 @@ function compileAllSprites() {
     var blocks = tempWorkspace.getTopBlocks(true);
     for (var block of blocks) {
       compileRoot(block.getRootBlock(), spr);
+      await new Promise((r) => setTimeout(r, 2));
     }
+    await new Promise((r) => setTimeout(r, 2));
   }
 
   tempWorkspace.dispose();
@@ -765,6 +769,13 @@ makeSortable(spritesContainer, ".spriteContainer", (oldIndex, newIndex) => {
   engine.makeUniqueSpriteNames();
 
   updateSpritesContainer();
+});
+
+engine.on(engine.RESOLUTION_UPDATED, function () {
+  var workspace = blocks.getCurrentWorkspace();
+  setTimeout(() => {
+    Blockly.svgResize(workspace);
+  });
 });
 
 module.exports = {

@@ -195,7 +195,7 @@ async function loadProjectZip(zipSource, progress = new ProgressMonitor()) {
     fromSpriteJSON(sprite, spriteJson);
   }
 
-  compileAllSprites();
+  await compileAllSprites();
 
   progress.finish();
 }
