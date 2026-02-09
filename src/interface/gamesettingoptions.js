@@ -22,11 +22,11 @@ function numberInputEventListeners() {
 }
 
 gameSettingOptions.elements = [
+  //Game resolution
   {
     element: "div",
     className: "infoDiv",
     children: [
-      //Game resolution
       {
         element: "b",
         textContent: "Game resolution: ",
@@ -67,15 +67,52 @@ gameSettingOptions.elements = [
       },
     ],
   },
+  //Game runtime
+  {
+    element: "div",
+    className: "infoDiv",
+    children: [
+      {
+        element: "b",
+        textContent: "Game runtime: ",
+      },
+
+      {
+        element: "br",
+      },
+      {
+        element: "span",
+        textContent: "Framerate: ",
+      },
+      {
+        element: "input",
+        ...numberInputEventListeners(),
+        type: "number",
+        min: 1,
+        max: 99999,
+        value: 5,
+        gid: "game-settings-frameRate",
+      },
+
+      {
+        element: "br",
+      },
+    ],
+  },
 ];
 
 gameSettingOptions.start = function () {
   var widthInput = elements.getGPId("game-settings-gameWidth");
   var heightInput = elements.getGPId("game-settings-gameHeight");
+  var frameRateInput = elements.getGPId("game-settings-frameRate");
 
   widthInput.addEventListener("change", () => {
     engine.gameWidth = +widthInput.value || 1;
     engine.updateCanvasSize();
+  });
+
+  frameRateInput.addEventListener("change", () => {
+    engine.setFramerate(frameRateInput.value);
   });
 
   heightInput.addEventListener("change", () => {
@@ -89,6 +126,9 @@ gameSettingOptions.start = function () {
   }
 
   engine.on(engine.RESOLUTION_UPDATED, updateGameSize);
+  engine.on(engine.FRAMERATE_CHANGED, () => {
+    frameRateInput.value = engine.frameRate;
+  });
   updateGameSize();
 };
 

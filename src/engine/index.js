@@ -15,12 +15,15 @@ var created = false;
 class GGM3Engine extends EventEmitter {
   SPRITE_CREATED = "SPRITE_CREATED";
   SPRITE_DELETED = "SPRITE_DELETED";
+
   RESOLUTION_UPDATED = "RESOLUTION_UPDATED";
+  CURSOR_CHANGED = "CURSOR_CHANGED";
+  FRAMERATE_CHANGED = "FRAMERATE_CHANGED";
+
   DEFAULT_WIDTH = 640;
   DEFAULT_HEIGHT = 360;
   DEFAULT_FRAMERATE = 60;
   DEFAULT_CURSOR_STYLE = "default";
-  CURSOR_CHANGED = "CURSOR_CHANGED";
 
   constructor(canvas) {
     super();
@@ -40,6 +43,7 @@ class GGM3Engine extends EventEmitter {
     this.drawables = [];
     this.sprites = [];
     this.frameRate = this.DEFAULT_FRAMERATE;
+    this._frameRate = this.frameRate;
     this._iTime = 0;
     this.sMath = sMath;
     this.keyNames = {
@@ -474,6 +478,10 @@ class GGM3Engine extends EventEmitter {
 
     this._iTime += elapsed / 1000;
     this.elapsedFrameTime = elapsed;
+    if (this._frameRate !== this.frameRate) {
+      this._frameRate = this.frameRate;
+      this.emit(this.FRAMERATE_CHANGED, this._frameRate);
+    }
 
     var _this = this;
     while (this.broadcastQueue.length > 0) {
