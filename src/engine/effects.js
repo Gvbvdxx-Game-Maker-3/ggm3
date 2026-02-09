@@ -69,6 +69,7 @@ class SpriteEffects {
 
   set ribbonShiftX(v) {
     this._ribbonShiftX = +v || 0;
+    this._ribbonShiftX = this._ribbonShiftX % 100;
   }
   get ribbonShiftX() {
     return this._ribbonShiftX;
@@ -76,6 +77,7 @@ class SpriteEffects {
 
   set ribbonShiftY(v) {
     this._ribbonShiftY = +v || 0;
+    this._ribbonShiftY = this._ribbonShiftY % 100;
   }
   get ribbonShiftY() {
     return this._ribbonShiftY;
@@ -114,8 +116,8 @@ class SpriteEffects {
       u_wave_ywave: this.waveY,
       u_wave_xtime: this.waveXTime,
       u_wave_ytime: this.waveYTime,
-      u_ribbonShiftX: this.ribbonShiftX / costumeScale,
-      u_ribbonShiftY: this.ribbonShiftY / costumeScale,
+      u_ribbonShiftX: this.ribbonShiftX / 100,
+      u_ribbonShiftY: this.ribbonShiftY / 100,
       u_brightness: this.brightness / 100,
     };
   }
