@@ -69,7 +69,8 @@ Blockly.Blocks["spritemaster_getclonecountofsprite"] = {
   },
 };
 
-Blockly.Blocks["spritemaster_checktouchingsprite_equals_propertyvalue"] = { //Very long type id lol.
+Blockly.Blocks["spritemaster_checktouchingsprite_equals_propertyvalue"] = {
+  //Very long type id lol.
   init: function () {
     this.jsonInit({
       message0: "touching %1 with properties of %2 equaling %3",
@@ -79,14 +80,17 @@ Blockly.Blocks["spritemaster_checktouchingsprite_equals_propertyvalue"] = { //Ve
           name: "SPRITE",
         },
         {
-                    type: "field_dropdown",
-                    name: "VARIABLE",
-                    options: Blockly.Blocks["spritemaster_checktouchingsprite_equals_propertyvalue"]._listProperties,
-                  },
-                  {
-                    type: "input_value",
-                    name: "VALUE",
-                  },
+          type: "field_dropdown",
+          name: "VARIABLE",
+          options:
+            Blockly.Blocks[
+              "spritemaster_checktouchingsprite_equals_propertyvalue"
+            ]._listProperties,
+        },
+        {
+          type: "input_value",
+          name: "VALUE",
+        },
       ],
       colour: "#c70000",
       extensions: ["output_boolean"],

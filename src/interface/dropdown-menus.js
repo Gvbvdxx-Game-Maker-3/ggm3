@@ -9,39 +9,45 @@ module.exports = {
     var menuJSON = [
       {
         element: "div",
-        className: "menuBarItem menuParent",
-        gid: menuId,
+        className: "menuParentMain",
         children: [
           {
             element: "div",
-            className: "menuBarItemLabel",
-            children: titleChildren,
-          },
-          {
-            element: "div",
-            className: "menuDropdown",
-            gid: dropdownId,
-            hidden: true,
-            children: items.map(function (it, idx) {
-              var child = {
+            className: "menuBarItem menuParent",
+            gid: menuId,
+            children: [
+              {
                 element: "div",
-                className: "menuDropdownItem",
-                gid: dropdownId + "-item-" + idx,
-              };
-              if (it.icon) {
-                child.children = [
-                  { element: "img", src: it.icon, className: "menuIcon" },
-                  {
+                className: "menuBarItemLabel",
+                children: titleChildren,
+              },
+              {
+                element: "div",
+                className: "menuDropdown",
+                gid: dropdownId,
+                hidden: true,
+                children: items.map(function (it, idx) {
+                  var child = {
                     element: "div",
-                    className: "menuDropdownItemLabel",
-                    textContent: it.label,
-                  },
-                ];
-              } else {
-                child.textContent = it.label;
-              }
-              return child;
-            }),
+                    className: "menuDropdownItem",
+                    gid: dropdownId + "-item-" + idx,
+                  };
+                  if (it.icon) {
+                    child.children = [
+                      { element: "img", src: it.icon, className: "menuIcon" },
+                      {
+                        element: "div",
+                        className: "menuDropdownItemLabel",
+                        textContent: it.label,
+                      },
+                    ];
+                  } else {
+                    child.textContent = it.label;
+                  }
+                  return child;
+                }),
+              },
+            ],
           },
         ],
       },

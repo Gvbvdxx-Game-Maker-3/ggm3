@@ -1,6 +1,6 @@
-module.exports = {
+var utilFunctions = {
   startThreadStack: function (blockjson) {
-    return `var thread = sprite.createThread(${JSON.stringify(blockjson.id)});try {`;
+    return `var thread = sprite.createThread(${JSON.stringify(blockjson.id)});try {${utilFunctions.aliveCheck((blockjson))}`;
   },
   endThreadStack: function (blockjson) {
     return `thread.stop();}catch(e){thread.hadError = true;thread.output = e;thread.stop();return thread;}`;
@@ -15,3 +15,4 @@ module.exports = {
     return `try{if (!thread.running) {thread.stop();return thread;}}catch(e){}`;
   },
 };
+module.exports = utilFunctions;

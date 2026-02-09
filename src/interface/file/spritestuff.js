@@ -1,7 +1,7 @@
 var {
   compileSpriteXML,
   saveCurrentSpriteCode,
-  compileAllSprites
+  compileAllSprites,
 } = require("../selectedsprite.js");
 
 function compileSprite(sprite) {

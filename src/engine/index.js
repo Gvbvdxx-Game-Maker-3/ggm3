@@ -13,9 +13,13 @@ var SHADERS = require("./shaders.js");
 var created = false;
 
 class GGM3Engine extends EventEmitter {
-  static SPRITE_CREATED = "SPRITE_CREATED";
-  static SPRITE_DELETED = "SPRITE_DELETED";
-  static OPTIONS_UPDATED = "OPTIONS_UPDATED";
+  SPRITE_CREATED = "SPRITE_CREATED";
+  SPRITE_DELETED = "SPRITE_DELETED";
+  RESOLUTION_UPDATED = "RESOLUTION_UPDATED";
+  DEFAULT_WIDTH = 640;
+  DEFAULT_HEIGHT = 360;
+  DEFAULT_FRAMERATE = 60;
+
   constructor(canvas) {
     super();
     if (!created) {
@@ -33,7 +37,7 @@ class GGM3Engine extends EventEmitter {
     this._editDragging = null;
     this.drawables = [];
     this.sprites = [];
-    this.frameRate = 60;
+    this.frameRate = this.DEFAULT_FRAMERATE;
     this._iTime = 0;
     this.sMath = sMath;
     this.keyNames = {
@@ -53,48 +57,30 @@ class GGM3Engine extends EventEmitter {
     this.broadcastNames = [];
     this.broadcastQueue = [];
 
-    this.gameWidth = 640;
-    this.gameHeight = 360;
+    this.gameWidth = this.DEFAULT_WIDTH;
+    this.gameHeight = this.DEFAULT_HEIGHT;
     this.screenScale = 1;
     this.updateCanvasSize();
+    this.calculateGLStuff();
   }
 
-  set frameRate(v) {
-    if (this._frameRate !== v) {
-      this._frameRate = v;
-      this.emit(GGM3Engine.OPTIONS_UPDATED);
+  setWidth(v) {
+    this.gameWidth = +v || this.DEFAULT_WIDTH;
+    if (this.gameWidth < 1) {
+      this.gameWidth = 1;
     }
   }
 
-  get frameRate() {
-    return this._frameRate;
-  }
-
-  set gameWidth(v) {
-    if (this._gameWidth !== v) {
-      this._gameWidth = v;
-      this.emit(GGM3Engine.OPTIONS_UPDATED);
+  setHeight(v) {
+    this.gameHeight = +v || this.DEFAULT_HEIGHT;
+    if (this.gameHeight < 1) {
+      this.gameHeight = 1;
     }
   }
 
-  get gameWidth() {
-    return this._gameWidth;
-  }
-
-  set gameHeight(v) {
-    if (this._gameHeight !== v) {
-      this._gameHeight = v;
-      this.emit(GGM3Engine.OPTIONS_UPDATED);
-    }
-  }
-
-  get gameHeight() {
-    return this._gameHeight;
-  }
-
-  setFramerate(v = 60) {
+  setFramerate(v) {
     //Used by blocks
-    this.frameRate = +v || 60;
+    this.frameRate = +v || this.DEFAULT_FRAMERATE;
     if (this.frameRate > 1000) {
       this.frameRate = 1000;
     }
@@ -147,9 +133,16 @@ class GGM3Engine extends EventEmitter {
 
   updateCanvasSize() {
     var { canvas, gameWidth, gameHeight, screenScale } = this;
-    canvas.width = gameWidth * screenScale;
-    canvas.height = gameHeight * screenScale;
-    this.calculateGLStuff();
+    var cwidth = gameWidth * screenScale;
+    var cheight = gameHeight * screenScale;
+
+    var needsUpdate = cwidth !== canvas.width || cheight !== canvas.height;
+    if (needsUpdate) {
+      canvas.width = cwidth;
+      canvas.height = cheight;
+      this.calculateGLStuff();
+      this.emit(this.RESOLUTION_UPDATED);
+    }
   }
 
   hasGlobalVariable(name) {
@@ -238,7 +231,7 @@ class GGM3Engine extends EventEmitter {
     }
     sprite.dispose();
     this.sprites = this.sprites.filter((s) => s.id !== sprite.id);
-    this.emit(GGM3Engine.SPRITE_DELETED, sprite);
+    this.emit(this.SPRITE_DELETED, sprite);
   }
 
   emptyProject() {
@@ -251,7 +244,7 @@ class GGM3Engine extends EventEmitter {
 
   createEmptySprite() {
     var spr = this.__createEmptySpriteNoEvent();
-    this.emit(GGM3Engine.SPRITE_CREATED, spr);
+    this.emit(this.SPRITE_CREATED, spr);
     return spr;
   }
 
@@ -287,6 +280,14 @@ class GGM3Engine extends EventEmitter {
       } catch (e) {}
     }
 
+    for (var variable of Object.keys(newSprite.spriteProperties)) {
+      try {
+        newSprite.spriteProperties[variable] = JSON.parse(
+          JSON.stringify(fromSprite.spriteProperties[variable]),
+        ); //This clones the variable value, including json values.
+      } catch (e) {}
+    }
+
     fromSprite.costumes.forEach(async (fromCostume) => {
       var costume = await newSprite.addCostume(fromCostume.dataURL);
       costume.name = fromCostume.name;
@@ -303,7 +304,7 @@ class GGM3Engine extends EventEmitter {
       sound.willPreload = sound.willPreload;
     });
 
-    this.emit(GGM3Engine.SPRITE_CREATED, newSprite);
+    this.emit(this.SPRITE_CREATED, newSprite);
     return newSprite;
   }
 

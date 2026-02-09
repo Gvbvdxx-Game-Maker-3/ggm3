@@ -11,6 +11,14 @@ var projectContainer = elements.getGPId("projectContainer");
 var fullscreenModeContainerMain = elements.getGPId(
   "fullscreenModeContainerMain",
 );
+
+var gameViewportStyles = document.createElement("style");
+document.body.append(gameViewportStyles);
+
+function updateGameViewportStyles() {
+  gameViewportStyles.textContent = `:root { --game-viewport-width: ${engine.gameWidth}px; --game-viewport-height: ${engine.gameHeight}px; }`;
+}
+
 function switchFullscreenMode() {
   canvas.remove();
   projectControls.remove();
@@ -51,7 +59,14 @@ elements.setInnerJSON(projectControls, [
   {
     element: "div",
     className: "projectButton",
-    textContent: "Start",
+    title: "Start/play game",
+    children: [
+      {
+            element: "img",
+            src: "icons/playcircle.svg",
+            className: "projectButtonImg",
+          },
+    ],
     eventListeners: [
       {
         event: "click",
@@ -64,7 +79,14 @@ elements.setInnerJSON(projectControls, [
   {
     element: "div",
     className: "projectButton",
-    textContent: "Stop",
+    title: "Stop/end game",
+    children: [
+      {
+            element: "img",
+            src: "icons/stopcircle.svg",
+            className: "projectButtonImg",
+          },
+    ],
     eventListeners: [
       {
         event: "click",
@@ -256,3 +278,9 @@ document.addEventListener("keyup", (event) => {
 });
 
 updateCoordinates();
+
+updateGameViewportStyles();
+
+engine.on(engine.RESOLUTION_UPDATED, () => {
+  updateGameViewportStyles();
+});

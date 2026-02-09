@@ -6,3 +6,4 @@ require("./ggm3blocks");
 require("./cleanup/inject.js");
 require("./enginecontrol.js");
 require("./quickedit.js");
+require("./edit-menu.js");

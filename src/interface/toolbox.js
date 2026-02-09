@@ -546,6 +546,8 @@ function generateToolbox(defaultX, defaultY) {
             </value>
         </block>
 
+		<label text="These do NOT affect collison:"></label>
+
         <block type="looks_seteffectto">
             <value name="VALUE">
                 <shadow type="math_number">
@@ -561,9 +563,7 @@ function generateToolbox(defaultX, defaultY) {
             </value>
         </block>
         <block type="looks_geteffect"></block>
-			
-		
-		<label text="These do NOT affect collison:"></label>
+        
 		<block type="looks_skew_to">
             <value name="XVALUE">
                 <shadow type="math_number">

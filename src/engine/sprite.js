@@ -359,6 +359,17 @@ class Sprite {
       }
     }
 
+    for (var variable of Object.keys(spriteOrigin.spriteProperties)) {
+      try {
+        sprite.spriteProperties[variable] = JSON.parse(
+          JSON.stringify(spriteOrigin.spriteProperties[variable]),
+        ); //This clones the variable value, including json values.
+      } catch (e) {
+        sprite.spriteProperties[variable] =
+          spriteOrigin.spriteProperties[variable]; //If it fails, just assign directly.
+      }
+    }
+
     this.clones.push(sprite);
 
     for (var key of Object.keys(this.spriteFunctions)) {

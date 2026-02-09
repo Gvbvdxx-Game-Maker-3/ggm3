@@ -83,12 +83,14 @@ body {
   width: 100%;
   min-height: 50px;
   background: #525252;
-  overflow: auto;
+  overflow: unset;
   transition: 0.2s;
+  flex-direction: row;
 }
 
 .menuBarItemLogo {
   all: unset;
+  width: fit-content;
   height: 50px;
   display: flex;
   align-items: center;
@@ -123,15 +125,18 @@ body {
 .menuBarMenus {
   display: flex;
   align-items: center;
-  position: relative;
+  flex-direction: row;
+}
+.menuParentMain {
 }
 .menuParent {
-  position: fixed;
+  position: relative;
   display: flex;
   align-items: center;
   padding: 0 8px;
   z-index: 9999;
   cursor: unset;
+  width: fit-content;
 }
 .menuBarItemLabel {
   color: #ffffff;
@@ -611,17 +616,24 @@ body {
   font-size: 20px;
   user-select: none;
   margin-right: 2px;
+  border-radius: 5px;
+  min-width: 20px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .projectButtonImg {
-  height: 16px;
-  width: 16px;
+  height: 20px;
+  width: 20px;
   object-fit: contain;
 }
 
 .projectButton:hover {
   cursor: pointer;
   color: white;
+  background-color: rgba(0,0,0,0.5);
 }
 
 .spriteInputContainer {

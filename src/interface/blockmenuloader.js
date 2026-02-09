@@ -343,16 +343,16 @@ function loadPropertyVariableBlocks(spr) {
     customContextMenu: contextMenuFunction,
   };
 
-  Blockly.Blocks["spritemaster_checktouchingsprite_equals_propertyvalue"]._listProperties = function () {
-    var currentMenu = Object.keys(engine.propertyVariables).map(
-                (name, i) => {
-                  return [name, name];
-                },
-              );
-              if (currentMenu.length < 1) {
-                currentMenu = [["(No Sprite Properties)", "none"]];
-              }
-              return currentMenu;
+  Blockly.Blocks[
+    "spritemaster_checktouchingsprite_equals_propertyvalue"
+  ]._listProperties = function () {
+    var currentMenu = Object.keys(engine.propertyVariables).map((name, i) => {
+      return [name, name];
+    });
+    if (currentMenu.length < 1) {
+      currentMenu = [["(No Sprite Properties)", "none"]];
+    }
+    return currentMenu;
   };
 
   Blockly.Blocks["propertydata_set"] = {

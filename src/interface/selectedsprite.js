@@ -316,7 +316,10 @@ function loadCode(spr) {
               typeof outputThread.output !== "undefined"
             ) {
               //Fix so undefined works.
-              workspace.reportValue(e.blockId, valueReport(outputThread.output));
+              workspace.reportValue(
+                e.blockId,
+                valueReport(outputThread.output),
+              );
             }
           }
         })();
@@ -691,7 +694,7 @@ function compileSpriteXML(spr) {
 }
 
 function compileAllSprites() {
-  async function compileRoot(rootBlock,spr) {
+  async function compileRoot(rootBlock, spr) {
     if (!rootBlock) return;
     // We don't need to stop it since it automatically stops the previous stack when ran.
     if (compiler.isStarterBlock(rootBlock)) {
