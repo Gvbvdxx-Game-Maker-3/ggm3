@@ -33,7 +33,7 @@ module.exports = {
       chunks: "all",
       name: "shared",
     },
-    //minimize: false
+    minimize: false,
   },
   output: {
     path: path.resolve(__dirname, "dist"),

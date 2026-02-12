@@ -55,7 +55,9 @@ function setCurrentSprite(index, forced, dontSave) {
     if (workspace) {
       workspace.saveScroll();
       if (!dontSave) {
-        state.currentSelectedSprite.blocklyXML = Blockly.Xml.workspaceToDom(blocks.getCurrentWorkspace());
+        state.currentSelectedSprite.blocklyXML = Blockly.Xml.workspaceToDom(
+          blocks.getCurrentWorkspace(),
+        );
       }
     }
   }
@@ -112,4 +114,5 @@ module.exports = {
   saveCurrentSpriteCode,
   saveScroll: workspace.saveScroll,
   scrollToPrevious: workspace.scrollToPrevious,
+  deps: deps,
 };

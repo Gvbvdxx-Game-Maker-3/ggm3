@@ -281,3 +281,12 @@ addAppMenu(
 );
 
 newProject();
+
+selectedSprite.deps.exportSprite = async function (sprite) {
+  var blob = await projectSaver.saveSpriteZipAsBlob(sprite);
+  var objectURL = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = objectURL;
+  a.download = sprite.name + ".ggm3sprite";
+  a.click();
+};

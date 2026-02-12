@@ -68,7 +68,8 @@ function init(state, deps) {
 
                 var draggedBlock = null;
                 try {
-                  draggedBlock = window.__ggm3_currentDragBlock || Blockly.selected;
+                  draggedBlock =
+                    window.__ggm3_currentDragBlock || Blockly.selected;
                 } catch (err) {
                   draggedBlock = Blockly.selected;
                 }
@@ -83,8 +84,12 @@ function init(state, deps) {
                 }
 
                 if (i === state.currentSelectedSpriteIndex) return;
-                if (state.currentSelectedSprite && state.currentSelectedSprite.clones) {
-                  if (state.currentSelectedSprite.clones.indexOf(spr) !== -1) return;
+                if (
+                  state.currentSelectedSprite &&
+                  state.currentSelectedSprite.clones
+                ) {
+                  if (state.currentSelectedSprite.clones.indexOf(spr) !== -1)
+                    return;
                 }
 
                 try {
@@ -112,22 +117,39 @@ function init(state, deps) {
                   Blockly.Xml.domToBlock(xmlBlock, tempWorkspace);
 
                   try {
-                    if (state.currentSelectedSprite && state.currentSelectedSprite.variables) {
-                      for (var varId of Object.keys(state.currentSelectedSprite.variables)) {
+                    if (
+                      state.currentSelectedSprite &&
+                      state.currentSelectedSprite.variables
+                    ) {
+                      for (var varId of Object.keys(
+                        state.currentSelectedSprite.variables,
+                      )) {
                         if (!spr.variables[varId]) {
-                          spr.variables[varId] = state.currentSelectedSprite.variables[varId];
+                          spr.variables[varId] =
+                            state.currentSelectedSprite.variables[varId];
                         }
                       }
                     }
-                    if (state.currentSelectedSprite && state.currentSelectedSprite.spriteProperties) {
-                      for (var propName of Object.keys(state.currentSelectedSprite.spriteProperties)) {
+                    if (
+                      state.currentSelectedSprite &&
+                      state.currentSelectedSprite.spriteProperties
+                    ) {
+                      for (var propName of Object.keys(
+                        state.currentSelectedSprite.spriteProperties,
+                      )) {
                         if (!spr.spriteProperties[propName]) {
-                          spr.spriteProperties[propName] = state.currentSelectedSprite.spriteProperties[propName];
+                          spr.spriteProperties[propName] =
+                            state.currentSelectedSprite.spriteProperties[
+                              propName
+                            ];
                         }
                       }
                     }
                   } catch (varErr) {
-                    console.warn("Warning: could not copy variables to target sprite:", varErr);
+                    console.warn(
+                      "Warning: could not copy variables to target sprite:",
+                      varErr,
+                    );
                   }
 
                   spr.blocklyXML = Blockly.Xml.workspaceToDom(tempWorkspace);
@@ -198,7 +220,10 @@ function init(state, deps) {
                     if (deps.engine.sprites.length > 1) {
                       var newIndex = state.currentSelectedSpriteIndex;
                       deps.engine.deleteSprite(spr);
-                      if (state.currentSelectedSpriteIndex > deps.engine.sprites.length - 1) {
+                      if (
+                        state.currentSelectedSpriteIndex >
+                        deps.engine.sprites.length - 1
+                      ) {
                         newIndex = deps.engine.sprites.length - 1;
                       }
                       if (typeof deps.onSetCurrentSprite === "function") {
@@ -226,7 +251,9 @@ function init(state, deps) {
                     var newSprite = deps.engine.duplicateSprite(spr);
                     if (spr && spr.blocklyXML) {
                       try {
-                        newSprite.blocklyXML = Blockly.Xml.textToDom(Blockly.Xml.domToText(spr.blocklyXML));
+                        newSprite.blocklyXML = Blockly.Xml.textToDom(
+                          Blockly.Xml.domToText(spr.blocklyXML),
+                        );
                       } catch (e) {
                         console.warn("Failed to copy blockly XML:", e);
                       }
@@ -245,6 +272,24 @@ function init(state, deps) {
                     } catch (e) {
                       updateSpritesContainer();
                     }
+                  },
+                },
+              ],
+            },
+
+            {
+              element: "button",
+              className: "greyButtonStyle",
+              textContent: "Export",
+              style: {
+                fontSize: "15px",
+                marginRight: "5px",
+              },
+              eventListeners: [
+                {
+                  event: "click",
+                  func: async function (elm) {
+                    deps.exportSprite(spr);
                   },
                 },
               ],
@@ -287,16 +332,30 @@ function init(state, deps) {
       if (spriteNameInput.value !== state.currentSelectedSprite.name) {
         spriteNameInput.value = state.currentSelectedSprite.name;
       }
-      if (Math.round(+spriteXPosInput.value || 0) !== Math.round(state.currentSelectedSprite.x)) {
+      if (
+        Math.round(+spriteXPosInput.value || 0) !==
+        Math.round(state.currentSelectedSprite.x)
+      ) {
         spriteXPosInput.value = Math.round(state.currentSelectedSprite.x);
       }
-      if (Math.round(+spriteYPosInput.value || 0) !== Math.round(state.currentSelectedSprite.y)) {
+      if (
+        Math.round(+spriteYPosInput.value || 0) !==
+        Math.round(state.currentSelectedSprite.y)
+      ) {
         spriteYPosInput.value = Math.round(state.currentSelectedSprite.y);
       }
-      if (Math.round(+spriteDirectionInput.value || 0) !== Math.round(state.currentSelectedSprite.direction)) {
-        spriteDirectionInput.value = Math.round(state.currentSelectedSprite.direction);
+      if (
+        Math.round(+spriteDirectionInput.value || 0) !==
+        Math.round(state.currentSelectedSprite.direction)
+      ) {
+        spriteDirectionInput.value = Math.round(
+          state.currentSelectedSprite.direction,
+        );
       }
-      if (Math.round(+spriteSizeInput.value || 0) !== Math.round(state.currentSelectedSprite.size)) {
+      if (
+        Math.round(+spriteSizeInput.value || 0) !==
+        Math.round(state.currentSelectedSprite.size)
+      ) {
         spriteSizeInput.value = Math.round(state.currentSelectedSprite.size);
       }
       if (spriteHiddenInput.checked !== state.currentSelectedSprite.hidden) {
@@ -306,17 +365,23 @@ function init(state, deps) {
   }, 1000 / 30);
 
   // Make sprites sortable
-  deps.makeSortable(spritesContainer, ".spriteContainer", (oldIndex, newIndex) => {
-    if (oldIndex === newIndex) return;
-    var spriteToMove = deps.engine.sprites[oldIndex];
-    deps.engine.sprites.splice(oldIndex, 1);
-    deps.engine.sprites.splice(newIndex, 0, spriteToMove);
-    if (state.currentSelectedSprite) {
-      state.currentSelectedSpriteIndex = deps.engine.sprites.indexOf(state.currentSelectedSprite);
-    }
-    deps.engine.makeUniqueSpriteNames();
-    updateSpritesContainer();
-  });
+  deps.makeSortable(
+    spritesContainer,
+    ".spriteContainer",
+    (oldIndex, newIndex) => {
+      if (oldIndex === newIndex) return;
+      var spriteToMove = deps.engine.sprites[oldIndex];
+      deps.engine.sprites.splice(oldIndex, 1);
+      deps.engine.sprites.splice(newIndex, 0, spriteToMove);
+      if (state.currentSelectedSprite) {
+        state.currentSelectedSpriteIndex = deps.engine.sprites.indexOf(
+          state.currentSelectedSprite,
+        );
+      }
+      deps.engine.makeUniqueSpriteNames();
+      updateSpritesContainer();
+    },
+  );
 
   return {
     updateSpritesContainer,
