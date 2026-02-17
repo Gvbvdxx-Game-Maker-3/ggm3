@@ -304,7 +304,9 @@ function init(state, deps) {
 
   function saveCurrentSpriteCode() {
     if (state.currentSelectedSprite && workspace) {
-      state.currentSelectedSprite.blocklyXML = Blockly.Xml.workspaceToDom(workspace);
+      try{
+        state.currentSelectedSprite.blocklyXML = Blockly.Xml.workspaceToDom(workspace);
+      }catch(e){}
     }
   }
 

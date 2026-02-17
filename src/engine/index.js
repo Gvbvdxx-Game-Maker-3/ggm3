@@ -273,7 +273,7 @@ class GGM3Engine extends EventEmitter {
 
   duplicateSprite(fromSprite) {
     var newSprite = this.__createEmptySpriteNoEvent();
-    newSprite.name = fromSprite.name;
+    newSprite.name = fromSprite.name + " " + Math.round(Date.now());
     this.makeUniqueSpriteNames();
 
     newSprite.x = fromSprite.x + 10;
