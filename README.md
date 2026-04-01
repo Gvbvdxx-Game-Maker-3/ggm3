@@ -1,12 +1,17 @@
 ![Gvbvdxx Game Maker 3 Logo](./static/logo/logo.png)
 
+> [!NOTE]
+> Development is at a complete stop right now, my school is blocking onrender.com and also codesandbox, also lost motivation because of the lack of developer tools on my school chromebook. It always had no developer tools, but as the editor got bigger, there is a bigger need of them.
+> 
+> Until I start working on this project again, you're gonna have to stick to the current version of GGM3.
+
 # Gvbvdxx Game Maker 3
 _aka GGM3_
 
 # About
 
-## Dev Note:
-  Still in development, and hopefully would always be, but some features may not be availbile yet.
+> [!NOTE]
+> Still in development, and hopefully would always be, but some features may not be availbile yet.
 
 Gvbvdxx Game Maker 3 is inspired by [Scratch](https://scratch.mit.edu) and the [TurboWarp](https://turbowarp.org) (mod & mods), just like its previous versions.
 
