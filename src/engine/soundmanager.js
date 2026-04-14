@@ -18,7 +18,7 @@ class SoundManager {
       return; //Sound isn't playing, no need to apply effects.
     }
     player.playbackRate = sound.effects.playbackRate;
-    player.volume = sound.effects.volume;
+    player.volume = sound.effects.volume/100;
   }
 
   stopSound(sound) {
