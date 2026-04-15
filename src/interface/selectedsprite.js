@@ -55,11 +55,11 @@ function setCurrentSprite(index, forced, dontSave) {
     if (workspace) {
       workspace.saveScroll();
       if (!dontSave) {
-        try{
+        try {
           state.currentSelectedSprite.blocklyXML = Blockly.Xml.workspaceToDom(
             blocks.getCurrentWorkspace(),
           );
-        }catch(e){}
+        } catch (e) {}
       }
     }
   }

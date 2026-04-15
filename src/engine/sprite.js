@@ -4,8 +4,7 @@ var Thread = require("./thread.js");
 var SpriteEffects = require("./effects.js");
 var SoundManager = require("./soundmanager.js");
 var SpriteMaster = require("./spritemaster.js");
-
-var dialogs = require("../interface/dialogs.js");
+var TWEEN = require("@tweenjs/tween.js");
 
 class Sprite {
   constructor(engine, name) {
@@ -32,6 +31,7 @@ class Sprite {
     this.x = 0;
     this.y = 0;
     this.angle = 0;
+    this.tween = engine.tween;
 
     this.hatFunctions = {};
     this.listeners = {
@@ -792,11 +792,16 @@ class Sprite {
   }
 
   getFunction(code) {
-    //Used by compiling.
-    //window.alert(code);
-    var func = eval(
-      "(async function (sprite,engine,spriteMaster) {" + code + "})",
+    const func = new Function(
+      'sprite', 
+      'engine', 
+      'spriteMaster', 
+      `
+       return (async function() { 
+         ${code} 
+       })();`
     );
+    
     return func;
   }
 

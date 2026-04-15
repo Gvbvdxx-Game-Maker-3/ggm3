@@ -36,7 +36,7 @@ function loadGlobalVariableBlocks(spr) {
 
                 // Refresh toolbox in main workspace
                 mainWorkspace.getToolbox().refreshSelection();
-                
+
                 // Helper to delete blocks in a workspace
                 function deleteBlocksInWorkspace(workspace) {
                   if (workspace && workspace.getAllBlocks) {

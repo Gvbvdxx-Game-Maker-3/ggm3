@@ -18,7 +18,7 @@ class SoundManager {
       return; //Sound isn't playing, no need to apply effects.
     }
     player.playbackRate = sound.effects.playbackRate;
-    player.volume = sound.effects.volume/100;
+    player.volume = sound.effects.volume / 100;
   }
 
   stopSound(sound) {
@@ -85,7 +85,7 @@ class SoundManager {
       return;
     }
     var effects = sound.effects;
-    if (effects[effectName]) {
+    if (typeof effects[effectName] !== "undefined") {
       effects[effectName] = effectValue;
     }
     this._applyEffects(sound);
@@ -96,7 +96,7 @@ class SoundManager {
       return;
     }
     var effects = sound.effects;
-    if (effects[effectName]) {
+    if (typeof effects[effectName] !== "undefined") {
       var previousValue = +effects[effectName] || 0;
       effects[effectName] = (+previousValue || 0) + (+effectValue || 0);
     }
@@ -108,7 +108,7 @@ class SoundManager {
       return;
     }
     var effects = sound.effects;
-    if (effects[effectName]) {
+    if (typeof effects[effectName] !== "undefined") {
       return effects[effectName];
     }
     return 0;

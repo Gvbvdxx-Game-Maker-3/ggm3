@@ -41,8 +41,15 @@ function calculateSpriteSaveMax(sprite) {
   return max;
 }
 
+function calculateSpriteLoadMax(spriteJson) {
+  var max = 0;
+  max += spriteJson.costumes ? spriteJson.costumes.length : 0;
+  max += spriteJson.sounds ? spriteJson.sounds.length : 0;
+  return max;
+}
+
 async function saveSpriteZip(sprite, zip, progress = new ProgressMonitor()) {
-  saveCurrentSpriteCode(); //Save current code to be safe that its saved.
+  saveCurrentSpriteCode(); //Save current code to be sure that its saved.
 
   var zip = new JSZip();
   zip.folder(RESOURCE_FOLDER);
@@ -95,7 +102,60 @@ async function saveSpriteZipAsBlob(sprite, progress = new ProgressMonitor()) {
   return blob;
 }
 
+async function loadSpriteFromZip(zipSource, progress = new ProgressMonitor()) {
+  var zip = await JSZip.loadAsync(zipSource);
+  var spriteJsonText = await zip.file(SPRITE_FILE).async("text");
+  var spriteJson = JSON.parse(spriteJsonText);
+  var sprite = engine.createEmptySprite();
+
+  var max = calculateSpriteLoadMax(spriteJson);
+  progress.calculatedMax(max);
+  progress.current = 0;
+
+  //Load costumes
+  for (var costumeJson of spriteJson.costumes) {
+    var mimeType = costumeJson.mimeType ? costumeJson.mimeType : "image/png"; //Fallback to PNG file type if it doesn't have a mime type.
+    var filePath = costumeJson.file;
+
+    var file = zip.file(filePath); //Find the file
+    if (!file) {
+      throw new Error(
+        `Unable to locate file path "${filePath}" in the ggm3sprite file.`,
+      );
+      return;
+    }
+    var arrayBuffer = await file.async("arraybuffer");
+    var dataURL = await arrayBufferToDataURL(arrayBuffer, mimeType);
+
+    await loadCostume(sprite, costumeJson, dataURL);
+    progress.current += 1;
+  }
+
+  //Load sounds
+  for (var soundJson of spriteJson.sounds) {
+    var mimeType = soundJson.mimeType ? soundJson.mimeType : "audio/mp3"; //Fallback to MP3 file type if it doesn't have a mime type.
+    var filePath = soundJson.file;
+
+    var file = zip.file(filePath); //Find the file
+    if (!file) {
+      throw new Error(
+        `Unable to locate file path "${filePath}" in the ggm3sprite file.`,
+      );
+      return;
+    }
+    var arrayBuffer = await file.async("arraybuffer");
+    var dataURL = await arrayBufferToDataURL(arrayBuffer, mimeType);
+
+    await loadSound(sprite, soundJson, dataURL);
+    progress.current += 1;
+  }
+
+  //Add sprite properties.
+  fromSpriteJSON(sprite, spriteJson);
+}
+
 module.exports = {
   saveSpriteZip,
   saveSpriteZipAsBlob,
+  loadSpriteFromZip,
 };

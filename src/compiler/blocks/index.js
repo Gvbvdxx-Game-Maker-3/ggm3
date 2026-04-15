@@ -15,6 +15,7 @@ var JavascriptTranslation = {
   ...require("./engine.js"),
   ...require("./property.js"),
   ...require("./sprite-master.js"),
+  ...require("./tweening.js")
 };
 
 module.exports = JavascriptTranslation;

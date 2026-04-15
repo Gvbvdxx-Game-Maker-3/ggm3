@@ -620,6 +620,7 @@ function generateToolbox(defaultX, defaultY) {
                 <shadow type="sound_sounds_menu"></shadow>
             </value>
         </block>
+        <!--Deprecated blocks with advanced options. These blocks are replaced with sound effect blocks.
         <block type="sound_play_advanced">
             <value name="SOUND_MENU">
                 <shadow type="sound_sounds_menu"></shadow>
@@ -658,6 +659,31 @@ function generateToolbox(defaultX, defaultY) {
                 <shadow type="math_number">
                     <field name="NUM">1</field>
                 </shadow>
+            </value>
+        </block>-->
+        <block type="sound_ggm3effect_set">
+            <value name="SOUND_MENU">
+                <shadow type="sound_sounds_menu"></shadow>
+            </value>
+            <value name="VALUE">
+                <shadow type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="sound_ggm3effect_change">
+            <value name="SOUND_MENU">
+                <shadow type="sound_sounds_menu"></shadow>
+            </value>
+            <value name="BY">
+                <shadow type="math_number">
+                    <field name="NUM">5</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="sound_ggm3effect_get">
+            <value name="SOUND_MENU">
+                <shadow type="sound_sounds_menu"></shadow>
             </value>
         </block>
         <block type="sound_stopallsounds"></block>
@@ -813,6 +839,84 @@ function generateToolbox(defaultX, defaultY) {
         </block>
         <block type="json_pretty_print"></block>
 		<block type="json_typeof"></block>
+    </category>
+    <category name="Tweening" id="tweening" colour="#74b62e" secondaryColour="#74b62e">
+        <block type="tween_to_xy">
+            <value name="X">
+                <shadow type="math_number">
+                    <field name="NUM">100</field>
+                </shadow>
+            </value>
+            <value name="Y">
+                <shadow type="math_number">
+                    <field name="NUM">100</field>
+                </shadow>
+            </value>
+            <value name="SECONDS">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+        </block>
+
+        <block type="tween_to_stretch">
+            <value name="X">
+                <shadow type="math_number">
+                    <field name="NUM">100</field>
+                </shadow>
+            </value>
+            <value name="Y">
+                <shadow type="math_number">
+                    <field name="NUM">100</field>
+                </shadow>
+            </value>
+            <value name="SECONDS">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+        </block>
+
+        <block type="tween_to_size">
+            <value name="VALUE">
+                <shadow type="math_number">
+                    <field name="NUM">100</field>
+                </shadow>
+            </value>
+            <value name="SECONDS">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+        </block>
+
+        <block type="tween_to_skew">
+            <value name="X">
+                <shadow type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+            <value name="Y">
+                <shadow type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+            <value name="SECONDS">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+        </block>
+
+        <block type="tween_to_object">
+            <value name="SOURCE"></value>
+            <value name="TARGET"></value>
+            <value name="SECONDS">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+        </block>
     </category>
     `;
 

@@ -73,6 +73,8 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
     pivotEditorContainer.hidden = false;
     var selectedCostume = 0;
     function updateList() {
+      var previousScrollTop = costumesInPivotContainer.scrollTop;
+      var previousScrollLeft = costumesInPivotContainer.scrollLeft;
       elements.setInnerJSON(
         costumesInPivotContainer,
         spr.costumes.map((costume, i) => {
@@ -112,6 +114,8 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
           };
         }),
       );
+      costumesInPivotContainer.scrollTop = previousScrollTop;
+      costumesInPivotContainer.scrollLeft = previousScrollLeft;
     }
 
     updateList();

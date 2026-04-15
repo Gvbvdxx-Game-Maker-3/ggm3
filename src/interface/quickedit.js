@@ -49,6 +49,7 @@ var defaultProject = require("./defaultproject.js");
 var newFileMenus = [];
 
 var projectSaver = require("./file");
+const dialog = require("./dialogs.js");
 
 async function newProject() {
   loadingScreenContainer.hidden = false;
@@ -185,6 +186,8 @@ if (available()) {
         fileHandle = await showSaveFilePicker("game.ggm3");
       } catch (e) {
         fileHandle = null;
+        dialogs.alert("Unable to save: " + e);
+        return;
       }
     }
     changeSaveNowContent(TEXT_SAVING);
@@ -215,11 +218,11 @@ if (available()) {
       });
       var zipBlob = await projectSaver.saveProjectZipBlob(monitor);
       await writeToWritable(writable, zipBlob);
+      closeWritable(writable);
     } catch (e) {
       console.error(e);
       dialogs.alert("Project save error " + e);
     }
-    closeWritable(writable);
     changeSaveNowContent(TEXT_SAVENOW);
     isSaving = false;
   };

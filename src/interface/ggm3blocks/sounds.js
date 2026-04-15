@@ -1,3 +1,117 @@
+Blockly.Blocks["sound_stopallsounds"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "stop all sounds",
+      category: Blockly.Categories.sound,
+      extensions: ["colours_sounds", "shape_statement"],
+    });
+  },
+};
+
+Blockly.Blocks["sound_stopallsoundsinsprite"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "stop all sounds in sprite",
+      category: Blockly.Categories.sound,
+      extensions: ["colours_sounds", "shape_statement"],
+    });
+  },
+};
+
+Blockly.Blocks["sound_stopsound"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "stop sound %1",
+      args0: [
+        {
+          type: "input_value",
+          name: "SOUND_MENU",
+        },
+      ],
+      category: Blockly.Categories.sound,
+      extensions: ["colours_sounds", "shape_statement"],
+    });
+  },
+};
+
+var soundEffectOptions = [
+  ["volume", "volume"],
+  ["playback rate", "playbackRate"],
+];
+
+Blockly.Blocks["sound_ggm3effect_set"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "set sound %1 %2 to %3",
+      args0: [
+        {
+          type: "input_value",
+          name: "SOUND_MENU",
+        },
+        {
+          type: "field_dropdown",
+          name: "EFFECT",
+          options: soundEffectOptions,
+        },
+        {
+          type: "input_value",
+          name: "VALUE",
+        },
+      ],
+      category: Blockly.Categories.sound,
+      extensions: ["colours_sounds", "shape_statement"],
+    });
+  },
+};
+
+Blockly.Blocks["sound_ggm3effect_change"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "change sound %1 %2 by %3",
+      args0: [
+        {
+          type: "input_value",
+          name: "SOUND_MENU",
+        },
+        {
+          type: "field_dropdown",
+          name: "EFFECT",
+          options: soundEffectOptions,
+        },
+        {
+          type: "input_value",
+          name: "BY",
+        },
+      ],
+      category: Blockly.Categories.sound,
+      extensions: ["colours_sounds", "shape_statement"],
+    });
+  },
+};
+
+Blockly.Blocks["sound_ggm3effect_get"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "get sound %1 %2",
+      args0: [
+        {
+          type: "input_value",
+          name: "SOUND_MENU",
+        },
+        {
+          type: "field_dropdown",
+          name: "EFFECT",
+          options: soundEffectOptions,
+        },
+      ],
+      category: Blockly.Categories.sound,
+      extensions: ["colours_sounds", "output_number"],
+    });
+  },
+};
+
+//Deprecated blocks with advanced options. These blocks are replaced with sound effect blocks.
+//Kept for compatibility for older project loading.
 Blockly.Blocks["sound_play_advanced"] = {
   /**
    * Block to play sound.
@@ -58,42 +172,6 @@ Blockly.Blocks["sound_playuntildone_advanced"] = {
         {
           type: "input_value",
           name: "TIME",
-        },
-      ],
-      category: Blockly.Categories.sound,
-      extensions: ["colours_sounds", "shape_statement"],
-    });
-  },
-};
-
-Blockly.Blocks["sound_stopallsounds"] = {
-  init: function () {
-    this.jsonInit({
-      message0: "stop all sounds",
-      category: Blockly.Categories.sound,
-      extensions: ["colours_sounds", "shape_statement"],
-    });
-  },
-};
-
-Blockly.Blocks["sound_stopallsoundsinsprite"] = {
-  init: function () {
-    this.jsonInit({
-      message0: "stop all sounds in sprite",
-      category: Blockly.Categories.sound,
-      extensions: ["colours_sounds", "shape_statement"],
-    });
-  },
-};
-
-Blockly.Blocks["sound_stopsound"] = {
-  init: function () {
-    this.jsonInit({
-      message0: "stop sound %1",
-      args0: [
-        {
-          type: "input_value",
-          name: "SOUND_MENU",
         },
       ],
       category: Blockly.Categories.sound,

@@ -1,6 +1,8 @@
 function init(state, deps) {
   var workspace = null;
   var disposingWorkspace = false;
+  var workspaceLoadToken = 0;
+  var pendingCompileAllTimeout = null;
 
   function saveScroll() {
     if (!workspace) return;
@@ -39,7 +41,9 @@ function init(state, deps) {
     deps.ui.errorLogsContainerRef.innerHTML = "";
     var willScroll = false;
     if (
-      deps.ui.errorLogsContainerRef.scrollTop + deps.ui.errorLogsContainerRef.offsetHeight + 2 >=
+      deps.ui.errorLogsContainerRef.scrollTop +
+        deps.ui.errorLogsContainerRef.offsetHeight +
+        2 >=
       deps.ui.errorLogsContainerRef.scrollHeight
     ) {
       willScroll = true;
@@ -49,13 +53,18 @@ function init(state, deps) {
       deps.ui.errorLogsContainerRef.appendChild(logDiv);
     }
     if (willScroll) {
-      deps.ui.errorLogsContainerRef.scrollTo(0, deps.ui.errorLogsContainerRef.scrollHeight);
+      deps.ui.errorLogsContainerRef.scrollTo(
+        0,
+        deps.ui.errorLogsContainerRef.scrollHeight,
+      );
     }
 
     spr.onErrorLog = function (error) {
       var willScroll = false;
       if (
-        deps.ui.errorLogsContainerRef.scrollTop + deps.ui.errorLogsContainerRef.offsetHeight + 2 >=
+        deps.ui.errorLogsContainerRef.scrollTop +
+          deps.ui.errorLogsContainerRef.offsetHeight +
+          2 >=
         deps.ui.errorLogsContainerRef.scrollHeight
       ) {
         willScroll = true;
@@ -63,13 +72,22 @@ function init(state, deps) {
       var logDiv = deps.ui.getErrorLogDiv(error);
       deps.ui.errorLogsContainerRef.appendChild(logDiv);
       if (willScroll) {
-        deps.ui.errorLogsContainerRef.scrollTo(0, deps.ui.errorLogsContainerRef.scrollHeight);
+        deps.ui.errorLogsContainerRef.scrollTo(
+          0,
+          deps.ui.errorLogsContainerRef.scrollHeight,
+        );
       }
     };
   }
 
   function loadCode(spr) {
     if (!spr) return;
+    workspaceLoadToken += 1;
+    var thisLoadToken = workspaceLoadToken;
+    if (pendingCompileAllTimeout) {
+      clearTimeout(pendingCompileAllTimeout);
+      pendingCompileAllTimeout = null;
+    }
     deps.loadBlockMenus(spr);
     disposingWorkspace = true;
     Blockly.Events.disable();
@@ -88,6 +106,8 @@ function init(state, deps) {
           var code = deps.compiler.compileBlock(rootBlock);
           var allSprs = [spr].concat(spr.clones);
           for (var cspr of allSprs) {
+            // Clear existing listeners/custom refs for this root before re-registering.
+            cspr.removeStackListener(rootBlock.id);
             cspr.removeSpriteFunction(rootBlock.id);
             cspr.addFunction(code, rootBlock.id);
             cspr.runFunctionID(rootBlock.id);
@@ -107,14 +127,34 @@ function init(state, deps) {
       }
     }
 
+    function requestCompileAll() {
+      if (pendingCompileAllTimeout) {
+        clearTimeout(pendingCompileAllTimeout);
+      }
+      pendingCompileAllTimeout = setTimeout(function () {
+        pendingCompileAllTimeout = null;
+        if (thisLoadToken !== workspaceLoadToken) return;
+        if (disposingWorkspace || !workspace) return;
+        if (state.currentSelectedSprite !== spr) return;
+        if (
+          deps.blocks.getCurrentWorkspace &&
+          deps.blocks.getCurrentWorkspace() !== workspace
+        )
+          return;
+        compileAll();
+      }, 0);
+    }
+
     function unglowErrorOnBlock(blockId) {
       try {
         var changedBlock = workspace.getBlockById(blockId);
         if (changedBlock && changedBlock.getSvgRoot) {
           var changedSvg = changedBlock.getSvgRoot();
-          if (changedSvg && changedSvg.classList) changedSvg.classList.remove("error-glow");
+          if (changedSvg && changedSvg.classList)
+            changedSvg.classList.remove("error-glow");
           try {
-            var errFilterId2 = workspace.options && workspace.options.errorGlowFilterId;
+            var errFilterId2 =
+              workspace.options && workspace.options.errorGlowFilterId;
             if (
               errFilterId2 &&
               changedSvg &&
@@ -129,17 +169,27 @@ function init(state, deps) {
     }
 
     workspace.addChangeListener(function (e) {
+      if (thisLoadToken !== workspaceLoadToken) return;
+      if (state.currentSelectedSprite !== spr) return;
+      if (
+        !workspace ||
+        (deps.blocks.getCurrentWorkspace &&
+          deps.blocks.getCurrentWorkspace() !== workspace)
+      )
+        return;
       if (disposingWorkspace) return;
       spr.editorScanVariables(workspace);
 
       if (e.element == "click") {
         var clickedBlock = workspace.getBlockById(e.blockId);
+        if (!clickedBlock) return;
         if (clickedBlock && clickedBlock.getSvgRoot) {
           try {
             var svg = clickedBlock.getSvgRoot();
             if (svg && svg.classList) svg.classList.remove("error-glow");
             try {
-              var errFilterId = workspace.options && workspace.options.errorGlowFilterId;
+              var errFilterId =
+                workspace.options && workspace.options.errorGlowFilterId;
               if (
                 errFilterId &&
                 svg &&
@@ -157,8 +207,14 @@ function init(state, deps) {
             var code = deps.compiler.compileBlockWithThreadForced(root);
             var outputThread = await spr.runFunction(code);
             if (outputThread) {
-              if (deps.compiler.isOutputBlock(root) || typeof outputThread.output !== "undefined") {
-                workspace.reportValue(e.blockId, deps.valueReport(outputThread.output));
+              if (
+                deps.compiler.isOutputBlock(root) ||
+                typeof outputThread.output !== "undefined"
+              ) {
+                workspace.reportValue(
+                  e.blockId,
+                  deps.valueReport(outputThread.output),
+                );
               }
             }
           })();
@@ -181,21 +237,24 @@ function init(state, deps) {
             var oldParentBlock = workspace.getBlockById(e.oldParentId);
             if (oldParentBlock) {
               unglowErrorOnBlock(oldParentBlock.getRootBlock().id);
-              compileAll();
+              requestCompileAll();
             }
           }
         } else {
           currentBlocks[e.blockId] = true;
           var newRoot = eventBlock.getRootBlock();
-          compileAll();
+          requestCompileAll();
 
-          if ((e instanceof Blockly.Events.Move || e.type == "move") && e.oldParentId) {
+          if (
+            (e instanceof Blockly.Events.Move || e.type == "move") &&
+            e.oldParentId
+          ) {
             var oldParentBlock = workspace.getBlockById(e.oldParentId);
             if (oldParentBlock) {
               var oldRoot = oldParentBlock.getRootBlock();
               if (oldRoot.id !== newRoot.id) {
                 unglowErrorOnBlock(oldRoot.id);
-                compileAll();
+                requestCompileAll();
               }
             }
           }
@@ -209,16 +268,32 @@ function init(state, deps) {
 
     var flyoutWorkspace = workspace.getFlyout().getWorkspace();
     flyoutWorkspace.addChangeListener(function (e) {
+      if (thisLoadToken !== workspaceLoadToken) return;
+      if (state.currentSelectedSprite !== spr) return;
+      if (
+        !workspace ||
+        (deps.blocks.getCurrentWorkspace &&
+          deps.blocks.getCurrentWorkspace() !== workspace)
+      )
+        return;
       spr.editorScanVariables(workspace);
       if (e.element == "click") {
-        var root = workspace.getBlockById(e.blockId).getRootBlock();
+        var clickedBlock = workspace.getBlockById(e.blockId);
+        if (!clickedBlock) return;
+        var root = clickedBlock.getRootBlock();
         if (!spr.runningStacks[root.id]) {
           (async function () {
             var code = deps.compiler.compileBlockWithThreadForced(root);
             var outputThread = await spr.runFunction(code);
             if (outputThread) {
-              if (deps.compiler.isOutputBlock(root) || typeof outputThread.output !== "undefined") {
-                workspace.reportValue(e.blockId, deps.valueReport(outputThread.output));
+              if (
+                deps.compiler.isOutputBlock(root) ||
+                typeof outputThread.output !== "undefined"
+              ) {
+                workspace.reportValue(
+                  e.blockId,
+                  deps.valueReport(outputThread.output),
+                );
               }
             }
           })();
@@ -237,14 +312,16 @@ function init(state, deps) {
     spr.threadStartListener = function (id) {
       if (disposingWorkspace) return;
       if (workspace.getBlockById(id)) {
-        if (typeof endTimeouts[id] !== "undefined") clearTimeout(endTimeouts[id]);
+        if (typeof endTimeouts[id] !== "undefined")
+          clearTimeout(endTimeouts[id]);
         workspace.glowStack(id, true);
       }
     };
     spr.threadEndListener = function (id, isPreviewMode) {
       if (disposingWorkspace) return;
       if (workspace.getBlockById(id)) {
-        if (typeof endTimeouts[id] !== "undefined") clearTimeout(endTimeouts[id]);
+        if (typeof endTimeouts[id] !== "undefined")
+          clearTimeout(endTimeouts[id]);
         endTimeouts[id] = setTimeout(() => {
           delete endTimeouts[id];
           if (workspace.getBlockById(id)) {
@@ -255,8 +332,14 @@ function init(state, deps) {
                 var svg = b.getSvgRoot();
                 if (svg && svg.classList) svg.classList.remove("error-glow");
                 try {
-                  var errFilterId = workspace.options && workspace.options.errorGlowFilterId;
-                  if (errFilterId && svg && svg.getAttribute && svg.getAttribute("filter") === "url(#" + errFilterId + ")") {
+                  var errFilterId =
+                    workspace.options && workspace.options.errorGlowFilterId;
+                  if (
+                    errFilterId &&
+                    svg &&
+                    svg.getAttribute &&
+                    svg.getAttribute("filter") === "url(#" + errFilterId + ")"
+                  ) {
                     svg.removeAttribute("filter");
                   }
                 } catch (inner) {}
@@ -270,7 +353,8 @@ function init(state, deps) {
     spr.threadErrorListener = function (id, output) {
       if (disposingWorkspace) return;
       if (workspace.getBlockById(id)) {
-        if (typeof endTimeouts[id] !== "undefined") clearTimeout(endTimeouts[id]);
+        if (typeof endTimeouts[id] !== "undefined")
+          clearTimeout(endTimeouts[id]);
         workspace.glowStack(id, true);
         try {
           var b = workspace.getBlockById(id);
@@ -278,7 +362,8 @@ function init(state, deps) {
             var svg = b.getSvgRoot();
             if (svg && svg.classList) svg.classList.add("error-glow");
             try {
-              var errFilterId = workspace.options && workspace.options.errorGlowFilterId;
+              var errFilterId =
+                workspace.options && workspace.options.errorGlowFilterId;
               if (errFilterId && svg && svg.setAttribute) {
                 svg.setAttribute("filter", "url(#" + errFilterId + ")");
               }
@@ -304,13 +389,20 @@ function init(state, deps) {
 
   function saveCurrentSpriteCode() {
     if (state.currentSelectedSprite && workspace) {
-      try{
-        state.currentSelectedSprite.blocklyXML = Blockly.Xml.workspaceToDom(workspace);
-      }catch(e){}
+      try {
+        state.currentSelectedSprite.blocklyXML =
+          Blockly.Xml.workspaceToDom(workspace);
+      } catch (e) {}
     }
   }
 
-  return { loadCode, saveScroll, scrollToPrevious, handleSpriteErrorLog, saveCurrentSpriteCode };
+  return {
+    loadCode,
+    saveScroll,
+    scrollToPrevious,
+    handleSpriteErrorLog,
+    saveCurrentSpriteCode,
+  };
 }
 
 module.exports = { init };

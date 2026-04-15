@@ -60,20 +60,22 @@ Blockly.WorkspaceSvg.prototype.registerToolboxCategoryCallback(
 
     var variableNames = Array.from(Object.keys(engine.globalVariables));
 
-    xmlList = xmlList.concat(variableNames.map((varName) => {
-      var blockElement = document.createElement("block");
-      blockElement.setAttribute("type","globaldata_get");
-      blockElement.setAttribute("id", "global_var_getter_" + varName);
+    xmlList = xmlList.concat(
+      variableNames.map((varName) => {
+        var blockElement = document.createElement("block");
+        blockElement.setAttribute("type", "globaldata_get");
+        blockElement.setAttribute("id", "global_var_getter_" + varName);
 
-      var field = document.createElement("field");
-      field.setAttribute("name", "VARIABLE");
-      field.textContent = varName;
-      blockElement.append(field);
+        var field = document.createElement("field");
+        field.setAttribute("name", "VARIABLE");
+        field.textContent = varName;
+        blockElement.append(field);
 
-      // Add context menu to delete the variable
-      blockElement.setAttribute("data-variable-name", varName);
-      return blockElement;
-    }));
+        // Add context menu to delete the variable
+        blockElement.setAttribute("data-variable-name", varName);
+        return blockElement;
+      }),
+    );
 
     if (variableNames.length > 0) {
       var firstVariable = variableNames[0];

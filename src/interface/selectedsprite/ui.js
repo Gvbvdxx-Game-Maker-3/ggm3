@@ -1,5 +1,15 @@
 var elements = require("../../gp2/elements.js");
 
+function closeSpriteMenu2() {
+  var spriteAddMenu = elements.getGPId("spriteAddMenu");
+  spriteAddMenu.hidden = true;
+  spriteAddMenu.innerHTML = "";
+}
+
+document.addEventListener("click", function (evt) {
+  closeSpriteMenu2();
+});
+
 function init(state, deps) {
   var spriteNameInput = elements.getGPId("spriteNameInput");
   var spriteXPosInput = elements.getGPId("spriteXPosInput");
@@ -10,14 +20,72 @@ function init(state, deps) {
 
   var spritesContainer = elements.getGPId("spritesContainer");
   var addSpriteButton = elements.getGPId("addSpriteButton");
+  var spriteAddMenu = elements.getGPId("spriteAddMenu");
   var errorLogsContainer = elements.getGPId("errorLogsContainer");
 
-  addSpriteButton.addEventListener("click", () => {
-    deps.engine.createEmptySprite();
-    deps.engine.makeUniqueSpriteNames();
-    if (typeof deps.onSetCurrentSprite === "function") {
-      deps.onSetCurrentSprite(deps.engine.sprites.length - 1);
+  function closeSpriteAddMenu() {
+    spriteAddMenu.hidden = true;
+    spriteAddMenu.innerHTML = "";
+  }
+
+  function openSpriteAddMenu() {
+    if (!spriteAddMenu.hidden) {
+      closeSpriteAddMenu();
+      return;
     }
+    spriteAddMenu.hidden = false;
+    var elms = [
+      {
+        element: "div",
+        className: "spriteAddMenuItem",
+        eventListeners: [
+          {
+            event: "click",
+            func: function () {
+              closeSpriteAddMenu();
+              deps.engine.createEmptySprite();
+              deps.engine.makeUniqueSpriteNames();
+              if (typeof deps.onSetCurrentSprite === "function") {
+                deps.onSetCurrentSprite(deps.engine.sprites.length - 1);
+              }
+            }
+          }
+        ],
+        children: [
+          {
+            element: "img",
+            src: "/icons/add.svg",
+          },
+          "New",
+        ],
+      },
+      {
+        element: "div",
+        className: "spriteAddMenuItem",
+        eventListeners: [
+          {
+            event: "click",
+            func: function () {
+              closeSpriteAddMenu();
+              window.alert("Import feature coming soon!");
+            }
+          }
+        ],
+        children: [
+          {
+            element: "img",
+            src: "/icons/import.svg",
+          },
+          "Import",
+        ],
+      },
+    ];
+    elements.setInnerJSON(spriteAddMenu, elms);
+  }
+
+  addSpriteButton.addEventListener("click", (event) => {
+    openSpriteAddMenu();
+    event.stopPropagation();
   });
 
   function getErrorLogDiv(error) {
@@ -62,7 +130,7 @@ function init(state, deps) {
               event: "mouseup",
               func: function (evt) {
                 var elm = evt.currentTarget || evt.target;
-                
+
                 // --- FIX 1: Ignore if clicking buttons ---
                 // If the user clicked "Select", "Delete", etc., stop here.
                 if (evt.target.tagName === "BUTTON") return;
@@ -73,22 +141,22 @@ function init(state, deps) {
                 } catch (err) {}
 
                 var draggedBlock = null;
-                
+
                 // --- FIX 2: Strict Drag Check ---
-                // Blockly.selected exists even if you just click a block. 
+                // Blockly.selected exists even if you just click a block.
                 // We must check if a drag is actually IN PROGRESS.
                 // Depending on your Blockly version, use isDragging() or check the gesture.
                 if (Blockly.Gesture && Blockly.Gesture.inProgress) {
-                    // Modern Blockly
-                    draggedBlock = Blockly.selected; 
-                } else if (Blockly.dragMode_ !== 0) { 
-                    // Older Blockly / Internal flag check
-                    draggedBlock = Blockly.selected;
+                  // Modern Blockly
+                  draggedBlock = Blockly.selected;
+                } else if (Blockly.dragMode_ !== 0) {
+                  // Older Blockly / Internal flag check
+                  draggedBlock = Blockly.selected;
                 } else if (window.__ggm3_currentDragBlock) {
-                    // Your custom drag handler
-                    draggedBlock = window.__ggm3_currentDragBlock;
+                  // Your custom drag handler
+                  draggedBlock = window.__ggm3_currentDragBlock;
                 }
-                
+
                 // If we still don't think we are dragging, STOP.
                 if (!draggedBlock) return;
 
@@ -350,28 +418,32 @@ function init(state, deps) {
         spriteNameInput.value = state.currentSelectedSprite.name;
       }
       if (
-        Math.round(+spriteXPosInput.value || 0) !==
-        Math.round(state.currentSelectedSprite.x)
+        Math.round(+spriteXPosInput.value) !==
+        Math.round(state.currentSelectedSprite.x) ||
+        spriteXPosInput.value.length < 1
       ) {
         spriteXPosInput.value = Math.round(state.currentSelectedSprite.x);
       }
       if (
-        Math.round(+spriteYPosInput.value || 0) !==
-        Math.round(state.currentSelectedSprite.y)
+        Math.round(+spriteYPosInput.value) !==
+        Math.round(state.currentSelectedSprite.y) ||
+        spriteYPosInput.value.length < 1
       ) {
         spriteYPosInput.value = Math.round(state.currentSelectedSprite.y);
       }
       if (
-        Math.round(+spriteDirectionInput.value || 0) !==
-        Math.round(state.currentSelectedSprite.direction)
+        Math.round(+spriteDirectionInput.value) !==
+        Math.round(state.currentSelectedSprite.direction) ||
+        spriteDirectionInput.value.length < 1
       ) {
         spriteDirectionInput.value = Math.round(
           state.currentSelectedSprite.direction,
         );
       }
       if (
-        Math.round(+spriteSizeInput.value || 0) !==
-        Math.round(state.currentSelectedSprite.size)
+        Math.round(+spriteSizeInput.value) !==
+        Math.round(state.currentSelectedSprite.size) ||
+        spriteSizeInput.value.length < 1
       ) {
         spriteSizeInput.value = Math.round(state.currentSelectedSprite.size);
       }

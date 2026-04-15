@@ -154,7 +154,6 @@ JavascriptTranslation["control_isclone"] = function (
   return `sprite.isClone`;
 };
 
-outputBlocks.push("control_stop");
 JavascriptTranslation["control_stop"] = function (jsonblock, utils, options) {
   var STOP_OPTION = utils.getField(jsonblock, "STOP_OPTION", options);
 

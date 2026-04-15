@@ -84,6 +84,8 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
       },
     ]);
   } else {
+    var previousScrollTop = costumesSelectorContainer.scrollTop;
+    var previousScrollLeft = costumesSelectorContainer.scrollLeft;
     elements.setInnerJSON(
       costumesSelectorContainer,
       spr.costumes.map((costume, i) => {
@@ -218,6 +220,8 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
         };
       }),
     );
+    costumesSelectorContainer.scrollTop = previousScrollTop;
+    costumesSelectorContainer.scrollLeft = previousScrollLeft;
 
     makeSortable(
       costumesSelectorContainer,
