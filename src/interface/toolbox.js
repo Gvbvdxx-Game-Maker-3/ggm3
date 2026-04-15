@@ -3,7 +3,7 @@ function generateToolbox(defaultX, defaultY) {
 
   xml += `
     <category name="Motion" id="motion" colour="${Blockly.Colours.motion.primary}" secondaryColour="${Blockly.Colours.motion.secondary}">
-    <block type="motion_gotoxy">
+        <block type="motion_gotoxy">
             <value name="X">
                 <shadow type="math_number">
                     <field name="NUM">${+defaultX}</field>
@@ -13,6 +13,11 @@ function generateToolbox(defaultX, defaultY) {
                 <shadow type="math_number">
                     <field name="NUM">${+defaultY}</field>
                 </shadow>
+            </value>
+        </block>
+        <block type="motion_goto">
+            <value name="TO">
+                <shadow type="motion_goto_menu"></shadow>
             </value>
         </block>
         <block type="motion_changexby">

@@ -80,6 +80,20 @@ class Sprite {
     this.spriteMaster = new SpriteMaster(this);
   }
 
+  goTo (target) {
+    if (target == "__mouse_pointer__") {
+      this.x = this.engine.mouseX;
+      this.y = this.engine.mouseY;
+      return;
+    }
+    var targetSprite = this.findSpriteByName(target);
+    if (!targetSprite) {
+      return;
+    }
+    this.x = targetSprite.x;
+    this.y = targetSprite.y;
+  }
+
   get costumeName() {
     if (!this.costume) {
       return;

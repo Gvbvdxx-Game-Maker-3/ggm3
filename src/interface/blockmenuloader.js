@@ -529,6 +529,25 @@ function loadBlockMenus(spr) {
       });
     },
   };
+  Blockly.Blocks['motion_goto_menu'] = {
+    init: function() {
+      this.jsonInit({
+        "message0": "%1",
+        "args0": [
+          {
+            "type": "field_dropdown",
+            "name": "TO",
+            "options": getSpriteMenuFunction(spr, [["mouse pointer", "__mouse_pointer__"]])
+          }
+        ],
+        "colour": Blockly.Colours.motion.secondary,
+        "colourSecondary": Blockly.Colours.motion.secondary,
+        "colourTertiary": Blockly.Colours.motion.tertiary,
+        "colourQuaternary": Blockly.Colours.motion.quaternary,
+        "extensions": ["output_string"]
+      });
+    }
+  };
   Blockly.Blocks["control_create_clone_of_menu"] = {
     init: function () {
       this.jsonInit({

@@ -108,4 +108,24 @@ JavascriptTranslation["motion_movesteps"] = function (
   return `sprite.moveSteps(+(${STEPS}) || 0);`;
 };
 
+outputBlocks.push("motion_goto_menu");
+JavascriptTranslation["motion_goto_menu"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var TO = utils.getField(jsonblock, "TO", options, "null");
+
+  return JSON.stringify(TO);
+};
+JavascriptTranslation["motion_goto"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  var TO = utils.getInput(jsonblock, "TO", options, "null");
+
+  return `sprite.goTo(${TO});`;
+};
+
 module.exports = JavascriptTranslation;

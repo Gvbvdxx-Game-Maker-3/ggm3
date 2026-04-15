@@ -671,6 +671,7 @@ body {
   flex-direction: column;
   padding: 1px;
   box-sizing: border-box;
+  gap: 2px;
 }
 
 .spriteAddMenuItem {
@@ -682,6 +683,7 @@ body {
   color: white;
   font-weight: bold;
   user-select: none;
+  font-size: 17px;
   cursor: default;
 }
 
@@ -691,8 +693,8 @@ body {
 }
 
 .spriteAddMenuItem > img {
-  width: 20px;
-  height: 20px;
+  width: 23px;
+  height: 23px;
   object-fit: contain;
 }
 
