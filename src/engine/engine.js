@@ -170,8 +170,10 @@ class GGM3Engine extends EventEmitter {
   }
 
   removeGlobalVariable(name) {
+    this.globalVariables[name] = true; //Blocks can set variables to undefined and may cause deletion to bug, so set it temporarily to true before deleting.
     delete this.globalVariables[name];
   }
+
 
   addSpriteProperty(name) {
     this.propertyVariables[name] = true; //Values are unique for each sprite.
@@ -185,6 +187,7 @@ class GGM3Engine extends EventEmitter {
   }
 
   removeSpriteProperty(name) {
+    this.propertyVariables[name] = true;
     delete this.propertyVariables[name];
     for (var sprite of this.sprites) {
       sprite.removeProperty(name);

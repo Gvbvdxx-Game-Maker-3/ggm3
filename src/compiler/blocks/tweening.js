@@ -46,4 +46,22 @@ JavascriptTranslation["tween_to_object"] = function (jsonblock, utils, options) 
   return `${utilFunctions.aliveCheck()}await thread.tweenToSource(${SOURCE}, ${TARGET}, +(${SECONDS}) || 0, ${JSON.stringify(EASING)});${utilFunctions.aliveCheck()}`;
 };
 
+JavascriptTranslation["tween_to_property"] = function (jsonblock, utils, options) {
+  var VARIABLE = utils.getField(jsonblock, "VARIABLE", options, "null");
+  var TARGET = utils.getInput(jsonblock, "TARGET", options, "{}");
+  var SECONDS = utils.getInput(jsonblock, "SECONDS", options, "undefined");
+  var EASING = utils.getField(jsonblock, "EASING", options, "linear");
+  
+  return `${utilFunctions.aliveCheck()}await thread.tweenToProperty(${JSON.stringify(VARIABLE)}, ${TARGET}, +(${SECONDS}) || 0, ${JSON.stringify(EASING)});${utilFunctions.aliveCheck()}`;
+};
+
+JavascriptTranslation["tween_to_global_variable"] = function (jsonblock, utils, options) {
+  var VARIABLE = utils.getField(jsonblock, "VARIABLE", options, "null");
+  var TARGET = utils.getInput(jsonblock, "TARGET", options, "{}");
+  var SECONDS = utils.getInput(jsonblock, "SECONDS", options, "undefined");
+  var EASING = utils.getField(jsonblock, "EASING", options, "linear");
+  
+  return `${utilFunctions.aliveCheck()}await thread.tweenToGlobalVariable(${JSON.stringify(VARIABLE)}, ${TARGET}, +(${SECONDS}) || 0, ${JSON.stringify(EASING)});${utilFunctions.aliveCheck()}`;
+};
+
 module.exports = JavascriptTranslation;

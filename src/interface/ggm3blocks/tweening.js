@@ -150,3 +150,64 @@ Blockly.Blocks["tween_to_object"] = {
     });
   },
 };
+
+Blockly.Blocks["tween_to_property"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "tween my property %1 to %2 in %3 seconds easing %4",
+      args0: [
+        {
+          type: "field_dropdown",
+          name: "VARIABLE",
+          options:
+            Blockly.Blocks["tween_to_property"]._listProperties,
+        },
+        {
+          type: "input_value",
+          name: "TARGET",
+        },
+        {
+          type: "input_value",
+          name: "SECONDS",
+        },
+        {
+          type: "field_dropdown",
+          name: "EASING",
+          options: getEasingOptions,
+        },
+      ],
+      colour: "#74b62e",
+      extensions: ["shape_statement"],
+    });
+  },
+};
+
+Blockly.Blocks["tween_to_global_variable"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "tween global variable %1 to %2 in %3 seconds easing %4",
+      args0: [
+        {
+          type: "field_dropdown",
+          name: "VARIABLE",
+          options: Blockly.Blocks["tween_to_global_variable"]._listGlobalVariables,
+        },
+        {
+          type: "input_value",
+          name: "TARGET",
+        },
+        {
+          type: "input_value",
+          name: "SECONDS",
+        },
+        {
+          type: "field_dropdown",
+          name: "EASING",
+          options: getEasingOptions,
+        },
+      ],
+      colour: "#74b62e",
+      extensions: ["shape_statement"],
+    });
+  },
+};

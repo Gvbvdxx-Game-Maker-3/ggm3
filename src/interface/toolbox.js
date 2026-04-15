@@ -917,6 +917,32 @@ function generateToolbox(defaultX, defaultY) {
                 </shadow>
             </value>
         </block>
+
+        <block type="tween_to_property">
+            <value name="TARGET">
+                <shadow type="math_number">
+                    <field name="NUM">100</field>
+                </shadow>
+            </value>
+            <value name="SECONDS">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+        </block>
+
+        <block type="tween_to_global_variable">
+            <value name="TARGET">
+                <shadow type="math_number">
+                    <field name="NUM">100</field>
+                </shadow>
+            </value>
+            <value name="SECONDS">
+                <shadow type="math_number">
+                    <field name="NUM">1</field>
+                </shadow>
+            </value>
+        </block>
     </category>
     `;
 

@@ -230,7 +230,7 @@ function loadPropertyVariableBlocks(spr) {
             `Delete sprite property "${variableName}"? This will also delete all blocks using this property.`,
             function (accepted) {
               if (accepted) {
-                engine.removeGlobalVariable(variableName);
+                engine.removeSpriteProperty(variableName);
 
                 // Helper to delete blocks in a workspace
                 function deleteBlocksInWorkspace(workspace) {
@@ -342,14 +342,30 @@ function loadPropertyVariableBlocks(spr) {
     customContextMenu: contextMenuFunction,
   };
 
-  Blockly.Blocks[
-    "spritemaster_checktouchingsprite_equals_propertyvalue"
-  ]._listProperties = function () {
+  function _listProperties() {
     var currentMenu = Object.keys(engine.propertyVariables).map((name, i) => {
       return [name, name];
     });
     if (currentMenu.length < 1) {
       currentMenu = [["(No Sprite Properties)", "none"]];
+    }
+    return currentMenu;
+  }
+
+  Blockly.Blocks[
+    "spritemaster_checktouchingsprite_equals_propertyvalue"
+  ]._listProperties = _listProperties;
+  Blockly.Blocks[
+    "tween_to_property"
+  ]._listProperties = _listProperties;
+  Blockly.Blocks["tween_to_global_variable"]._listGlobalVariables = function () {
+    var currentMenu = Object.keys(engine.globalVariables).map(
+      (name, i) => {
+        return [name, name];
+      },
+    );
+    if (currentMenu.length < 1) {
+      currentMenu = [["(No Global Variables)", "none"]];
     }
     return currentMenu;
   };

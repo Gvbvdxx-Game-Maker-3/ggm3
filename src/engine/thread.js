@@ -173,6 +173,74 @@ class Thread {
     });
   }
 
+  tweenToProperty(variableName, targetValue, duration, easing) {
+    var _this = this;
+    return new Promise((resolve) => {
+      if (!_this.sprite.engine.hasSpriteProperty(variableName)) { //Stops unused variables from being created accidentally.
+        resolve();
+        return;
+      }
+      if (!_this.running) {
+        resolve();
+      }
+      var source = {
+        value: +_this.sprite.spriteProperties[variableName] || 0
+      };
+      var movement = new TWEEN.Tween(source).to({
+        value: +targetValue || 0
+      }, duration*1000);
+      _this.sprite.tween.add(movement);
+      if (easing) {
+        movement.easing(EasingMap[easing]);
+      }
+      movement.onComplete(() => {
+        resolve();
+      });
+      movement.onUpdate(() => {
+        this.sprite.spriteProperties[variableName] = source.value;
+        if (!_this.running) {
+          movement.stop();
+          resolve();
+        }
+      });
+      movement.start(_this.sprite.engine._iTime * 1000);
+    });
+  }
+
+  tweenToGlobalVariable(variableName, targetValue, duration, easing) {
+    var _this = this;
+    return new Promise((resolve) => {
+      if (typeof _this.sprite.engine.globalVariables[variableName] == "undefined") { //Stops unused variables from being created accidentally.
+        resolve();
+        return;
+      }
+      if (!_this.running) {
+        resolve();
+      }
+      var source = {
+        value: +_this.sprite.engine.globalVariables[variableName] || 0
+      };
+      var movement = new TWEEN.Tween(source).to({
+        value: +targetValue || 0
+      }, duration*1000);
+      _this.sprite.tween.add(movement);
+      if (easing) {
+        movement.easing(EasingMap[easing]);
+      }
+      movement.onComplete(() => {
+        resolve();
+      });
+      movement.onUpdate(() => {
+        this.sprite.engine.globalVariables[variableName] = source.value;
+        if (!_this.running) {
+          movement.stop();
+          resolve();
+        }
+      });
+      movement.start(_this.sprite.engine._iTime * 1000);
+    });
+  }
+
   isInt(val) {
     //Copied and pasted from scratch-vm, but just with some edits.
     // Values that are already numbers.
