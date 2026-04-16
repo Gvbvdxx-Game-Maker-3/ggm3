@@ -5,6 +5,13 @@ class SoundEffects {
     this.volume = 100;
   }
 
+  set duration(v) {
+    //empty so there is no errors thrown when trying to set duration, even though it's not writable.
+  }
+  get duration() {
+    return this.sound.data ? this.sound.getDuration() : 0;
+  }
+
   set playbackRate(v) {
     this._playbackRate = +v || 0;
     if (this._playbackRate > 9999) {

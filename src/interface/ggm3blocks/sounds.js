@@ -39,6 +39,10 @@ var soundEffectOptions = [
   ["playback rate", "playbackRate"],
 ];
 
+var unwritableEffectOptions = [
+  ["duration", "duration"]
+];
+
 Blockly.Blocks["sound_ggm3effect_set"] = {
   init: function () {
     this.jsonInit({
@@ -101,7 +105,7 @@ Blockly.Blocks["sound_ggm3effect_get"] = {
         {
           type: "field_dropdown",
           name: "EFFECT",
-          options: soundEffectOptions,
+          options: soundEffectOptions.concat(unwritableEffectOptions),
         },
       ],
       category: Blockly.Categories.sound,
