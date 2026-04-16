@@ -259,6 +259,12 @@ class Thread {
     return false;
   }
 
+  deleteClone() {
+    this.stop();
+    this.sprite.deleteClone();
+    return;
+  }
+
   random(from, to) {
     //Copied and pasted from scratch-vm, but just with some edits.
     var { isInt } = this;

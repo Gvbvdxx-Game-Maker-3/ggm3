@@ -133,7 +133,10 @@ JavascriptTranslation["control_delete_this_clone"] = function (
   utils,
   options,
 ) {
-  return `sprite.destroyClone();`;
+  //Update: Moving this to a thread function and also adding an alive check to prevent potential crashes
+  // with spamming broadcasts that create clones and immediately delete themselves, which can cause
+  // the engine to try to do things with clones that have already been deleted.
+  return `thread.deleteClone();${utilFunctions.aliveCheck(jsonblock)}`;
 };
 
 outputBlocks.push("control_elapsed");
@@ -161,7 +164,7 @@ JavascriptTranslation["control_stop"] = function (jsonblock, utils, options) {
     return `thread.stop();${utilFunctions.aliveCheck(jsonblock)}`;
   }
   if (STOP_OPTION == "other scripts in sprite") {
-    return `thread.stopEverythingButMe();`;
+    return `thread.stopEverythingButMe();${utilFunctions.aliveCheck(jsonblock)}`;
   }
   // Safe return if option is somehow missing
   return "";
