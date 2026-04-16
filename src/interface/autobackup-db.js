@@ -58,8 +58,17 @@ async function getBackupData(id) {
     return fileEntry ? fileEntry.data : null;
 }
 
+async function deleteBackup(id) {
+    var db = await dbPromise;
+    var tx = db.transaction(['metadata', 'files'], 'readwrite');
+    tx.objectStore('metadata').delete(id);
+    tx.objectStore('files').delete(id);
+    await tx.done;
+}
+
 module.exports = {
   saveBackup,
   getBackups,
-  getBackupData
+  getBackupData,
+  deleteBackup
 };

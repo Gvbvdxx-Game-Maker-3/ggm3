@@ -51,7 +51,15 @@ var newFileMenus = [];
 var projectSaver = require("./file");
 const dialog = require("./dialogs.js");
 
+var fileHandle = null;
+
 async function newProject() {
+  if (fileHandle) {
+    try{
+      fileHandle.close();
+    }catch(e){}
+    fileHandle = null;
+  }
   loadingScreenContainer.hidden = false;
   await defaultProject.loadDefaultProject();
   selectedSprite.setCurrentSprite(0, true, true);
@@ -62,6 +70,7 @@ function loadProjectFile(file) {
   if (!file) {
     return;
   }
+  fileHandle = null; //Reset the file handle to prevent accidental overwriting of the loaded file. It will be set again to the new location the user picks when they try to save.
   loadingScreenContainer.hidden = false;
   elements.setInnerJSON(loadingScreenContent, []);
   var reader = new FileReader();
@@ -76,10 +85,11 @@ function loadProjectFile(file) {
       });
 
       await projectSaver.loadProjectZip(reader.result, monitor);
+      selectedSprite.unmarkProjectDirty();
     } catch (e) {
       await defaultProject.loadDefaultProject();
       console.error("Project load error: ", e);
-      dialogs.alert("Project load error: " + e.message);
+      dialogs.alert("Project load error: " + e.message + "\nA default project has been loaded instead.");
     }
     selectedSprite.setCurrentSprite(0, true, true);
     loadingScreenContainer.hidden = true;
@@ -87,7 +97,9 @@ function loadProjectFile(file) {
   reader.readAsArrayBuffer(file);
 }
 
-var {saveBackupNow} = require("./autobackup.js");
+var {saveBackupNow, getFileMenuOption, backupDeps, getBackupNotice} = require("./autobackup.js");
+
+backupDeps.loadProjectFile = loadProjectFile;
 
 if (available()) {
   var menuBar = elements.getGPId("menuBar");
@@ -98,6 +110,7 @@ if (available()) {
         marginRight: "auto",
       },
     },
+    ...getBackupNotice ? getBackupNotice() : [],
     {
       element: "div",
       className: "menuBarItem",
@@ -113,7 +126,6 @@ if (available()) {
   ]);
 
   var editFileQuick = elements.getGPId("editFileQuick");
-  var fileHandle = null;
   var isSaving = false;
 
   const TEXT_SAVENOW = "Save now";
@@ -224,6 +236,7 @@ if (available()) {
       var zipBlob = await projectSaver.saveProjectZipBlob(monitor);
       await writeToWritable(writable, zipBlob);
       closeWritable(writable);
+      selectedSprite.unmarkProjectDirty();
     } catch (e) {
       console.error(e);
       dialogs.alert("Project save error " + e);
@@ -271,7 +284,13 @@ addAppMenu(
     {
       label: "Load",
       icon: "icons/import.svg",
-      action: function () {
+      action: async function () {
+        if (selectedSprite.isProjectDirty()) {
+          if (!(await dialogs.confirm("You might have unsaved changes. Load anyway?"))) {
+            return;
+          }
+        }
+
         var input = document.createElement("input");
         input.type = "file";
         input.accept = ".ggm3";
@@ -285,6 +304,7 @@ addAppMenu(
         });
       },
     },
+    ...getFileMenuOption ? getFileMenuOption() : [],
   ]),
 );
 
@@ -300,3 +320,6 @@ selectedSprite.deps.exportSprite = async function (sprite) {
 };
 
 
+module.exports = {
+  loadProjectFile
+};

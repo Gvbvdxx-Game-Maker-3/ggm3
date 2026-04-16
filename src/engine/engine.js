@@ -406,7 +406,12 @@ class GGM3Engine extends EventEmitter {
     var canvas = this.canvas;
     canvas.width = 640;
     canvas.height = 360;
-    const contextAttribs = { alpha: false, stencil: true, antialias: false };
+    const contextAttribs = {
+      alpha: false,
+      stencil: true,
+      antialias: false,
+      preserveDrawingBuffer: true
+    };
     var gl =
       canvas.getContext("webgl", contextAttribs) ||
       canvas.getContext("experimental-webgl", contextAttribs) ||

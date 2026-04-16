@@ -9,6 +9,13 @@ var costumePivots = require("./costumepivoteditor.js");
 
 var { makeSortable } = require("./drag-utils.js");
 
+var deps = {
+  markAsDirty: () => {},
+  forwardMarkAsDirty: function () {
+    costumePivots.deps.markAsDirty = deps.markAsDirty;
+  }
+};
+
 function reloadCostumes(spr, reloadTabCallback = function () {}) {
   costumePivots.reloadCostumes(spr, reloadTabCallback);
   elements.setInnerJSON(costumesHeaderContainer, [
@@ -49,6 +56,7 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
                           spr.ensureUniqueCostumeNames();
                           resolve();
                           reloadCostumes(spr);
+                          deps.markAsDirty();
                         } catch (e) {
                           window.alert(e);
                         }
@@ -114,6 +122,7 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
                     spr.ensureUniqueCostumeNames();
                     reloadCostumes(spr);
                     reloadTabCallback(spr);
+                    deps.markAsDirty();
                   },
                 },
               ],
@@ -131,6 +140,7 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
                   event: "click",
                   func: function () {
                     spr.costumeIndex = i;
+                    deps.markAsDirty();
                   },
                 },
               ],
@@ -159,6 +169,7 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
                     } else {
                       this.textContent = "Enable preloading";
                     }
+                    deps.markAsDirty();
                   },
                 },
               ],
@@ -212,6 +223,7 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
                     spr.deleteCostume(costume);
                     reloadCostumes(spr);
                     reloadTabCallback(spr);
+                    deps.markAsDirty();
                   },
                 },
               ],
@@ -243,6 +255,7 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
 
         reloadCostumes(spr);
         reloadTabCallback(spr);
+        deps.markAsDirty();
       },
     );
   }
@@ -250,4 +263,5 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
 
 module.exports = {
   reloadCostumes,
+  deps
 };

@@ -8,6 +8,7 @@ var costumeViewer = require("./costumeviewer.js");
 var soundViewer = require("./soundviewer.js");
 var compiler = require("../compiler");
 var blockMenu = require("./blockmenuloader.js");
+var isProjectDirty = false;
 var { valueReport } = require("./value-report.js");
 var { makeSortable } = require("./drag-utils.js");
 var { loadBlockMenus } = blockMenu;
@@ -105,6 +106,26 @@ if (blockMenu && blockMenu.helpers) {
   blockMenu.helpers.loadWorkspaceFromSprite = compile.loadWorkspaceFromSprite;
 }
 
+deps.markProjectDirty = function () {
+  if (isProjectDirty) {
+    return;
+  }
+  isProjectDirty = true;
+};
+deps.unmarkProjectDirty = function () {
+  if (!isProjectDirty) {
+    return;
+  }
+  isProjectDirty = false;
+};
+deps.isProjectDirty = function () {
+  return isProjectDirty;
+};
+
+costumeViewer.deps.markAsDirty = deps.markProjectDirty;
+soundViewer.deps.markAsDirty = deps.markProjectDirty;
+costumeViewer.deps.forwardMarkAsDirty(); //So that the costume pivot editor could also mark the project as dirty when a pivot is changed.
+
 module.exports = {
   setCurrentSprite,
   updateSpritesContainer: ui.updateSpritesContainer,
@@ -116,5 +137,8 @@ module.exports = {
   saveCurrentSpriteCode,
   saveScroll: workspace.saveScroll,
   scrollToPrevious: workspace.scrollToPrevious,
+  markProjectDirty: deps.markProjectDirty,
+  unmarkProjectDirty: deps.unmarkProjectDirty,
+  isProjectDirty: deps.isProjectDirty,
   deps: deps,
 };

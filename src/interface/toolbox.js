@@ -48,37 +48,37 @@ function generateToolbox(defaultX, defaultY) {
                 </shadow>
             </value>
         </block>
-    <block type="motion_pointindirection">
-    <value name="DIRECTION">
-        <shadow type="math_angle">
-            <field name="NUM">90</field>
-        </shadow>
-    </value>
-    </block>
-    <block type="motion_turnright">
-    <value name="DEGREES">
-        <shadow type="math_number">
-            <field name="NUM">15</field>
-        </shadow>
-    </value>
-    </block>
-    <block type="motion_turnleft">
-    <value name="DEGREES">
-        <shadow type="math_number">
-            <field name="NUM">15</field>
-        </shadow>
-    </value>
-    </block>
-    <block type="motion_movesteps">
-    <value name="STEPS">
-        <shadow type="math_number">
-            <field name="NUM">10</field>
-        </shadow>
-    </value>
-    </block>
-    <block type="motion_xposition"></block>
-    <block type="motion_yposition"></block>
-    <block type="motion_direction"></block>
+        <block type="motion_pointindirection">
+            <value name="DIRECTION">
+                <shadow type="math_angle">
+                    <field name="NUM">90</field>
+                </shadow>
+            </value>
+            </block>
+        <block type="motion_turnright">
+            <value name="DEGREES">
+                <shadow type="math_number">
+                    <field name="NUM">15</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="motion_turnleft">
+            <value name="DEGREES">
+                <shadow type="math_number">
+                    <field name="NUM">15</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="motion_movesteps">
+            <value name="STEPS">
+                <shadow type="math_number">
+                    <field name="NUM">10</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="motion_xposition"></block>
+        <block type="motion_yposition"></block>
+        <block type="motion_direction"></block>
     </category>
     <category name="Events" id="events" colour="${Blockly.Colours.event.primary}" secondaryColour="${Blockly.Colours.event.secondary}">
         <block type="event_beforegamestarts"></block>

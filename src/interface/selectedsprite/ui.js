@@ -48,6 +48,7 @@ function init(state, deps) {
               if (typeof deps.onSetCurrentSprite === "function") {
                 deps.onSetCurrentSprite(deps.engine.sprites.length - 1);
               }
+              deps.markProjectDirty();
             }
           }
         ],
@@ -315,6 +316,7 @@ function init(state, deps) {
                         deps.onSetCurrentSprite(newIndex, true);
                       }
                       updateSpritesContainer();
+                      deps.markProjectDirty();
                     }
                   },
                 },
@@ -357,6 +359,8 @@ function init(state, deps) {
                     } catch (e) {
                       updateSpritesContainer();
                     }
+
+                    deps.markProjectDirty();
                   },
                 },
               ],
@@ -390,26 +394,32 @@ function init(state, deps) {
     state.currentSelectedSprite.name = spriteNameInput.value;
     deps.engine.makeUniqueSpriteNames();
     updateSpritesContainer();
+    deps.markProjectDirty();
   });
   spriteXPosInput.addEventListener("input", () => {
     if (!state.currentSelectedSprite) return;
     state.currentSelectedSprite.x = +spriteXPosInput.value || 0;
+    deps.markProjectDirty();
   });
   spriteYPosInput.addEventListener("input", () => {
     if (!state.currentSelectedSprite) return;
     state.currentSelectedSprite.y = +spriteYPosInput.value || 0;
+    deps.markProjectDirty();
   });
   spriteDirectionInput.addEventListener("input", () => {
     if (!state.currentSelectedSprite) return;
     state.currentSelectedSprite.direction = +spriteDirectionInput.value || 0;
+    deps.markProjectDirty();
   });
   spriteSizeInput.addEventListener("input", () => {
     if (!state.currentSelectedSprite) return;
     state.currentSelectedSprite.size = +spriteSizeInput.value || 0;
+    deps.markProjectDirty();
   });
   spriteHiddenInput.addEventListener("input", () => {
     if (!state.currentSelectedSprite) return;
     state.currentSelectedSprite.hidden = spriteHiddenInput.checked;
+    deps.markProjectDirty();
   });
 
   setInterval(() => {

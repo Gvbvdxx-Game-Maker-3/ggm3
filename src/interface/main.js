@@ -5,5 +5,6 @@ require("./dom/index.js");
 require("./ggm3blocks");
 require("./cleanup/inject.js");
 require("./enginecontrol.js");
-require("./quickedit.js");
+require("./file-menu.js");
 require("./edit-menu.js");
+require("./unsaved-changes-dialog.js");

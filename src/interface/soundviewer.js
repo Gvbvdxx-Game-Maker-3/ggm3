@@ -7,6 +7,10 @@ var soundsSelectorContainer = elements.getGPId("soundsSelectorContainer");
 
 var { makeSortable } = require("./drag-utils.js");
 
+var deps = {
+  markAsDirty: () => {},
+};
+
 function reloadSounds(spr, reloadTabCallback = function () {}) {
   elements.setInnerJSON(soundsHeaderContainer, [
     {
@@ -45,6 +49,7 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
                             .trim();
                           spr.ensureUniqueSoundNames();
                           resolve();
+                          deps.markAsDirty();
                           reloadSounds(spr);
                         } catch (e) {
                           window.alert(e);
@@ -57,6 +62,7 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
                 }
                 Promise.all(p).then(() => {
                   reloadTabCallback(spr);
+                  deps.markAsDirty();
                 });
               } else {
                 input.value = "";
@@ -118,6 +124,7 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
                         spr.ensureUniqueSoundNames();
                         reloadSounds(spr);
                         reloadTabCallback(spr);
+                        deps.markAsDirty();
                       },
                     },
                   ],
@@ -146,6 +153,7 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
                         } else {
                           this.textContent = "Enable preloading";
                         }
+                        deps.markAsDirty();
                       },
                     },
                   ],
@@ -199,6 +207,7 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
                         spr.deleteSound(sound);
                         reloadSounds(spr);
                         reloadTabCallback(spr);
+                        deps.markAsDirty();
                       },
                     },
                   ],
@@ -228,6 +237,7 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
 
         reloadSounds(spr);
         reloadTabCallback(spr);
+        deps.markAsDirty();
       },
     );
   }
@@ -235,4 +245,5 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
 
 module.exports = {
   reloadSounds,
+  deps
 };

@@ -169,6 +169,7 @@ function init(state, deps) {
     }
 
     workspace.addChangeListener(function (e) {
+      deps.markProjectDirty();
       if (thisLoadToken !== workspaceLoadToken) return;
       if (state.currentSelectedSprite !== spr) return;
       if (
@@ -393,6 +394,7 @@ function init(state, deps) {
         state.currentSelectedSprite.blocklyXML =
           Blockly.Xml.workspaceToDom(workspace);
       } catch (e) {}
+      deps.markProjectDirty();
     }
   }
 
