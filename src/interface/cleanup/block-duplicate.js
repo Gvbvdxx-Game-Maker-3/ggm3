@@ -17,6 +17,15 @@ document.addEventListener(
 
 const ScratchBlocks = window.Blockly;
 
+function setGlobalBlockDragState(block, inProgress) {
+  try {
+    window.__ggm3_currentDragBlock = block || null;
+    window.__ggm3_blockDragInProgress = !!inProgress;
+  } catch (e) {}
+}
+
+setGlobalBlockDragState(null, false);
+
 if (ScratchBlocks.registry) {
   // new Blockly: only implement duplication (cherry picking is a vanilla feature)
 
@@ -84,6 +93,8 @@ if (ScratchBlocks.registry) {
       return;
     }
 
+    setGlobalBlockDragState(this.block, true);
+
     if (enableDuplication) {
       // By default, both Ctrl/Cmd and Alt can be used for cherry picking.
       // Exclude Alt if duplication is enabled.
@@ -109,6 +120,9 @@ if (ScratchBlocks.registry) {
   ScratchBlocks.dragging.BlockDragStrategy.prototype.endDrag = function (e) {
     oldEndDrag.call(this, e);
     ScratchBlocks.Events.setGroup(false);
+    setTimeout(function () {
+      setGlobalBlockDragState(null, false);
+    }, 0);
   };
 
   return;
@@ -123,7 +137,7 @@ ScratchBlocks.Gesture.prototype.startDraggingBlock_ = function (...args) {
   // Track the currently dragged block globally so other UI (sprite list)
   // can detect drops and copy blocks across sprites.
   try {
-    window.__ggm3_currentDragBlock = block;
+    setGlobalBlockDragState(block, true);
   } catch (e) {}
 
   // Scratch uses fake mouse events to implement right click > duplicate
@@ -173,7 +187,7 @@ ScratchBlocks.Gesture.prototype.startDraggingBlock_ = function (...args) {
       block = newBlock;
       this.targetBlock_ = newBlock;
       try {
-        window.__ggm3_currentDragBlock = newBlock;
+        setGlobalBlockDragState(newBlock, true);
       } catch (e) {}
       if (ScratchBlocks.Events.isEnabled()) {
         ScratchBlocks.Events.fire(
@@ -200,9 +214,9 @@ ScratchBlocks.Gesture.prototype.startDraggingBlock_ = function (...args) {
 document.addEventListener(
   "mouseup",
   function () {
-    try {
-      window.__ggm3_currentDragBlock = null;
-    } catch (e) {}
+    setTimeout(function () {
+      setGlobalBlockDragState(null, false);
+    }, 0);
   },
   { capture: true },
 );

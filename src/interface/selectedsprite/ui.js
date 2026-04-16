@@ -11,50 +11,6 @@ document.addEventListener("click", function (evt) {
 });
 
 function init(state, deps) {
-  var isMouseDown = false;
-  var movedDuringCurrentMousePress = false;
-  var mouseDownX = 0;
-  var mouseDownY = 0;
-  var DRAG_MOVEMENT_THRESHOLD_PX = 6;
-
-  // Track whether the current click truly involved dragging so stale block
-  // references cannot trigger cross-sprite copy on a plain click.
-  window.addEventListener(
-    "mousedown",
-    function (evt) {
-      isMouseDown = true;
-      movedDuringCurrentMousePress = false;
-      mouseDownX = evt.clientX;
-      mouseDownY = evt.clientY;
-    },
-    true,
-  );
-
-  window.addEventListener(
-    "mousemove",
-    function (evt) {
-      if (!isMouseDown || movedDuringCurrentMousePress) return;
-      var dx = evt.clientX - mouseDownX;
-      var dy = evt.clientY - mouseDownY;
-      if (dx * dx + dy * dy >= DRAG_MOVEMENT_THRESHOLD_PX * DRAG_MOVEMENT_THRESHOLD_PX) {
-        movedDuringCurrentMousePress = true;
-      }
-    },
-    true,
-  );
-
-  window.addEventListener(
-    "mouseup",
-    function () {
-      isMouseDown = false;
-      // Keep the value for this event loop turn so mouseup handlers can read it.
-      setTimeout(function () {
-        movedDuringCurrentMousePress = false;
-      }, 0);
-    },
-    true,
-  );
-
   var spriteNameInput = elements.getGPId("spriteNameInput");
   var spriteXPosInput = elements.getGPId("spriteXPosInput");
   var spriteYPosInput = elements.getGPId("spriteYPosInput");
@@ -176,10 +132,6 @@ function init(state, deps) {
               func: function (evt) {
                 var elm = evt.currentTarget || evt.target;
 
-                if (!movedDuringCurrentMousePress) {
-                  return;
-                }
-
                 // --- FIX 1: Ignore if clicking buttons ---
                 // If the user clicked "Select", "Delete", etc., stop here.
                 if (evt.target.tagName === "BUTTON") return;
@@ -189,22 +141,8 @@ function init(state, deps) {
                   elm.classList.remove("sprite-drop-target");
                 } catch (err) {}
 
-                var draggedBlock = null;
-
-                // --- FIX 2: Strict Drag Check ---
-                // Blockly.selected exists even if you just click a block.
-                // We must check if a drag is actually IN PROGRESS.
-                // Depending on your Blockly version, use isDragging() or check the gesture.
-                if (Blockly.Gesture && Blockly.Gesture.inProgress) {
-                  // Modern Blockly
-                  draggedBlock = Blockly.selected;
-                } else if (Blockly.dragMode_ !== 0) {
-                  // Older Blockly / Internal flag check
-                  draggedBlock = Blockly.selected;
-                } else if (window.__ggm3_currentDragBlock) {
-                  // Your custom drag handler
-                  draggedBlock = window.__ggm3_currentDragBlock;
-                }
+                if (!window.__ggm3_blockDragInProgress) return;
+                var draggedBlock = window.__ggm3_currentDragBlock;
 
                 // If we still don't think we are dragging, STOP.
                 if (!draggedBlock) return;
