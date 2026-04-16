@@ -248,6 +248,7 @@ function init(state, deps) {
                   } catch (e) {}
 
                   updateSpritesContainer();
+                  deps.markProjectDirty();
                 } catch (err) {
                   console.error("Error copying block to sprite:", err);
                 }
@@ -479,6 +480,7 @@ function init(state, deps) {
       }
       deps.engine.makeUniqueSpriteNames();
       updateSpritesContainer();
+      deps.markProjectDirty();
     },
   );
 
