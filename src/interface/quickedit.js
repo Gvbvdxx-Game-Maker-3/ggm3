@@ -87,6 +87,8 @@ function loadProjectFile(file) {
   reader.readAsArrayBuffer(file);
 }
 
+var {saveBackupNow} = require("./autobackup.js");
+
 if (available()) {
   var menuBar = elements.getGPId("menuBar");
   elements.appendElementsFromJSON(menuBar, [
@@ -192,6 +194,9 @@ if (available()) {
     }
     changeSaveNowContent(TEXT_SAVING);
     isSaving = true;
+    if (saveBackupNow) {
+      saveBackupNow();
+    }
     try {
       var writable = await createWritable(fileHandle);
       var monitor = new projectSaver.ProgressMonitor();
@@ -293,3 +298,5 @@ selectedSprite.deps.exportSprite = async function (sprite) {
   a.download = sprite.name + ".ggm3sprite";
   a.click();
 };
+
+
