@@ -81,7 +81,7 @@ Blockly.WorkspaceSvg.prototype.registerToolboxCategoryCallback(
       },
     );
 
-    var broadcastNames = engine.getBroadcastNames().slice(0, 1);
+    var broadcastNames = engine.getBroadcastNames();
 
     for (var brodcastName of broadcastNames) {
       xmlList.push(
@@ -90,6 +90,9 @@ Blockly.WorkspaceSvg.prototype.registerToolboxCategoryCallback(
             <field name="BROADCAST_NAME">${getSafeHTML(brodcastName)}</field>
           </block>`),
       );
+    }
+
+    if (broadcastNames.length > 0) {
       xmlList.push(
         createElementXML(`
           <block type="event_ggm3_broadcast">

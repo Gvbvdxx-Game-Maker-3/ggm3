@@ -57,6 +57,8 @@ class Drawable {
       this.texture = twgl.createTexture(this.gl, {
         src: this.canvas,
         mag: this.gl ? this.gl.NEAREST : undefined,
+        min: this.gl ? this.gl.NEAREST : undefined,
+        wrap: this.gl ? this.gl.CLAMP_TO_EDGE : undefined,
       });
     } catch (e) {
       console.warn("Drawable: failed to create texture", e);

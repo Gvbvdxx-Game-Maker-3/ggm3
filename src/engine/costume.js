@@ -31,6 +31,20 @@ class Costume {
     var canvas = this.canvas;
     var ctx = canvas.getContext("2d");
 
+    // Keep pixel-art edges crisp and avoid interpolation fringes on transparent pixels.
+    if (ctx) {
+      ctx.imageSmoothingEnabled = false;
+      if (typeof ctx.webkitImageSmoothingEnabled !== "undefined") {
+        ctx.webkitImageSmoothingEnabled = false;
+      }
+      if (typeof ctx.mozImageSmoothingEnabled !== "undefined") {
+        ctx.mozImageSmoothingEnabled = false;
+      }
+      if (typeof ctx.msImageSmoothingEnabled !== "undefined") {
+        ctx.msImageSmoothingEnabled = false;
+      }
+    }
+
     canvas.width = img.width * this.preferedScale;
     canvas.height = img.height * this.preferedScale;
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
