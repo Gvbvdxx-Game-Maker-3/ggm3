@@ -11,6 +11,50 @@ document.addEventListener("click", function (evt) {
 });
 
 function init(state, deps) {
+  var isMouseDown = false;
+  var movedDuringCurrentMousePress = false;
+  var mouseDownX = 0;
+  var mouseDownY = 0;
+  var DRAG_MOVEMENT_THRESHOLD_PX = 6;
+
+  // Track whether the current click truly involved dragging so stale block
+  // references cannot trigger cross-sprite copy on a plain click.
+  window.addEventListener(
+    "mousedown",
+    function (evt) {
+      isMouseDown = true;
+      movedDuringCurrentMousePress = false;
+      mouseDownX = evt.clientX;
+      mouseDownY = evt.clientY;
+    },
+    true,
+  );
+
+  window.addEventListener(
+    "mousemove",
+    function (evt) {
+      if (!isMouseDown || movedDuringCurrentMousePress) return;
+      var dx = evt.clientX - mouseDownX;
+      var dy = evt.clientY - mouseDownY;
+      if (dx * dx + dy * dy >= DRAG_MOVEMENT_THRESHOLD_PX * DRAG_MOVEMENT_THRESHOLD_PX) {
+        movedDuringCurrentMousePress = true;
+      }
+    },
+    true,
+  );
+
+  window.addEventListener(
+    "mouseup",
+    function () {
+      isMouseDown = false;
+      // Keep the value for this event loop turn so mouseup handlers can read it.
+      setTimeout(function () {
+        movedDuringCurrentMousePress = false;
+      }, 0);
+    },
+    true,
+  );
+
   var spriteNameInput = elements.getGPId("spriteNameInput");
   var spriteXPosInput = elements.getGPId("spriteXPosInput");
   var spriteYPosInput = elements.getGPId("spriteYPosInput");
@@ -131,6 +175,10 @@ function init(state, deps) {
               event: "mouseup",
               func: function (evt) {
                 var elm = evt.currentTarget || evt.target;
+
+                if (!movedDuringCurrentMousePress) {
+                  return;
+                }
 
                 // --- FIX 1: Ignore if clicking buttons ---
                 // If the user clicked "Select", "Delete", etc., stop here.

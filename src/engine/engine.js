@@ -259,6 +259,15 @@ class GGM3Engine extends EventEmitter {
       _this.deleteSprite(s);
     });
     this.sprites = [];
+    this.spriteProperties = {};
+    this.globalVariables = {};
+    this.propertyVariables = {};
+    this.broadcastNames = [];
+    this.stopGame();
+    this.setWidth(this.DEFAULT_WIDTH);
+    this.setHeight(this.DEFAULT_HEIGHT);
+    this.setFramerate(this.DEFAULT_FRAMERATE);
+    this.changeCursorStyle(this.DEFAULT_CURSOR_STYLE);
   }
 
   createEmptySprite() {
