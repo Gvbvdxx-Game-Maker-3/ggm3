@@ -261,8 +261,7 @@ class Thread {
 
   deleteClone() {
     this.stop();
-    this.sprite.deleteClone();
-    return;
+    this.sprite.destroyClone();
   }
 
   random(from, to) {
