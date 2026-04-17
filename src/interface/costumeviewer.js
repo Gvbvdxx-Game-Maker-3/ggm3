@@ -13,7 +13,7 @@ var deps = {
   markAsDirty: () => {},
   forwardMarkAsDirty: function () {
     costumePivots.deps.markAsDirty = deps.markAsDirty;
-  }
+  },
 };
 
 function reloadCostumes(spr, reloadTabCallback = function () {}) {
@@ -263,5 +263,5 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
 
 module.exports = {
   reloadCostumes,
-  deps
+  deps,
 };

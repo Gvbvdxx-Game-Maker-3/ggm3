@@ -6,12 +6,17 @@ var SoundManager = require("./soundmanager.js");
 var SpriteMaster = require("./spritemaster.js");
 var TWEEN = require("@tweenjs/tween.js");
 
+var idCount = 0;
+
 class Sprite {
   constructor(engine, name) {
     var id = "";
     id += Date.now();
     id += "_";
     id += Math.round(Math.random() * 999999);
+	id += "_";
+	idCount += 1;
+	id += idCount;
     this.id = id;
 
     this.costumes = [];
@@ -64,6 +69,7 @@ class Sprite {
 
     this.spriteFunctions = {};
     this.isClone = false;
+    this.cloneActive = true;
     this.parent = null; //This is used by clones.
     this.clones = [];
     this.effects = new SpriteEffects(this);
@@ -80,7 +86,7 @@ class Sprite {
     this.spriteMaster = new SpriteMaster(this);
   }
 
-  goTo (target) {
+  goTo(target) {
     if (target == "__mouse_pointer__") {
       this.x = this.engine.mouseX;
       this.y = this.engine.mouseY;
@@ -319,6 +325,7 @@ class Sprite {
     if (!this.isClone) {
       return;
     }
+    this.cloneActive = false;
     this.stopAllScripts();
     this.parent.removeCloneFromList(this);
     this.dispose();
@@ -387,7 +394,9 @@ class Sprite {
     this.clones.push(sprite);
 
     for (var key of Object.keys(this.spriteFunctions)) {
-      sprite.runFunctionID(key);
+      if (sprite.cloneActive) {
+        sprite.runFunctionID(key);
+      }
     }
     sprite.emitStackListener("clonestart");
   }
@@ -730,8 +739,14 @@ class Sprite {
   }
 
   emitStackListener(name, ...args) {
+    if (!this.cloneActive) {
+      return;
+    }
     if (this.listeners[name]) {
       for (var blockID of this.listeners[name]) {
+        if (!this.cloneActive) {
+          return;
+        }
         if (this.hatFunctions[blockID]) {
           this.hatFunctions[blockID](...args);
         }
@@ -807,15 +822,15 @@ class Sprite {
 
   getFunction(code) {
     const func = new Function(
-      'sprite', 
-      'engine', 
-      'spriteMaster', 
+      "sprite",
+      "engine",
+      "spriteMaster",
       `
        return (async function() { 
          ${code} 
-       })();`
+       })();`,
     );
-    
+
     return func;
   }
 

@@ -174,7 +174,6 @@ class GGM3Engine extends EventEmitter {
     delete this.globalVariables[name];
   }
 
-
   addSpriteProperty(name) {
     this.propertyVariables[name] = true; //Values are unique for each sprite.
   }
@@ -419,7 +418,7 @@ class GGM3Engine extends EventEmitter {
       alpha: false,
       stencil: true,
       antialias: false,
-      preserveDrawingBuffer: true
+      preserveDrawingBuffer: true,
     };
     var gl =
       canvas.getContext("webgl", contextAttribs) ||
@@ -709,5 +708,5 @@ class GGM3Engine extends EventEmitter {
 }
 
 module.exports = {
-    GGM3Engine
+  GGM3Engine,
 };

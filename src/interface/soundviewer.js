@@ -245,5 +245,5 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
 
 module.exports = {
   reloadSounds,
-  deps
+  deps,
 };

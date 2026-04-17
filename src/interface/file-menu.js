@@ -55,9 +55,9 @@ var fileHandle = null;
 
 async function newProject() {
   if (fileHandle) {
-    try{
+    try {
       fileHandle.close();
-    }catch(e){}
+    } catch (e) {}
     fileHandle = null;
   }
   loadingScreenContainer.hidden = false;
@@ -89,7 +89,11 @@ function loadProjectFile(file) {
     } catch (e) {
       await defaultProject.loadDefaultProject();
       console.error("Project load error: ", e);
-      dialogs.alert("Project load error: " + e.message + "\nA default project has been loaded instead.");
+      dialogs.alert(
+        "Project load error: " +
+          e.message +
+          "\nA default project has been loaded instead.",
+      );
     }
     selectedSprite.setCurrentSprite(0, true, true);
     loadingScreenContainer.hidden = true;
@@ -97,7 +101,12 @@ function loadProjectFile(file) {
   reader.readAsArrayBuffer(file);
 }
 
-var {saveBackupNow, getFileMenuOption, backupDeps, getBackupNotice} = require("./autobackup.js");
+var {
+  saveBackupNow,
+  getFileMenuOption,
+  backupDeps,
+  getBackupNotice,
+} = require("./autobackup.js");
 
 backupDeps.loadProjectFile = loadProjectFile;
 
@@ -110,7 +119,7 @@ if (available()) {
         marginRight: "auto",
       },
     },
-    ...getBackupNotice ? getBackupNotice() : [],
+    ...(getBackupNotice ? getBackupNotice() : []),
     {
       element: "div",
       className: "menuBarItem",
@@ -286,7 +295,11 @@ addAppMenu(
       icon: "icons/import.svg",
       action: async function () {
         if (selectedSprite.isProjectDirty()) {
-          if (!(await dialogs.confirm("You might have unsaved changes. Load anyway?"))) {
+          if (
+            !(await dialogs.confirm(
+              "You might have unsaved changes. Load anyway?",
+            ))
+          ) {
             return;
           }
         }
@@ -304,7 +317,7 @@ addAppMenu(
         });
       },
     },
-    ...getFileMenuOption ? getFileMenuOption() : [],
+    ...(getFileMenuOption ? getFileMenuOption() : []),
   ]),
 );
 
@@ -319,7 +332,6 @@ selectedSprite.deps.exportSprite = async function (sprite) {
   a.click();
 };
 
-
 module.exports = {
-  loadProjectFile
+  loadProjectFile,
 };

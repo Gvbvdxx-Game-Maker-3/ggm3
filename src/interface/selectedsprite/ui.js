@@ -49,8 +49,8 @@ function init(state, deps) {
                 deps.onSetCurrentSprite(deps.engine.sprites.length - 1);
               }
               deps.markProjectDirty();
-            }
-          }
+            },
+          },
         ],
         children: [
           {
@@ -69,8 +69,8 @@ function init(state, deps) {
             func: function () {
               closeSpriteAddMenu();
               window.alert("Import feature coming soon!");
-            }
-          }
+            },
+          },
         ],
         children: [
           {
@@ -416,21 +416,21 @@ function init(state, deps) {
       }
       if (
         Math.round(+spriteXPosInput.value) !==
-        Math.round(state.currentSelectedSprite.x) ||
+          Math.round(state.currentSelectedSprite.x) ||
         spriteXPosInput.value.length < 1
       ) {
         spriteXPosInput.value = Math.round(state.currentSelectedSprite.x);
       }
       if (
         Math.round(+spriteYPosInput.value) !==
-        Math.round(state.currentSelectedSprite.y) ||
+          Math.round(state.currentSelectedSprite.y) ||
         spriteYPosInput.value.length < 1
       ) {
         spriteYPosInput.value = Math.round(state.currentSelectedSprite.y);
       }
       if (
         Math.round(+spriteDirectionInput.value) !==
-        Math.round(state.currentSelectedSprite.direction) ||
+          Math.round(state.currentSelectedSprite.direction) ||
         spriteDirectionInput.value.length < 1
       ) {
         spriteDirectionInput.value = Math.round(
@@ -439,7 +439,7 @@ function init(state, deps) {
       }
       if (
         Math.round(+spriteSizeInput.value) !==
-        Math.round(state.currentSelectedSprite.size) ||
+          Math.round(state.currentSelectedSprite.size) ||
         spriteSizeInput.value.length < 1
       ) {
         spriteSizeInput.value = Math.round(state.currentSelectedSprite.size);

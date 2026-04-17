@@ -83,7 +83,7 @@ class Sound {
     this.loading = false;
   }
 
-  getDuration () {
+  getDuration() {
     //this.data is a audio buffer. If it's not loaded (is null), return 0.
     if (!this.data) {
       return 0;
