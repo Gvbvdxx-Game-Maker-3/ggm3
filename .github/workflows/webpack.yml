@@ -34,5 +34,5 @@ jobs:
       - name: Deploy to Deploy Branch 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: build # The folder containing your built website files
+          folder: dist # The folder containing your built website files
           branch: deploy        # The branch you want to push to
