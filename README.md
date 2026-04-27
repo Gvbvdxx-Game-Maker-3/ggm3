@@ -1,4 +1,5 @@
 ![Gvbvdxx Game Maker 3 Logo](./static/logo/logo.png)
+[Old but still updated link here](https://ggm3-y1xs.onrender.com)
 
 > [!WARNING]
 > Development is at a complete stop right now, my school is blocking onrender.com and also codesandbox, also lost motivation because of the lack of developer tools on my school chromebook. It always had no developer tools, but as the editor got bigger, there is a bigger need of them.
