@@ -7150,6 +7150,10 @@ class Sprite {
     }
   }
 
+  getFunctionCode(code) {
+    return `(async function(sprite, engine, spriteMaster) {${code}})`;
+  }
+
   getFunction(code) {
     const func = new Function(
       'sprite', 
@@ -7456,6 +7460,48 @@ function init(state, deps) {
     div.remove();
   }
 
+  function compileSpriteXMLToString(spr) {
+    var functions = {};
+    async function compileRoot(rootBlock) {
+      if (!rootBlock) return;
+      if (deps.compiler.isStarterBlock(rootBlock)) {
+        try {
+          var code = deps.compiler.compileBlock(rootBlock);
+          functions[rootBlock.id] = code;
+        } catch (e) {
+          return;
+        }
+      }
+    }
+    var div = document.createElement("div");
+    document.body.append(div);
+    var tempWorkspace = Blockly.inject(div, {
+      comments: true,
+      disable: false,
+      collapse: false,
+      media: "../media/",
+      readOnly: false,
+      rtl: false,
+      scrollbars: false,
+      trashcan: false,
+      sounds: false,
+    });
+
+    if (spr.blocklyXML) {
+      Blockly.Xml.domToWorkspace(spr.blocklyXML, tempWorkspace);
+    }
+
+    var blocks = tempWorkspace.getTopBlocks(true);
+    for (var block of blocks) {
+      compileRoot(block.getRootBlock());
+    }
+
+    tempWorkspace.dispose();
+    div.remove();
+
+    return functions;
+  }
+
   async function compileAllSprites() {
     async function compileRoot(rootBlock, spr) {
       if (!rootBlock) return;
@@ -7531,7 +7577,7 @@ function init(state, deps) {
     return tempWorkspace;
   }
 
-  return { compileSpriteXML, compileAllSprites, loadWorkspaceFromSprite };
+  return { compileSpriteXML, compileAllSprites, loadWorkspaceFromSprite, compileSpriteXMLToString };
 }
 
 module.exports = { init };
@@ -8108,6 +8154,7 @@ module.exports = {
   getCurSpriteIndex,
   loadCode: workspace.loadCode,
   compileSpriteXML: compile.compileSpriteXML,
+  compileSpriteXMLToString: compile.compileSpriteXMLToString,
   compileAllSprites: compile.compileAllSprites,
   saveCurrentSpriteCode,
   saveScroll: workspace.saveScroll,
@@ -28223,6 +28270,7 @@ Blockly.Blocks["event_ggm3_whenbroadcasted"] = {
 
 var {
   compileSpriteXML,
+  compileSpriteXMLToString,
   saveCurrentSpriteCode,
   compileAllSprites,
 } = __webpack_require__(3010);
@@ -28231,10 +28279,15 @@ function compileSprite(sprite) {
   compileSpriteXML(sprite);
 }
 
+function getSpriteFunctionsCode(sprite) {
+  return compileSpriteXMLToString(sprite);
+}
+
 module.exports = {
   compileSprite,
   saveCurrentSpriteCode,
   compileAllSprites,
+  getSpriteFunctionsCode
 };
 
 
