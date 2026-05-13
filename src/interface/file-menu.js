@@ -305,6 +305,14 @@ addAppMenu(
       },
     },
     ...getFileMenuOption ? getFileMenuOption() : [],
+
+    {
+      label: "Export game",
+      icon: "icons/export.svg",
+      action: async function () {
+        
+      },
+    },
   ]),
 );
 

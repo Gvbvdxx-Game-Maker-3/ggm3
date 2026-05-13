@@ -10,6 +10,8 @@ var SPRITE_MASTER_VALUES = {
   alpha: "alpha",
   "x stretch": "scaleX",
   "y stretch": "scaleY",
+  "x stretch (percent)": "scaleX * 100",
+  "y stretch (percent)": "scaleY * 100",
   "skew x": "skewX",
   "skew y": "skewY",
 };
