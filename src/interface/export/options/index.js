@@ -5,4 +5,4 @@ function initDefaultOptions(addExportOption) {
     ];
 }
 
-module.exports = initDefaultOptions;
+module.exports = {initDefaultOptions};

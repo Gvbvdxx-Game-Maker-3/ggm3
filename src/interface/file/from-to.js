@@ -42,6 +42,18 @@ function toEngineJSON() {
   };
 }
 
+/** Export safe version of `toEngineJSON` */
+function toEngineExportJSON() {
+  return {
+    globalVariables: getSaveableVariablesGlobal(engine.globalVariables),
+    broadcastNames: engine.broadcastNames,
+    frameRate: engine.frameRate,
+    spriteProperties: _toEnginePropertyNames(),
+    gameWidth: engine.gameWidth,
+    gameHeight: engine.gameHeight,
+  };
+}
+
 //Sprite properties
 
 function fromSpriteJSON(sprite, spriteJson) {
@@ -113,6 +125,18 @@ function toCostumeJSON(costume) {
   };
 }
 
+function toExportableCostumeJSON(costume) {
+  return {
+    name: costume.name,
+    id: costume.id,
+    rotationCenterX: costume.rotationCenterX,
+    rotationCenterY: costume.rotationCenterY,
+    preferedScale: costume.preferedScale,
+    willPreload: costume.willPreload,
+    mimeType: costume.mimeType,
+  };
+}
+
 //Sound properties
 
 function fromSoundJSON(sound, soundJson) {
@@ -132,16 +156,29 @@ function toSoundJSON(sound) {
   };
 }
 
+function toExportableSoundJSON(sound) {
+  return {
+    name: sound.name,
+    id: sound.id,
+    willPreload: sound.willPreload,
+    mimeType: sound.mimeType,
+  };
+}
+
 module.exports = {
   fromEngineJSON,
   toEngineJSON,
+
+  toEngineExportJSON,
 
   fromSpriteJSON,
   toSpriteJSON,
 
   fromCostumeJSON,
   toCostumeJSON,
+  toExportableCostumeJSON,
 
   fromSoundJSON,
   toSoundJSON,
+  toExportableSoundJSON,
 };
