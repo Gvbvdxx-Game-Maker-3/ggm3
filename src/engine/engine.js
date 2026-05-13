@@ -1,3 +1,10 @@
+/*!
+ * @license
+ * Gvbvdxx Game Maker 3 Engine
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 var twgl = require("twgl.js");
 var TWEEN = require("@tweenjs/tween.js");
 
@@ -8,22 +15,60 @@ var sMath = require("./smath.js");
 var EventEmitter = require("eventemitter3");
 var CollisionSprite = require("./mask.js");
 var SHADERS = require("./shaders.js");
+var GGM3ExportLoader = require("./export-loader.js");
 
 var created = false;
 
+/**
+ * The library for the runtime & rendering of Gvbvdxx Game Maker 3 games.
+ * @emits GGM3Engine#SPRITE_CREATED
+ * @emits GGM3Engine#RESOLUTION_UPDATED
+ */
 class GGM3Engine extends EventEmitter {
+  static GGM3ExportLoader = GGM3ExportLoader;
+  /**
+   * @readonly
+   * @type {String} Event emitted when a sprite is created. */
   SPRITE_CREATED = "SPRITE_CREATED";
+  /**
+   * @readonly
+   * @type {String} Event emitted when a sprite is deleted. */
   SPRITE_DELETED = "SPRITE_DELETED";
 
+  /**
+   * @readonly
+   * @type {String} Event emitted when the resolution is updated. */
   RESOLUTION_UPDATED = "RESOLUTION_UPDATED";
+  /**
+   * @readonly
+   * @type {String} Event emitted when the cursor style is changed. */
   CURSOR_CHANGED = "CURSOR_CHANGED";
+  /**
+   * @readonly
+   * @type {String} Event emitted when the frame rate is changed. */
   FRAMERATE_CHANGED = "FRAMERATE_CHANGED";
 
+  /**
+   * @readonly 
+   * @type {Number} The default width of the game. */
   DEFAULT_WIDTH = 640;
+  /**
+   * @readonly
+   * @type {Number} The default height of the game. */
   DEFAULT_HEIGHT = 360;
+  /**
+   * @readonly
+   * @type {Number} The default frame rate of the game. */
   DEFAULT_FRAMERATE = 60;
+  /**
+   * @readonly
+   * @type {String} The default cursor style. */
   DEFAULT_CURSOR_STYLE = "default";
 
+  /**
+   * Creates a new instance of the Gvbvdxx Game Maker 3 engine.
+   * @param {HTMLCanvasElement} canvas Canvas to render the game on.
+   */
   constructor(canvas) {
     super();
     if (!created) {
@@ -45,6 +90,7 @@ class GGM3Engine extends EventEmitter {
     this._frameRate = this.frameRate;
     this._iTime = 0;
     this.sMath = sMath;
+    this.exportMode = false;
     this.tween = new TWEEN.Group();
     this.keyNames = {
       " ": "space-bar",
@@ -71,6 +117,10 @@ class GGM3Engine extends EventEmitter {
     this.changeCursorStyle(this.DEFAULT_CURSOR_STYLE);
   }
 
+  /**
+   * Sets the cursor style value for the canvas.
+   * @param {String} value Cursor style property to change to. 
+   */
   changeCursorStyle(value) {
     var cursorStyle = value ? "" + value : this.DEFAULT_CURSOR_STYLE;
     if (cursorStyle !== this.cursorStyle) {
@@ -80,6 +130,10 @@ class GGM3Engine extends EventEmitter {
     }
   }
 
+  /**
+   * Sets the internal width of the game (unscaled), `updateCanvasSize` needs to be called right after this function.
+   * @param {Number} v Width in pixels, if none provided or invalid number, it defaults to the original width.
+   */
   setWidth(v) {
     this.gameWidth = +v || this.DEFAULT_WIDTH;
     if (this.gameWidth < 1) {
@@ -87,6 +141,10 @@ class GGM3Engine extends EventEmitter {
     }
   }
 
+  /**
+   * Sets the internal height of the game (unscaled), `updateCanvasSize` needs to be called right after this function.
+   * @param {Number} v Height in pixels, if none provided or invalid number, it defaults to the original height.
+   */
   setHeight(v) {
     this.gameHeight = +v || this.DEFAULT_HEIGHT;
     if (this.gameHeight < 1) {
@@ -94,6 +152,10 @@ class GGM3Engine extends EventEmitter {
     }
   }
 
+  /**
+   * Sets the FPS of the game, this is also used by some blocks of the game.
+   * @param {Number} v New FPS value. If none provided or invalid, defaults to the original value.
+   */
   setFramerate(v) {
     //Used by blocks
     this.frameRate = +v || this.DEFAULT_FRAMERATE;
@@ -105,18 +167,29 @@ class GGM3Engine extends EventEmitter {
     }
   }
 
+  /**
+   * Stops all sounds for every sprite in the game.
+   */
   stopAllSounds() {
     for (var sprite of this.getAllTopSprites()) {
       sprite.stopAllSounds();
     }
   }
 
+  /**
+   * Sends out a broadcast for every sprite in the game.
+   * @param {String} name The name of the broadcast to send out.
+   */
   broadcast(name) {
     this.getAllTopSprites().forEach((sprite) => {
       sprite.emitBroadcastListener(name);
     });
   }
 
+  /**
+   * Sends out a broadcast for every sprite in the game to the next frame.
+   * @param {String} name The name of the broadcast to send out.
+   */
   broadcastOnNextFrame(name) {
     this.broadcastQueue.push(() => {
       this.getAllTopSprites().forEach((sprite) => {
@@ -125,6 +198,10 @@ class GGM3Engine extends EventEmitter {
     });
   }
 
+  /**
+   * Sends out a broadcast for every sprite in the game, and waits for it to complete.
+   * @param {String} name The name of the broadcast to send out.
+   */
   async broadcastAndWait(name) {
     var promises = [];
     this.getAllTopSprites().forEach((sprite) => {
@@ -133,20 +210,36 @@ class GGM3Engine extends EventEmitter {
     await Promise.all(promises);
   }
 
+  /**
+   * Retrieves all the possible broadcast names possible.
+   * @returns {Array} Array of broadcast names.
+   */
   getBroadcastNames() {
     return this.broadcastNames;
   }
 
+  /**
+   * Adds a broadcast name to the list of possible broadcast names.
+   * @param {String} name The broadcast name to add.
+   */
   addBroadcastName(name) {
     if (this.broadcastNames.indexOf(name) === -1) {
       this.broadcastNames.push(name);
     }
   }
 
+  /**
+   * Removes a possible broadcast name from the list of possible broadcast names.
+   * @param {String} name The broadcast name to remove.
+   */
   removeBroadcastName(name) {
     this.broadcastNames = this.broadcastNames.filter((n) => n !== name);
   }
 
+  /**
+   * This updates the game screen size if the game screen size needs to be updated.
+   * Call this after setting `gameWidth`, `gameHeight`, or `screenScale`.
+   */
   updateCanvasSize() {
     var { canvas, gameWidth, gameHeight, screenScale } = this;
     var cwidth = gameWidth * screenScale;
@@ -161,24 +254,45 @@ class GGM3Engine extends EventEmitter {
     }
   }
 
+  /**
+   * Returns true if there is a global variable with that name.
+   * @param {String} name Global variable name to check.
+   * @returns {Boolean} True or false.
+   */
   hasGlobalVariable(name) {
     return Object.keys(this.globalVariables).indexOf(name) > -1;
   }
 
+  /**
+   * Creates a global variable, if already existing then it resets to zero.
+   * @param {String} name New global variable name.
+   */
   addGlobalVariable(name) {
     this.globalVariables[name] = 0;
   }
 
+  /**
+   * Removes a global variable by the name.
+   * @param {String} name Target global variable name to delete.
+   */
   removeGlobalVariable(name) {
     this.globalVariables[name] = true; //Blocks can set variables to undefined and may cause deletion to bug, so set it temporarily to true before deleting.
     delete this.globalVariables[name];
   }
 
-
+  /**
+   * Adds a possible sprite property name.
+   * @param {String} name The new sprite property name.
+   */
   addSpriteProperty(name) {
     this.propertyVariables[name] = true; //Values are unique for each sprite.
   }
 
+  /**
+   * Checks if the sprite property exists.
+   * @param {String} name Name of sprite property check.
+   * @returns {Boolean} True or false.
+   */
   hasSpriteProperty(name) {
     if (this.propertyVariables[name]) {
       return true;
@@ -186,6 +300,10 @@ class GGM3Engine extends EventEmitter {
     return false;
   }
 
+  /**
+   * Removes a possible sprite property name, and deletes the property from all sprites.
+   * @param {String} name The sprite property name to remove.
+   */
   removeSpriteProperty(name) {
     this.propertyVariables[name] = true;
     delete this.propertyVariables[name];
@@ -194,6 +312,10 @@ class GGM3Engine extends EventEmitter {
     }
   }
 
+  /**
+   * This function makes sure all sprites have unique names, and if there are any duplicates it renames them by adding " (1)", " (2)", etc to the end of the name. It also creates a map of sprite names to sprite objects for easy lookup.
+    * This should be called whenever a new sprite is created, or a sprite is renamed.
+   */
   makeUniqueSpriteNames() {
     var existingNames = [];
     var nameCounts = {};
@@ -214,16 +336,34 @@ class GGM3Engine extends EventEmitter {
     this.spriteMap = spriteMap;
   }
 
+  /**
+   * Gets the x-coordinate of the mouse position.
+   * @returns {Number} The x-coordinate of the mouse position.
+   * @type {Number}
+   */
   get mouseX() {
     return this.mouseMask.x;
   }
+  /**
+   * Gets the y-coordinate of the mouse position.
+   * @returns {Number} The y-coordinate of the mouse position.
+   * @type {Number}
+   */
   get mouseY() {
     return -this.mouseMask.y;
   }
+  /**
+   * Gets whether the mouse is down.
+   * @returns {Boolean} True if the mouse is down, false otherwise.
+   * @type {Boolean}
+   */
   get mouseIsDown() {
     return this.mouseMask.isDown;
   }
 
+  /**
+   * Stops the game by stopping all scripts, deleting all clones, and resetting all effects for every sprite in the game.
+   */
   stopGame() {
     this.broadcastQueue = [];
     for (var sprite of this.sprites) {
@@ -233,6 +373,9 @@ class GGM3Engine extends EventEmitter {
     }
   }
 
+  /**
+   * Starts the game by stopping all scripts, deleting all clones, and resetting all effects for every sprite in the game.
+   */
   startGame() {
     this.stopGame();
     this.makeUniqueSpriteNames();
@@ -244,6 +387,11 @@ class GGM3Engine extends EventEmitter {
     }
   }
 
+  /**
+   * Deletes a sprite from the game.
+   * @param {Sprite} sprite The sprite to delete.
+   * @returns {void}
+   */
   deleteSprite(sprite) {
     if (!sprite.id) {
       return;
@@ -253,6 +401,9 @@ class GGM3Engine extends EventEmitter {
     this.emit(this.SPRITE_DELETED, sprite);
   }
 
+  /**
+   * Empties the project by deleting all sprites, resetting all variables, stopping the game, and resetting the resolution, framerate, and cursor style to default values.
+   */
   emptyProject() {
     var _this = this;
     this.sprites.forEach((s) => {
@@ -270,12 +421,20 @@ class GGM3Engine extends EventEmitter {
     this.changeCursorStyle(this.DEFAULT_CURSOR_STYLE);
   }
 
+  /**
+   * Creates a new empty sprite and adds it to the game.
+   * @returns {Sprite} The newly created sprite.
+   */
   createEmptySprite() {
     var spr = this.__createEmptySpriteNoEvent();
     this.emit(this.SPRITE_CREATED, spr);
     return spr;
   }
 
+  /**
+   * Creates a new empty sprite without emitting a sprite created event.
+   * @returns {Sprite} The newly created sprite.
+   */
   __createEmptySpriteNoEvent() {
     var spr = new Sprite(this, "Sprite " + (this.sprites.length + 1));
     this.sprites.push(spr);
@@ -283,6 +442,11 @@ class GGM3Engine extends EventEmitter {
     return spr;
   }
 
+  /**
+   * Duplicates a sprite.
+   * @param {Sprite} fromSprite The sprite to duplicate.
+   * @returns {Sprite} The newly created sprite.
+   */
   duplicateSprite(fromSprite) {
     var newSprite = this.__createEmptySpriteNoEvent();
     newSprite.name = fromSprite.name + " " + Math.round(Date.now());
@@ -335,6 +499,11 @@ class GGM3Engine extends EventEmitter {
     return newSprite;
   }
 
+  /**
+   * Starts the render loop of the game, which updates and renders every sprite in the game every frame. The framerate can be changed by setting the `frameRate` property, but it defaults to 60 FPS.
+   * The render loop uses a fixed timestep method, which means that if the game lags for some reason, it will update the game state multiple times in a row to catch up, and then render. This ensures that the game state is always consistent and not affected by lag spikes, but it also means that if the game is running too slow, it may skip rendering some frames to catch up.
+   * @returns {void}
+   */
   startRenderLoop() {
     const _this = this;
 
@@ -351,8 +520,8 @@ class GGM3Engine extends EventEmitter {
       let delta = now - previous;
       previous = now;
 
-      if (delta > 1000) {
-        delta = 1000;
+      if (delta > 500) {
+        delta = 500; // Cap delta to avoid spiral of death after long frames or when the tab is inactive
       }
 
       // Add the (capped) delta to our lag accumulator
@@ -370,30 +539,55 @@ class GGM3Engine extends EventEmitter {
     setTimeout(loop, 1);
   }
 
+  /**
+   * Creates a new drawable and adds it to the game.
+   * @param {HTMLCanvasElement} canvas The canvas to use for the drawable.
+   * @returns {Drawable} The newly created drawable.
+   */
   newDrawable(canvas) {
     var drawable = new Drawable(this, canvas, this.drawables.length);
     this.drawables.push(drawable);
     return drawable;
   }
 
+  /**
+   * Disposes of a drawable, removing it from the game.
+   * @param {Drawable} drawable The drawable to dispose of.
+   */
   disposeDrawable(drawable) {
     drawable.dispose();
     this.drawables = this.drawables.filter((d) => d.id !== drawable.id);
   }
 
+  /**
+   * Disposes of all drawables, removing them from the game.
+   * @returns {void}
+   */
   disposeAllDrawables() {
     var t = this;
     Array.from(this.drawables).forEach((d) => t.disposeDrawable(d));
   }
 
+  /**
+   * Enables edit mode, which allows the user to click and drag sprites around. This is used in the editor, and can be toggled on and off.
+   * @returns {void}
+   */
   turnOnEditing() {
     this.editMode = true;
   }
 
+  /**
+   * Disables edit mode, which allows the user to click and drag sprites around. This is used in the editor, and can be toggled on and off.
+   * @returns {void}
+   */
   turnOffEditing() {
     this.editMode = false;
   }
 
+  /**
+   * Generates a simple 1x1 white pixel mouse mask for detecting mouse interactions with sprites.
+   * @returns {void}
+   */
   generateMouseMask() {
     var c = document.createElement("canvas");
     var ctx = c.getContext("2d");
@@ -408,6 +602,10 @@ class GGM3Engine extends EventEmitter {
     c.remove();
   }
 
+  /**
+   * Initializes the canvas for rendering.
+   * @returns {void}
+   */
   initCanvas() {
     if (this.gl) {
       return;
@@ -435,6 +633,10 @@ class GGM3Engine extends EventEmitter {
     this.gl = gl;
   }
 
+  /**
+   * Internal function used to get webGL rendering information.
+   * @returns {Void}
+   */
   calculateGLStuff() {
     var gl = this.gl;
 
@@ -486,6 +688,11 @@ class GGM3Engine extends EventEmitter {
     this.render(1 / this.frameRate);
   }
 
+  /**
+   * Renders the game scene, this shouldn't be called directly.
+   * @param {Number} elapsed The time elapsed since the last frame.
+   * @returns {void}
+   */
   render(elapsed) {
     var { canvas, gl } = this;
     gl.viewport(0, 0, canvas.width, canvas.height);
@@ -518,6 +725,11 @@ class GGM3Engine extends EventEmitter {
     }
   }
 
+  /**
+   * Finds a sprite by its name.
+   * @param {String} name The name of the sprite to find.
+   * @returns {Sprite|null} The found sprite or null if not found.
+   */
   findSpriteByName(name) {
     if (name instanceof Sprite) {
       return name;
@@ -534,15 +746,32 @@ class GGM3Engine extends EventEmitter {
     return null;
   }
 
+  /**
+   * Changes the mouse position.
+   * @param {Number} cx The x-coordinate of the mouse position.
+   * @param {Number} cy The y-coordinate of the mouse position.
+   * @returns {void}
+   */
   changeMousePosition(cx, cy) {
     this.mouseMask.x = (+cx || 0) / this.screenScale - this.gameWidth / 2;
     this.mouseMask.y = (+cy || 0) / this.screenScale - this.gameHeight / 2;
   }
 
+  /**
+   * Changes the mouse down state.
+   * @param {Boolean} down The new mouse down state.
+   * @returns {void}
+   */
   changeMouseDown(down) {
     this.mouseMask.isDown = !!down;
   }
 
+  /**
+   * Changes the key pressed state.
+   * @param {String} key The key to change.
+   * @param {Boolean} down The new key pressed state.
+   * @returns {void}
+   */
   changeKeyPressed(key, down) {
     var keyName = key.toLowerCase();
     if (this.keyNames[key]) {
@@ -555,10 +784,19 @@ class GGM3Engine extends EventEmitter {
     }
   }
 
+  /**
+   * Updates the state of a sprite.
+   * @param {Sprite} sprite The sprite to update.
+   * @returns {void}
+   */
   tickSprite(sprite) {
     sprite.emitFrameListeners();
   }
 
+  /**
+   * Sorts the sprites by their z-index, so that they are rendered in the correct order. This should be called whenever a sprite's z-index is changed, or a new sprite is added to the game.
+   * @returns {void}
+   */
   sortLayers() {
     var i = 0;
     for (var sprite of this.getAllTopSprites()) {
@@ -567,6 +805,10 @@ class GGM3Engine extends EventEmitter {
     }
   }
 
+  /**
+   * Gets all top-level sprites.
+   * @returns {Sprite[]} The list of top-level sprites.
+   */
   getAllTopSprites() {
     var sprs = [];
     for (var spr of this.sprites) {
@@ -581,6 +823,10 @@ class GGM3Engine extends EventEmitter {
     return topSprites;
   }
 
+  /**
+   * Gets the top-level sprites.
+   * @returns {Sprite[]} The list of top-level sprites.
+   */
   getTopSprites() {
     var topSprites = this.sprites
       .map((s) => s)
@@ -588,6 +834,10 @@ class GGM3Engine extends EventEmitter {
     return topSprites;
   }
 
+  /**
+   * Checks for collisions between the mouse and sprites, and allows dragging of sprites in edit mode. This should only be called in edit mode, and is used for the editor to allow users to click and drag sprites around.
+   * @returns {void}
+   */
   tickEditMode() {
     if (this._editDragging) {
       if (this.mouseIsDown) {
@@ -636,6 +886,11 @@ class GGM3Engine extends EventEmitter {
     }
   }
 
+  /**
+   * Renders a sprite.
+   * @param {Sprite} spr The sprite to render.
+   * @returns {void}
+   */
   renderSprite(spr) {
     if (spr.hidden) {
       return;
@@ -699,6 +954,10 @@ class GGM3Engine extends EventEmitter {
     }
   }
 
+  /**
+   * Generates a unique ID.
+   * @returns {String} The generated ID.
+   */
   generateID() {
     var id = "";
     id += Date.now();

@@ -17,16 +17,18 @@ This script overrides the WebSocket constructor to modify
     class WebSocket extends OriginalWebsocket {
         constructor(url, protocols) {
             var newURL = new URL(url);
-            
-            var targetPort = newURL.port;
-            newURL.port = "";
 
-            var devHostname = newURL.hostname.split(githubDevName)[0];
-            var devParts = devHostname.split(githubDevNameDash);
+            if (newURL.hostname.indexOf(githubDevName) !== -1) {
+              var targetPort = newURL.port;
+              newURL.port = "";
 
-            devParts.pop();
-            devParts.push(targetPort);
-            newURL.hostname = devParts.join(githubDevNameDash) + githubDevName;
+              var devHostname = newURL.hostname.split(githubDevName)[0];
+              var devParts = devHostname.split(githubDevNameDash);
+
+              devParts.pop();
+              devParts.push(targetPort);
+              newURL.hostname = devParts.join(githubDevNameDash) + githubDevName;
+            }
 
             url = newURL.href;
             super(url, protocols);

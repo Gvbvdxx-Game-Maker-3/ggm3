@@ -1,6 +1,6 @@
 {
   "name": "gvbvdxx-game-maker-3",
-  "version": "0.1.0",
+  "version": "3.0.0",
   "description": "Gvbvdxx Game Maker 3 is a game programming and designing software by gvbvdxx.",
   "scripts": {
     "build": "webpack",

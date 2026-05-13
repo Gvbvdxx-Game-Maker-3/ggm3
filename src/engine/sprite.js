@@ -6,7 +6,17 @@ var SoundManager = require("./soundmanager.js");
 var SpriteMaster = require("./spritemaster.js");
 var TWEEN = require("@tweenjs/tween.js");
 
+/**
+ * Object for an active sprite in game.
+ * @class
+ */
 class Sprite {
+  /**
+   * Creates a new sprite.
+   * @param {GGM3Engine} engine The engine instance the sprite belongs to.
+   * @param {String} name The name of the sprite.
+   * @constructor
+   */
   constructor(engine, name) {
     var id = "";
     id += Date.now();
@@ -838,6 +848,12 @@ class Sprite {
     return await this.callCompiledFunction(func);
   }
 
+  /**
+   * Function used to add a costume to the sprite.
+   * @param {String} dataURL The URL of the costume image, can be a data URL or a normal URL.
+   * @param {String} name The name of the costume.
+   * @returns {Promise<Costume>} A promise that resolves to the added costume.
+   */
   addCostume(dataURL, name) {
     if (this.isClone) {
       throw new Error("Clones can't create their own costumes.");
@@ -862,6 +878,12 @@ class Sprite {
     });
   }
 
+  /**
+   * Function used to add a costume to the sprite without loading it.
+   * @param {String} url The URL of the costume image, can be a data URL or a normal URL.
+   * @param {String} name The name of the costume.
+   * @returns {Costume} The added costume.
+   */
   addCostumeWithoutLoading(url, name) {
     if (this.isClone) {
       throw new Error("Clones can't create their own costumes.");
@@ -876,6 +898,12 @@ class Sprite {
     return costume;
   }
 
+  /**
+   * Function used to add a sound to the sprite.
+   * @param {String} dataURL The URL of the sound file, can be a data URL or a normal URL.
+   * @param {String} name The name of the sound.
+   * @returns {Promise<Sound>} A promise that resolves to the added sound.
+   */
   addSound(dataURL, name) {
     if (this.isClone) {
       throw new Error("Clones can't create their own sounds.");
@@ -896,6 +924,12 @@ class Sprite {
     });
   }
 
+  /**
+   * Function used to add a sound to the sprite without loading it.
+   * @param {String} url The URL of the sound file, can be a data URL or a normal URL.
+   * @param {String} name The name of the sound.
+   * @returns {Sound} The added sound.
+   */
   addSoundWithoutLoading(url, name) {
     if (this.isClone) {
       throw new Error("Clones can't create their own sounds.");
@@ -907,6 +941,10 @@ class Sprite {
     return s;
   }
 
+  /**
+   * Function used to delete a costume from the sprite.
+   * @param {Costume} costume The costume to delete.
+   */
   deleteCostume(costume) {
     if (this.isClone) {
       throw new Error("Clones can't delete their own costumes.");
@@ -916,6 +954,10 @@ class Sprite {
     this.ensureUniqueCostumeNames(); //This also causes the costume mapping to happen.
   }
 
+  /**
+   * Function used to delete a sound from the sprite.
+   * @param {Sound} sound The sound to delete.
+   */
   deleteSound(sound) {
     if (this.isClone) {
       throw new Error("Clones can't delete their own sounds.");
@@ -925,6 +967,10 @@ class Sprite {
     this.ensureUniqueCostumeNames(); //This also causes the costume mapping to happen.
   }
 
+  /**
+   * Function used to dispose of the sprite and all of its resources. This is used when deleting a sprite or clone.
+   * Don't call this directly, this won't remove it from the engine by itself, use delete or destroyClone instead, depending on if the sprite is a clone or not.
+   */
   dispose() {
     if (!this.isClone) {
       for (var costume of this.costumes) {
@@ -941,6 +987,9 @@ class Sprite {
     this.spriteMaster.dispose();
   }
 
+  /**
+   * Function used to delete the sprite.
+   */
   delete() {
     if (this.isClone) {
       throw new Error("This sprite is a clone, use destroyClone instead.");

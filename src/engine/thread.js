@@ -260,8 +260,10 @@ class Thread {
   }
 
   deleteClone() {
-    this.stop();
-    this.sprite.destroyClone();
+    if (this.sprite.isClone) { //Bug fix: Stop non-clone threads from stopping themselves even though they aren't clones.
+      this.stop();
+      this.sprite.destroyClone();
+    }
   }
 
   random(from, to) {
