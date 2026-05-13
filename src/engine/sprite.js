@@ -815,6 +815,10 @@ class Sprite {
     }
   }
 
+  getFunctionCode(code) {
+    return `(async function(sprite, engine, spriteMaster) {${code}})`;
+  }
+
   getFunction(code) {
     const func = new Function(
       'sprite', 

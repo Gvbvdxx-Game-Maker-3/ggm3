@@ -28,6 +28,7 @@ module.exports = {
   entry: {
     interface: "./src/interface/index.js",
     engine: "./src/engine/engine-bundle.js",
+    terser: "./src/terser.js"
   },
   optimization: {
     splitChunks: false,
@@ -129,7 +130,7 @@ module.exports = {
       filename: `index.html`,
       title: `Gvbvdxx Game Maker 3`,
       template: "./src/base_html.html",
-      chunks: ["interface"],
+      chunks: ["terser","interface"],
     }),
     new CopyWebpackPlugin({
       patterns: [

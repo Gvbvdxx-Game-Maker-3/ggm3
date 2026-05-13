@@ -133,6 +133,7 @@ module.exports = {
   getCurSpriteIndex,
   loadCode: workspace.loadCode,
   compileSpriteXML: compile.compileSpriteXML,
+  compileSpriteXMLToString: compile.compileSpriteXMLToString,
   compileAllSprites: compile.compileAllSprites,
   saveCurrentSpriteCode,
   saveScroll: workspace.saveScroll,
