@@ -1800,6 +1800,8 @@ var SPRITE_MASTER_VALUES = {
   alpha: "alpha",
   "x stretch": "scaleX",
   "y stretch": "scaleY",
+  "x stretch (percent)": "scaleX * 100",
+  "y stretch (percent)": "scaleY * 100",
   "skew x": "skewX",
   "skew y": "skewY",
 };
@@ -15743,31 +15745,17 @@ class GGM3Engine extends EventEmitter {
     const _this = this;
 
     let previous = performance.now();
-    let lag = 0.0;
 
     function loop() {
       setTimeout(loop, 1);
       var now = performance.now();
 
-      const frameDuration = 1000 / _this.frameRate;
+      var frameDuration = 1000 / _this.frameRate;
 
-      // Calculate time since last frame
       let delta = now - previous;
-      previous = now;
-
-      if (delta > 500) {
-        delta = 500; // Cap delta to avoid spiral of death after long frames or when the tab is inactive
-      }
-
-      // Add the (capped) delta to our lag accumulator
-      lag += delta;
-
-      // Run update logic in fixed steps
-      // This loop will run 0 or more times
-      while (lag >= frameDuration) {
-        // Pass the *fixed* step to the update logic
-        _this.render(frameDuration);
-        lag -= frameDuration;
+      if (delta >= frameDuration) {
+        previous = now;
+        _this.render(delta);
       }
     }
 
