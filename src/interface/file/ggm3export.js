@@ -156,8 +156,8 @@ class ExportMainGenerator extends EventEmitter {
       }
     }
 
-    baseObject.costumes = await Promise.all(costumePromises);
-    baseObject.sounds = await Promise.all(soundPromises);
+    baseObject.costumes = costumeList;
+    baseObject.sounds = soundList;
 
     var functionsCode = getSpriteFunctionsCode(sprite);
     var exportableFunctions = {};
