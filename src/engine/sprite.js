@@ -90,7 +90,7 @@ class Sprite {
     this.spriteMaster = new SpriteMaster(this);
   }
 
-  goTo (target) {
+  goTo(target) {
     if (target == "__mouse_pointer__") {
       this.x = this.engine.mouseX;
       this.y = this.engine.mouseY;
@@ -821,15 +821,15 @@ class Sprite {
 
   getFunction(code) {
     const func = new Function(
-      'sprite', 
-      'engine', 
-      'spriteMaster', 
+      "sprite",
+      "engine",
+      "spriteMaster",
       `
        return (async function() { 
          ${code} 
-       })();`
+       })();`,
     );
-    
+
     return func;
   }
 

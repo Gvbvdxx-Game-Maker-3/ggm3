@@ -160,7 +160,12 @@ function init(state, deps) {
     return tempWorkspace;
   }
 
-  return { compileSpriteXML, compileAllSprites, loadWorkspaceFromSprite, compileSpriteXMLToString };
+  return {
+    compileSpriteXML,
+    compileAllSprites,
+    loadWorkspaceFromSprite,
+    compileSpriteXMLToString,
+  };
 }
 
 module.exports = { init };

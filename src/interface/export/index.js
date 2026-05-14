@@ -1,4 +1,3 @@
-
-function addExportOption(option) {
-    
-}
+module.exports = {
+  ...require("./dialog.js"),
+};

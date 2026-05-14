@@ -208,6 +208,5 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
 
 module.exports = {
   reloadCostumes,
-  deps
+  deps,
 };
-

@@ -118,11 +118,7 @@ JavascriptTranslation["motion_goto_menu"] = function (
 
   return JSON.stringify(TO);
 };
-JavascriptTranslation["motion_goto"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
+JavascriptTranslation["motion_goto"] = function (jsonblock, utils, options) {
   var TO = utils.getInput(jsonblock, "TO", options, "null");
 
   return `sprite.goTo(${TO});`;

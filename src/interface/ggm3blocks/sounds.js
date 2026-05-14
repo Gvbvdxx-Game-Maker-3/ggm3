@@ -39,9 +39,7 @@ var soundEffectOptions = [
   ["playback rate", "playbackRate"],
 ];
 
-var unwritableEffectOptions = [
-  ["duration", "duration"]
-];
+var unwritableEffectOptions = [["duration", "duration"]];
 
 Blockly.Blocks["sound_ggm3effect_set"] = {
   init: function () {

@@ -1,2 +1,2 @@
-const Terser = require('terser');
+const Terser = require("terser");
 window.Terser = Terser;

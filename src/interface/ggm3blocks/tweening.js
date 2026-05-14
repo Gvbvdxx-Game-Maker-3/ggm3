@@ -1,13 +1,13 @@
 var EasingMap = require("../../engine/easingmap.js");
 
-function getEasingOptions () {
-    var options = [];
+function getEasingOptions() {
+  var options = [];
 
-    for (var key of Object.keys(EasingMap)) {
-        options.push([key, key]);
-    }
+  for (var key of Object.keys(EasingMap)) {
+    options.push([key, key]);
+  }
 
-    return options;
+  return options;
 }
 
 Blockly.Blocks["tween_to_xy"] = {
@@ -125,7 +125,8 @@ Blockly.Blocks["tween_to_skew"] = {
 Blockly.Blocks["tween_to_object"] = {
   init: function () {
     this.jsonInit({
-      message0: "tween object %1 to values in object %2 in %3 seconds easing %4",
+      message0:
+        "tween object %1 to values in object %2 in %3 seconds easing %4",
       args0: [
         {
           type: "input_value",
@@ -159,8 +160,7 @@ Blockly.Blocks["tween_to_property"] = {
         {
           type: "field_dropdown",
           name: "VARIABLE",
-          options:
-            Blockly.Blocks["tween_to_property"]._listProperties,
+          options: Blockly.Blocks["tween_to_property"]._listProperties,
         },
         {
           type: "input_value",
@@ -190,7 +190,8 @@ Blockly.Blocks["tween_to_global_variable"] = {
         {
           type: "field_dropdown",
           name: "VARIABLE",
-          options: Blockly.Blocks["tween_to_global_variable"]._listGlobalVariables,
+          options:
+            Blockly.Blocks["tween_to_global_variable"]._listGlobalVariables,
         },
         {
           type: "input_value",

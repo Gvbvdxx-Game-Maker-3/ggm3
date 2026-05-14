@@ -1,9 +1,9 @@
 class ExportOptionsEvents {
-    static PROGRESS = "export-progress";
-    static COMPLETE = "export-complete";
-    static CANCEL_COMPLETE = "export-cancel-complete";
-    static ERROR = "export-error";
-    static PROGRESS_TEXT = "export-progress-text";
+  static PROGRESS = "export-progress";
+  static COMPLETE = "export-complete";
+  static CANCEL_COMPLETE = "export-cancel-complete";
+  static ERROR = "export-error";
+  static PROGRESS_TEXT = "export-progress-text";
 }
 
 module.exports = ExportOptionsEvents;

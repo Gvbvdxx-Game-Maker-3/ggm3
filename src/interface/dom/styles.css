@@ -1155,3 +1155,84 @@ body {
   flex-wrap: none;
   font-size: 9px;
 }
+
+.gameExportBox {
+  background: rgb(49, 49, 49);
+  color: rgb(255, 255, 255);
+  padding: 3px 3px;
+  box-shadow: 0 0px 30px rgb(0, 0, 0);
+  border-radius: 5px;
+  box-sizing: border-box;
+
+  overflow-y: auto;
+  width: calc(100svw - 100px);
+  height: calc(100svh - 100px);
+
+  display: flex;
+  flex-direction: column;
+}
+
+.exportGameTypeSelectionContainer {
+  display: flex;
+  width: 100%;
+	height: fit-content;
+	flex-shrink: 0;
+	flex-grow: 0;
+  flex-direction: row;
+  padding: 2px 2px;
+  gap: 5px;
+  text-wrap: nowrap;
+  align-items: center;
+}
+
+.exportGameTypeSelection {
+  display: flex;
+	height: fit-content;
+	flex-grow: 1;
+	overflow: auto;
+}
+
+.exportGameType {
+	display: flex;
+	background: rgba(0,0,0,0.3);
+	padding: 4px 4px;
+	text-wrap: nowrap;
+	border-radius: 2px;
+	font-weight: bold;
+	font-size: 18px;
+	color: rgba(255,255,255,0.5);
+	flex-grow: 0;
+	flex-shrink: 0;
+	box-sizing: border-box;
+	width: fit-content;
+	height: fit-content;
+	gap: 3px;
+	align-items: center;
+}
+
+.exportGameType > img {
+	width: 30px;
+	height: 30px;
+	object-fit: contain;
+  padding: 3px 3px;
+}
+
+.exportGameType:hover {
+  background: rgba(0,0,0,0.2);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.exportGameType[selected] {
+  text-decoration: unset;
+  cursor: unset;
+  background: rgba(0,0,0,0);
+}
+
+.exportGameType[selected] > img {
+  width: 30px;
+	height: 30px;
+	object-fit: contain;
+  border-radius: 5px;
+  background: rgba(0,0,0,0.4);
+}

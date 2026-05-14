@@ -110,38 +110,46 @@ class Thread {
   }
 
   tweenToXY(targetX, targetY, duration, easing) {
-    return this.tweenTo({
-      x: +targetX || 0,
-      y: +targetY || 0,
-    },
-    +duration || 0, 
-    easing);
+    return this.tweenTo(
+      {
+        x: +targetX || 0,
+        y: +targetY || 0,
+      },
+      +duration || 0,
+      easing,
+    );
   }
 
   tweenToSize(targetSize, duration, easing) {
-    return this.tweenTo({
-      size: +targetSize || 0
-    },
-    +duration || 0,
-    easing);
+    return this.tweenTo(
+      {
+        size: +targetSize || 0,
+      },
+      +duration || 0,
+      easing,
+    );
   }
 
   tweenToStretchXY(targetScaleX, targetScaleY, duration, easing) {
-    return this.tweenTo({
-      scaleX: (+targetScaleX || 0) / 100,
-      scaleY: (+targetScaleY || 0) / 100
-    },
-    +duration || 0,
-    easing);
+    return this.tweenTo(
+      {
+        scaleX: (+targetScaleX || 0) / 100,
+        scaleY: (+targetScaleY || 0) / 100,
+      },
+      +duration || 0,
+      easing,
+    );
   }
 
   tweenToSkewXY(targetSkewX, targetSkewY, duration, easing) {
-    return this.tweenTo({
-      skewX: +targetSkewX || 0,
-      skewY: +targetSkewY || 0
-    },
-    +duration || 0,
-    easing);
+    return this.tweenTo(
+      {
+        skewX: +targetSkewX || 0,
+        skewY: +targetSkewY || 0,
+      },
+      +duration || 0,
+      easing,
+    );
   }
 
   tweenTo(target, duration, easing) {
@@ -155,7 +163,7 @@ class Thread {
       if (!_this.running) {
         resolve();
       }
-      var movement = new TWEEN.Tween(source).to(target, duration*1000);
+      var movement = new TWEEN.Tween(source).to(target, duration * 1000);
       _this.sprite.tween.add(movement);
       if (easing) {
         movement.easing(EasingMap[easing]);
@@ -176,7 +184,8 @@ class Thread {
   tweenToProperty(variableName, targetValue, duration, easing) {
     var _this = this;
     return new Promise((resolve) => {
-      if (!_this.sprite.engine.hasSpriteProperty(variableName)) { //Stops unused variables from being created accidentally.
+      if (!_this.sprite.engine.hasSpriteProperty(variableName)) {
+        //Stops unused variables from being created accidentally.
         resolve();
         return;
       }
@@ -184,11 +193,14 @@ class Thread {
         resolve();
       }
       var source = {
-        value: +_this.sprite.spriteProperties[variableName] || 0
+        value: +_this.sprite.spriteProperties[variableName] || 0,
       };
-      var movement = new TWEEN.Tween(source).to({
-        value: +targetValue || 0
-      }, duration*1000);
+      var movement = new TWEEN.Tween(source).to(
+        {
+          value: +targetValue || 0,
+        },
+        duration * 1000,
+      );
       _this.sprite.tween.add(movement);
       if (easing) {
         movement.easing(EasingMap[easing]);
@@ -210,7 +222,10 @@ class Thread {
   tweenToGlobalVariable(variableName, targetValue, duration, easing) {
     var _this = this;
     return new Promise((resolve) => {
-      if (typeof _this.sprite.engine.globalVariables[variableName] == "undefined") { //Stops unused variables from being created accidentally.
+      if (
+        typeof _this.sprite.engine.globalVariables[variableName] == "undefined"
+      ) {
+        //Stops unused variables from being created accidentally.
         resolve();
         return;
       }
@@ -218,11 +233,14 @@ class Thread {
         resolve();
       }
       var source = {
-        value: +_this.sprite.engine.globalVariables[variableName] || 0
+        value: +_this.sprite.engine.globalVariables[variableName] || 0,
       };
-      var movement = new TWEEN.Tween(source).to({
-        value: +targetValue || 0
-      }, duration*1000);
+      var movement = new TWEEN.Tween(source).to(
+        {
+          value: +targetValue || 0,
+        },
+        duration * 1000,
+      );
       _this.sprite.tween.add(movement);
       if (easing) {
         movement.easing(EasingMap[easing]);
@@ -260,7 +278,8 @@ class Thread {
   }
 
   deleteClone() {
-    if (this.sprite.isClone) { //Bug fix: Stop non-clone threads from stopping themselves even though they aren't clones.
+    if (this.sprite.isClone) {
+      //Bug fix: Stop non-clone threads from stopping themselves even though they aren't clones.
       this.stop();
       this.sprite.destroyClone();
     }

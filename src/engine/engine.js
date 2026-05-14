@@ -49,7 +49,7 @@ class GGM3Engine extends EventEmitter {
   FRAMERATE_CHANGED = "FRAMERATE_CHANGED";
 
   /**
-   * @readonly 
+   * @readonly
    * @type {Number} The default width of the game. */
   DEFAULT_WIDTH = 640;
   /**
@@ -119,7 +119,7 @@ class GGM3Engine extends EventEmitter {
 
   /**
    * Sets the cursor style value for the canvas.
-   * @param {String} value Cursor style property to change to. 
+   * @param {String} value Cursor style property to change to.
    */
   changeCursorStyle(value) {
     var cursorStyle = value ? "" + value : this.DEFAULT_CURSOR_STYLE;
@@ -314,7 +314,7 @@ class GGM3Engine extends EventEmitter {
 
   /**
    * This function makes sure all sprites have unique names, and if there are any duplicates it renames them by adding " (1)", " (2)", etc to the end of the name. It also creates a map of sprite names to sprite objects for easy lookup.
-    * This should be called whenever a new sprite is created, or a sprite is renamed.
+   * This should be called whenever a new sprite is created, or a sprite is renamed.
    */
   makeUniqueSpriteNames() {
     var existingNames = [];
@@ -603,7 +603,7 @@ class GGM3Engine extends EventEmitter {
       alpha: false,
       stencil: true,
       antialias: false,
-      preserveDrawingBuffer: true
+      preserveDrawingBuffer: true,
     };
     var gl =
       canvas.getContext("webgl", contextAttribs) ||
@@ -954,5 +954,5 @@ class GGM3Engine extends EventEmitter {
 }
 
 module.exports = {
-    GGM3Engine
+  GGM3Engine,
 };

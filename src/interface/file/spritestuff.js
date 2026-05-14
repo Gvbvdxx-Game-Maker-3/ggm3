@@ -17,5 +17,5 @@ module.exports = {
   compileSprite,
   saveCurrentSpriteCode,
   compileAllSprites,
-  getSpriteFunctionsCode
+  getSpriteFunctionsCode,
 };
