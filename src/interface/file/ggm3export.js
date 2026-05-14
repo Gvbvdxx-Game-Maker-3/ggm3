@@ -203,9 +203,7 @@ class ExportMainGenerator extends EventEmitter {
 
     var wasCanceled = await this.cancelableAsyncChain([
       this.generateEngineMetadata.bind(this),
-      ...engine
-        .getAllSprites()
-        .map((sprite) => this.spriteToJS.bind(this, sprite)),
+      ...(engine.sprites.map((sprite) => this.spriteToJS.bind(this, sprite))),
       this.generateGameCode.bind(this),
     ]);
 

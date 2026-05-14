@@ -1300,3 +1300,37 @@ body {
 	border-color: rgba(50,50,50,1);
 	font-size: 13px;
 }
+
+.exportButtonsContainer {
+	display: flex;
+	flex-direction: row;
+	gap: 2px;
+	padding: 2px 2px;
+	overflow: auto;
+}
+
+.exportButton {
+	display: flex;
+	background: rgba(255,255,255,0.5);
+	color: rgba(0,0,0,0.7);
+	border-radius: 5px;
+	padding: 5px 5px;
+	font-weight: bold;
+	align-items: center;
+	gap: 3px;
+	user-select: none;
+}
+
+.exportButton > img {
+	width: 30px;
+	height: 30px;
+	object-fit: contain;
+	background: rgba(0,0,0,0.3);
+	padding: 2px 2px;
+	border-radius: 3px;
+}
+
+.exportButton:hover {
+	cursor: pointer;
+	background: rgba(255,255,255,0.7);
+}

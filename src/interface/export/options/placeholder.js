@@ -33,6 +33,7 @@ class PlaceholderExportOption extends EventEmitter {
   constructor(options) {
     super();
 		this.canceled = false;
+		this.generate();
   }
 
   cancel() {

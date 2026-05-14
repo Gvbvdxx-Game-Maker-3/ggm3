@@ -1,5 +1,10 @@
 var elements = require("../../gp2/elements.js");
 var { getExportOptions } = require("./options");
+var ExportEvents = require("./events.js");
+
+////////////////////////////////////////////////////////////////////////////
+
+var currentCompilerActive = null;
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -63,6 +68,14 @@ var exportDialog = elements.createElementsFromJSON([
                 },
                 onclick: () => {
                   exportDialog.hidden = true;
+									if (currentCompilerActive) {
+										try{
+											currentCompilerActive.cancel();
+										}catch(e){
+											console.warn(`Unable to cancel the game exporter: `,e);
+										}
+										currentCompilerActive = null;
+									}
                 },
               },
               ///////////////////////////////
@@ -90,6 +103,12 @@ var exportDialog = elements.createElementsFromJSON([
             className: "exportOptionsContainer",
             gid: "exportOptionsContainer",
           },
+					///////////////////////////////
+					{
+            element: "div",
+            className: "exportButtonsContainer",
+            gid: "exportButtonsContainer",
+          },
         ],
       },
       ///////////////////////////////
@@ -103,12 +122,78 @@ document.body.append(exportDialog);
 
 var exportGameTypeSelection = elements.getGPId("exportGameTypeSelection");
 var exportOptionsContainer = elements.getGPId("exportOptionsContainer");
+var exportButtonsContainer = elements.getGPId("exportButtonsContainer");
 var selectedType = 0;
+var exportOptions = {};
+
+function getExportOptionValues() {
+	return exportOptions;
+}
+
+function renderExportButtons(additionalButtons = []) {
+	var modes = getExportOptions();
+  var mode = modes[selectedType];
+  if (!mode) {
+    return;
+  }
+	var buttons = [
+		{
+			name: "Export",
+			icon: "icons/package.svg",
+			_span_gid: "exportDialogExportButtonSpan",
+			func: () => {
+				if (currentCompilerActive) {
+					try{
+						currentCompilerActive.cancel();
+					}catch(e){
+						console.warn(`Unable to cancel the game exporter: `,e);
+					}
+					currentCompilerActive = null;
+				}
+				var buttonSpan = elements.getGPId("exportDialogExportButtonSpan");
+				buttonSpan.textContent = "Exporting...";
+				var exporting = new mode(getExportOptionValues());
+				currentCompilerActive = exporting;
+				exporting.on(ExportEvents.COMPLETE, function (buttons) {
+					renderExportButtons(buttons || []);
+					var buttonSpan = elements.getGPId("exportDialogExportButtonSpan");
+					buttonSpan.textContent = "Export complete!";
+				});
+			}
+		}
+	];
+
+	elements.setInnerJSON(exportButtonsContainer, buttons.map((b, i) => {
+		return {
+			element: "div",
+			className: "exportButton",
+			...(b._gid ? {gid: b._gid} : {}),
+			eventListeners: [
+				{
+					event: "click",
+					func: b.func || (() => {}),
+				}
+			],
+			children: [
+				{
+					element: "img",
+					src: b.icon || "favicon.png",
+				},
+				{
+					element: "span",
+					textContent: b.name || "Button",
+					...(b._span_gid ? {gid: b._span_gid} : {}),
+				}
+			]
+		}
+	}));
+}
 
 function generateActualExportOption(option, index) {
 	var content = [];
 
 	if (option.type == "checkbox") {
+		exportOptions[option.id] = !!option.default;
 		content = [
 			{
 				element: "div",
@@ -123,7 +208,12 @@ function generateActualExportOption(option, index) {
 					{
 						element: "input",
 						checked: !!option.default,
-						type: "checkbox"
+						type: "checkbox",
+						GPWhenCreated: function (elm) {
+							elm.oninput = () => {
+								exportOptions[option.id] = elm.checked;
+							};
+						}
 					}
 				]
 			}
@@ -131,6 +221,7 @@ function generateActualExportOption(option, index) {
 	}
 
 	if (option.type == "text") {
+		exportOptions[option.id] = option.default || "";
 		content = [
 			{
 				element: "div",
@@ -142,7 +233,12 @@ function generateActualExportOption(option, index) {
 						element: "input",
 						className: "textInput",
 						value: option.default || "",
-						type: "text"
+						type: "text",
+						GPWhenCreated: function (elm) {
+							elm.oninput = () => {
+								exportOptions[option.id] = elm.value;
+							};
+						}
 					}
 				]
 			}
@@ -175,6 +271,7 @@ function generateActualExportOption(option, index) {
 }
 
 function renderActualExportOptions() {
+	exportOptions = {};
   elements.setInnerJSON(exportOptionsContainer,[]);
   var modes = getExportOptions();
   var mode = modes[selectedType];
@@ -241,6 +338,7 @@ function showExportDialog() {
   exportDialog.hidden = false;
   renderExportOptions();
   renderActualExportOptions();
+	renderExportButtons();
 }
 
 ////////////////////////////////////////////////////////////////////////////
