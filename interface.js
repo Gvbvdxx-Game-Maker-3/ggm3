@@ -131,11 +131,7 @@ JavascriptTranslation["motion_goto_menu"] = function (
 
   return JSON.stringify(TO);
 };
-JavascriptTranslation["motion_goto"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
+JavascriptTranslation["motion_goto"] = function (jsonblock, utils, options) {
   var TO = utils.getInput(jsonblock, "TO", options, "null");
 
   return `sprite.goTo(${TO});`;
@@ -3153,7 +3149,7 @@ module.exports = {
 /***/ 735:
 /***/ ((module) => {
 
-module.exports = ":root {\n  --game-viewport-width: 640px;\n  --game-viewport-height: 360px;\n  --game-viewport-scale: 1;\n\n  /*windowDialogContainer*/\n  --popup-dialog-font: \"arial\";\n  /*windowDialogBox*/\n  --popup-dialog-background: hsl(0deg, 0%, 100%);\n  --popup-dialog-border-radius: 10px;\n  --popup-dialog-text-color: hsl(0deg, 0%, 0%);\n  /*windowDialogButton*/\n  --popup-dialog-button-background: hsl(224, 100%, 67%);\n  --popup-dialog-button-hover-background: hsl(224, 100%, 63%);\n  --popup-dialog-button-text-color: hsl(0deg, 0%, 100%);\n  --popup-dialog-button-radius: 5px;\n  /*windowDialogInput*/\n  --popup-dialog-input-background: hsl(0deg, 0%, 100%);\n  --popup-dialog-input-border-width: 1.5px;\n  --popup-dialog-input-border-color: hsl(0deg, 0%, 73%);\n  --popup-dialog-input-text-color: hsl(0deg, 0%, 0%);\n  /*windowDialogHeader*/\n  --popup-dialog-message-size: 16px;\n\n  --loader2-time: 2.5s;\n}\n\n.windowDialogContainer {\n  font-family: var(--popup-dialog-font);\n}\n.windowDialogBackground {\n  background: hsl(0deg, 0%, 0%);\n  z-index: 999999999999;\n}\n.windowDialogBox {\n  background: var(--popup-dialog-background);\n  border-radius: var(--popup-dialog-border-radius);\n  color: var(--popup-dialog-text-color);\n  z-index: 999999999999;\n}\n.windowDialogButton {\n  background: var(--popup-dialog-button-background);\n  color: var(--popup-dialog-button-text-color);\n  border-radius: var(--popup-dialog-button-radius);\n}\n.windowDialogButton:hover {\n  background: var(--popup-dialog-button-hover-background);\n}\n.windowDialogInput {\n  background: var(--popup-dialog-input-background);\n  border-style: solid;\n  border-width: var(--popup-dialog-input-border-width);\n  border-color: var(--popup-dialog-input-border-color);\n  color: var(--popup-dialog-input-text-color);\n  outline: none;\n}\n.windowDialogHeader {\n  font-weight: bold;\n  font-size: var(--popup-dialog-message-size);\n}\n\nbody {\n  font-family: arial;\n}\n\n.appContainer {\n  background: #363636;\n  width: 100%;\n  height: 100svh;\n  position: fixed;\n  top: 0;\n  left: 0;\n  overflow: auto;\n}\n\n.blocklyDiv {\n  width: 100%;\n  height: 100%;\n}\n\n.menuBar {\n  display: flex;\n  width: 100%;\n  min-height: 50px;\n  background: #525252;\n  overflow: unset;\n  transition: 0.2s;\n  flex-direction: row;\n}\n\n.menuBarItemLogo {\n  all: unset;\n  width: fit-content;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  user-select: none;\n  padding: 0 10px;\n}\n\n.menuBarItemLogoImg {\n  height: 30px;\n}\n\n.menuBarItem {\n  all: unset;\n  color: #ffffff;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n}\n\n.unclickableMenuBarItem {\n  all: unset;\n  color: #ffffff;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n}\n\n.menuBarItem:hover {\n  background: #363636;\n  cursor: pointer;\n}\n\n/* Dropdown menu styles */\n.menuBarMenus {\n  display: flex;\n  align-items: center;\n  flex-direction: row;\n}\n.menuParentMain {\n}\n.menuParent {\n  position: relative;\n  display: flex;\n  align-items: center;\n  padding: 0 8px;\n  z-index: 9999;\n  cursor: unset;\n  width: fit-content;\n}\n.menuBarItemLabel {\n  color: #ffffff;\n  font-weight: bold;\n  user-select: none;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  gap: 3px;\n}\n.menuParent.open > .menuBarItemLabel {\n  color: #ffffff;\n}\n.menuDropdown {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  background: #444444;\n  min-width: 160px;\n  border-radius: 6px;\n  box-shadow: 0 6px 14px rgba(0,0,0,0.3);\n  z-index: 9999;\n  display: block; /* hidden attribute controls visibility */\n  cursor: unset;\n}\n.menuDropdownItem {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 6px 8px;\n  color: #ffffff;\n  border-radius: 4px;\n  user-select: none;\n}\n.menuDropdownItem:hover {\n  background: #5a5a5a;\n  cursor: pointer;\n  box-sizing: border-box;\n}\n.menuIcon {\n  width: 16px;\n  height: 16px;\n  object-fit: contain;\n}\n.menuDropdownItemLabel {\n  color: #ffffff;\n}\n\n.panelContainer {\n  display: flex;\n  flex-direction: row;\n  width: 100svw;\n  height: calc(100svh - 50px);\n  position: absolute;\n  top: 50px;\n  left: 0px;\n  min-height: 500px;\n}\n\n.leftPanel {\n  height: calc(100svh - 50px);\n  display: flex;\n  flex-direction: column;\n  flex-grow: 1;\n  min-width: 0;\n}\n\n.rightPanel {\n  width: fit-content;\n  height: calc(100svh - 50px);\n  overflow: auto;\n  box-sizing: border-box;\n  flex-grow: 0;\n  flex-shrink: 0;\n}\n\n.rightPanelContent {\n  width: fit-content;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  min-height: 700px;\n  box-sizing: border-box;\n  position: relative;\n}\n\n.projectControls {\n  width: 100%;\n  height: 200px;\n}\n\n.projectCanvas {\n  background: #ffffff;\n  border-radius: 4px;\n  flex-shrink: 0;\n  flex-grow: 0;\n  width: calc(var(--game-viewport-width) * var(--game-viewport-scale));\n  height: calc(var(--game-viewport-height) * var(--game-viewport-scale));\n}\n\n.tabArea {\n  display: flex;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow-x: auto;\n  overflow-y: hidden;\n}\n\n.tabIcon {\n  height: 20px;\n  width: 20px;\n  object-fit: contain;\n  margin-right: 5px;\n}\n\n.tabButton {\n  all: unset;\n  color: #c7c7c7;\n  width: fit-content;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n  flex-grow: 0;\n  transform: translateY(5px);\n  border-top-left-radius: 5px;\n  border-top-right-radius: 5px;\n}\n\n.tabButton:hover {\n  background: #8f8f8f;\n  cursor: pointer;\n  color: #ffffff;\n  transform: translateY(4px);\n}\n\n.tabButton[selected] {\n  background: #8f8f8f;\n  cursor: unset;\n  color: #ffffff;\n  transform: translateY(0px);\n}\n\n.tabWindow {\n  background: #8f8f8f;\n  flex-grow: 1;\n  width: 100%;\n  color: #000000;\n  display: flex;            /* <-- CHANGED */\n  flex-direction: column;   /* <-- ADDED */\n  min-height: 0;            /* <-- ADDED (crucial for containing flex) */\n}\n\n.selectedSpriteContainer {\n  min-width: 100%;\n  max-width: calc(var(--game-viewport-scale) * var(--game-viewport-width));\n  box-sizing: border-box;\n  border-width: 5px;\n  border-style: solid;\n  border-color: black;\n  border-radius: 4px;\n  min-height: 30px;\n  height: fit-content;\n  display: flex;\n  padding: 4px 4px;\n  flex-shrink: 0;\n  flex-grow: 0;\n  flex-wrap: wrap;\n  overflow: auto;\n}\n\n.spritesContainer {\n  width: 100%;\n  box-sizing: border-box;\n  border-width: 5px;\n  border-style: solid;\n  border-color: black;\n  border-radius: 4px;\n  display: flex;\n  flex-direction: column;\n  overflow: auto;\n  flex-grow: 1;\n}\n\n.spriteContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n}\n\n.spriteTextContainer {\n  width: 200px;\n  text-wrap: wrap;\n  line-break: anywhere;\n}\n\n.spriteContainer[selected] {\n  background: #525252;\n}\n\n.selectedSpriteLabel {\n  color: white;\n  font-weight: bold;\n}\n.selectedSpriteInput {\n  all: unset;\n  padding: 3px 3px;\n  box-sizing: border-box;\n  width: fit-content;\n  color: white;\n  width: 100px;\n  border-radius: 2px;\n  background: #595959;\n}\n\n.costumesContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: column;\n  color: white;\n}\n\n.soundsContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: column;\n  color: white;\n}\n\n.costumePivotContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: row;\n  color: white;\n}\n\n.costumesInPivotContainer {\n  width: fit-content;\n  height: 100%; /* <-- This is OK now */\n  flex-grow: 0;\n  flex-shrink: 0;\n  overflow: auto; /* <-- This will now activate */\n  overflow-anchor: none;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.pivotCostumeButton {\n  min-width: 100px;\n  min-height: 100px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  box-sizing: border-box;\n  padding: 4px 4px;\n  border-radius: 10px;\n  border-width: 2px;\n  border-style: solid;\n  border-color: #000000;\n  margin: 2px;\n  user-select: none;\n  font-weight: bold;\n}\n\n.pivotCostumeButton:hover {\n  border-color: rgb(121, 121, 121);\n  cursor: pointer;\n}\n.pivotCostumeButton[selected] {\n  border-color: #ffffff;\n  cursor: unset;\n}\n\n.pivotEditor {\n  flex-grow: 1;\n  background: #212121;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  flex-shrink: 1;  /* <-- 1. ALLOWS this element to shrink */\n  min-width: 0;      /* <-- 2. THE KEY: Allows it to shrink smaller than its content */\n  overflow: hidden;    /* <-- 3. Prevents children from spilling out */\n  position: relative;\n}\n\n.pivotEditorMenuBar {\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: 64px;\n  width: 100%;\n  display: flex;      /* <-- Puts all items in one horizontal row */\n  overflow-x: auto;   /* <-- Adds horizontal scroll */\n  overflow-y: hidden; /* <-- Prevents vertical scroll */\n  align-items: center;\n}\n\n.pivotEditorMenuBar > * {\n  flex-shrink: 0;\n}\n\n.pivotEditorContainer {\n  flex-grow: 1;\n  position: relative;\n  overflow: auto;\n}\n\n.pivotEditorImageContainer {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: fit-content;\n  height: fit-content;\n  display: block;\n  background-image: url(editor/transparent.png);\n  background-size: 32px;\n  image-rendering: pixelated;\n}\n\n.pivotEditorMenuInput {\n  all: unset;\n  color: #ffffff;\n  font-weight: bold;\n  height: 100%;\n  box-sizing: border-box;\n}\n\n.pivotEditorDot {\n  background: #000000;\n  border-style: solid;\n  border-color: #ffffff;\n  box-sizing: border-box;\n  border-width: 2px;\n  border-radius: 50%;\n  width: 10px;\n  height: 10px;\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  transform: translate(-50%, -50%);\n  opacity: 0.5;\n}\n\n.costumesHeaderContainer {\n  width: 100%;\n  display: block;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  box-sizing: border-box;\n  padding: 5px 5px;\n}\n\n.soundsHeaderContainer {\n  width: 100%;\n  display: block;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  box-sizing: border-box;\n  padding: 5px 5px;\n}\n\n.costumesSelectorContainer {\n  display: flex;\n  flex-direction: column;\n  overflow: auto;\n  overflow-anchor: none;\n  flex-grow: 1;\n}\n\n.soundsSelectorContainer {\n  display: flex;\n  flex-direction: column;\n  overflow: auto;\n  flex-grow: 1;\n}\n\n.costumeContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n}\n\n.soundContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n  flex-direction: column;\n}\n\n.greyButtonStyle {\n  all: unset;\n  background: #6e6e6e;\n  color: white;\n  border-radius: 10px;\n  padding: 7px 7px;\n  box-sizing: border-box;\n  width: fit-content;\n  height: fit-content;\n  font-weight: bold;\n}\n\n.greyButtonStyle:hover {\n  background: #b8b8b8;\n  cursor: pointer;\n}\n\n.selectedCostumeInput {\n  all: unset;\n  padding: 3px 3px;\n  box-sizing: border-box;\n  width: 140px;\n  color: white;\n}\n\n.scratchCategoryMenuItemLabel {\n  color: white;\n}\n\n.projectControls {\n  background: #8f8f8f;\n  border-radius: 5px;\n  width: 100%;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  display: flex;\n}\n\n.projectButton {\n  padding: 5px;\n  font-size: 20px;\n  user-select: none;\n  margin-right: 2px;\n  border-radius: 5px;\n  min-width: 20px;\n  box-sizing: border-box;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n\n.projectButtonImg {\n  height: 20px;\n  width: 20px;\n  object-fit: contain;\n}\n\n.projectButton:hover {\n  cursor: pointer;\n  color: white;\n  background-color: rgba(0,0,0,0.5);\n}\n\n.spriteInputContainer {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  padding: 4px;\n  box-sizing: border-box;\n  border-radius: 5px;\n  background: #8f8f8f;\n  margin: 3px;\n}\n\n.projectMouseCoordinates {\n  color: white;\n  font-size: 10px;\n  font-weight: bold;\n}\n\n.addSpriteButton {\n  position: absolute;\n  bottom: 10px;\n  right: 10px;\n}\n\n.spriteAddMenu {\n  position: absolute;\n  bottom: 65px;\n  right: 10px;\n  background: #8f8f8f;\n  border-radius: 5px;\n  display: flex;\n  flex-direction: column;\n  padding: 1px;\n  box-sizing: border-box;\n  gap: 2px;\n}\n\n.spriteAddMenuItem {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  padding: 5px;\n  border-radius: 5px;\n  color: white;\n  font-weight: bold;\n  user-select: none;\n  font-size: 17px;\n  cursor: default;\n}\n\n.spriteAddMenuItem:hover {\n  cursor: pointer;\n  background: rgba(0,0,0,0.5);\n}\n\n.spriteAddMenuItem > img {\n  width: 23px;\n  height: 23px;\n  object-fit: contain;\n}\n\n.customBlockDialogBG {\n  position: fixed;\n  width: 100svw;\n  height: 100svh;\n  top: 0;\n  left: 0;\n  background: rgba(0, 0, 0, 0.5);\n}\n.customBlockDialogBox {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  border-radius: 10px;\n  box-sizing: border-box;\n  background: #5c5c5c;\n  transform: translate(-50%, -50%);\n  padding: 10px 10px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  max-width: calc(100% - 100px);\n  max-height: calc(100% - 50px);\n  overflow: auto;\n  color: #ffffff;\n}\n.customBlockWorkspace {\n  flex-grow: 1;\n  display: block;\n  min-width: calc(100% - 1px);\n  min-height: 100%;\n  max-width: 100%;\n  max-height: 100%;\n}\n\n.customBlockButtons {\n  flex-grow: 0;\n  flex-shrink: 0;\n  display: flex;\n  width: 100%;\n  align-items: center;\n  justify-content: center;\n}\n\n.loadingDialogBG {\n  background: #363636;\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  z-index: 99999999;\n}\n\n.loadingDialogBox {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  align-items: center;\n  z-index: 99999999;\n  font-weight: bold;\n  justify-content: center;\n  display: flex;\n  flex-direction: column;\n  color: #ffffff;\n}\n\n.loader2Container {\n  width: 120px;\n  height: 120px;\n  position: relative;\n}\n\n.loaderBlock1 {\n  animation-name: loaderBlock1Anim;\n  animation-duration: var(--loader2-time);\n    background-image: url(\"loading/blocks1.svg\");\n}\n\n.loaderBlock3 {\n  animation-name: loaderBlock3Anim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/blocks3.svg\");\n}\n\n.loaderBlock2 {\n  animation-name: loaderBlock2Anim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/blocks2.svg\");\n}\n\n.loaderBlockIcon {\n  animation-name: loaderBlockIconAnim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/three.svg\");\n}\n\n.loaderBlock {\n  width: 120px;\n  height: 120px;\n  animation-iteration-count: infinite;\n\n  position: absolute;\n  top: 0;\n  left: 0;\n\n  background-repeat: no-repeat;\n  background-position: center center;\n  background-size: 100% 100%;\n  transform-origin: bottom;\n\n  filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.25));\n}\n\n@keyframes loaderBlock1Anim {\n  0% {\n    transform: translate(0, -50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  10% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  15% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  85% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  100% {\n    transform: translate(0, -50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n}\n\n@keyframes loaderBlock3Anim {\n  0% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  20% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  30% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  70% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  100% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n}\n\n@keyframes loaderBlock2Anim {\n  0% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n  40% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n  45% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n    transform-origin: center;\n  }\n  85% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n    transform-origin: center;\n  }\n  100% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n}\n\n@keyframes loaderBlockIconAnim {\n  0% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n  }\n  45% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    transform-origin: center;\n  }\n  60% {\n    transform-origin: center;\n    transform: translate(0, 0) scale(1.2, 1.2) rotate(360deg);\n    animation-timing-function: ease-in;\n    filter: drop-shadow(4px 4px 8px rgba(0, 255, 13, 1));\n  }\n  75% {\n    transform-origin: center;\n    transform: translate(0, 0) scale(1, 1) rotate(360deg);\n    animation-timing-function: ease-out;\n  }\n  100% {\n    transform: translate(0, 0) scale(1, 1) rotate(360deg);\n    animation-timing-function: ease-out;\n  }\n}\n\n.errorLogsContainer {\n  width: 100%;\n  height: 100%;\n  box-sizing: border-box;\n  padding: 10px 10px;\n  display: flex;\n  flex-direction: column;\n  color: #ffffff;\n  background-color: #000000;\n  overflow: auto;\n}\n\n.errorLogError {\n  color: #ff4c4c;\n  font-weight: bold;\n  margin-bottom: 2px;\n}\n\n/* Error glow is provided via the workspace SVG filter; keep a minimal\n   class so we can target blocks in case the filter can't be applied. */\n.blocklyBlockSvg.error-glow {\n  /* Prefer the workspace SVG filter for the glow; keep a harmless\n     property so linters don't complain about an empty ruleset. */\n  outline: none;\n}\n\n.fullscreenModeContainerMain {\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: column;\n  background: #363636;\n  z-index: 99999999;\n}\n\n.fullscreenModeContainer {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.blocklyFlyoutLabelText {\n  fill: #ffffff;\n}\n\n.blocklyFlyoutButton .blocklyText {\n  fill: #ffffff;\n}\n\n.blocklyFlyoutButton:hover {\n  cursor: pointer;\n  fill: rgba(0,0,0,0.5);\n}\n\n.blocklyFlyoutButton:hover > .blocklyText {\n  font-weight: bold;\n}\n\n.loadingProgressMain {\n  width: 200px;\n  height: 30px;\n  box-sizing: border-box;\n  background: rgba(255, 255, 255, 0.3);\n  border-style: solid;\n  border-radius: 3px;\n  border-width: 3px;\n  border-color: rgba(0, 0, 0, 0.7);\n}\n.loadingProgressInner {\n  height: 100%;\n  background: rgba(255, 255, 255, 0.5);\n}\n\n.dialogBackground {\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  background-color: rgba(0, 0, 0, 0.5); /* Optional: semi-transparent background */\n  backdrop-filter: blur(2px); /* The blur effect */\n  -webkit-backdrop-filter: blur(2px); /* For Safari */\n}\n\n.gameSettingsBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n}\n\n.gameSettingSelection {\n  display: flex;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow: auto;\n  gap: 2px;\n}\n\n.gameSelectionCategory {\n  display: block;\n  flex-direction: row;\n  flex-grow: 1;\n  width: 100%;\n  overflow: auto;\n}\n\n.centerMiddle {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.infoDiv {\n\twidth: 100%;\n\theight: fit-content;\n\tmin-height: 70px;\n\tbackground: rgba(0,0,0,0.5);\n\tmargin-bottom:2px;\n\tmargin-top:2px;\n\tborder-radius: 10px;\n  padding: 5px 10px;\n  box-sizing: border-box;\n  display: block;\n}\n\n.gameBackupBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n}\n\n.gameBackupSelection {\n  display: flex;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow: auto;\n  gap: 2px;\n}\n\n.gameBackupCategory {\n  display: block;\n  flex-direction: row;\n  flex-grow: 1;\n  width: 100%;\n  overflow: auto;\n}\n\n.backupThumbnail {\n  height: 150px;\n  object-fit: contain;\n  border-radius: 10px;\n  user-select: none;\n  pointer-events: none;\n}\n\n.backupEntry {\n  display: flex;\n  padding: 5px;\n  box-sizing: border-box;\n  border-radius: 5px;\n  background: #8f8f8f;\n  margin: 3px;\n  color: white;\n  font-weight: bold;\n  flex-direction: row;\n  align-items: center;\n  gap: 8px;\n}\n\n.backupTimestamp {\n  font-size: 20px;\n  color: #c7c7c7;\n}\n\n.backupNoticeMenuBarItem {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: row;\n  gap: 3px;\n  flex-wrap: none;\n  font-size: 9px;\n}";
+module.exports = ":root {\n  --game-viewport-width: 640px;\n  --game-viewport-height: 360px;\n  --game-viewport-scale: 1;\n\n  /*windowDialogContainer*/\n  --popup-dialog-font: \"arial\";\n  /*windowDialogBox*/\n  --popup-dialog-background: hsl(0deg, 0%, 100%);\n  --popup-dialog-border-radius: 10px;\n  --popup-dialog-text-color: hsl(0deg, 0%, 0%);\n  /*windowDialogButton*/\n  --popup-dialog-button-background: hsl(224, 100%, 67%);\n  --popup-dialog-button-hover-background: hsl(224, 100%, 63%);\n  --popup-dialog-button-text-color: hsl(0deg, 0%, 100%);\n  --popup-dialog-button-radius: 5px;\n  /*windowDialogInput*/\n  --popup-dialog-input-background: hsl(0deg, 0%, 100%);\n  --popup-dialog-input-border-width: 1.5px;\n  --popup-dialog-input-border-color: hsl(0deg, 0%, 73%);\n  --popup-dialog-input-text-color: hsl(0deg, 0%, 0%);\n  /*windowDialogHeader*/\n  --popup-dialog-message-size: 16px;\n\n  --loader2-time: 2.5s;\n}\n\n.windowDialogContainer {\n  font-family: var(--popup-dialog-font);\n}\n.windowDialogBackground {\n  background: hsl(0deg, 0%, 0%);\n  z-index: 999999999999;\n}\n.windowDialogBox {\n  background: var(--popup-dialog-background);\n  border-radius: var(--popup-dialog-border-radius);\n  color: var(--popup-dialog-text-color);\n  z-index: 999999999999;\n}\n.windowDialogButton {\n  background: var(--popup-dialog-button-background);\n  color: var(--popup-dialog-button-text-color);\n  border-radius: var(--popup-dialog-button-radius);\n}\n.windowDialogButton:hover {\n  background: var(--popup-dialog-button-hover-background);\n}\n.windowDialogInput {\n  background: var(--popup-dialog-input-background);\n  border-style: solid;\n  border-width: var(--popup-dialog-input-border-width);\n  border-color: var(--popup-dialog-input-border-color);\n  color: var(--popup-dialog-input-text-color);\n  outline: none;\n}\n.windowDialogHeader {\n  font-weight: bold;\n  font-size: var(--popup-dialog-message-size);\n}\n\nbody {\n  font-family: arial;\n}\n\n.appContainer {\n  background: #363636;\n  width: 100%;\n  height: 100svh;\n  position: fixed;\n  top: 0;\n  left: 0;\n  overflow: auto;\n}\n\n.blocklyDiv {\n  width: 100%;\n  height: 100%;\n}\n\n.menuBar {\n  display: flex;\n  width: 100%;\n  min-height: 50px;\n  background: #525252;\n  overflow: unset;\n  transition: 0.2s;\n  flex-direction: row;\n}\n\n.menuBarItemLogo {\n  all: unset;\n  width: fit-content;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  user-select: none;\n  padding: 0 10px;\n}\n\n.menuBarItemLogoImg {\n  height: 30px;\n}\n\n.menuBarItem {\n  all: unset;\n  color: #ffffff;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n}\n\n.unclickableMenuBarItem {\n  all: unset;\n  color: #ffffff;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n}\n\n.menuBarItem:hover {\n  background: #363636;\n  cursor: pointer;\n}\n\n/* Dropdown menu styles */\n.menuBarMenus {\n  display: flex;\n  align-items: center;\n  flex-direction: row;\n}\n.menuParentMain {\n}\n.menuParent {\n  position: relative;\n  display: flex;\n  align-items: center;\n  padding: 0 8px;\n  z-index: 9999;\n  cursor: unset;\n  width: fit-content;\n}\n.menuBarItemLabel {\n  color: #ffffff;\n  font-weight: bold;\n  user-select: none;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  gap: 3px;\n}\n.menuParent.open > .menuBarItemLabel {\n  color: #ffffff;\n}\n.menuDropdown {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  background: #444444;\n  min-width: 160px;\n  border-radius: 6px;\n  box-shadow: 0 6px 14px rgba(0,0,0,0.3);\n  z-index: 9999;\n  display: block; /* hidden attribute controls visibility */\n  cursor: unset;\n}\n.menuDropdownItem {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 6px 8px;\n  color: #ffffff;\n  border-radius: 4px;\n  user-select: none;\n}\n.menuDropdownItem:hover {\n  background: #5a5a5a;\n  cursor: pointer;\n  box-sizing: border-box;\n}\n.menuIcon {\n  width: 16px;\n  height: 16px;\n  object-fit: contain;\n}\n.menuDropdownItemLabel {\n  color: #ffffff;\n}\n\n.panelContainer {\n  display: flex;\n  flex-direction: row;\n  width: 100svw;\n  height: calc(100svh - 50px);\n  position: absolute;\n  top: 50px;\n  left: 0px;\n  min-height: 500px;\n}\n\n.leftPanel {\n  height: calc(100svh - 50px);\n  display: flex;\n  flex-direction: column;\n  flex-grow: 1;\n  min-width: 0;\n}\n\n.rightPanel {\n  width: fit-content;\n  height: calc(100svh - 50px);\n  overflow: auto;\n  box-sizing: border-box;\n  flex-grow: 0;\n  flex-shrink: 0;\n}\n\n.rightPanelContent {\n  width: fit-content;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  min-height: 700px;\n  box-sizing: border-box;\n  position: relative;\n}\n\n.projectControls {\n  width: 100%;\n  height: 200px;\n}\n\n.projectCanvas {\n  background: #ffffff;\n  border-radius: 4px;\n  flex-shrink: 0;\n  flex-grow: 0;\n  width: calc(var(--game-viewport-width) * var(--game-viewport-scale));\n  height: calc(var(--game-viewport-height) * var(--game-viewport-scale));\n}\n\n.tabArea {\n  display: flex;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow-x: auto;\n  overflow-y: hidden;\n}\n\n.tabIcon {\n  height: 20px;\n  width: 20px;\n  object-fit: contain;\n  margin-right: 5px;\n}\n\n.tabButton {\n  all: unset;\n  color: #c7c7c7;\n  width: fit-content;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n  flex-grow: 0;\n  transform: translateY(5px);\n  border-top-left-radius: 5px;\n  border-top-right-radius: 5px;\n}\n\n.tabButton:hover {\n  background: #8f8f8f;\n  cursor: pointer;\n  color: #ffffff;\n  transform: translateY(4px);\n}\n\n.tabButton[selected] {\n  background: #8f8f8f;\n  cursor: unset;\n  color: #ffffff;\n  transform: translateY(0px);\n}\n\n.tabWindow {\n  background: #8f8f8f;\n  flex-grow: 1;\n  width: 100%;\n  color: #000000;\n  display: flex;            /* <-- CHANGED */\n  flex-direction: column;   /* <-- ADDED */\n  min-height: 0;            /* <-- ADDED (crucial for containing flex) */\n}\n\n.selectedSpriteContainer {\n  min-width: 100%;\n  max-width: calc(var(--game-viewport-scale) * var(--game-viewport-width));\n  box-sizing: border-box;\n  border-width: 5px;\n  border-style: solid;\n  border-color: black;\n  border-radius: 4px;\n  min-height: 30px;\n  height: fit-content;\n  display: flex;\n  padding: 4px 4px;\n  flex-shrink: 0;\n  flex-grow: 0;\n  flex-wrap: wrap;\n  overflow: auto;\n}\n\n.spritesContainer {\n  width: 100%;\n  box-sizing: border-box;\n  border-width: 5px;\n  border-style: solid;\n  border-color: black;\n  border-radius: 4px;\n  display: flex;\n  flex-direction: column;\n  overflow: auto;\n  flex-grow: 1;\n}\n\n.spriteContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n}\n\n.spriteTextContainer {\n  width: 200px;\n  text-wrap: wrap;\n  line-break: anywhere;\n}\n\n.spriteContainer[selected] {\n  background: #525252;\n}\n\n.selectedSpriteLabel {\n  color: white;\n  font-weight: bold;\n}\n.selectedSpriteInput {\n  all: unset;\n  padding: 3px 3px;\n  box-sizing: border-box;\n  width: fit-content;\n  color: white;\n  width: 100px;\n  border-radius: 2px;\n  background: #595959;\n}\n\n.costumesContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: column;\n  color: white;\n}\n\n.soundsContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: column;\n  color: white;\n}\n\n.costumePivotContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: row;\n  color: white;\n}\n\n.costumesInPivotContainer {\n  width: fit-content;\n  height: 100%; /* <-- This is OK now */\n  flex-grow: 0;\n  flex-shrink: 0;\n  overflow: auto; /* <-- This will now activate */\n  overflow-anchor: none;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.pivotCostumeButton {\n  min-width: 100px;\n  min-height: 100px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  box-sizing: border-box;\n  padding: 4px 4px;\n  border-radius: 10px;\n  border-width: 2px;\n  border-style: solid;\n  border-color: #000000;\n  margin: 2px;\n  user-select: none;\n  font-weight: bold;\n}\n\n.pivotCostumeButton:hover {\n  border-color: rgb(121, 121, 121);\n  cursor: pointer;\n}\n.pivotCostumeButton[selected] {\n  border-color: #ffffff;\n  cursor: unset;\n}\n\n.pivotEditor {\n  flex-grow: 1;\n  background: #212121;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  flex-shrink: 1;  /* <-- 1. ALLOWS this element to shrink */\n  min-width: 0;      /* <-- 2. THE KEY: Allows it to shrink smaller than its content */\n  overflow: hidden;    /* <-- 3. Prevents children from spilling out */\n  position: relative;\n}\n\n.pivotEditorMenuBar {\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: 64px;\n  width: 100%;\n  display: flex;      /* <-- Puts all items in one horizontal row */\n  overflow-x: auto;   /* <-- Adds horizontal scroll */\n  overflow-y: hidden; /* <-- Prevents vertical scroll */\n  align-items: center;\n}\n\n.pivotEditorMenuBar > * {\n  flex-shrink: 0;\n}\n\n.pivotEditorContainer {\n  flex-grow: 1;\n  position: relative;\n  overflow: auto;\n}\n\n.pivotEditorImageContainer {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: fit-content;\n  height: fit-content;\n  display: block;\n  background-image: url(editor/transparent.png);\n  background-size: 32px;\n  image-rendering: pixelated;\n}\n\n.pivotEditorMenuInput {\n  all: unset;\n  color: #ffffff;\n  font-weight: bold;\n  height: 100%;\n  box-sizing: border-box;\n}\n\n.pivotEditorDot {\n  background: #000000;\n  border-style: solid;\n  border-color: #ffffff;\n  box-sizing: border-box;\n  border-width: 2px;\n  border-radius: 50%;\n  width: 10px;\n  height: 10px;\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  transform: translate(-50%, -50%);\n  opacity: 0.5;\n}\n\n.costumesHeaderContainer {\n  width: 100%;\n  display: block;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  box-sizing: border-box;\n  padding: 5px 5px;\n}\n\n.soundsHeaderContainer {\n  width: 100%;\n  display: block;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  box-sizing: border-box;\n  padding: 5px 5px;\n}\n\n.costumesSelectorContainer {\n  display: flex;\n  flex-direction: column;\n  overflow: auto;\n  overflow-anchor: none;\n  flex-grow: 1;\n}\n\n.soundsSelectorContainer {\n  display: flex;\n  flex-direction: column;\n  overflow: auto;\n  flex-grow: 1;\n}\n\n.costumeContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n}\n\n.soundContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n  flex-direction: column;\n}\n\n.greyButtonStyle {\n  all: unset;\n  background: #6e6e6e;\n  color: white;\n  border-radius: 10px;\n  padding: 7px 7px;\n  box-sizing: border-box;\n  width: fit-content;\n  height: fit-content;\n  font-weight: bold;\n}\n\n.greyButtonStyle:hover {\n  background: #b8b8b8;\n  cursor: pointer;\n}\n\n.selectedCostumeInput {\n  all: unset;\n  padding: 3px 3px;\n  box-sizing: border-box;\n  width: 140px;\n  color: white;\n}\n\n.scratchCategoryMenuItemLabel {\n  color: white;\n}\n\n.projectControls {\n  background: #8f8f8f;\n  border-radius: 5px;\n  width: 100%;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  display: flex;\n}\n\n.projectButton {\n  padding: 5px;\n  font-size: 20px;\n  user-select: none;\n  margin-right: 2px;\n  border-radius: 5px;\n  min-width: 20px;\n  box-sizing: border-box;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n\n.projectButtonImg {\n  height: 20px;\n  width: 20px;\n  object-fit: contain;\n}\n\n.projectButton:hover {\n  cursor: pointer;\n  color: white;\n  background-color: rgba(0,0,0,0.5);\n}\n\n.spriteInputContainer {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  padding: 4px;\n  box-sizing: border-box;\n  border-radius: 5px;\n  background: #8f8f8f;\n  margin: 3px;\n}\n\n.projectMouseCoordinates {\n  color: white;\n  font-size: 10px;\n  font-weight: bold;\n}\n\n.addSpriteButton {\n  position: absolute;\n  bottom: 10px;\n  right: 10px;\n}\n\n.spriteAddMenu {\n  position: absolute;\n  bottom: 65px;\n  right: 10px;\n  background: #8f8f8f;\n  border-radius: 5px;\n  display: flex;\n  flex-direction: column;\n  padding: 1px;\n  box-sizing: border-box;\n  gap: 2px;\n}\n\n.spriteAddMenuItem {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  padding: 5px;\n  border-radius: 5px;\n  color: white;\n  font-weight: bold;\n  user-select: none;\n  font-size: 17px;\n  cursor: default;\n}\n\n.spriteAddMenuItem:hover {\n  cursor: pointer;\n  background: rgba(0,0,0,0.5);\n}\n\n.spriteAddMenuItem > img {\n  width: 23px;\n  height: 23px;\n  object-fit: contain;\n}\n\n.customBlockDialogBG {\n  position: fixed;\n  width: 100svw;\n  height: 100svh;\n  top: 0;\n  left: 0;\n  background: rgba(0, 0, 0, 0.5);\n}\n.customBlockDialogBox {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  border-radius: 10px;\n  box-sizing: border-box;\n  background: #5c5c5c;\n  transform: translate(-50%, -50%);\n  padding: 10px 10px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  max-width: calc(100% - 100px);\n  max-height: calc(100% - 50px);\n  overflow: auto;\n  color: #ffffff;\n}\n.customBlockWorkspace {\n  flex-grow: 1;\n  display: block;\n  min-width: calc(100% - 1px);\n  min-height: 100%;\n  max-width: 100%;\n  max-height: 100%;\n}\n\n.customBlockButtons {\n  flex-grow: 0;\n  flex-shrink: 0;\n  display: flex;\n  width: 100%;\n  align-items: center;\n  justify-content: center;\n}\n\n.loadingDialogBG {\n  background: #363636;\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  z-index: 99999999;\n}\n\n.loadingDialogBox {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  align-items: center;\n  z-index: 99999999;\n  font-weight: bold;\n  justify-content: center;\n  display: flex;\n  flex-direction: column;\n  color: #ffffff;\n}\n\n.loader2Container {\n  width: 120px;\n  height: 120px;\n  position: relative;\n}\n\n.loaderBlock1 {\n  animation-name: loaderBlock1Anim;\n  animation-duration: var(--loader2-time);\n    background-image: url(\"loading/blocks1.svg\");\n}\n\n.loaderBlock3 {\n  animation-name: loaderBlock3Anim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/blocks3.svg\");\n}\n\n.loaderBlock2 {\n  animation-name: loaderBlock2Anim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/blocks2.svg\");\n}\n\n.loaderBlockIcon {\n  animation-name: loaderBlockIconAnim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/three.svg\");\n}\n\n.loaderBlock {\n  width: 120px;\n  height: 120px;\n  animation-iteration-count: infinite;\n\n  position: absolute;\n  top: 0;\n  left: 0;\n\n  background-repeat: no-repeat;\n  background-position: center center;\n  background-size: 100% 100%;\n  transform-origin: bottom;\n\n  filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.25));\n}\n\n@keyframes loaderBlock1Anim {\n  0% {\n    transform: translate(0, -50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  10% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  15% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  85% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  100% {\n    transform: translate(0, -50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n}\n\n@keyframes loaderBlock3Anim {\n  0% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  20% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  30% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  70% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  100% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n}\n\n@keyframes loaderBlock2Anim {\n  0% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n  40% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n  45% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n    transform-origin: center;\n  }\n  85% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n    transform-origin: center;\n  }\n  100% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n}\n\n@keyframes loaderBlockIconAnim {\n  0% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n  }\n  45% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    transform-origin: center;\n  }\n  60% {\n    transform-origin: center;\n    transform: translate(0, 0) scale(1.2, 1.2) rotate(360deg);\n    animation-timing-function: ease-in;\n    filter: drop-shadow(4px 4px 8px rgba(0, 255, 13, 1));\n  }\n  75% {\n    transform-origin: center;\n    transform: translate(0, 0) scale(1, 1) rotate(360deg);\n    animation-timing-function: ease-out;\n  }\n  100% {\n    transform: translate(0, 0) scale(1, 1) rotate(360deg);\n    animation-timing-function: ease-out;\n  }\n}\n\n.errorLogsContainer {\n  width: 100%;\n  height: 100%;\n  box-sizing: border-box;\n  padding: 10px 10px;\n  display: flex;\n  flex-direction: column;\n  color: #ffffff;\n  background-color: #000000;\n  overflow: auto;\n}\n\n.errorLogError {\n  color: #ff4c4c;\n  font-weight: bold;\n  margin-bottom: 2px;\n}\n\n/* Error glow is provided via the workspace SVG filter; keep a minimal\n   class so we can target blocks in case the filter can't be applied. */\n.blocklyBlockSvg.error-glow {\n  /* Prefer the workspace SVG filter for the glow; keep a harmless\n     property so linters don't complain about an empty ruleset. */\n  outline: none;\n}\n\n.fullscreenModeContainerMain {\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: column;\n  background: #363636;\n  z-index: 99999999;\n}\n\n.fullscreenModeContainer {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.blocklyFlyoutLabelText {\n  fill: #ffffff;\n}\n\n.blocklyFlyoutButton .blocklyText {\n  fill: #ffffff;\n}\n\n.blocklyFlyoutButton:hover {\n  cursor: pointer;\n  fill: rgba(0,0,0,0.5);\n}\n\n.blocklyFlyoutButton:hover > .blocklyText {\n  font-weight: bold;\n}\n\n.loadingProgressMain {\n  width: 200px;\n  height: 30px;\n  box-sizing: border-box;\n  background: rgba(255, 255, 255, 0.3);\n  border-style: solid;\n  border-radius: 3px;\n  border-width: 3px;\n  border-color: rgba(0, 0, 0, 0.7);\n}\n.loadingProgressInner {\n  height: 100%;\n  background: rgba(255, 255, 255, 0.5);\n}\n\n.dialogBackground {\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  background-color: rgba(0, 0, 0, 0.5); /* Optional: semi-transparent background */\n  backdrop-filter: blur(2px); /* The blur effect */\n  -webkit-backdrop-filter: blur(2px); /* For Safari */\n}\n\n.gameSettingsBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n}\n\n.gameSettingSelection {\n  display: flex;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow: auto;\n  gap: 2px;\n}\n\n.gameSelectionCategory {\n  display: block;\n  flex-direction: row;\n  flex-grow: 1;\n  width: 100%;\n  overflow: auto;\n}\n\n.centerMiddle {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.infoDiv {\n\twidth: 100%;\n\theight: fit-content;\n\tmin-height: 70px;\n\tbackground: rgba(0,0,0,0.5);\n\tmargin-bottom:2px;\n\tmargin-top:2px;\n\tborder-radius: 10px;\n  padding: 5px 10px;\n  box-sizing: border-box;\n  display: block;\n}\n\n.gameBackupBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n}\n\n.gameBackupSelection {\n  display: flex;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow: auto;\n  gap: 2px;\n}\n\n.gameBackupCategory {\n  display: block;\n  flex-direction: row;\n  flex-grow: 1;\n  width: 100%;\n  overflow: auto;\n}\n\n.backupThumbnail {\n  height: 150px;\n  object-fit: contain;\n  border-radius: 10px;\n  user-select: none;\n  pointer-events: none;\n}\n\n.backupEntry {\n  display: flex;\n  padding: 5px;\n  box-sizing: border-box;\n  border-radius: 5px;\n  background: #8f8f8f;\n  margin: 3px;\n  color: white;\n  font-weight: bold;\n  flex-direction: row;\n  align-items: center;\n  gap: 8px;\n}\n\n.backupTimestamp {\n  font-size: 20px;\n  color: #c7c7c7;\n}\n\n.backupNoticeMenuBarItem {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: row;\n  gap: 3px;\n  flex-wrap: none;\n  font-size: 9px;\n}\n\n.gameExportBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n}\n\n.exportGameTypeSelectionContainer {\n  display: flex;\n  width: 100%;\n\theight: fit-content;\n\tflex-shrink: 0;\n\tflex-grow: 0;\n  flex-direction: row;\n  padding: 2px 2px;\n  gap: 5px;\n  text-wrap: nowrap;\n  align-items: center;\n}\n\n.exportGameTypeSelection {\n  display: flex;\n\theight: fit-content;\n\tflex-grow: 1;\n\toverflow: auto;\n}\n\n.exportGameType {\n\tdisplay: flex;\n\tbackground: rgba(0,0,0,0.3);\n\tpadding: 4px 4px;\n\ttext-wrap: nowrap;\n\tborder-radius: 2px;\n\tfont-weight: bold;\n\tfont-size: 18px;\n\tcolor: rgba(255,255,255,0.5);\n\tflex-grow: 0;\n\tflex-shrink: 0;\n\tbox-sizing: border-box;\n\twidth: fit-content;\n\theight: fit-content;\n\tgap: 3px;\n\talign-items: center;\n}\n\n.exportGameType > img {\n\twidth: 30px;\n\theight: 30px;\n\tobject-fit: contain;\n  padding: 3px 3px;\n}\n\n.exportGameType:hover {\n  background: rgba(0,0,0,0.2);\n  text-decoration: underline;\n  cursor: pointer;\n}\n\n.exportGameType[selected] {\n  text-decoration: unset;\n  cursor: unset;\n  background: rgba(0,0,0,0);\n}\n\n.exportGameType[selected] > img {\n  width: 30px;\n\theight: 30px;\n\tobject-fit: contain;\n  border-radius: 5px;\n  background: rgba(0,0,0,0.4);\n}";
 
 /***/ }),
 
@@ -3648,20 +3644,17 @@ function loadPropertyVariableBlocks(spr) {
   Blockly.Blocks[
     "spritemaster_checktouchingsprite_equals_propertyvalue"
   ]._listProperties = _listProperties;
-  Blockly.Blocks[
-    "tween_to_property"
-  ]._listProperties = _listProperties;
-  Blockly.Blocks["tween_to_global_variable"]._listGlobalVariables = function () {
-    var currentMenu = Object.keys(engine.globalVariables).map(
-      (name, i) => {
+  Blockly.Blocks["tween_to_property"]._listProperties = _listProperties;
+  Blockly.Blocks["tween_to_global_variable"]._listGlobalVariables =
+    function () {
+      var currentMenu = Object.keys(engine.globalVariables).map((name, i) => {
         return [name, name];
-      },
-    );
-    if (currentMenu.length < 1) {
-      currentMenu = [["(No Global Variables)", "none"]];
-    }
-    return currentMenu;
-  };
+      });
+      if (currentMenu.length < 1) {
+        currentMenu = [["(No Global Variables)", "none"]];
+      }
+      return currentMenu;
+    };
 
   Blockly.Blocks["propertydata_set"] = {
     init: function () {
@@ -3822,24 +3815,26 @@ function loadBlockMenus(spr) {
       });
     },
   };
-  Blockly.Blocks['motion_goto_menu'] = {
-    init: function() {
+  Blockly.Blocks["motion_goto_menu"] = {
+    init: function () {
       this.jsonInit({
-        "message0": "%1",
-        "args0": [
+        message0: "%1",
+        args0: [
           {
-            "type": "field_dropdown",
-            "name": "TO",
-            "options": getSpriteMenuFunction(spr, [["mouse pointer", "__mouse_pointer__"]])
-          }
+            type: "field_dropdown",
+            name: "TO",
+            options: getSpriteMenuFunction(spr, [
+              ["mouse pointer", "__mouse_pointer__"],
+            ]),
+          },
         ],
-        "colour": Blockly.Colours.motion.secondary,
-        "colourSecondary": Blockly.Colours.motion.secondary,
-        "colourTertiary": Blockly.Colours.motion.tertiary,
-        "colourQuaternary": Blockly.Colours.motion.quaternary,
-        "extensions": ["output_string"]
+        colour: Blockly.Colours.motion.secondary,
+        colourSecondary: Blockly.Colours.motion.secondary,
+        colourTertiary: Blockly.Colours.motion.tertiary,
+        colourQuaternary: Blockly.Colours.motion.quaternary,
+        extensions: ["output_string"],
       });
-    }
+    },
   };
   Blockly.Blocks["control_create_clone_of_menu"] = {
     init: function () {
@@ -4241,9 +4236,8 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
 
 module.exports = {
   reloadCostumes,
-  deps
+  deps,
 };
-
 
 
 /***/ }),
@@ -4267,6 +4261,7 @@ __webpack_require__(1396);
 __webpack_require__(6938);
 __webpack_require__(6936);
 __webpack_require__(5334);
+
 
 /***/ }),
 
@@ -4778,9 +4773,7 @@ var soundEffectOptions = [
   ["playback rate", "playbackRate"],
 ];
 
-var unwritableEffectOptions = [
-  ["duration", "duration"]
-];
+var unwritableEffectOptions = [["duration", "duration"]];
 
 Blockly.Blocks["sound_ggm3effect_set"] = {
   init: function () {
@@ -5048,33 +5041,31 @@ var EventEmitter = __webpack_require__(228);
  * The exported game data is generated by the interface.
  */
 class GGM3ExportLoader extends EventEmitter {
+  LOADING_PROGRESS = "LOADING_PROGRESS";
+  LOADING_COMPLETE = "LOADING_COMPLETE";
+  LOADING_ERROR = "LOADING_ERROR";
 
-    LOADING_PROGRESS = "LOADING_PROGRESS";
-    LOADING_COMPLETE = "LOADING_COMPLETE";
-    LOADING_ERROR = "LOADING_ERROR";
+  /**
+   * Creates a new ExportLoader instance.
+   * @param {GGM3Engine} engine - The GGM3Engine instance to load the game into.
+   * @param {Object} generated - The data from the exported game, this includes compiled code, sprites, costume urls, etc.
+   */
+  constructor(engine, generated) {
+    super();
+    this.engine = engine;
+    this.generated = generated;
+    this.maximum = 0;
+    this.loaded = 0;
+  }
 
-    /**
-     * Creates a new ExportLoader instance.
-     * @param {GGM3Engine} engine - The GGM3Engine instance to load the game into.
-     * @param {Object} generated - The data from the exported game, this includes compiled code, sprites, costume urls, etc.
-     */
-    constructor (engine, generated) {
-        super();
-        this.engine = engine;
-        this.generated = generated;
-        this.maximum = 0;
-        this.loaded = 0;
-    }
-
-    async startLoading () {
-        var engine = this.engine;
-        var generatedData = this.generated;
-
-        
-    }
+  async startLoading() {
+    var engine = this.engine;
+    var generatedData = this.generated;
+  }
 }
 
-module.exports =  GGM3ExportLoader;
+module.exports = GGM3ExportLoader;
+
 
 /***/ }),
 
@@ -5864,11 +5855,11 @@ var idb = __webpack_require__(602);
 
 var dbPromise = idb.openDB("ggm3-autobackup", 1, {
   upgrade(db) {
-    if (!db.objectStoreNames.contains('metadata')) {
-      db.createObjectStore('metadata', { keyPath: 'id' });
+    if (!db.objectStoreNames.contains("metadata")) {
+      db.createObjectStore("metadata", { keyPath: "id" });
     }
-    if (!db.objectStoreNames.contains('files')) {
-      db.createObjectStore('files', { keyPath: 'id' });
+    if (!db.objectStoreNames.contains("files")) {
+      db.createObjectStore("files", { keyPath: "id" });
     }
   },
 });
@@ -5878,62 +5869,63 @@ async function saveBackup(gameBlob, thumbBlob) {
   var id = "backup-" + Date.now();
   var MAX_VERSIONS = 10;
 
-  var keys = await db.getAllKeys('metadata');
+  var keys = await db.getAllKeys("metadata");
 
-  var tx = db.transaction(['metadata', 'files'], 'readwrite');
+  var tx = db.transaction(["metadata", "files"], "readwrite");
 
   if (keys.length >= MAX_VERSIONS) {
-    var numberToRemove = (keys.length - MAX_VERSIONS) + 1;
+    var numberToRemove = keys.length - MAX_VERSIONS + 1;
     var keysToRemove = keys.slice(0, numberToRemove);
 
     for (var oldId of keysToRemove) {
-      tx.objectStore('metadata').delete(oldId);
-      tx.objectStore('files').delete(oldId);
+      tx.objectStore("metadata").delete(oldId);
+      tx.objectStore("files").delete(oldId);
     }
   }
 
-  tx.objectStore('metadata').put({
+  tx.objectStore("metadata").put({
     id: id,
     thumbnail: thumbBlob,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   });
 
-  tx.objectStore('files').put({
+  tx.objectStore("files").put({
     id: id,
-    data: gameBlob
+    data: gameBlob,
   });
 
   await tx.done;
 }
 
 async function getBackups() {
-    var db = await dbPromise;
-    // getAll is fine for metadata since it's small (thumbnails + IDs)
-    var metadata = await db.getAll('metadata');
-    // Sort descending: Newest first
-    return metadata.sort((a, b) => b.timestamp - a.timestamp);
+  var db = await dbPromise;
+  // getAll is fine for metadata since it's small (thumbnails + IDs)
+  var metadata = await db.getAll("metadata");
+  // Sort descending: Newest first
+  return metadata.sort((a, b) => b.timestamp - a.timestamp);
 }
 
 async function getBackupData(id) {
-    var db = await dbPromise;
-    var fileEntry = await db.get('files', id);
-    return fileEntry ? fileEntry.data : null;
+  var db = await dbPromise;
+  var fileEntry = await db.get("files", id);
+  return fileEntry ? fileEntry.data : null;
 }
 
 async function deleteBackup(id) {
-    var db = await dbPromise;
-    var tx = db.transaction(['metadata', 'files'], 'readwrite');
-    tx.objectStore('metadata').delete(id);
-    tx.objectStore('files').delete(id);
-    await tx.done;
+  var db = await dbPromise;
+  var tx = db.transaction(["metadata", "files"], "readwrite");
+  tx.objectStore("metadata").delete(id);
+  tx.objectStore("files").delete(id);
+  await tx.done;
 }
 
 module.exports = {
   saveBackup,
   getBackups,
   getBackupData,
-  deleteBackup
+  deleteBackup,
 };
+
 
 /***/ }),
 
@@ -6151,6 +6143,16 @@ module.exports = {
   saveProjectZipBlob,
 
   loadProjectZip,
+};
+
+
+/***/ }),
+
+/***/ 2179:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports = {
+  ...__webpack_require__(9135),
 };
 
 
@@ -6425,7 +6427,7 @@ class Sprite {
     this.spriteMaster = new SpriteMaster(this);
   }
 
-  goTo (target) {
+  goTo(target) {
     if (target == "__mouse_pointer__") {
       this.x = this.engine.mouseX;
       this.y = this.engine.mouseY;
@@ -7156,15 +7158,15 @@ class Sprite {
 
   getFunction(code) {
     const func = new Function(
-      'sprite', 
-      'engine', 
-      'spriteMaster', 
+      "sprite",
+      "engine",
+      "spriteMaster",
       `
        return (async function() { 
          ${code} 
-       })();`
+       })();`,
     );
-    
+
     return func;
   }
 
@@ -7577,7 +7579,12 @@ function init(state, deps) {
     return tempWorkspace;
   }
 
-  return { compileSpriteXML, compileAllSprites, loadWorkspaceFromSprite, compileSpriteXMLToString };
+  return {
+    compileSpriteXML,
+    compileAllSprites,
+    loadWorkspaceFromSprite,
+    compileSpriteXMLToString,
+  };
 }
 
 module.exports = { init };
@@ -7645,9 +7652,9 @@ var fileHandle = null;
 
 async function newProject() {
   if (fileHandle) {
-    try{
+    try {
       fileHandle.close();
-    }catch(e){}
+    } catch (e) {}
     fileHandle = null;
   }
   loadingScreenContainer.hidden = false;
@@ -7679,7 +7686,11 @@ function loadProjectFile(file) {
     } catch (e) {
       await defaultProject.loadDefaultProject();
       console.error("Project load error: ", e);
-      dialogs.alert("Project load error: " + e.message + "\nA default project has been loaded instead.");
+      dialogs.alert(
+        "Project load error: " +
+          e.message +
+          "\nA default project has been loaded instead.",
+      );
     }
     selectedSprite.setCurrentSprite(0, true, true);
     loadingScreenContainer.hidden = true;
@@ -7687,7 +7698,12 @@ function loadProjectFile(file) {
   reader.readAsArrayBuffer(file);
 }
 
-var {saveBackupNow, getFileMenuOption, backupDeps, getBackupNotice} = __webpack_require__(3475);
+var {
+  saveBackupNow,
+  getFileMenuOption,
+  backupDeps,
+  getBackupNotice,
+} = __webpack_require__(3475);
 
 backupDeps.loadProjectFile = loadProjectFile;
 
@@ -7700,7 +7716,7 @@ if (available()) {
         marginRight: "auto",
       },
     },
-    ...getBackupNotice ? getBackupNotice() : [],
+    ...(getBackupNotice ? getBackupNotice() : []),
     {
       element: "div",
       className: "menuBarItem",
@@ -7836,6 +7852,8 @@ if (available()) {
   };
 }
 
+var { showExportDialog } = __webpack_require__(2179);
+
 addAppMenu(
   "file",
   [
@@ -7876,7 +7894,11 @@ addAppMenu(
       icon: "icons/import.svg",
       action: async function () {
         if (selectedSprite.isProjectDirty()) {
-          if (!(await dialogs.confirm("You might have unsaved changes. Load anyway?"))) {
+          if (
+            !(await dialogs.confirm(
+              "You might have unsaved changes. Load anyway?",
+            ))
+          ) {
             return;
           }
         }
@@ -7894,13 +7916,13 @@ addAppMenu(
         });
       },
     },
-    ...getFileMenuOption ? getFileMenuOption() : [],
+    ...(getFileMenuOption ? getFileMenuOption() : []),
 
     {
       label: "Export game",
       icon: "icons/export.svg",
       action: async function () {
-        
+        showExportDialog();
       },
     },
   ]),
@@ -7917,10 +7939,10 @@ selectedSprite.deps.exportSprite = async function (sprite) {
   a.click();
 };
 
-
 module.exports = {
-  loadProjectFile
+  loadProjectFile,
 };
+
 
 /***/ }),
 
@@ -8363,24 +8385,33 @@ createBlockContextMenu(
 var elements = __webpack_require__(7255);
 var AElement = __webpack_require__(3759);
 var engine = __webpack_require__(9940);
-var { saveBackup, getBackups, getBackupData, deleteBackup } = __webpack_require__(2126);
-var isSupported = !!(window.indexedDB && window.showSaveFilePicker && window.showOpenFilePicker);
+var {
+  saveBackup,
+  getBackups,
+  getBackupData,
+  deleteBackup,
+} = __webpack_require__(2126);
+var isSupported = !!(
+  window.indexedDB &&
+  window.showSaveFilePicker &&
+  window.showOpenFilePicker
+);
 var BACKUP_INTERVAL = 5 * 60 * 1000; // 5 minutes
 var projectSaver = __webpack_require__(3539);
 var selectedSprite = __webpack_require__(3010);
 var dialogs = __webpack_require__(269);
 
 var backupDeps = {
-    loadProjectFile: () => {},
+  loadProjectFile: () => {},
 };
 
 function getThumbnail() {
-    var canvas = engine.canvas;
-    return new Promise((resolve) => {
-        canvas.toBlob((blob) => {
-            resolve(blob);
-        }, "image/png");
-    });
+  var canvas = engine.canvas;
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => {
+      resolve(blob);
+    }, "image/png");
+  });
 }
 
 //for testing
@@ -8390,33 +8421,33 @@ var loadingScreenContainer = elements.getGPId("loadingScreenContainer");
 var loadingScreenContent = elements.getGPId("loadingScreenContent");
 var isBackingUp = false;
 async function saveBackupNow() {
-    if (!isSupported) {
-        return;
-    }
-    if (isBackingUp) {
-        return;
-    }
-    if (!selectedSprite.isProjectDirty()) {
-        return;
-    }
-    if (!loadingScreenContainer.hidden) {
-        return; // Loading so don't accidentally store a backup of a half-loaded project.
-    }
+  if (!isSupported) {
+    return;
+  }
+  if (isBackingUp) {
+    return;
+  }
+  if (!selectedSprite.isProjectDirty()) {
+    return;
+  }
+  if (!loadingScreenContainer.hidden) {
+    return; // Loading so don't accidentally store a backup of a half-loaded project.
+  }
 
-    var backupNotice = elements.getGPId("backingUpNotice");
-    if (backupNotice) {
-        backupNotice.hidden = false;
-    }
+  var backupNotice = elements.getGPId("backingUpNotice");
+  if (backupNotice) {
+    backupNotice.hidden = false;
+  }
 
-    isBackingUp = true;
-    var thumbBlob = await getThumbnail();
-    var zipBlob = await projectSaver.saveProjectZipBlob();
-    await saveBackup(zipBlob, thumbBlob)
-    isBackingUp = false;
+  isBackingUp = true;
+  var thumbBlob = await getThumbnail();
+  var zipBlob = await projectSaver.saveProjectZipBlob();
+  await saveBackup(zipBlob, thumbBlob);
+  isBackingUp = false;
 
-    if (backupNotice) {
-        backupNotice.hidden = true;
-    }
+  if (backupNotice) {
+    backupNotice.hidden = true;
+  }
 }
 
 var backupInterval = setInterval(saveBackupNow, BACKUP_INTERVAL);
@@ -8446,15 +8477,18 @@ var backupDialog = elements.createElementsFromJSON([
           {
             element: "span",
             children: [
-                {element:"b",textContent:"Don't rely on these backups to save your work! "},
-                { element: "br" },
-                "They can be deleted at any time or by your browser without warning. ",
-                "This is meant as a last resort to recover from crashes or other unexpected issues. ",
-                "Always make sure to save your project regularly. ",
-                { element: "br" },
-                "This can only hold a few backups, so older ones will be deleted as new ones are made. ",
-                "If you want to keep a backup, make sure to download it before making more changes or it might be deleted."
-            ]
+              {
+                element: "b",
+                textContent: "Don't rely on these backups to save your work! ",
+              },
+              { element: "br" },
+              "They can be deleted at any time or by your browser without warning. ",
+              "This is meant as a last resort to recover from crashes or other unexpected issues. ",
+              "Always make sure to save your project regularly. ",
+              { element: "br" },
+              "This can only hold a few backups, so older ones will be deleted as new ones are made. ",
+              "If you want to keep a backup, make sure to download it before making more changes or it might be deleted.",
+            ],
           },
           {
             element: "div",
@@ -8479,10 +8513,10 @@ var backupDialog = elements.createElementsFromJSON([
             element: "div",
             className: "gameBackupCategory",
             children: [
-                {
-                    element: "div",
-                    gid: "backupListContainer"
-                }
+              {
+                element: "div",
+                gid: "backupListContainer",
+              },
             ],
           },
         ],
@@ -8498,176 +8532,176 @@ var backupListContainer = elements.getGPId("backupListContainer");
 var blobImages = [];
 
 async function refreshBackupList() {
-    backupListContainer.textContent = "Loading...";
+  backupListContainer.textContent = "Loading...";
 
-    var backups = await getBackups();
-    backupListContainer.textContent = "";
-    elements.removeAllChildren(backupListContainer);
+  var backups = await getBackups();
+  backupListContainer.textContent = "";
+  elements.removeAllChildren(backupListContainer);
 
-    blobImages.forEach(URL.revokeObjectURL);
-    blobImages = [];
+  blobImages.forEach(URL.revokeObjectURL);
+  blobImages = [];
 
-    backups.forEach((backup) => {
-
-        function loadBackupButtonClicked() {
-            var promise = Promise.resolve(true);
-            if (selectedSprite.isProjectDirty()) {
-                promise = dialogs.confirm("You have unsaved changes. Are you sure you want to load this backup and lose those changes?");
-            }
-            promise.then((confirmed) => {
-                if (confirmed) {
-                    loadingScreenContainer.hidden = false;
-                    backupDialog.hidden = true;
-                    loadingScreenContent.textContent = "Reading backup content...";
-                    getBackupData(backup.id).then((zipBlob) => {
-                        loadingScreenContent.textContent = "";
-                        backupDeps.loadProjectFile(zipBlob);
-                    });
-                }
-            });
+  backups.forEach((backup) => {
+    function loadBackupButtonClicked() {
+      var promise = Promise.resolve(true);
+      if (selectedSprite.isProjectDirty()) {
+        promise = dialogs.confirm(
+          "You have unsaved changes. Are you sure you want to load this backup and lose those changes?",
+        );
+      }
+      promise.then((confirmed) => {
+        if (confirmed) {
+          loadingScreenContainer.hidden = false;
+          backupDialog.hidden = true;
+          loadingScreenContent.textContent = "Reading backup content...";
+          getBackupData(backup.id).then((zipBlob) => {
+            loadingScreenContent.textContent = "";
+            backupDeps.loadProjectFile(zipBlob);
+          });
         }
+      });
+    }
 
-        function downloadBackupButtonClicked() {
-            getBackupData(backup.id).then((zipBlob) => {
-                var url = URL.createObjectURL(zipBlob);
-                var a = document.createElement("a");
-                a.href = url;
-                a.download = `Gvbvdxx Game Maker 3 backup from ${new Date(backup.timestamp).toISOString()}.ggm3`;
-                document.body.append(a);
-                a.click();
-                a.remove();
-                URL.revokeObjectURL(url);
-            });
+    function downloadBackupButtonClicked() {
+      getBackupData(backup.id).then((zipBlob) => {
+        var url = URL.createObjectURL(zipBlob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = `Gvbvdxx Game Maker 3 backup from ${new Date(backup.timestamp).toISOString()}.ggm3`;
+        document.body.append(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    function deleteBackupButtonClicked() {
+      var promise = dialogs.confirm(
+        "Are you sure you want to delete this backup?",
+      );
+      promise.then((confirmed) => {
+        if (confirmed) {
+          deleteBackup(backup.id);
+          refreshBackupList();
         }
+      });
+    }
 
-        function deleteBackupButtonClicked() {
-            var promise = dialogs.confirm("Are you sure you want to delete this backup?");
-            promise.then((confirmed) => {
-                if (confirmed) {
-                    deleteBackup(backup.id);
-                    refreshBackupList();
-                }
-            });
-        }
-
-        var blobUrl = URL.createObjectURL(backup.thumbnail);
-        blobImages.push(blobUrl);
-        var backupElement = elements.createElementsFromJSON([
-            {
-                element: "div",
-                className: "backupEntry",
-                children: [
-                    {
-                        element: "img",
-                        className: "backupThumbnail",
-                        src: blobUrl
-                    },
-                    {
-                        element: "span",
-                        textContent: new Date(backup.timestamp).toLocaleString(),
-                        className: "backupTimestamp"
-                    },
-                    {
-                        element: "div",
-                        style: {
-                            marginLeft: "auto",
-                        }
-                    },
-                    {
-                        element: "button",
-                        className: "greyButtonStyle",
-                        children: [
-                            "Load"
-                        ],
-                        eventListeners: [
-                            {
-                                event: "click",
-                                func: loadBackupButtonClicked
-                            }
-                        ]
-                    },
-                    {
-                        element: "button",
-                        className: "greyButtonStyle",
-                        children: [
-                            "Download"
-                        ],
-                        eventListeners: [
-                            {
-                                event: "click",
-                                func: downloadBackupButtonClicked
-                            }
-                        ]
-                    },
-                    {
-                        element: "button",
-                        className: "greyButtonStyle",
-                        textContent: "Delete",
-                        eventListeners: [
-                            {
-                                event: "click",
-                                func: deleteBackupButtonClicked
-                            }
-                        ]
-                    }
-                ]
+    var blobUrl = URL.createObjectURL(backup.thumbnail);
+    blobImages.push(blobUrl);
+    var backupElement = elements.createElementsFromJSON([
+      {
+        element: "div",
+        className: "backupEntry",
+        children: [
+          {
+            element: "img",
+            className: "backupThumbnail",
+            src: blobUrl,
+          },
+          {
+            element: "span",
+            textContent: new Date(backup.timestamp).toLocaleString(),
+            className: "backupTimestamp",
+          },
+          {
+            element: "div",
+            style: {
+              marginLeft: "auto",
             },
-        ])[0];
-        backupListContainer.append(backupElement);
-    });
+          },
+          {
+            element: "button",
+            className: "greyButtonStyle",
+            children: ["Load"],
+            eventListeners: [
+              {
+                event: "click",
+                func: loadBackupButtonClicked,
+              },
+            ],
+          },
+          {
+            element: "button",
+            className: "greyButtonStyle",
+            children: ["Download"],
+            eventListeners: [
+              {
+                event: "click",
+                func: downloadBackupButtonClicked,
+              },
+            ],
+          },
+          {
+            element: "button",
+            className: "greyButtonStyle",
+            textContent: "Delete",
+            eventListeners: [
+              {
+                event: "click",
+                func: deleteBackupButtonClicked,
+              },
+            ],
+          },
+        ],
+      },
+    ])[0];
+    backupListContainer.append(backupElement);
+  });
 }
 
-function getFileMenuOption () {
-    if (!isSupported) {
-        return [];
-    }
-    return [
-        {
-            label: "Backup history",
-            icon: "icons/history.svg",
-            action: function () {
-                backupDialog.hidden = false;
-                refreshBackupList();
-            }
-        }
-    ];
+function getFileMenuOption() {
+  if (!isSupported) {
+    return [];
+  }
+  return [
+    {
+      label: "Backup history",
+      icon: "icons/history.svg",
+      action: function () {
+        backupDialog.hidden = false;
+        refreshBackupList();
+      },
+    },
+  ];
 }
 
 function getBackupNotice() {
-    if (!isSupported) {
-        return [];
-    }
-    return [
+  if (!isSupported) {
+    return [];
+  }
+  return [
+    {
+      element: "div",
+      className: "unclickableMenuBarItem backupNoticeMenuBarItem",
+      gid: "backingUpNotice",
+      hidden: true,
+      children: [
         {
-            element: "div",
-            className: "unclickableMenuBarItem backupNoticeMenuBarItem",
-            gid: "backingUpNotice",
-            hidden: true,
-            children: [
-                {
-                    element: "img",
-                    src: "icons/history.svg",
-                    style: {
-                        width: "16px",
-                        height: "16px",
-                        objectFit: "contain"
-                    }
-                },
-                {
-                    element: "span",
-                    textContent: "Saving to backup point..."
-                }
-            ]
-        }
-    ];
+          element: "img",
+          src: "icons/history.svg",
+          style: {
+            width: "16px",
+            height: "16px",
+            objectFit: "contain",
+          },
+        },
+        {
+          element: "span",
+          textContent: "Saving to backup point...",
+        },
+      ],
+    },
+  ];
 }
 
 module.exports = {
   saveBackupNow,
   getFileMenuOption,
   backupDeps,
-  getBackupNotice
+  getBackupNotice,
 };
+
 
 /***/ }),
 
@@ -8977,6 +9011,7 @@ EasingMap["bounce-inout"] = TWEEN.Easing.Bounce.InOut;
 
 module.exports = EasingMap;
 
+
 /***/ }),
 
 /***/ 3525:
@@ -9161,7 +9196,7 @@ module.exports = {
   ...__webpack_require__(6544),
   ...__webpack_require__(2166),
   ...__webpack_require__(1498),
-  ...__webpack_require__(4275)
+  ...__webpack_require__(4275),
 };
 
 
@@ -9282,38 +9317,46 @@ class Thread {
   }
 
   tweenToXY(targetX, targetY, duration, easing) {
-    return this.tweenTo({
-      x: +targetX || 0,
-      y: +targetY || 0,
-    },
-    +duration || 0, 
-    easing);
+    return this.tweenTo(
+      {
+        x: +targetX || 0,
+        y: +targetY || 0,
+      },
+      +duration || 0,
+      easing,
+    );
   }
 
   tweenToSize(targetSize, duration, easing) {
-    return this.tweenTo({
-      size: +targetSize || 0
-    },
-    +duration || 0,
-    easing);
+    return this.tweenTo(
+      {
+        size: +targetSize || 0,
+      },
+      +duration || 0,
+      easing,
+    );
   }
 
   tweenToStretchXY(targetScaleX, targetScaleY, duration, easing) {
-    return this.tweenTo({
-      scaleX: (+targetScaleX || 0) / 100,
-      scaleY: (+targetScaleY || 0) / 100
-    },
-    +duration || 0,
-    easing);
+    return this.tweenTo(
+      {
+        scaleX: (+targetScaleX || 0) / 100,
+        scaleY: (+targetScaleY || 0) / 100,
+      },
+      +duration || 0,
+      easing,
+    );
   }
 
   tweenToSkewXY(targetSkewX, targetSkewY, duration, easing) {
-    return this.tweenTo({
-      skewX: +targetSkewX || 0,
-      skewY: +targetSkewY || 0
-    },
-    +duration || 0,
-    easing);
+    return this.tweenTo(
+      {
+        skewX: +targetSkewX || 0,
+        skewY: +targetSkewY || 0,
+      },
+      +duration || 0,
+      easing,
+    );
   }
 
   tweenTo(target, duration, easing) {
@@ -9327,7 +9370,7 @@ class Thread {
       if (!_this.running) {
         resolve();
       }
-      var movement = new TWEEN.Tween(source).to(target, duration*1000);
+      var movement = new TWEEN.Tween(source).to(target, duration * 1000);
       _this.sprite.tween.add(movement);
       if (easing) {
         movement.easing(EasingMap[easing]);
@@ -9348,7 +9391,8 @@ class Thread {
   tweenToProperty(variableName, targetValue, duration, easing) {
     var _this = this;
     return new Promise((resolve) => {
-      if (!_this.sprite.engine.hasSpriteProperty(variableName)) { //Stops unused variables from being created accidentally.
+      if (!_this.sprite.engine.hasSpriteProperty(variableName)) {
+        //Stops unused variables from being created accidentally.
         resolve();
         return;
       }
@@ -9356,11 +9400,14 @@ class Thread {
         resolve();
       }
       var source = {
-        value: +_this.sprite.spriteProperties[variableName] || 0
+        value: +_this.sprite.spriteProperties[variableName] || 0,
       };
-      var movement = new TWEEN.Tween(source).to({
-        value: +targetValue || 0
-      }, duration*1000);
+      var movement = new TWEEN.Tween(source).to(
+        {
+          value: +targetValue || 0,
+        },
+        duration * 1000,
+      );
       _this.sprite.tween.add(movement);
       if (easing) {
         movement.easing(EasingMap[easing]);
@@ -9382,7 +9429,10 @@ class Thread {
   tweenToGlobalVariable(variableName, targetValue, duration, easing) {
     var _this = this;
     return new Promise((resolve) => {
-      if (typeof _this.sprite.engine.globalVariables[variableName] == "undefined") { //Stops unused variables from being created accidentally.
+      if (
+        typeof _this.sprite.engine.globalVariables[variableName] == "undefined"
+      ) {
+        //Stops unused variables from being created accidentally.
         resolve();
         return;
       }
@@ -9390,11 +9440,14 @@ class Thread {
         resolve();
       }
       var source = {
-        value: +_this.sprite.engine.globalVariables[variableName] || 0
+        value: +_this.sprite.engine.globalVariables[variableName] || 0,
       };
-      var movement = new TWEEN.Tween(source).to({
-        value: +targetValue || 0
-      }, duration*1000);
+      var movement = new TWEEN.Tween(source).to(
+        {
+          value: +targetValue || 0,
+        },
+        duration * 1000,
+      );
       _this.sprite.tween.add(movement);
       if (easing) {
         movement.easing(EasingMap[easing]);
@@ -9432,7 +9485,8 @@ class Thread {
   }
 
   deleteClone() {
-    if (this.sprite.isClone) { //Bug fix: Stop non-clone threads from stopping themselves even though they aren't clones.
+    if (this.sprite.isClone) {
+      //Bug fix: Stop non-clone threads from stopping themselves even though they aren't clones.
       this.stop();
       this.sprite.destroyClone();
     }
@@ -10015,32 +10069,32 @@ var FromTo = __webpack_require__(7405);
 var DataURL = __webpack_require__(8570);
 var { getSpriteFunctionsCode } = __webpack_require__(7802);
 
-const ENGINE_FILE_URL = "engine.js?v="+Date.now();
+const ENGINE_FILE_URL = "engine.js?v=" + Date.now();
 const ASSET_PATH = "assets/";
 
 function getEngine() {
-    return fetch(ENGINE_FILE_URL).then(res => res.text());
+  return fetch(ENGINE_FILE_URL).then((res) => res.text());
 }
 
 function getFileExtension(mimeType) {
-    switch (mimeType) {
-        case "image/png":
-            return "png";
-        case "image/svg+xml":
-            return "svg";
-        case "image/webm":
-            return "webm";
-        case "image/jpeg":
-            return "jpg";
-        case "image/gif":
-            return "gif";
-        case "audio/wav":
-            return "wav";
-        case "audio/mpeg":
-            return "mp3";
-        default:
-            return "data";
-    }
+  switch (mimeType) {
+    case "image/png":
+      return "png";
+    case "image/svg+xml":
+      return "svg";
+    case "image/webm":
+      return "webm";
+    case "image/jpeg":
+      return "jpg";
+    case "image/gif":
+      return "gif";
+    case "audio/wav":
+      return "wav";
+    case "audio/mpeg":
+      return "mp3";
+    default:
+      return "data";
+  }
 }
 
 const terserOptions = {
@@ -10052,193 +10106,194 @@ const terserOptions = {
 };
 
 async function compress(code) {
-    if (!window.Terser) { //Terser is a separate chunk, so it might not be loaded yet.
-        return code;
+  if (!window.Terser) {
+    //Terser is a separate chunk, so it might not be loaded yet.
+    return code;
+  }
+  try {
+    var result = await window.Terser.minify(code, terserOptions);
+    if (result.error) {
+      return code;
     }
-    try{
-        var result = await window.Terser.minify(code, terserOptions);
-        if (result.error) {
-            return code;
-        }
-        return result.code;
-    }catch(e){
-        return code;
-    }
+    return result.code;
+  } catch (e) {
+    return code;
+  }
 }
 
 class ExportMainGenerator extends EventEmitter {
-    static get ASSET_PATH() {
-        return ASSET_PATH;
+  static get ASSET_PATH() {
+    return ASSET_PATH;
+  }
+
+  constructor() {
+    super();
+    this.engineCode = null;
+    this.gameCode = null;
+    this.canceled = false;
+    this._spriteJS = [];
+    this.useDataURL = true;
+    this.uniqueIDCounter = 0;
+    this._spriteAssets = [];
+  }
+
+  getFiles() {
+    var spriteFiles = {};
+    if (this._spriteAssets.length > 0) {
+      spriteFiles[ASSET_PATH] = null;
+      for (var asset of this._spriteAssets) {
+        spriteFiles[asset.path] = asset.buffer;
+      }
     }
+    return {
+      "engine.js": this.engineCode,
+      "game.js": this.gameCode,
+      ...spriteFiles,
+    };
+  }
 
-    constructor() {
-        super();
-        this.engineCode = null;
-        this.gameCode = null;
-        this.canceled = false;
-        this._spriteJS = [];
-        this.useDataURL = true;
-        this.uniqueIDCounter = 0;
-        this._spriteAssets = [];
+  cancel() {
+    this.canceled = true;
+  }
+
+  getEngineCode() {
+    if (this.engineCode) {
+      return Promise.resolve(this.engineCode);
+    } else {
+      return getEngine().then((code) => {
+        this.engineCode = code;
+        return code;
+      });
     }
+  }
 
-    getFiles() {
-        var spriteFiles = {};
-        if (this._spriteAssets.length > 0) {
-            spriteFiles[ASSET_PATH] = null;
-            for (var asset of this._spriteAssets) {
-                spriteFiles[asset.path] = asset.buffer;
-            }
-        }
-        return {
-            "engine.js": this.engineCode,
-            "game.js": this.gameCode,
-            ...spriteFiles
-        };
-    }
+  async generateEngineMetadata() {
+    this.engineMetadata = FromTo.toEngineExportJSON();
+  }
 
-    cancel() {
-        this.canceled = true;
-    }
+  async generateEngineCode() {
+    this.engineCode = await this.getEngineCode();
+  }
 
-    getEngineCode() {
-        if (this.engineCode) {
-            return Promise.resolve(this.engineCode);
-        } else {
-            return getEngine().then(code => {
-                this.engineCode = code;
-                return code;
-            });
-        }
-    }
+  async spriteToJS(sprite) {
+    var baseObject = FromTo.toSpriteJSON(sprite);
 
-    async generateEngineMetadata() {
-        this.engineMetadata = FromTo.toEngineExportJSON();
-    }
-
-    async generateEngineCode() {
-        this.engineCode = await this.getEngineCode();
-    }
-
-    async spriteToJS(sprite) {
-        var baseObject = FromTo.toSpriteJSON(sprite);
-
-        var costumeList = [];
-        for (var costume of sprite.costumes) {
-            this.uniqueIDCounter += 1;
-            var uid = "c"+this.uniqueIDCounter;
-            var costumeJson = FromTo.toExportableCostumeJSON(costume);
-            if (this.useDataURL) {
-                costumeJson.url = costume.dataURL;
-            } else {
-                costumeJson.url = `${ASSET_PATH}${uid}.${getFileExtension(costume.mimeType)}`;
-                var buffer = await DataURL.dataURLToArrayBuffer(costume.dataURL);
-                this._spriteAssets.push({
-                    path: costumeJson.url,
-                    buffer: buffer,
-                });
-            }
-            costumeList.push(costumeJson);
-            if (this.canceled) {
-                return;
-            }
-        }
-
-        var soundList = [];
-        for (var sound of sprite.sounds) {
-            this.uniqueIDCounter += 1;
-            var uid = "s"+this.uniqueIDCounter;
-            var soundJson = FromTo.toExportableSoundJSON(sound);
-            if (this.useDataURL) {
-                soundJson.url = sound.dataURL;
-            } else {
-                soundJson.url = `${ASSET_PATH}${uid}.${getFileExtension(sound.mimeType)}`;
-                var buffer = await DataURL.dataURLToArrayBuffer(sound.dataURL);
-                this._spriteAssets.push({
-                    path: soundJson.url,
-                    buffer: buffer,
-                });
-            }
-            soundList.push(soundJson);
-            if (this.canceled) {
-                return;
-            }
-        }
-        
-
-        baseObject.costumes = await Promise.all(costumePromises);
-        baseObject.sounds = await Promise.all(soundPromises);
-
-        var functionsCode = getSpriteFunctionsCode(sprite);
-        var exportableFunctions = {};
-        for (var id of Object.keys(functionsCode)) {
-            exportableFunctions[id] = sprite.getFunctionCode(functionsCode[id]);
-        }
-
-        var js = `{sprite:(${JSON.stringify(baseObject)}),costumes:(${JSON.stringify(costumeList)}),sounds:(${JSON.stringify(soundList)}),functions:(${JSON.stringify(exportableFunctions)})}`;
-
-        this._spriteJS.push(js);
-    }
-
-    cancelableAsyncChain(functions) {
-        return new Promise((resolve, reject) => {
-            let index = 0;
-            const next = () => {
-                if (this.canceled) {
-                    resolve(false);
-                    return;
-                }
-                if (index >= functions.length) {
-                    resolve(true);
-                    return;
-                }
-                const func = functions[index];
-                index++;
-                Promise.resolve(func()).then(next).catch(reject);
-            };
-            next();
+    var costumeList = [];
+    for (var costume of sprite.costumes) {
+      this.uniqueIDCounter += 1;
+      var uid = "c" + this.uniqueIDCounter;
+      var costumeJson = FromTo.toExportableCostumeJSON(costume);
+      if (this.useDataURL) {
+        costumeJson.url = costume.dataURL;
+      } else {
+        costumeJson.url = `${ASSET_PATH}${uid}.${getFileExtension(costume.mimeType)}`;
+        var buffer = await DataURL.dataURLToArrayBuffer(costume.dataURL);
+        this._spriteAssets.push({
+          path: costumeJson.url,
+          buffer: buffer,
         });
+      }
+      costumeList.push(costumeJson);
+      if (this.canceled) {
+        return;
+      }
     }
 
-    async generateGameCode() {
-        var spritesCodeInArray = this._spriteJS.join(",");
-        var code = `window.GGM3Game = [${spritesCodeInArray}];`;
-
-        this.gameCode = await compress(code);
+    var soundList = [];
+    for (var sound of sprite.sounds) {
+      this.uniqueIDCounter += 1;
+      var uid = "s" + this.uniqueIDCounter;
+      var soundJson = FromTo.toExportableSoundJSON(sound);
+      if (this.useDataURL) {
+        soundJson.url = sound.dataURL;
+      } else {
+        soundJson.url = `${ASSET_PATH}${uid}.${getFileExtension(sound.mimeType)}`;
+        var buffer = await DataURL.dataURLToArrayBuffer(sound.dataURL);
+        this._spriteAssets.push({
+          path: soundJson.url,
+          buffer: buffer,
+        });
+      }
+      soundList.push(soundJson);
+      if (this.canceled) {
+        return;
+      }
     }
 
-    async generate() {
-        this.cleanup();
-        this.canceled = false;
+    baseObject.costumes = await Promise.all(costumePromises);
+    baseObject.sounds = await Promise.all(soundPromises);
 
-        var wasCanceled = await this.cancelableAsyncChain([
-            this.generateEngineMetadata.bind(this),
-            ...engine.getAllSprites().map(sprite => this.spriteToJS.bind(this, sprite)),
-            this.generateGameCode.bind(this),
-        ]);
+    var functionsCode = getSpriteFunctionsCode(sprite);
+    var exportableFunctions = {};
+    for (var id of Object.keys(functionsCode)) {
+      exportableFunctions[id] = sprite.getFunctionCode(functionsCode[id]);
+    }
 
-        if (wasCanceled) {
-            this.cleanup();
-            return null;
-        } else {
-            var result = this.getFiles();
-            this.cleanup();
-            this.canceled = false;
-            return result;
+    var js = `{sprite:(${JSON.stringify(baseObject)}),costumes:(${JSON.stringify(costumeList)}),sounds:(${JSON.stringify(soundList)}),functions:(${JSON.stringify(exportableFunctions)})}`;
+
+    this._spriteJS.push(js);
+  }
+
+  cancelableAsyncChain(functions) {
+    return new Promise((resolve, reject) => {
+      let index = 0;
+      const next = () => {
+        if (this.canceled) {
+          resolve(false);
+          return;
         }
-    }
+        if (index >= functions.length) {
+          resolve(true);
+          return;
+        }
+        const func = functions[index];
+        index++;
+        Promise.resolve(func()).then(next).catch(reject);
+      };
+      next();
+    });
+  }
 
-    cleanup () {
-        this.cancel();
-        this.engineCode = null;
-        this._spriteJS = [];
-        this._spriteAssets = [];
+  async generateGameCode() {
+    var spritesCodeInArray = this._spriteJS.join(",");
+    var code = `window.GGM3Game = [${spritesCodeInArray}];`;
+
+    this.gameCode = await compress(code);
+  }
+
+  async generate() {
+    this.cleanup();
+    this.canceled = false;
+
+    var wasCanceled = await this.cancelableAsyncChain([
+      this.generateEngineMetadata.bind(this),
+      ...engine
+        .getAllSprites()
+        .map((sprite) => this.spriteToJS.bind(this, sprite)),
+      this.generateGameCode.bind(this),
+    ]);
+
+    if (wasCanceled) {
+      this.cleanup();
+      return null;
+    } else {
+      var result = this.getFiles();
+      this.cleanup();
+      this.canceled = false;
+      return result;
     }
+  }
+
+  cleanup() {
+    this.cancel();
+    this.engineCode = null;
+    this._spriteJS = [];
+    this._spriteAssets = [];
+  }
 }
 
-
 module.exports = {
-    ExportMainGenerator
+  ExportMainGenerator,
 };
 
 
@@ -21737,7 +21792,7 @@ var JavascriptTranslation = {
   ...__webpack_require__(8337),
   ...__webpack_require__(4782),
   ...__webpack_require__(73),
-  ...__webpack_require__(5486)
+  ...__webpack_require__(5486),
 };
 
 module.exports = JavascriptTranslation;
@@ -23110,7 +23165,7 @@ class Sound {
     this.loading = false;
   }
 
-  getDuration () {
+  getDuration() {
     //this.data is a audio buffer. If it's not loaded (is null), return 0.
     if (!this.data) {
       return 0;
@@ -23150,7 +23205,11 @@ JavascriptTranslation["tween_to_xy"] = function (jsonblock, utils, options) {
   return `${utilFunctions.aliveCheck()}await thread.tweenToXY(${X}, ${Y}, ${SECONDS}, ${JSON.stringify(EASING)});${utilFunctions.aliveCheck()}`;
 };
 
-JavascriptTranslation["tween_to_stretch"] = function (jsonblock, utils, options) {
+JavascriptTranslation["tween_to_stretch"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
   var X = utils.getInput(jsonblock, "X", options, "undefined");
   var Y = utils.getInput(jsonblock, "Y", options, "undefined");
   var SECONDS = utils.getInput(jsonblock, "SECONDS", options, "undefined");
@@ -23176,34 +23235,62 @@ JavascriptTranslation["tween_to_skew"] = function (jsonblock, utils, options) {
   return `${utilFunctions.aliveCheck()}await thread.tweenToSkewXY(${X}, ${Y}, ${SECONDS}, ${JSON.stringify(EASING)});${utilFunctions.aliveCheck()}`;
 };
 
-JavascriptTranslation["tween_to_object"] = function (jsonblock, utils, options) {
+JavascriptTranslation["tween_to_object"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
   var SOURCE = utils.getInput(jsonblock, "SOURCE", options, "{}");
   var TARGET = utils.getInput(jsonblock, "TARGET", options, "{}");
   var SECONDS = utils.getInput(jsonblock, "SECONDS", options, "undefined");
   var EASING = utils.getField(jsonblock, "EASING", options, "linear");
-  
+
   return `${utilFunctions.aliveCheck()}await thread.tweenToSource(${SOURCE}, ${TARGET}, +(${SECONDS}) || 0, ${JSON.stringify(EASING)});${utilFunctions.aliveCheck()}`;
 };
 
-JavascriptTranslation["tween_to_property"] = function (jsonblock, utils, options) {
+JavascriptTranslation["tween_to_property"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
   var VARIABLE = utils.getField(jsonblock, "VARIABLE", options, "null");
   var TARGET = utils.getInput(jsonblock, "TARGET", options, "{}");
   var SECONDS = utils.getInput(jsonblock, "SECONDS", options, "undefined");
   var EASING = utils.getField(jsonblock, "EASING", options, "linear");
-  
+
   return `${utilFunctions.aliveCheck()}await thread.tweenToProperty(${JSON.stringify(VARIABLE)}, ${TARGET}, +(${SECONDS}) || 0, ${JSON.stringify(EASING)});${utilFunctions.aliveCheck()}`;
 };
 
-JavascriptTranslation["tween_to_global_variable"] = function (jsonblock, utils, options) {
+JavascriptTranslation["tween_to_global_variable"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
   var VARIABLE = utils.getField(jsonblock, "VARIABLE", options, "null");
   var TARGET = utils.getInput(jsonblock, "TARGET", options, "{}");
   var SECONDS = utils.getInput(jsonblock, "SECONDS", options, "undefined");
   var EASING = utils.getField(jsonblock, "EASING", options, "linear");
-  
+
   return `${utilFunctions.aliveCheck()}await thread.tweenToGlobalVariable(${JSON.stringify(VARIABLE)}, ${TARGET}, +(${SECONDS}) || 0, ${JSON.stringify(EASING)});${utilFunctions.aliveCheck()}`;
 };
 
 module.exports = JavascriptTranslation;
+
+
+/***/ }),
+
+/***/ 5554:
+/***/ ((module) => {
+
+class ExportOptionsEvents {
+  static PROGRESS = "export-progress";
+  static COMPLETE = "export-complete";
+  static CANCEL_COMPLETE = "export-cancel-complete";
+  static ERROR = "export-error";
+  static PROGRESS_TEXT = "export-progress-text";
+}
+
+module.exports = ExportOptionsEvents;
 
 
 /***/ }),
@@ -23226,7 +23313,7 @@ var deps = {
   markAsDirty: () => {},
   forwardMarkAsDirty: function () {
     costumePivots.deps.markAsDirty = deps.markAsDirty;
-  }
+  },
 };
 
 function reloadCostumes(spr, reloadTabCallback = function () {}) {
@@ -23476,7 +23563,7 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
 
 module.exports = {
   reloadCostumes,
-  deps
+  deps,
 };
 
 
@@ -23727,8 +23814,8 @@ function init(state, deps) {
                 deps.onSetCurrentSprite(deps.engine.sprites.length - 1);
               }
               deps.markProjectDirty();
-            }
-          }
+            },
+          },
         ],
         children: [
           {
@@ -23747,8 +23834,8 @@ function init(state, deps) {
             func: function () {
               closeSpriteAddMenu();
               window.alert("Import feature coming soon!");
-            }
-          }
+            },
+          },
         ],
         children: [
           {
@@ -24094,21 +24181,21 @@ function init(state, deps) {
       }
       if (
         Math.round(+spriteXPosInput.value) !==
-        Math.round(state.currentSelectedSprite.x) ||
+          Math.round(state.currentSelectedSprite.x) ||
         spriteXPosInput.value.length < 1
       ) {
         spriteXPosInput.value = Math.round(state.currentSelectedSprite.x);
       }
       if (
         Math.round(+spriteYPosInput.value) !==
-        Math.round(state.currentSelectedSprite.y) ||
+          Math.round(state.currentSelectedSprite.y) ||
         spriteYPosInput.value.length < 1
       ) {
         spriteYPosInput.value = Math.round(state.currentSelectedSprite.y);
       }
       if (
         Math.round(+spriteDirectionInput.value) !==
-        Math.round(state.currentSelectedSprite.direction) ||
+          Math.round(state.currentSelectedSprite.direction) ||
         spriteDirectionInput.value.length < 1
       ) {
         spriteDirectionInput.value = Math.round(
@@ -24117,7 +24204,7 @@ function init(state, deps) {
       }
       if (
         Math.round(+spriteSizeInput.value) !==
-        Math.round(state.currentSelectedSprite.size) ||
+          Math.round(state.currentSelectedSprite.size) ||
         spriteSizeInput.value.length < 1
       ) {
         spriteSizeInput.value = Math.round(state.currentSelectedSprite.size);
@@ -24525,10 +24612,10 @@ module.exports = JavascriptTranslation;
 var selectedSprite = __webpack_require__(3010);
 var dialogs = __webpack_require__(269);
 addEventListener("beforeunload", (event) => {
-    if (selectedSprite.isProjectDirty()) {
-        event.preventDefault();
-        return false;
-    }
+  if (selectedSprite.isProjectDirty()) {
+    event.preventDefault();
+    return false;
+  }
 });
 
 
@@ -25662,14 +25749,14 @@ module.exports = audioEngine;
 
 var EasingMap = __webpack_require__(3514);
 
-function getEasingOptions () {
-    var options = [];
+function getEasingOptions() {
+  var options = [];
 
-    for (var key of Object.keys(EasingMap)) {
-        options.push([key, key]);
-    }
+  for (var key of Object.keys(EasingMap)) {
+    options.push([key, key]);
+  }
 
-    return options;
+  return options;
 }
 
 Blockly.Blocks["tween_to_xy"] = {
@@ -25787,7 +25874,8 @@ Blockly.Blocks["tween_to_skew"] = {
 Blockly.Blocks["tween_to_object"] = {
   init: function () {
     this.jsonInit({
-      message0: "tween object %1 to values in object %2 in %3 seconds easing %4",
+      message0:
+        "tween object %1 to values in object %2 in %3 seconds easing %4",
       args0: [
         {
           type: "input_value",
@@ -25821,8 +25909,7 @@ Blockly.Blocks["tween_to_property"] = {
         {
           type: "field_dropdown",
           name: "VARIABLE",
-          options:
-            Blockly.Blocks["tween_to_property"]._listProperties,
+          options: Blockly.Blocks["tween_to_property"]._listProperties,
         },
         {
           type: "input_value",
@@ -25852,7 +25939,8 @@ Blockly.Blocks["tween_to_global_variable"] = {
         {
           type: "field_dropdown",
           name: "VARIABLE",
-          options: Blockly.Blocks["tween_to_global_variable"]._listGlobalVariables,
+          options:
+            Blockly.Blocks["tween_to_global_variable"]._listGlobalVariables,
         },
         {
           type: "input_value",
@@ -25873,6 +25961,7 @@ Blockly.Blocks["tween_to_global_variable"] = {
     });
   },
 };
+
 
 /***/ }),
 
@@ -26961,6 +27050,18 @@ Blockly.Blocks["engine_framerate"] = {
 
 /***/ }),
 
+/***/ 7386:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+function getExportOptions() {
+  return [__webpack_require__(9450)];
+}
+
+module.exports = { getExportOptions };
+
+
+/***/ }),
+
 /***/ 7405:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -27235,7 +27336,7 @@ class GGM3Engine extends EventEmitter {
   FRAMERATE_CHANGED = "FRAMERATE_CHANGED";
 
   /**
-   * @readonly 
+   * @readonly
    * @type {Number} The default width of the game. */
   DEFAULT_WIDTH = 640;
   /**
@@ -27305,7 +27406,7 @@ class GGM3Engine extends EventEmitter {
 
   /**
    * Sets the cursor style value for the canvas.
-   * @param {String} value Cursor style property to change to. 
+   * @param {String} value Cursor style property to change to.
    */
   changeCursorStyle(value) {
     var cursorStyle = value ? "" + value : this.DEFAULT_CURSOR_STYLE;
@@ -27500,7 +27601,7 @@ class GGM3Engine extends EventEmitter {
 
   /**
    * This function makes sure all sprites have unique names, and if there are any duplicates it renames them by adding " (1)", " (2)", etc to the end of the name. It also creates a map of sprite names to sprite objects for easy lookup.
-    * This should be called whenever a new sprite is created, or a sprite is renamed.
+   * This should be called whenever a new sprite is created, or a sprite is renamed.
    */
   makeUniqueSpriteNames() {
     var existingNames = [];
@@ -27789,7 +27890,7 @@ class GGM3Engine extends EventEmitter {
       alpha: false,
       stencil: true,
       antialias: false,
-      preserveDrawingBuffer: true
+      preserveDrawingBuffer: true,
     };
     var gl =
       canvas.getContext("webgl", contextAttribs) ||
@@ -28140,8 +28241,9 @@ class GGM3Engine extends EventEmitter {
 }
 
 module.exports = {
-    GGM3Engine
+  GGM3Engine,
 };
+
 
 /***/ }),
 
@@ -28564,7 +28666,7 @@ module.exports = {
   compileSprite,
   saveCurrentSpriteCode,
   compileAllSprites,
-  getSpriteFunctionsCode
+  getSpriteFunctionsCode,
 };
 
 
@@ -29391,6 +29493,157 @@ module.exports = SpriteEffects;
 
 /***/ }),
 
+/***/ 9135:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var elements = __webpack_require__(7255);
+var { getExportOptions } = __webpack_require__(7386);
+
+////////////////////////////////////////////////////////////////////////////
+
+var exportDialog = elements.createElementsFromJSON([
+  {
+    element: "div",
+    hidden: true,
+    children: [
+      ///////////////////////////////
+      {
+        element: "div",
+        className: "dialogBackground",
+      },
+      ///////////////////////////////
+      {
+        element: "div",
+        className: "gameExportBox centerMiddle",
+        children: [
+          ///////////////////////////////
+          {
+            element: "span",
+            textContent: "Export Game",
+            style: {
+              textAlign: "center",
+              flexShrink: "0px",
+              fontWeight: "bold",
+              fontSize: "30px",
+            },
+          },
+          ///////////////////////////////
+          {
+            element: "div",
+            style: {
+              textAlign: "center",
+              flexShrink: "0px",
+            },
+            children: [
+              ///////////////////////////////
+              {
+                element: "span",
+                textContent:
+                  "Export your games to other devices, so you and others can play them without having to open the Gvbvdxx Game Maker 3 editor.",
+              },
+              ///////////////////////////////
+            ],
+          },
+          ///////////////////////////////
+          {
+            element: "div",
+            className: "gameSettingSelection",
+            children: [
+              ///////////////////////////////
+              {
+                element: "button",
+                className: "greyButtonStyle",
+                textContent: "Close",
+                style: {
+                  width: "100%",
+                  boxSizing: "border-box",
+                  textAlign: "center",
+                },
+                onclick: () => {
+                  exportDialog.hidden = true;
+                },
+              },
+              ///////////////////////////////
+            ],
+          },
+          ///////////////////////////////
+          {
+            element: "div",
+            className: "exportGameTypeSelectionContainer",
+            children: [
+              {
+                element: "span",
+                textContent: "Types:"
+              },
+              {
+                element: "div",
+                className: "exportGameTypeSelection",
+                gid: "exportGameTypeSelection"
+              }
+            ],
+          },
+          ///////////////////////////////
+        ],
+      },
+      ///////////////////////////////
+    ],
+  },
+])[0];
+
+document.body.append(exportDialog);
+
+////////////////////////////////////////////////////////////////////////////
+
+var exportGameTypeSelection = elements.getGPId("exportGameTypeSelection");
+var selectedType = 0;
+
+function generateExportOption(option, index) {
+  var information = option.getInformation();
+  var e = {
+    element: "div",
+    className: "exportGameType",
+    GPWhenCreated: function (elm) {
+      if (index == selectedType) {
+        elm.setAttribute("selected","");
+      }
+    },
+    children: [
+      {
+        element: "img",
+        src: information.icon,
+      },
+      {
+        element: "span",
+        textContent: information.name,
+      },
+    ],
+  };
+
+  return e;
+}
+
+function renderExportOptions() {
+  var exportOptions = getExportOptions();
+  var jsonArray = exportOptions.map((o,i) => generateExportOption(o,i));
+  elements.setInnerJSON(exportGameTypeSelection, jsonArray);
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+function showExportDialog() {
+  exportDialog.hidden = false;
+  renderExportOptions();
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+module.exports = {
+  showExportDialog,
+};
+
+
+/***/ }),
+
 /***/ 9291:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -30081,7 +30334,7 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
 
 module.exports = {
   reloadSounds,
-  deps
+  deps,
 };
 
 
@@ -30269,6 +30522,113 @@ module.exports = {
 
 /***/ }),
 
+/***/ 9450:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var EventEmitter = __webpack_require__(228);
+var ExportOptionsEvents = __webpack_require__(5554);
+var { ExportMainGenerator } = __webpack_require__(3539);
+var jszip = __webpack_require__(1710);
+
+class HTML5ExportOption extends EventEmitter {
+  static getInformation() {
+    return {
+      icon: "icons/html.svg",
+      name: "HTML5",
+      description:
+        "Export your game as an HTML5 package that can be hosted on the web or run locally.",
+      options: [
+        {
+          name: "Singular HTML file",
+          id: "dataURLs",
+          description:
+            "Export the game as a single HTML file that includes all assets encoded as base64 data URIs. This makes it easy to share and run the game, but may increase the file size, load time and cause stability issues on some devices.",
+          type: "boolean",
+          default: true,
+        },
+      ],
+    };
+  }
+
+  constructor(generatedJS, options) {
+    super();
+
+    this.generatedJS = generatedJS;
+    this.options = options;
+    this.canceled = false;
+    this.zip = null;
+    this.generator = null;
+    this.resultZip = null;
+    this.generate();
+  }
+
+  cancel() {
+    this.canceled = true;
+    this.zip = null;
+    if (this.generator) {
+      this.generator.cancel();
+      this.generator = null;
+    }
+    this.resultZip = null;
+  }
+
+  async generate() {
+    this.canceled = false;
+    this.generator = new ExportMainGenerator();
+    this.generator.useDataURL = this.options.dataURLs;
+    var files = this.generator.generate();
+    if (!files) {
+      this.canceled = true;
+      this.emit(ExportOptionsEvents.CANCEL_COMPLETE);
+      return;
+    }
+
+    this.zip = new jszip();
+    for (var filename in Object.keys(files)) {
+      var data = files[filename];
+      if (data) {
+        this.zip.file(filename, data);
+      } else {
+        this.zip.folder(filename);
+      }
+      if (this.canceled) {
+        this.emit(ExportOptionsEvents.CANCEL_COMPLETE);
+        return;
+      }
+    }
+
+    this.resultZip = await this.zip.generateAsync({ type: "blob" });
+    if (this.canceled) {
+      this.emit(ExportOptionsEvents.CANCEL_COMPLETE);
+      return;
+    }
+
+    this.emit(ExportOptionsEvents.COMPLETE, [
+      {
+        name: "Download exported game",
+        action: this.downloadExportedGame.bind(this),
+      },
+    ]);
+  }
+
+  downloadExportedGame() {
+    var result = this.resultZip;
+    if (!result) {
+      return;
+    }
+    var objectURL = URL.createObjectURL(result);
+    var a = document.createElement("a");
+    a.href = objectURL;
+    a.download = "game.zip";
+    a.click();
+  }
+}
+
+module.exports = HTML5ExportOption;
+
+
+/***/ }),
+
 /***/ 9483:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -30282,6 +30642,7 @@ __webpack_require__(9335);
 __webpack_require__(2498);
 __webpack_require__(7156);
 __webpack_require__(5939);
+
 
 /***/ }),
 
@@ -31390,16 +31751,18 @@ if (window.Blockly) {
   window.ScratchBlocks = window.Blockly;
 } else {
   canLoad = false;
-  window.alert("ScratcbBlocks is required to run GGM3, but it failed to load or isn't included. Please make sure to include ScratchBlocks before GGM3.");
+  window.alert(
+    "ScratcbBlocks is required to run GGM3, but it failed to load or isn't included. Please make sure to include ScratchBlocks before GGM3.",
+  );
 }
 
-try{
+try {
   var testCanvas = document.createElement("canvas");
   const contextAttribs = {
     alpha: false,
     stencil: true,
     antialias: false,
-    preserveDrawingBuffer: true
+    preserveDrawingBuffer: true,
   };
   var gl =
     testCanvas.getContext("webgl", contextAttribs) ||
@@ -31407,11 +31770,15 @@ try{
     testCanvas.getContext("webgl2", contextAttribs);
   if (!gl) {
     canLoad = false;
-    window.alert("WebGL is required to run GGM3, but it isn't supported by your browser. Please make sure you have a compatible browser and that WebGL is enabled.");
+    window.alert(
+      "WebGL is required to run GGM3, but it isn't supported by your browser. Please make sure you have a compatible browser and that WebGL is enabled.",
+    );
   }
-}catch(e){
+} catch (e) {
   canLoad = false;
-  window.alert("WebGL can't be checked, its required to run GGM3, but it failed to load or isn't supported by your browser. Please make sure you have a compatible browser and that WebGL is enabled.");
+  window.alert(
+    "WebGL can't be checked, its required to run GGM3, but it failed to load or isn't supported by your browser. Please make sure you have a compatible browser and that WebGL is enabled.",
+  );
 }
 
 if (canLoad) {
