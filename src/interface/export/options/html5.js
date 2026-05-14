@@ -9,24 +9,23 @@ class HTML5ExportOption extends EventEmitter {
       icon: "icons/html.svg",
       name: "HTML5",
       description:
-        "Export your game as an HTML5 package that can be hosted on the web or run locally.",
+        "Export your game as an HTML5 package that can be hosted on the web or can run locally.",
       options: [
         {
-          name: "Singular HTML file",
+          name: "Single HTML file",
           id: "dataURLs",
           description:
-            "Export the game as a single HTML file that includes all assets encoded as base64 data URIs. This makes it easy to share and run the game, but may increase the file size, load time and cause stability issues on some devices.",
-          type: "boolean",
+            "Export the game as a single HTML file that includes all assets encoded as base64 data URIs. This can severely effect device resources if this is on.\nNote: If you turn this off, you'll need to run this game on a web server.",
+          type: "checkbox",
           default: true,
         },
       ],
     };
   }
 
-  constructor(generatedJS, options) {
+  constructor(options) {
     super();
 
-    this.generatedJS = generatedJS;
     this.options = options;
     this.canceled = false;
     this.zip = null;

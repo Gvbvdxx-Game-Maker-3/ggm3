@@ -48,6 +48,7 @@ audioEngine.loadSoundFromURL = async function loadSoundURL(url) {
   }
 };
 
+//AI optimized code.
 class AudioBufferPlayer {
   constructor(data) {
     this.data = data;

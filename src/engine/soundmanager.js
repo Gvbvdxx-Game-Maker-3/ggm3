@@ -34,7 +34,7 @@ class SoundManager {
     delete this.playingSounds[getIdentifier(sound)];
   }
 
-  startSound(sound) {
+  startSound(sound, startTime = 0) {
     if (!sound) {
       return; //No sound to play, do nothing.
     }
@@ -48,12 +48,12 @@ class SoundManager {
     player._fromSprite = this.sprite;
     player._isWait = false;
     player._sound = sound;
-    player.play();
+    player.play(+startTime || 0);
     this.playingSounds[getIdentifier(sound)] = player;
     this._applyEffects(sound);
   }
 
-  playSoundUntilDone(sound) {
+  playSoundUntilDone(sound, startTime = 0) {
     if (!sound) {
       return new Promise((resolve) => {
         resolve();
@@ -71,7 +71,7 @@ class SoundManager {
     player._fromSprite = this.sprite;
     player._isWait = true;
     player._sound = sound;
-    player.play();
+    player.play(+startTime || 0);
     this.playingSounds[getIdentifier(sound)] = player;
     this._applyEffects(sound);
 

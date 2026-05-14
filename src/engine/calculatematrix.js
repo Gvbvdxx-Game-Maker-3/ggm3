@@ -1,3 +1,5 @@
+//AI optimized code.
+
 // Use a shared Float32Array if none is provided to avoid garbage collection
 const MatrixArrayType =
   typeof Float32Array !== "undefined" ? Float32Array : Array;

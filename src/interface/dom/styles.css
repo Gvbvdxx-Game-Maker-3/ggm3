@@ -1170,6 +1170,7 @@ body {
 
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
 }
 
 .exportGameTypeSelectionContainer {
@@ -1180,6 +1181,7 @@ body {
 	flex-grow: 0;
   flex-direction: row;
   padding: 2px 2px;
+  box-sizing: border-box;
   gap: 5px;
   text-wrap: nowrap;
   align-items: center;
@@ -1190,6 +1192,7 @@ body {
 	height: fit-content;
 	flex-grow: 1;
 	overflow: auto;
+	gap: 2px;
 }
 
 .exportGameType {
@@ -1208,6 +1211,7 @@ body {
 	height: fit-content;
 	gap: 3px;
 	align-items: center;
+	user-select: none;
 }
 
 .exportGameType > img {
@@ -1235,4 +1239,64 @@ body {
 	object-fit: contain;
   border-radius: 5px;
   background: rgba(0,0,0,0.4);
+}
+
+.exportOptionsContainer {
+  width: 100%;
+  flex-grow: 1;
+  overflow: auto;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.exportOptionsDescription {
+  width: 100%;
+  height: fit-content;
+  padding: 10px 10px;
+  border-radius: 5px;
+  color: rgba(255,255,255,0.8);
+  background: rgba(0,0,0,0.6);
+  overflow: auto;
+  display: block;
+  box-sizing: border-box;
+}
+
+.exportOptionsOptionContainer {
+  width: 100%;
+  height: fit-content;
+  padding: 10px 10px;
+  border-radius: 5px;
+  color: rgba(255,255,255,0.8);
+  background: rgba(0,0,0,0.6);
+  overflow: auto;
+  display: block;
+  box-sizing: border-box;
+}
+
+.exportOptionsOptionTitle {
+  font-weight: bold;
+  font-size: 25px;
+  margin-bottom: 3px;
+}
+
+.exportOptionsOptionDescription {
+	white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.textInput {
+	all: unset;
+	padding: 2px 2px;
+	width: fit-content;
+	height: fit-content;
+	background: rgba(255,255,255,1);
+	color: rgba(0,0,0,1);
+	border-style: solid;
+	border-width: 1px;
+	border-color: rgba(50,50,50,1);
+	font-size: 13px;
 }
