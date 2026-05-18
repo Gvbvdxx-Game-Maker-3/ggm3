@@ -10200,7 +10200,7 @@ class ExportMainGenerator extends EventEmitter {
 			thing += JSON.stringify(id);
 			thing += ":";
 			thing += "("+exportableFunctions[id]+")";
-			middleCodeStuff.push(middleCodeStuff);
+			middleCodeStuff.push(thing);
 		}
 		var exportableFunctionsJS = `{${middleCodeStuff.join(",")}}`;
 
