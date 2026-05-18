@@ -38,10 +38,17 @@ function getFileExtension(mimeType) {
 
 const terserOptions = {
   compress: {
-    passes: 2,
-    properties: false,
+	  // Set to false to stop variables from being moved out of their original lines,
+    // which is usually what triggers the scoping clash in once wrappers
+    hoist_vars: false, 
+      
+    // Prevents functions from being radically collapsed into one-liners 
+    // if it risks altering variable visibility
+    reduce_vars: false 
   },
-  mangle: true,
+  mangle: {
+    keep_fnames: true, 
+  }
 };
 
 async function compress(code) {
@@ -56,6 +63,7 @@ async function compress(code) {
     }
     return result.code;
   } catch (e) {
+		window.alert("Unable to minify: "+e);
     return code;
   }
 }
@@ -178,7 +186,7 @@ class ExportMainGenerator extends EventEmitter {
 		}
 		var exportableFunctionsJS = `{${middleCodeStuff.join(",")}}`;
 
-    var js = `{sprite:(${JSON.stringify(baseObject)}),functions:(${exportableFunctionsJS})`;
+    var js = `{sprite:(${JSON.stringify(baseObject)}),functions:(${exportableFunctionsJS})}`;
 
     this._spriteJS.push(js);
   }
@@ -204,8 +212,10 @@ class ExportMainGenerator extends EventEmitter {
   }
 
   async generateGameCode() {
-    var spritesCodeInArray = this._spriteJS.join(",");
-    var code = (""+GAME_CODE_BASE).replaceAll("|%GGM3Game%|", spritesCodeInArray);
+    var spritesCodeInArray = `[${this._spriteJS.join(",")}]`;
+		var engineProperties = JSON.stringify(this.engineMetadata);
+		var allCode = `{sprites:[spritesCodeInArray],engineProps:${engineProperties}}`;
+    var code = (""+GAME_CODE_BASE).replaceAll("|%GGM3Game%|", allCode);
 
     this.gameCode = await compress(code);
   }
