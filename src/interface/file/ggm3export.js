@@ -8,6 +8,9 @@ var { getSpriteFunctionsCode } = require("./spritestuff.js");
 const ENGINE_FILE_URL = "engine.js?v=" + Date.now();
 const ASSET_PATH = "assets/";
 
+const GAME_CODE_BASE__ = require("!!raw-loader!./exported-game-base/game.base.js");
+const GAME_CODE_BASE = GAME_CODE_BASE__.default ? GAME_CODE_BASE__.default : GAME_CODE_BASE__;
+
 function getEngine() {
   return fetch(ENGINE_FILE_URL).then((res) => res.text());
 }
@@ -175,7 +178,7 @@ class ExportMainGenerator extends EventEmitter {
 		}
 		var exportableFunctionsJS = `{${middleCodeStuff.join(",")}}`;
 
-    var js = `{sprite:(${JSON.stringify(baseObject)}),functions:(${exportableFunctionsJS}`;
+    var js = `{sprite:(${JSON.stringify(baseObject)}),functions:(${exportableFunctionsJS})`;
 
     this._spriteJS.push(js);
   }
@@ -202,7 +205,7 @@ class ExportMainGenerator extends EventEmitter {
 
   async generateGameCode() {
     var spritesCodeInArray = this._spriteJS.join(",");
-    var code = `window.GGM3Game = [${spritesCodeInArray}];`;
+    var code = (""+GAME_CODE_BASE).replaceAll("|%GGM3Game%|", spritesCodeInArray);
 
     this.gameCode = await compress(code);
   }
