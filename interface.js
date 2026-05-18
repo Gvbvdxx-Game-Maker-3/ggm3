@@ -10064,10 +10064,17 @@ function getFileExtension(mimeType) {
 
 const terserOptions = {
   compress: {
-    passes: 2,
-    properties: false,
+	  // Set to false to stop variables from being moved out of their original lines,
+    // which is usually what triggers the scoping clash in once wrappers
+    hoist_vars: false, 
+      
+    // Prevents functions from being radically collapsed into one-liners 
+    // if it risks altering variable visibility
+    reduce_vars: false 
   },
-  mangle: true,
+  mangle: {
+    keep_fnames: true, 
+  }
 };
 
 async function compress(code) {
@@ -10082,6 +10089,7 @@ async function compress(code) {
     }
     return result.code;
   } catch (e) {
+		window.alert("Unable to minify: "+e);
     return code;
   }
 }
@@ -10204,7 +10212,7 @@ class ExportMainGenerator extends EventEmitter {
 		}
 		var exportableFunctionsJS = `{${middleCodeStuff.join(",")}}`;
 
-    var js = `{sprite:(${JSON.stringify(baseObject)}),functions:(${exportableFunctionsJS})`;
+    var js = `{sprite:(${JSON.stringify(baseObject)}),functions:(${exportableFunctionsJS})}`;
 
     this._spriteJS.push(js);
   }
@@ -10230,8 +10238,10 @@ class ExportMainGenerator extends EventEmitter {
   }
 
   async generateGameCode() {
-    var spritesCodeInArray = this._spriteJS.join(",");
-    var code = (""+GAME_CODE_BASE).replaceAll("|%GGM3Game%|", spritesCodeInArray);
+    var spritesCodeInArray = `[${this._spriteJS.join(",")}]`;
+		var engineProperties = JSON.stringify(this.engineMetadata);
+		var allCode = `{sprites:[spritesCodeInArray],engineProps:${engineProperties}}`;
+    var code = (""+GAME_CODE_BASE).replaceAll("|%GGM3Game%|", allCode);
 
     this.gameCode = await compress(code);
   }
@@ -24900,7 +24910,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("(function () {\n\t//////////////////////////////////////////////////////////////////\n\t\n\tconst GameContent = |%GGM3Game%|;\n\tvar Game = window.Game = {};\n\tvar GameEvents = {};\n\t\n\t//////////////////////////////////////////////////////////////////\n\t\n\tGameEvents.progress = [];\n\tGameEvents.loaded = [];\n\tGameEvents.error = [];\n\n\tfunction _game_removeEventListener(eventName, func) {\n\t\tif (typeof eventName !== \"string\") {\n\t\t\tthrow new Error(\"Event name isn't a string.\");\n\t\t\treturn;\n\t\t}\n\t\tvar eventArray = GameEvents[eventName];\n\t\tif (eventArray) {\n\t\t\tGameEvents[eventName] = eventArray.filter((f) => !(func == f));\n\t\t} else {\n\t\t\tthrow new Error(\"Event doesn't exist\");\n\t\t\treturn;\n\t\t}\n\t}\n\t\n\tfunction _game_addEventListener(eventName, func, options = {}) {\n\t\tif (typeof eventName !== \"string\") {\n\t\t\tthrow new Error(\"Event name isn't a string.\");\n\t\t\treturn;\n\t\t}\n\t\tvar safeOptions = options || {};\n\t\tvar eventArray = GameEvents[eventName];\n\t\tif (eventArray) {\n\t\t\tif (safeOptions.once) {\n\t\t\t\tvar func2 = function (...args) {\n\t\t\t\t\tvar r = func(...args);\n\t\t\t\t\t_game_removeEventListener(eventName, func2);\n\t\t\t\t\treturn r;\n\t\t\t\t};\n\t\t\t\teventArray.push(func2);\n\t\t\t} else {\n\t\t\t\teventArray.push(func);\n\t\t\t}\n\t\t} else {\n\t\t\tthrow new Error(\"Event doesn't exist\");\n\t\t\treturn;\n\t\t}\n\t}\n\n\tfunction _callEvent(eventName, ...args) {\n\t\tvar eventArray = GameEvents[eventName];\n\t\tif (!eventArray) {\n\t\t\treturn;\n\t\t}\n\t\teventArray.forEach((f) => f(...args));\n\t}\n\n\tGame.addEventListener = _game_addEventListener;\n\tGame.removeEventListener = _game_removeEventListener;\n\t\n\t//////////////////////////////////////////////////////////////////\n\t\n\tGame.engine = null;\n\tfunction attachEngine(engine) {\n\t\tif (!engine) {\n\t\t\tthrow new Error(\"No GGM3Engine provided.\");\n\t\t\treturn;\n\t\t}\n\t\tif (!engine.__isGGM3Engine__) {\n\t\t\tthrow new Error(\"Engine provided isn't a GGM3Engine.\");\n\t\t\treturn;\n\t\t}\n\t\tGame.engine = engine;\n\t};\n\t\n\t//////////////////////////////////////////////////////////////////\n\t\n\t\n})();");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("(function () {\n\t//////////////////////////////////////////////////////////////////\n\t\n\tconst GameContent = |%GGM3Game%|;\n\tvar Game = window.Game = {};\n\tvar GameEvents = {};\n\t\n\t//////////////////////////////////////////////////////////////////\n\t\n\tGameEvents.progress = [];\n\tGameEvents.loaded = [];\n\tGameEvents.error = [];\n\n\tfunction _game_removeEventListener(eventName, func) {\n\t\tif (typeof eventName !== \"string\") {\n\t\t\tthrow new Error(\"Event name isn't a string.\");\n\t\t\treturn;\n\t\t}\n\t\tvar eventArray = GameEvents[eventName];\n\t\tif (eventArray) {\n\t\t\tGameEvents[eventName] = eventArray.filter((f) => !(func == f));\n\t\t} else {\n\t\t\tthrow new Error(\"Event doesn't exist\");\n\t\t\treturn;\n\t\t}\n\t}\n\t\n\tfunction _game_addEventListener(eventName, func, options = {}) {\n\t\tif (typeof eventName !== \"string\") {\n\t\t\tthrow new Error(\"Event name isn't a string.\");\n\t\t\treturn;\n\t\t}\n\t\tvar safeOptions = options || {};\n\t\tvar eventArray = GameEvents[eventName];\n\t\tif (eventArray) {\n\t\t\tif (safeOptions.once) {\n\t\t\t\tvar wrapper = function (...incomingArgs) {\n\t\t\t\t\tvar result = func(...incomingArgs);\n\t\t\t\t\t_game_removeEventListener(eventName, wrapper);\n\t\t\t\t\treturn result;\n\t\t\t\t};\n\t\t\t\teventArray.push(wrapper);\n\t\t\t} else {\n\t\t\t\teventArray.push(func);\n\t\t\t}\n\t\t} else {\n\t\t\tthrow new Error(\"Event doesn't exist\");\n\t\t\treturn;\n\t\t}\n\t}\n\n\tfunction _callEvent(eventName, ...args) {\n\t\tvar eventArray = GameEvents[eventName];\n\t\tif (!eventArray) {\n\t\t\treturn;\n\t\t}\n\t\teventArray.forEach((f) => f(...args));\n\t}\n\n\tGame.addEventListener = _game_addEventListener;\n\tGame.removeEventListener = _game_removeEventListener;\n\t\n\t//////////////////////////////////////////////////////////////////\n\t\n\tGame.engine = null;\n\tfunction attachEngine(engine) {\n\t\tif (!engine) {\n\t\t\tthrow new Error(\"No GGM3Engine provided.\");\n\t\t\treturn;\n\t\t}\n\t\tif (!engine.__isGGM3Engine__) {\n\t\t\tthrow new Error(\"Engine provided isn't a GGM3Engine.\");\n\t\t\treturn;\n\t\t}\n\t\tGame.engine = engine;\n\t};\n\t\n\t//////////////////////////////////////////////////////////////////\n\n\t//Most of these used from from-to.js\n\n\tfunction _fromEnginePropertyNames(from) {\n\t  engine.propertyVariables = {};\n\t  for (var name of from || []) {\n\t    engine.propertyVariables[name] = true;\n\t  }\n\t}\n\tfunction fromEngineJSON(mainJSON) {\n\t  Object.assign(engine, {\n\t    globalVariables: mainJSON.globalVariables || {},\n\t    broadcastNames: mainJSON.broadcastNames || [],\n\t    frameRate: mainJSON.frameRate || 60,\n\t    gameWidth: mainJSON.gameWidth || engine.DEFAULT_WIDTH,\n\t    gameHeight: mainJSON.gameHeight || engine.DEFAULT_HEIGHT,\n\t  });\n\t  _fromEnginePropertyNames(mainJSON.spriteProperties);\n\t  engine.updateCanvasSize();\n\t}\n\t\n\tfunction fromSpriteJSON(sprite, spriteJson) {\n\t  Object.assign(sprite, {\n\t    x: spriteJson.x,\n\t    y: spriteJson.y,\n\t    angle: spriteJson.angle,\n\t    scaleX: spriteJson.scaleX,\n\t    scaleY: spriteJson.scaleY,\n\t    skewX: spriteJson.skewX || 0,\n\t    skewY: spriteJson.skewY || 0,\n\t    size: spriteJson.size,\n\t\t\t//blocklyXML isn't used in exports since we're using pre-generated code, and also because there is no Blockly library included.\n\t    //blocklyXML: spriteJson.blocklyXML\n\t    //  ? Blockly.Xml.textToDom(spriteJson.blocklyXML)\n\t    //  : null,\n\t    name: spriteJson.name,\n\t    costumeIndex: spriteJson.costumeIndex,\n\t    zIndex: spriteJson.zIndex,\n\t    variables: spriteJson.variables,\n\t    hidden: spriteJson.hidden,\n\t    spriteProperties: spriteJson.properties || {},\n\t  });\n\t}\n\n\tfunction fromCostumeJSON(costume, costumeJson) {\n\t  Object.assign(costume, {\n\t    id: costumeJson.id,\n\t    rotationCenterX: costumeJson.rotationCenterX,\n\t    rotationCenterY: costumeJson.rotationCenterY,\n\t    preferedScale: costumeJson.preferedScale,\n\t    willPreload: costumeJson.willPreload,\n\t    mimeType: costumeJson.mimeType,\n\t  });\n\t}\n\n\tfunction fromSoundJSON(sound, soundJson) {\n\t  Object.assign(sound, {\n\t    id: soundJson.id,\n\t    willPreload: soundJson.willPreload,\n\t    mimeType: soundJson.mimeType,\n\t  });\n\t}\n\n\t//////////////////////////////////////////////////////////////////\n\n\t//Function used to assign the generated sprite \n\tfunction assignSpriteLogic(spr, functions) { //spr is the GGM3 sprite class, not an JSON object.\n\t\tfor (var id of Object.keys(functions)) { //ID: Function\n\t\t\tvar spriteFunction = functions[id];\n\n\t\t\tspr.addFunction();\n\t\t}\n\t}\n\n\t//////////////////////////////////////////////////////////////////\n\n\tfunction _startPreloading() {\n\t\tif (!Game.engine) {\n\t\t\tthrow new Error(\"There is no attached GGM3Engine to load the game into.\");\n\t\t\treturn;\n\t\t}\n\t}\n\t\n\tGame.startPreloading = _startPreloading;\n\n\t//////////////////////////////////////////////////////////////////\n})();");
 
 /***/ }),
 
