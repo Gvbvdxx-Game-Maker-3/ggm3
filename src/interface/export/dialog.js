@@ -141,7 +141,7 @@ function renderExportButtons(additionalButtons = []) {
 			name: "Export",
 			icon: "icons/package.svg",
 			_span_gid: "exportDialogExportButtonSpan",
-			func: () => {
+			action: () => {
 				if (currentCompilerActive) {
 					try{
 						currentCompilerActive.cancel();
@@ -159,9 +159,16 @@ function renderExportButtons(additionalButtons = []) {
 					var buttonSpan = elements.getGPId("exportDialogExportButtonSpan");
 					buttonSpan.textContent = "Export complete!";
 				});
+				exporting.on(ExportEvents.CANCEL_COMPLETE, function (buttons) {
+					renderExportButtons(buttons || []);
+					var buttonSpan = elements.getGPId("exportDialogExportButtonSpan");
+					buttonSpan.textContent = "Export canceled.";
+				});
 			}
 		}
 	];
+
+	buttons = buttons.concat(additionalButtons || []);
 
 	elements.setInnerJSON(exportButtonsContainer, buttons.map((b, i) => {
 		return {
@@ -171,7 +178,7 @@ function renderExportButtons(additionalButtons = []) {
 			eventListeners: [
 				{
 					event: "click",
-					func: b.func || (() => {}),
+					func: b.action || (() => {}),
 				}
 			],
 			children: [

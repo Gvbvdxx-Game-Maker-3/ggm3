@@ -15,7 +15,6 @@ var sMath = require("./smath.js");
 var EventEmitter = require("eventemitter3");
 var CollisionSprite = require("./mask.js");
 var SHADERS = require("./shaders.js");
-var GGM3ExportLoader = require("./export-loader.js");
 
 var created = false;
 
@@ -25,7 +24,13 @@ var created = false;
  * @emits GGM3Engine#RESOLUTION_UPDATED
  */
 class GGM3Engine extends EventEmitter {
-  static GGM3ExportLoader = GGM3ExportLoader;
+	/**
+   * @readonly
+   * @type {Boolean} Returns true if is GGM3Engine. */
+	static get __isGGM3Engine__() {
+		return true;
+	}
+	
   /**
    * @readonly
    * @type {String} Event emitted when a sprite is created. */

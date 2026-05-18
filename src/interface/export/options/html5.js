@@ -48,7 +48,7 @@ class HTML5ExportOption extends EventEmitter {
     this.canceled = false;
     this.generator = new ExportMainGenerator();
     this.generator.useDataURL = this.options.dataURLs;
-    var files = this.generator.generate();
+    var files = await this.generator.generate();
     if (!files) {
       this.canceled = true;
       this.emit(ExportOptionsEvents.CANCEL_COMPLETE);
@@ -56,12 +56,13 @@ class HTML5ExportOption extends EventEmitter {
     }
 
     this.zip = new jszip();
-    for (var filename in Object.keys(files)) {
+    for (var filename of Object.keys(files)) {
+			window.alert(filename);
       var data = files[filename];
       if (data) {
-        this.zip.file(filename, data);
+        await this.zip.file(filename, data);
       } else {
-        this.zip.folder(filename);
+        await this.zip.folder(filename);
       }
       if (this.canceled) {
         this.emit(ExportOptionsEvents.CANCEL_COMPLETE);

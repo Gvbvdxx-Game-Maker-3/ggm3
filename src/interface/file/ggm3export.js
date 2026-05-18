@@ -93,11 +93,11 @@ class ExportMainGenerator extends EventEmitter {
   }
 
   getEngineCode() {
+		var _this = this;
     if (this.engineCode) {
       return Promise.resolve(this.engineCode);
     } else {
       return getEngine().then((code) => {
-        this.engineCode = code;
         return code;
       });
     }
@@ -112,7 +112,7 @@ class ExportMainGenerator extends EventEmitter {
   }
 
   async spriteToJS(sprite) {
-    var baseObject = FromTo.toSpriteJSON(sprite);
+    var baseObject = FromTo.toExportableSpriteJSON(sprite);
 
     var costumeList = [];
     for (var costume of sprite.costumes) {
@@ -165,7 +165,17 @@ class ExportMainGenerator extends EventEmitter {
       exportableFunctions[id] = sprite.getFunctionCode(functionsCode[id]);
     }
 
-    var js = `{sprite:(${JSON.stringify(baseObject)}),costumes:(${JSON.stringify(costumeList)}),sounds:(${JSON.stringify(soundList)}),functions:(${JSON.stringify(exportableFunctions)})}`;
+		var middleCodeStuff = [];
+		for (var id of Object.keys(exportableFunctions)) {
+			var thing = "";
+			thing += JSON.stringify(id);
+			thing += ":";
+			thing += "("+exportableFunctions[id]+")";
+			middleCodeStuff.push(middleCodeStuff);
+		}
+		var exportableFunctionsJS = `{${middleCodeStuff.join(",")}}`;
+
+    var js = `{sprite:(${JSON.stringify(baseObject)}),functions:(${exportableFunctionsJS}`;
 
     this._spriteJS.push(js);
   }
@@ -175,11 +185,11 @@ class ExportMainGenerator extends EventEmitter {
       let index = 0;
       const next = () => {
         if (this.canceled) {
-          resolve(false);
+          resolve(true);
           return;
         }
         if (index >= functions.length) {
-          resolve(true);
+          resolve(false);
           return;
         }
         const func = functions[index];
@@ -202,6 +212,7 @@ class ExportMainGenerator extends EventEmitter {
     this.canceled = false;
 
     var wasCanceled = await this.cancelableAsyncChain([
+			this.generateEngineCode.bind(this),
       this.generateEngineMetadata.bind(this),
       ...(engine.sprites.map((sprite) => this.spriteToJS.bind(this, sprite))),
       this.generateGameCode.bind(this),

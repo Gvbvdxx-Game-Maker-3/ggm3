@@ -99,6 +99,28 @@ function toSpriteJSON(sprite) {
     hidden: sprite.hidden,
   };
 }
+function toExportableSpriteJSON(sprite) {
+  return {
+    x: sprite.x,
+    y: sprite.y,
+    angle: sprite.angle,
+    scaleX: sprite.scaleX,
+    scaleY: sprite.scaleY,
+    skewX: sprite.skewX,
+    skewY: sprite.skewY,
+    size: sprite.size,
+		//Exclude blocklyXML since it isn't needed to make the game work.
+    //blocklyXML: sprite.blocklyXML
+    //  ? Blockly.Xml.domToText(sprite.blocklyXML)
+    //  : null,
+    name: sprite.name,
+    zIndex: sprite.zIndex,
+    costumeIndex: sprite.costumeIndex,
+    variables: getSaveableVariables(sprite.variables),
+    properties: getSaveableVariablesGlobal(sprite.spriteProperties),
+    hidden: sprite.hidden,
+  };
+}
 
 //Costume properties
 
@@ -173,6 +195,7 @@ module.exports = {
 
   fromSpriteJSON,
   toSpriteJSON,
+	toExportableSpriteJSON,
 
   fromCostumeJSON,
   toCostumeJSON,
