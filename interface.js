@@ -10034,6 +10034,9 @@ var { getSpriteFunctionsCode } = __webpack_require__(7802);
 const ENGINE_FILE_URL = "engine.js?v=" + Date.now();
 const ASSET_PATH = "assets/";
 
+const GAME_CODE_BASE__ = __webpack_require__(6175);
+const GAME_CODE_BASE = GAME_CODE_BASE__.default ? GAME_CODE_BASE__.default : GAME_CODE_BASE__;
+
 function getEngine() {
   return fetch(ENGINE_FILE_URL).then((res) => res.text());
 }
@@ -10201,7 +10204,7 @@ class ExportMainGenerator extends EventEmitter {
 		}
 		var exportableFunctionsJS = `{${middleCodeStuff.join(",")}}`;
 
-    var js = `{sprite:(${JSON.stringify(baseObject)}),functions:(${exportableFunctionsJS}`;
+    var js = `{sprite:(${JSON.stringify(baseObject)}),functions:(${exportableFunctionsJS})`;
 
     this._spriteJS.push(js);
   }
@@ -10228,7 +10231,7 @@ class ExportMainGenerator extends EventEmitter {
 
   async generateGameCode() {
     var spritesCodeInArray = this._spriteJS.join(",");
-    var code = `window.GGM3Game = [${spritesCodeInArray}];`;
+    var code = (""+GAME_CODE_BASE).replaceAll("|%GGM3Game%|", spritesCodeInArray);
 
     this.gameCode = await compress(code);
   }
@@ -24889,6 +24892,18 @@ module.exports = JavascriptTranslation;
 
 /***/ }),
 
+/***/ 6175:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("(function () {\n\t//////////////////////////////////////////////////////////////////\n\t\n\tconst GameContent = |%GGM3Game%|;\n\tvar Game = window.Game = {};\n\tvar GameEvents = {};\n\t\n\t//////////////////////////////////////////////////////////////////\n\t\n\tGameEvents.progress = [];\n\tGameEvents.loaded = [];\n\tGameEvents.error = [];\n\n\tfunction _game_removeEventListener(eventName, func) {\n\t\tif (typeof eventName !== \"string\") {\n\t\t\tthrow new Error(\"Event name isn't a string.\");\n\t\t\treturn;\n\t\t}\n\t\tvar eventArray = GameEvents[eventName];\n\t\tif (eventArray) {\n\t\t\tGameEvents[eventName] = eventArray.filter((f) => !(func == f));\n\t\t} else {\n\t\t\tthrow new Error(\"Event doesn't exist\");\n\t\t\treturn;\n\t\t}\n\t}\n\t\n\tfunction _game_addEventListener(eventName, func, options = {}) {\n\t\tif (typeof eventName !== \"string\") {\n\t\t\tthrow new Error(\"Event name isn't a string.\");\n\t\t\treturn;\n\t\t}\n\t\tvar safeOptions = options || {};\n\t\tvar eventArray = GameEvents[eventName];\n\t\tif (eventArray) {\n\t\t\tif (safeOptions.once) {\n\t\t\t\tvar func2 = function (...args) {\n\t\t\t\t\tvar r = func(...args);\n\t\t\t\t\t_game_removeEventListener(eventName, func2);\n\t\t\t\t\treturn r;\n\t\t\t\t};\n\t\t\t\teventArray.push(func2);\n\t\t\t} else {\n\t\t\t\teventArray.push(func);\n\t\t\t}\n\t\t} else {\n\t\t\tthrow new Error(\"Event doesn't exist\");\n\t\t\treturn;\n\t\t}\n\t}\n\n\tfunction _callEvent(eventName, ...args) {\n\t\tvar eventArray = GameEvents[eventName];\n\t\tif (!eventArray) {\n\t\t\treturn;\n\t\t}\n\t\teventArray.forEach((f) => f(...args));\n\t}\n\n\tGame.addEventListener = _game_addEventListener;\n\tGame.removeEventListener = _game_removeEventListener;\n\t\n\t//////////////////////////////////////////////////////////////////\n\t\n\tGame.engine = null;\n\tfunction attachEngine(engine) {\n\t\tif (!engine) {\n\t\t\tthrow new Error(\"No GGM3Engine provided.\");\n\t\t\treturn;\n\t\t}\n\t\tif (!engine.__isGGM3Engine__) {\n\t\t\tthrow new Error(\"Engine provided isn't a GGM3Engine.\");\n\t\t\treturn;\n\t\t}\n\t\tGame.engine = engine;\n\t};\n\t\n\t//////////////////////////////////////////////////////////////////\n\t\n\t\n})();");
+
+/***/ }),
+
 /***/ 6185:
 /***/ ((module) => {
 
@@ -30861,7 +30876,6 @@ class HTML5ExportOption extends EventEmitter {
 
     this.zip = new jszip();
     for (var filename of Object.keys(files)) {
-			window.alert(filename);
       var data = files[filename];
       if (data) {
         await this.zip.file(filename, data);
