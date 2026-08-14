@@ -53,7 +53,7 @@ const modeTabs = [
   }
 ];
 
-var currentMode = tabs[0].id;
+var currentMode = modeTabs[0].id;
 function updateModes() {
   elements.setInnerJSON(
     modeTabsElm,
@@ -77,13 +77,34 @@ function switchMode(id) {
   updateModes();
 }
 
+var spritesLeftPanel = elements.getGPId("spritesLeftPanel");
 var spritesMode = elements.getGPId("spritesMode");
+var spritesTabs = require("./sprites.js");
+
 var libraryMode = elements.getGPId("libraryMode");
+var librariesLeftPanel = elements.getGPId("librariesLeftPanel");
+
 function hideEverything() {
+  spritesLeftPanel.hidden = true;
+  spritesMode.hidden = true;
+  spritesTabs.hideEverything();
   
+  libraryMode.hidden = true;
+  librariesLeftPanel.hidden = true;
+
 }
 function updateModesVisibility() {
-
+    hideEverything();
+    if (currentMode == "MODE_SPRITES") {
+        spritesLeftPanel.hidden = false;
+        spritesMode.hidden = false;
+        spritesTabs.updateTabs();
+    }
+    if (currentMode == "MODE_LIBRARIES") {
+        libraryMode.hidden = false;
+        librariesLeftPanel.hidden = false;
+    }
+    
 }
 
 updateModes();

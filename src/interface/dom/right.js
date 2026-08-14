@@ -28,12 +28,6 @@ module.exports = {
           className: "projectMouseCoordinates",
           gid: "projectMouseCoordinates",
         },
-        {
-          element: "div",
-          className: "selectedSpriteContainer",
-          children: require("./sprite-inputs.js"),
-        },
-
         ...require("./modes.js"),
       ],
     },

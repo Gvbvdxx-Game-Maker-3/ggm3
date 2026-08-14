@@ -27,6 +27,11 @@ module.exports = [
     className: "modeDivContainer",
     hidden: true,
     children: [
+        {
+          element: "div",
+          className: "selectedSpriteContainer",
+          children: require("./sprite-inputs.js"),
+        },
       {
         element: "div",
         className: "spritesContainer",

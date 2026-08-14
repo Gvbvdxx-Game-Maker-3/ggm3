@@ -21,7 +21,7 @@ elements.appendElementsFromJSON(document.body, [
         element: "div",
         className: "panelContainer",
         children: [
-          require("./left.js"), //Left panel
+          ...require("./left-panels.js"), //Left panels (Each one for different mode on the right)
           require("./right.js"), //Right panel
           require("./fullscreen.js"),
         ],

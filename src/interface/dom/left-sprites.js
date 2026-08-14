@@ -1,6 +1,7 @@
 module.exports = {
   element: "div",
   className: "leftPanel",
+  gid: "spritesLeftPanel",
   children: [
     {
       element: "div",

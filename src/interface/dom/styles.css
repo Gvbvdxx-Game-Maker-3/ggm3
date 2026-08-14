@@ -1349,11 +1349,12 @@ body {
   height: fit-content;
   flex-direction: row;
   overflow: auto;
+  gap: 0.5px;
 }
 
 .modeTabContainer {
   width: fit-content;
   height: 50px;
-  position: absolute;
+  position: relative;
   overflow: hidden;
 }
