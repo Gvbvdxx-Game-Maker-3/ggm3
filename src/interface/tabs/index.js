@@ -5,7 +5,7 @@ var AElement = require("../../gp2/aelement.js");
 var modeTabsElm = elements.getGPId("modeTabs");
 
 function createTabElementJSON(label, src, whenClick, isSelected) {
-  return {
+  var elm = {
     element: "div",
     className: "tabButton",
     eventListeners: [
@@ -31,6 +31,11 @@ function createTabElementJSON(label, src, whenClick, isSelected) {
       },
     ],
   };
+  return {
+    element: "div",
+    className: "modeTabContainer",
+    children: [elm]
+  };
 }
 
 const modeTabs = [
@@ -48,3 +53,43 @@ const modeTabs = [
   }
 ];
 
+var currentMode = tabs[0].id;
+function updateModes() {
+  elements.setInnerJSON(
+    modeTabsElm,
+    modeTabs.map((mode) =>
+      createTabElementJSON(
+        mode.label,
+        mode.src,
+        () => switchMode(mode.id),
+        currentMode == mode.id,
+      ),
+    ),
+  );
+  updateModesVisibility();
+}
+
+function switchMode(id) {
+  if (currentMode == id) {
+    return;
+  }
+  currentMode = id;
+  updateModes();
+}
+
+var spritesMode = elements.getGPId("spritesMode");
+var libraryMode = elements.getGPId("libraryMode");
+function hideEverything() {
+  
+}
+function updateModesVisibility() {
+
+}
+
+updateModes();
+
+module.exports = {
+    hideEverything,
+    updateTabs: updateModes,
+    updateModes
+};

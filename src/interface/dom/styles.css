@@ -1351,7 +1351,7 @@ body {
   overflow: auto;
 }
 
-.modeTab {
+.modeTabContainer {
   width: fit-content;
   height: 50px;
   position: absolute;

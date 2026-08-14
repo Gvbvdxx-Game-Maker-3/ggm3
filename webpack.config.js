@@ -25,7 +25,7 @@ module.exports = {
     type: "filesystem",
     allowCollectingMemory: true,
   },
-  devtool: false,
+  devtool: "source-map",
   entry: {
     interface: "./src/interface/index.js",
     engine: "./src/engine/engine-bundle.js",

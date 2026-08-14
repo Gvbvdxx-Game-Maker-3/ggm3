@@ -1,5 +1,4 @@
 var engine = require("./curengine.js");
-var tabs = require("./tabs.js");
 var helpers = {
   //overriden by selectedsprite.js
   loadWorkspaceFromSprite: function (func) {},
