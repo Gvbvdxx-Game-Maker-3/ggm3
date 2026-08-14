@@ -9,7 +9,9 @@ const ENGINE_FILE_URL = "engine.js?v=" + Date.now();
 const ASSET_PATH = "assets/";
 
 const GAME_CODE_BASE__ = require("!!raw-loader!./exported-game-base/game.base.js");
-const GAME_CODE_BASE = GAME_CODE_BASE__.default ? GAME_CODE_BASE__.default : GAME_CODE_BASE__;
+const GAME_CODE_BASE = GAME_CODE_BASE__.default
+  ? GAME_CODE_BASE__.default
+  : GAME_CODE_BASE__;
 
 function getEngine() {
   return fetch(ENGINE_FILE_URL).then((res) => res.text());
@@ -38,17 +40,17 @@ function getFileExtension(mimeType) {
 
 const terserOptions = {
   compress: {
-	  // Set to false to stop variables from being moved out of their original lines,
+    // Set to false to stop variables from being moved out of their original lines,
     // which is usually what triggers the scoping clash in once wrappers
-    hoist_vars: false, 
-      
-    // Prevents functions from being radically collapsed into one-liners 
+    hoist_vars: false,
+
+    // Prevents functions from being radically collapsed into one-liners
     // if it risks altering variable visibility
-    reduce_vars: false 
+    reduce_vars: false,
   },
   mangle: {
-    keep_fnames: true, 
-  }
+    keep_fnames: true,
+  },
 };
 
 async function compress(code) {
@@ -63,7 +65,7 @@ async function compress(code) {
     }
     return result.code;
   } catch (e) {
-		window.alert("Unable to minify: "+e);
+    window.alert("Unable to minify: " + e);
     return code;
   }
 }
@@ -104,7 +106,7 @@ class ExportMainGenerator extends EventEmitter {
   }
 
   getEngineCode() {
-		var _this = this;
+    var _this = this;
     if (this.engineCode) {
       return Promise.resolve(this.engineCode);
     } else {
@@ -176,15 +178,15 @@ class ExportMainGenerator extends EventEmitter {
       exportableFunctions[id] = sprite.getFunctionCode(functionsCode[id]);
     }
 
-		var middleCodeStuff = [];
-		for (var id of Object.keys(exportableFunctions)) {
-			var thing = "";
-			thing += JSON.stringify(id);
-			thing += ":";
-			thing += "("+exportableFunctions[id]+")";
-			middleCodeStuff.push(thing);
-		}
-		var exportableFunctionsJS = `{${middleCodeStuff.join(",")}}`;
+    var middleCodeStuff = [];
+    for (var id of Object.keys(exportableFunctions)) {
+      var thing = "";
+      thing += JSON.stringify(id);
+      thing += ":";
+      thing += "(" + exportableFunctions[id] + ")";
+      middleCodeStuff.push(thing);
+    }
+    var exportableFunctionsJS = `{${middleCodeStuff.join(",")}}`;
 
     var js = `{sprite:(${JSON.stringify(baseObject)}),functions:(${exportableFunctionsJS})}`;
 
@@ -213,9 +215,9 @@ class ExportMainGenerator extends EventEmitter {
 
   async generateGameCode() {
     var spritesCodeInArray = `[${this._spriteJS.join(",")}]`;
-		var engineProperties = JSON.stringify(this.engineMetadata);
-		var allCode = `{sprites:[spritesCodeInArray],engineProps:${engineProperties}}`;
-    var code = (""+GAME_CODE_BASE).replaceAll("|%GGM3Game%|", allCode);
+    var engineProperties = JSON.stringify(this.engineMetadata);
+    var allCode = `{sprites:[spritesCodeInArray],engineProps:${engineProperties}}`;
+    var code = ("" + GAME_CODE_BASE).replaceAll("|%GGM3Game%|", allCode);
 
     this.gameCode = await compress(code);
   }
@@ -225,9 +227,9 @@ class ExportMainGenerator extends EventEmitter {
     this.canceled = false;
 
     var wasCanceled = await this.cancelableAsyncChain([
-			this.generateEngineCode.bind(this),
+      this.generateEngineCode.bind(this),
       this.generateEngineMetadata.bind(this),
-      ...(engine.sprites.map((sprite) => this.spriteToJS.bind(this, sprite))),
+      ...engine.sprites.map((sprite) => this.spriteToJS.bind(this, sprite)),
       this.generateGameCode.bind(this),
     ]);
 

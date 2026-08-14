@@ -1334,3 +1334,26 @@ body {
 	cursor: pointer;
 	background: rgba(255,255,255,0.7);
 }
+
+.modeDivContainer {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.modeTabs {
+  display: flex;
+  width: 100%;
+  min-height: 50px;
+  height: fit-content;
+  flex-direction: row;
+  overflow: auto;
+}
+
+.modeTab {
+  width: fit-content;
+  height: 50px;
+  position: absolute;
+  overflow: hidden;
+}

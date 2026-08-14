@@ -109,7 +109,7 @@ function toExportableSpriteJSON(sprite) {
     skewX: sprite.skewX,
     skewY: sprite.skewY,
     size: sprite.size,
-		//Exclude blocklyXML since it isn't needed to make the game work.
+    //Exclude blocklyXML since it isn't needed to make the game work.
     //blocklyXML: sprite.blocklyXML
     //  ? Blockly.Xml.domToText(sprite.blocklyXML)
     //  : null,
@@ -195,7 +195,7 @@ module.exports = {
 
   fromSpriteJSON,
   toSpriteJSON,
-	toExportableSpriteJSON,
+  toExportableSpriteJSON,
 
   fromCostumeJSON,
   toCostumeJSON,

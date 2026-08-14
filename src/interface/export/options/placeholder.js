@@ -8,18 +8,16 @@ class PlaceholderExportOption extends EventEmitter {
     return {
       icon: "icons/controller.svg",
       name: "Placeholder",
-      description:
-        "Base export option",
+      description: "Base export option",
       options: [
         {
           name: "Checkbox Option",
           id: "optionid",
-          description:
-            "Checkbox Description",
+          description: "Checkbox Description",
           type: "checkbox",
           default: false,
         },
-				{
+        {
           name: "Text Option",
           id: "optionid2",
           description: "Text Description",
@@ -32,8 +30,8 @@ class PlaceholderExportOption extends EventEmitter {
 
   constructor(options) {
     super();
-		this.canceled = false;
-		this.generate();
+    this.canceled = false;
+    this.generate();
   }
 
   cancel() {
@@ -47,8 +45,8 @@ class PlaceholderExportOption extends EventEmitter {
       {
         name: "Finished button",
         action: function () {
-					window.alert("Finished button clicked");
-				},
+          window.alert("Finished button clicked");
+        },
       },
     ]);
   }

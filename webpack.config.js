@@ -13,6 +13,7 @@ module.exports = {
     allowedHosts: "all",
     port: 3000,
     client: {
+      logging: "none",
       overlay: {
         errors: true, // Keep displaying errors
         warnings: false, // Disable displaying warnings

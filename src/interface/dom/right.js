@@ -33,13 +33,8 @@ module.exports = {
           className: "selectedSpriteContainer",
           children: require("./sprite-inputs.js"),
         },
-        {
-          element: "div",
-          className: "spritesContainer",
-          gid: "spritesContainer",
-          children: [],
-        },
-        ...require("./add-sprite-buttons.js"),
+
+        ...require("./modes.js"),
       ],
     },
   ],

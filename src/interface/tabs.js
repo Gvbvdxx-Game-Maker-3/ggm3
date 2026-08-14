@@ -6,6 +6,7 @@ var costumeViewer = require("./costumeviewer.js");
 var costumePivot = require("./costumepivoteditor.js");
 
 var tabArea = elements.getGPId("tabArea");
+var modeTabs = elements.getGPId("modeTabs");
 function createTabElementJSON(label, src, whenClick, isSelected) {
   return {
     element: "div",
@@ -35,6 +36,8 @@ function createTabElementJSON(label, src, whenClick, isSelected) {
   };
 }
 
+
+
 const tabs = [
   {
     label: "Code",
@@ -45,25 +48,25 @@ const tabs = [
   {
     label: "Costumes",
     src: "icons/brush.svg",
-    default: true,
+    default: false,
     id: "COSTUMES",
   },
   {
     label: "Sounds",
     src: "icons/speaker.svg",
-    default: true,
+    default: false,
     id: "SOUNDS",
   },
   {
     label: "Costume pivots",
     src: "icons/pivot.svg",
-    default: true,
+    default: false,
     id: "COSTUME_PIVOT",
   },
   {
     label: "Error Logs",
     src: "icons/logs.svg",
-    default: true,
+    default: false,
     id: "ERROR_LOGS",
   },
 ];

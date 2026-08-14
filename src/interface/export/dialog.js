@@ -68,14 +68,14 @@ var exportDialog = elements.createElementsFromJSON([
                 },
                 onclick: () => {
                   exportDialog.hidden = true;
-									if (currentCompilerActive) {
-										try{
-											currentCompilerActive.cancel();
-										}catch(e){
-											console.warn(`Unable to cancel the game exporter: `,e);
-										}
-										currentCompilerActive = null;
-									}
+                  if (currentCompilerActive) {
+                    try {
+                      currentCompilerActive.cancel();
+                    } catch (e) {
+                      console.warn(`Unable to cancel the game exporter: `, e);
+                    }
+                    currentCompilerActive = null;
+                  }
                 },
               },
               ///////////////////////////////
@@ -88,13 +88,13 @@ var exportDialog = elements.createElementsFromJSON([
             children: [
               {
                 element: "span",
-                textContent: "Types:"
+                textContent: "Types:",
               },
               {
                 element: "div",
                 className: "exportGameTypeSelection",
-                gid: "exportGameTypeSelection"
-              }
+                gid: "exportGameTypeSelection",
+              },
             ],
           },
           ///////////////////////////////
@@ -103,8 +103,8 @@ var exportDialog = elements.createElementsFromJSON([
             className: "exportOptionsContainer",
             gid: "exportOptionsContainer",
           },
-					///////////////////////////////
-					{
+          ///////////////////////////////
+          {
             element: "div",
             className: "exportButtonsContainer",
             gid: "exportButtonsContainer",
@@ -127,159 +127,162 @@ var selectedType = 0;
 var exportOptions = {};
 
 function getExportOptionValues() {
-	return exportOptions;
+  return exportOptions;
 }
 
 function renderExportButtons(additionalButtons = []) {
-	var modes = getExportOptions();
+  var modes = getExportOptions();
   var mode = modes[selectedType];
   if (!mode) {
     return;
   }
-	var buttons = [
-		{
-			name: "Export",
-			icon: "icons/package.svg",
-			_span_gid: "exportDialogExportButtonSpan",
-			action: () => {
-				if (currentCompilerActive) {
-					try{
-						currentCompilerActive.cancel();
-					}catch(e){
-						console.warn(`Unable to cancel the game exporter: `,e);
-					}
-					currentCompilerActive = null;
-				}
-				var buttonSpan = elements.getGPId("exportDialogExportButtonSpan");
-				buttonSpan.textContent = "Exporting...";
-				var exporting = new mode(getExportOptionValues());
-				currentCompilerActive = exporting;
-				exporting.on(ExportEvents.COMPLETE, function (buttons) {
-					renderExportButtons(buttons || []);
-					var buttonSpan = elements.getGPId("exportDialogExportButtonSpan");
-					buttonSpan.textContent = "Export complete!";
-				});
-				exporting.on(ExportEvents.CANCEL_COMPLETE, function (buttons) {
-					renderExportButtons(buttons || []);
-					var buttonSpan = elements.getGPId("exportDialogExportButtonSpan");
-					buttonSpan.textContent = "Export canceled.";
-				});
-			}
-		}
-	];
+  var buttons = [
+    {
+      name: "Export",
+      icon: "icons/package.svg",
+      _span_gid: "exportDialogExportButtonSpan",
+      action: () => {
+        if (currentCompilerActive) {
+          try {
+            currentCompilerActive.cancel();
+          } catch (e) {
+            console.warn(`Unable to cancel the game exporter: `, e);
+          }
+          currentCompilerActive = null;
+        }
+        var buttonSpan = elements.getGPId("exportDialogExportButtonSpan");
+        buttonSpan.textContent = "Exporting...";
+        var exporting = new mode(getExportOptionValues());
+        currentCompilerActive = exporting;
+        exporting.on(ExportEvents.COMPLETE, function (buttons) {
+          renderExportButtons(buttons || []);
+          var buttonSpan = elements.getGPId("exportDialogExportButtonSpan");
+          buttonSpan.textContent = "Export complete!";
+        });
+        exporting.on(ExportEvents.CANCEL_COMPLETE, function (buttons) {
+          renderExportButtons(buttons || []);
+          var buttonSpan = elements.getGPId("exportDialogExportButtonSpan");
+          buttonSpan.textContent = "Export canceled.";
+        });
+      },
+    },
+  ];
 
-	buttons = buttons.concat(additionalButtons || []);
+  buttons = buttons.concat(additionalButtons || []);
 
-	elements.setInnerJSON(exportButtonsContainer, buttons.map((b, i) => {
-		return {
-			element: "div",
-			className: "exportButton",
-			...(b._gid ? {gid: b._gid} : {}),
-			eventListeners: [
-				{
-					event: "click",
-					func: b.action || (() => {}),
-				}
-			],
-			children: [
-				{
-					element: "img",
-					src: b.icon || "favicon.png",
-				},
-				{
-					element: "span",
-					textContent: b.name || "Button",
-					...(b._span_gid ? {gid: b._span_gid} : {}),
-				}
-			]
-		}
-	}));
+  elements.setInnerJSON(
+    exportButtonsContainer,
+    buttons.map((b, i) => {
+      return {
+        element: "div",
+        className: "exportButton",
+        ...(b._gid ? { gid: b._gid } : {}),
+        eventListeners: [
+          {
+            event: "click",
+            func: b.action || (() => {}),
+          },
+        ],
+        children: [
+          {
+            element: "img",
+            src: b.icon || "favicon.png",
+          },
+          {
+            element: "span",
+            textContent: b.name || "Button",
+            ...(b._span_gid ? { gid: b._span_gid } : {}),
+          },
+        ],
+      };
+    }),
+  );
 }
 
 function generateActualExportOption(option, index) {
-	var content = [];
+  var content = [];
 
-	if (option.type == "checkbox") {
-		exportOptions[option.id] = !!option.default;
-		content = [
-			{
-				element: "div",
-				style: {
-					display: "flex"
-				},
-				children: [
-					{
-						element: "span",
-						textContent: "Enabled:"
-					},
-					{
-						element: "input",
-						checked: !!option.default,
-						type: "checkbox",
-						GPWhenCreated: function (elm) {
-							elm.oninput = () => {
-								exportOptions[option.id] = elm.checked;
-							};
-						}
-					}
-				]
-			}
-		];
-	}
+  if (option.type == "checkbox") {
+    exportOptions[option.id] = !!option.default;
+    content = [
+      {
+        element: "div",
+        style: {
+          display: "flex",
+        },
+        children: [
+          {
+            element: "span",
+            textContent: "Enabled:",
+          },
+          {
+            element: "input",
+            checked: !!option.default,
+            type: "checkbox",
+            GPWhenCreated: function (elm) {
+              elm.oninput = () => {
+                exportOptions[option.id] = elm.checked;
+              };
+            },
+          },
+        ],
+      },
+    ];
+  }
 
-	if (option.type == "text") {
-		exportOptions[option.id] = option.default || "";
-		content = [
-			{
-				element: "div",
-				style: {
-					display: "flex"
-				},
-				children: [
-					{
-						element: "input",
-						className: "textInput",
-						value: option.default || "",
-						type: "text",
-						GPWhenCreated: function (elm) {
-							elm.oninput = () => {
-								exportOptions[option.id] = elm.value;
-							};
-						}
-					}
-				]
-			}
-		];
-	}
-	
+  if (option.type == "text") {
+    exportOptions[option.id] = option.default || "";
+    content = [
+      {
+        element: "div",
+        style: {
+          display: "flex",
+        },
+        children: [
+          {
+            element: "input",
+            className: "textInput",
+            value: option.default || "",
+            type: "text",
+            GPWhenCreated: function (elm) {
+              elm.oninput = () => {
+                exportOptions[option.id] = elm.value;
+              };
+            },
+          },
+        ],
+      },
+    ];
+  }
+
   return {
-    element:"div",
+    element: "div",
     className: "exportOptionsOptionContainer",
     children: [
       {
         element: "span",
         textContent: option.name,
-        className: "exportOptionsOptionTitle"
+        className: "exportOptionsOptionTitle",
       },
-			{
-				element: "br"
-			},
-			...content,
-			{
-				element: "br"
-			},
-			{
+      {
+        element: "br",
+      },
+      ...content,
+      {
+        element: "br",
+      },
+      {
         element: "span",
         textContent: option.description,
-        className: "exportOptionsOptionDescription"
+        className: "exportOptionsOptionDescription",
       },
-    ]
+    ],
   };
 }
 
 function renderActualExportOptions() {
-	exportOptions = {};
-  elements.setInnerJSON(exportOptionsContainer,[]);
+  exportOptions = {};
+  elements.setInnerJSON(exportOptionsContainer, []);
   var modes = getExportOptions();
   var mode = modes[selectedType];
   if (!mode) {
@@ -291,9 +294,11 @@ function renderActualExportOptions() {
       element: "div",
       className: "exportOptionsDescription",
       textContent: info.description,
-    }
+    },
   ];
-  exportOpts = exportOpts.concat(info.options.map((o,i) => generateActualExportOption(o,i)));
+  exportOpts = exportOpts.concat(
+    info.options.map((o, i) => generateActualExportOption(o, i)),
+  );
   elements.setInnerJSON(exportOptionsContainer, exportOpts);
 }
 
@@ -305,19 +310,19 @@ function generateExportOption(option, index) {
     title: information.description,
     GPWhenCreated: function (elm) {
       if (index == selectedType) {
-        elm.setAttribute("selected","");
+        elm.setAttribute("selected", "");
       }
     },
-		eventListeners: [
-			{
-				event: "click",
-				func: function () {
-					selectedType = index;
-					renderExportOptions();
-				  renderActualExportOptions();
-				}
-			}
-		],
+    eventListeners: [
+      {
+        event: "click",
+        func: function () {
+          selectedType = index;
+          renderExportOptions();
+          renderActualExportOptions();
+        },
+      },
+    ],
     children: [
       {
         element: "img",
@@ -335,7 +340,7 @@ function generateExportOption(option, index) {
 
 function renderExportOptions() {
   var exportOptions = getExportOptions();
-  var jsonArray = exportOptions.map((o,i) => generateExportOption(o,i));
+  var jsonArray = exportOptions.map((o, i) => generateExportOption(o, i));
   elements.setInnerJSON(exportGameTypeSelection, jsonArray);
 }
 
@@ -345,7 +350,7 @@ function showExportDialog() {
   exportDialog.hidden = false;
   renderExportOptions();
   renderActualExportOptions();
-	renderExportButtons();
+  renderExportButtons();
 }
 
 ////////////////////////////////////////////////////////////////////////////
