@@ -4,39 +4,10 @@ var blocks = require("../blocks.js");
 var selectedSprite = require("../selectedsprite.js");
 var costumeViewer = require("../costumeviewer.js");
 var costumePivot = require("../costumepivoteditor.js");
+var {createTabElementJSON} = require("./util.js");
 
 var tabArea = elements.getGPId("tabArea");
 var modeTabs = elements.getGPId("modeTabs");
-function createTabElementJSON(label, src, whenClick, isSelected) {
-  return {
-    element: "div",
-    className: "tabButton",
-    eventListeners: [
-      {
-        event: "click",
-        func: whenClick,
-      },
-    ],
-    GPWhenCreated: function (elm) {
-      if (isSelected) {
-        elm.setAttribute("selected", "");
-      }
-    },
-    children: [
-      {
-        element: "img",
-        className: "tabIcon",
-        src,
-      },
-      {
-        element: "span",
-        textContent: label,
-      },
-    ],
-  };
-}
-
-
 
 const tabs = [
   {
