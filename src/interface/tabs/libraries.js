@@ -45,7 +45,7 @@ function switchTab(id) {
   updateTabs();
 }
 
-
+var library = require("../library");
 
 function hideEverything() {
   //Hide every window here.
