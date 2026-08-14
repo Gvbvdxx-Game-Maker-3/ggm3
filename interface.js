@@ -4307,6 +4307,44 @@ __webpack_require__(5334);
 
 /***/ }),
 
+/***/ 1129:
+/***/ ((module) => {
+
+function createTabElementJSON(label, src, whenClick, isSelected) {
+  return {
+    element: "div",
+    className: "tabButton",
+    eventListeners: [
+      {
+        event: "click",
+        func: whenClick,
+      },
+    ],
+    GPWhenCreated: function (elm) {
+      if (isSelected) {
+        elm.setAttribute("selected", "");
+      }
+    },
+    children: [
+      {
+        element: "img",
+        className: "tabIcon",
+        src,
+      },
+      {
+        element: "span",
+        textContent: label,
+      },
+    ],
+  };
+}
+
+module.exports = {
+    createTabElementJSON
+};
+
+/***/ }),
+
 /***/ 1246:
 /***/ ((module) => {
 
@@ -29406,39 +29444,10 @@ var blocks = __webpack_require__(9436);
 var selectedSprite = __webpack_require__(3010);
 var costumeViewer = __webpack_require__(5604);
 var costumePivot = __webpack_require__(1077);
+var {createTabElementJSON} = __webpack_require__(1129);
 
 var tabArea = elements.getGPId("tabArea");
 var modeTabs = elements.getGPId("modeTabs");
-function createTabElementJSON(label, src, whenClick, isSelected) {
-  return {
-    element: "div",
-    className: "tabButton",
-    eventListeners: [
-      {
-        event: "click",
-        func: whenClick,
-      },
-    ],
-    GPWhenCreated: function (elm) {
-      if (isSelected) {
-        elm.setAttribute("selected", "");
-      }
-    },
-    children: [
-      {
-        element: "img",
-        className: "tabIcon",
-        src,
-      },
-      {
-        element: "span",
-        textContent: label,
-      },
-    ],
-  };
-}
-
-
 
 const tabs = [
   {
