@@ -607,9 +607,7 @@ module.exports = {
       element: "div",
       className: "tabWindow",
       gid: "tabLibrariesWindow",
-      children: [
-        
-      ],
+      children: [],
     },
   ],
 };
@@ -3976,10 +3974,10 @@ module.exports = { loadBlockMenus, helpers };
 /***/ 1020:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-
 module.exports = {
-    ...__webpack_require__(5618)
+  ...__webpack_require__(5618),
 };
+
 
 /***/ }),
 
@@ -9496,8 +9494,8 @@ module.exports = Thread;
 /***/ 3618:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-
 module.exports = __webpack_require__(7809);
+
 
 /***/ }),
 
@@ -9547,10 +9545,8 @@ module.exports = AElement;
 /***/ 3960:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = [
-    __webpack_require__(9965),
-    __webpack_require__(196),
-];
+module.exports = [__webpack_require__(9965), __webpack_require__(196)];
+
 
 /***/ }),
 
@@ -23612,151 +23608,142 @@ process.umask = function() { return 0; };
 /***/ 5618:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var elements = __webpack_require__(7255);
 var AElement = __webpack_require__(3759);
+var engine = __webpack_require__(9940);
+var { makeSortable } = __webpack_require__(2088);
 
-var selectedLibrary = (/* unused pure expression or super */ null && (-1));
+var selectedLibrary = -1;
 
-function createLibrarySelection(library,index) {
-    return {
+function createLibrarySelection(library, index) {
+  return {
+    element: "div",
+    className: "spriteContainer",
+    style: {
+      cursor: "grab",
+    },
+    GPWhenCreated: function (elm) {
+      if (selectedLibrary == index) {
+        elm.setAttribute("selected", "");
+      }
+    },
+    children: [
+      {
         element: "div",
-        className: "spriteContainer",
+        className: "spriteTextContainer",
+        textContent: library.name,
         style: {
-            cursor: "grab",
+          marginRight: "5px",
         },
-        GPWhenCreated: function (elm) {
-            if (selectedLibrary == index) {
-              elm.setAttribute("selected", "");
-            }
+      },
+      {
+        element: "button",
+        className: "greyButtonStyle",
+        textContent: "Select",
+        style: {
+          fontSize: "15px",
+          marginRight: "5px",
         },
-        children: [
-            {
-              element: "div",
-              className: "spriteTextContainer",
-              textContent: library.name,
-              style: {
-                marginRight: "5px",
-              },
-            },
-            {
-              element: "button",
-              className: "greyButtonStyle",
-              textContent: "Select",
-              style: {
-                fontSize: "15px",
-                marginRight: "5px",
-              },
-              eventListeners: [
-                {
-                  event: "click",
-                  func: function (elm) {
-                    
-                  },
-                },
-              ],
-            },
-            {
-              element: "button",
-              className: "greyButtonStyle",
-              textContent: "Delete",
-              style: {
-                fontSize: "15px",
-                marginRight: "5px",
-              },
-              eventListeners: [
-                {
-                  event: "click",
-                  func: function (elm) {
-                    
-                  },
-                },
-              ],
-            },
-            {
-              element: "button",
-              className: "greyButtonStyle",
-              textContent: "Duplicate",
-              style: {
-                fontSize: "15px",
-                marginRight: "5px",
-              },
-              eventListeners: [
-                {
-                  event: "click",
-                  func: function (elm) {
-                    
-                  },
-                },
-              ],
-            },
-
-            {
-              element: "button",
-              className: "greyButtonStyle",
-              textContent: "Export",
-              style: {
-                fontSize: "15px",
-                marginRight: "5px",
-              },
-              eventListeners: [
-                {
-                  event: "click",
-                  func: async function (elm) {
-
-                  },
-                },
-              ],
-            },
-          ],
-        }
+        eventListeners: [
+          {
+            event: "click",
+            func: function (elm) {},
+          },
+        ],
+      },
+    ],
+  };
 }
+
+var libraryContainer = elements.getGPId("libraryContainer");
 
 function reloadLibrariesSelection() {
+  elements.removeAllChildren(libraryContainer);
+  if (engine.libraries.length < 1) {
+    elements.appendElementsFromJSON(libraryContainer, [
+      {
+        element: "span",
+        textContent: "No libraries. Press the + button to create one.",
+        style: {
+          color: "white",
+          fontWeight: "bold",
+          textAlign: "center",
+          padding: "4px 4px",
+        },
+      },
+    ]);
+  } else {
+    elements.appendElementsFromJSON(
+      libraryContainer,
+      engine.libraries.map(createLibrarySelection),
+    );
+  }
 }
+/*
+makeSortable(
+    libraryContainer,
+    ".spriteContainer",
+    (oldIndex, newIndex) => {
+      if (oldIndex === newIndex) return;
+      var spriteToMove = deps.engine.sprites[oldIndex];
+      deps.engine.sprites.splice(oldIndex, 1);
+      deps.engine.sprites.splice(newIndex, 0, spriteToMove);
+      if (selectedLibrary) {
+        state.currentSelectedSpriteIndex = deps.engine.sprites.indexOf(
+          state.currentSelectedSprite,
+        );
+      }
+
+    },
+  );*/
 
 var addLibraryButton = elements.getGPId("addLibraryButton");
 var libraryAddMenu = elements.getGPId("libraryAddMenu");
 
 function closeAddMenu() {
-    libraryAddMenu.hidden = true;
-    libraryAddMenu.innerHTML = "";
+  libraryAddMenu.hidden = true;
+  libraryAddMenu.innerHTML = "";
 }
 
 function showAddMenu() {
-    libraryAddMenu.hidden = false;
-    var elms = [
-      {
-        element: "div",
-        className: "spriteAddMenuItem",
-        eventListeners: [
-          {
-            event: "click",
-            func: function () {
-              closeAddMenu();
-            },
+  libraryAddMenu.hidden = false;
+  var elms = [
+    {
+      element: "div",
+      className: "spriteAddMenuItem",
+      eventListeners: [
+        {
+          event: "click",
+          func: function () {
+            closeAddMenu();
+            var library = engine.createEmptyLibrary();
+            reloadLibrariesSelection();
           },
-        ],
-        children: [
-          {
-            element: "img",
-            src: "/icons/add.svg",
-          },
-          "New",
-        ],
-      },
-    ];
-    elements.setInnerJSON(libraryAddMenu, elms);
+        },
+      ],
+      children: [
+        {
+          element: "img",
+          src: "/icons/add.svg",
+        },
+        "New",
+      ],
+    },
+  ];
+  elements.setInnerJSON(libraryAddMenu, elms);
 }
 
 addLibraryButton.addEventListener("click", (event) => {
-    showAddMenu();
-    event.stopPropagation();
+  showAddMenu();
+  event.stopPropagation();
 });
 
 document.addEventListener("click", function (evt) {
   closeAddMenu();
 });
+
+reloadLibrariesSelection();
+
 
 /***/ }),
 
@@ -25391,7 +25378,7 @@ module.exports = [
   {
     element: "div",
     className: "modeTabs",
-    gid: "modeTabs"
+    gid: "modeTabs",
   },
 
   {
@@ -25416,11 +25403,11 @@ module.exports = [
     className: "modeDivContainer",
     hidden: true,
     children: [
-        {
-          element: "div",
-          className: "selectedSpriteContainer",
-          children: __webpack_require__(7714),
-        },
+      {
+        element: "div",
+        className: "selectedSpriteContainer",
+        children: __webpack_require__(7714),
+      },
       {
         element: "div",
         className: "spritesContainer",
@@ -27114,8 +27101,9 @@ function createTabElementJSON(label, src, whenClick, isSelected) {
 }
 
 module.exports = {
-    createTabElementJSON
+  createTabElementJSON,
 };
+
 
 /***/ }),
 
@@ -28838,7 +28826,6 @@ module.exports = {
 /***/ 7809:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var elements = __webpack_require__(7255);
 var AElement = __webpack_require__(3759);
 
@@ -28874,12 +28861,12 @@ function createTabElementJSON(label, src, whenClick, isSelected) {
   return {
     element: "div",
     className: "modeTabContainer",
-    children: [elm]
+    children: [elm],
   };
 }
 
 const modeTabs = [
-    {
+  {
     label: "Sprites",
     src: "icons/code.svg",
     default: true,
@@ -28890,7 +28877,7 @@ const modeTabs = [
     src: "icons/brush.svg",
     default: false,
     id: "MODE_LIBRARIES",
-  }
+  },
 ];
 
 var currentMode = modeTabs[0].id;
@@ -28929,34 +28916,33 @@ function hideEverything() {
   spritesLeftPanel.hidden = true;
   spritesMode.hidden = true;
   spritesTabs.hideEverything();
-  
+
   libraryMode.hidden = true;
   librariesLeftPanel.hidden = true;
   libraryTabs.hideEverything();
-
 }
 function updateModesVisibility() {
-    hideEverything();
-    if (currentMode == "MODE_SPRITES") {
-        spritesLeftPanel.hidden = false;
-        spritesMode.hidden = false;
-        spritesTabs.updateTabs();
-    }
-    if (currentMode == "MODE_LIBRARIES") {
-        libraryMode.hidden = false;
-        librariesLeftPanel.hidden = false;
-        libraryTabs.updateTabs();
-    }
-    
+  hideEverything();
+  if (currentMode == "MODE_SPRITES") {
+    spritesLeftPanel.hidden = false;
+    spritesMode.hidden = false;
+    spritesTabs.updateTabs();
+  }
+  if (currentMode == "MODE_LIBRARIES") {
+    libraryMode.hidden = false;
+    librariesLeftPanel.hidden = false;
+    libraryTabs.updateTabs();
+  }
 }
 
 updateModes();
 
 module.exports = {
-    hideEverything,
-    updateTabs: updateModes,
-    updateModes
+  hideEverything,
+  updateTabs: updateModes,
+  updateModes,
 };
+
 
 /***/ }),
 
@@ -29622,7 +29608,7 @@ var blocks = __webpack_require__(9436);
 var selectedSprite = __webpack_require__(3010);
 var costumeViewer = __webpack_require__(5604);
 var costumePivot = __webpack_require__(1077);
-var {createTabElementJSON} = __webpack_require__(7344);
+var { createTabElementJSON } = __webpack_require__(7344);
 
 var tabArea = elements.getGPId("tabArea");
 var modeTabs = elements.getGPId("modeTabs");
@@ -29742,6 +29728,7 @@ function switchTab(id) {
 updateTabs();
 
 module.exports = { updateTabs, updateVisibility, hideEverything, switchTab };
+
 
 /***/ }),
 
@@ -30378,10 +30365,9 @@ module.exports = {
 /***/ 9146:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var elements = __webpack_require__(7255);
 var AElement = __webpack_require__(3759);
-var {createTabElementJSON} = __webpack_require__(7344);
+var { createTabElementJSON } = __webpack_require__(7344);
 
 var panel = elements.getGPId("librariesLeftPanel");
 var tabArea = elements.getGPId("tabLibrariesArea");
@@ -30431,21 +30417,20 @@ function hideEverything() {
   //Hide every window here.
 }
 function updateTabVisibility() {
-    hideEverything();
-    if (currentTab == "GRAPHICS") {
-        
-    }
-    if (currentTab == "SOUNDS") {
-        
-    }
+  hideEverything();
+  if (currentTab == "GRAPHICS") {
+  }
+  if (currentTab == "SOUNDS") {
+  }
 }
 
 updateTabs();
 
 module.exports = {
-    hideEverything,
-    updateTabs
+  hideEverything,
+  updateTabs,
 };
+
 
 /***/ }),
 
