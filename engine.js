@@ -1785,6 +1785,22 @@ exports.update = update;
 
 /***/ }),
 
+/***/ 692:
+/***/ ((module) => {
+
+class LibraryCostume {
+  constructor(library, source) {
+    this.library = library;
+    this.engine = library.engine;
+    this.source = source;
+  }
+}
+
+module.exports = LibraryCostume;
+
+
+/***/ }),
+
 /***/ 1065:
 /***/ ((module) => {
 
@@ -3570,6 +3586,25 @@ class Thread {
 }
 
 module.exports = Thread;
+
+
+/***/ }),
+
+/***/ 3728:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var LibraryCostume = __webpack_require__(692);
+
+class Library {
+  constructor(engine) {
+    this.engine = engine;
+    this.id = this.name = "Library";
+    this.costumes = [];
+    this.sounds = [];
+  }
+}
+
+module.exports = Library;
 
 
 /***/ }),
@@ -15237,6 +15272,7 @@ var sMath = __webpack_require__(4912);
 var EventEmitter = __webpack_require__(228);
 var CollisionSprite = __webpack_require__(4447);
 var SHADERS = __webpack_require__(425);
+var Library = __webpack_require__(3728);
 
 var created = false;
 
@@ -15246,13 +15282,13 @@ var created = false;
  * @emits GGM3Engine#RESOLUTION_UPDATED
  */
 class GGM3Engine extends EventEmitter {
-	/**
+  /**
    * @readonly
    * @type {Boolean} Returns true if is GGM3Engine. */
-	static get __isGGM3Engine__() {
-		return true;
-	}
-	
+  static get __isGGM3Engine__() {
+    return true;
+  }
+
   /**
    * @readonly
    * @type {String} Event emitted when a sprite is created. */
@@ -15313,6 +15349,7 @@ class GGM3Engine extends EventEmitter {
     this._editDragging = null;
     this.drawables = [];
     this.sprites = [];
+    this.libraries = [];
     this.frameRate = this.DEFAULT_FRAMERATE;
     this._frameRate = this.frameRate;
     this._iTime = 0;
@@ -15656,6 +15693,37 @@ class GGM3Engine extends EventEmitter {
     var spr = this.__createEmptySpriteNoEvent();
     this.emit(this.SPRITE_CREATED, spr);
     return spr;
+  }
+
+  /**
+   * Checks libraries and makes sure there are no duplicate names.
+   */
+
+  checkLibraryDuplicateNames() {
+    var names = [];
+    for (var library of this.libraries) {
+      if (names.indexOf(library.name) > -1) {
+        var number = 1;
+        while (names.indexOf(library.name) > -1) {
+          library.name = library.name + " (" + number + ")";
+          number += 1;
+        }
+        names.push(library.name);
+      } else {
+        names.push(library.name);
+      }
+    }
+  }
+
+  /**
+   * Creates an empty library and returns it.
+   * @returns Library
+   */
+  createEmptyLibrary() {
+    var library = new Library(this);
+    this.libraries.push(library);
+    this.checkLibraryDuplicateNames();
+    return library;
   }
 
   /**
