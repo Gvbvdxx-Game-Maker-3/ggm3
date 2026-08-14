@@ -3177,10 +3177,11 @@ module.exports = {
 /***/ ((module) => {
 
 class LibraryCostume {
-  constructor(library, source) {
+  constructor(library, src) {
     this.library = library;
     this.engine = library.engine;
-    this.source = source;
+    this.src = src;
+    this.id = Date.now() + "_" + Math.round(Math.random() * 9999999);
   }
 }
 
@@ -3969,6 +3970,16 @@ function loadBlockMenus(spr) {
 
 module.exports = { loadBlockMenus, helpers };
 
+
+/***/ }),
+
+/***/ 1020:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+module.exports = {
+    ...__webpack_require__(5618)
+};
 
 /***/ }),
 
@@ -5216,7 +5227,7 @@ module.exports = JavascriptTranslation;
 var CollisionSprite = __webpack_require__(4447);
 
 class Costume {
-  constructor(engine, dataURL, name, resolveFunction) {
+  constructor(engine, dataURL, name, resolveFunction, libraryCostume) {
     this.engine = engine;
     this.dataURL = dataURL;
     this.drawable = null;
@@ -5227,12 +5238,20 @@ class Costume {
     this.mimeType = null;
     this.canvas = document.createElement("canvas");
     this.id = Date.now() + "_" + Math.round(Math.random() * 9999999);
+    this.libCostume = libraryCostume;
 
     this.name = name || "Costume";
     this.resolveFunction = resolveFunction;
     this.mask = null;
     this.loaded = false;
     this.willPreload = true;
+  }
+
+  removeLibraryCostume() {
+    if (this.libCostume) {
+      this.src = this.libCostume;
+      this.libCostume = null;
+    }
   }
 
   renderImageAtScale() {
@@ -5321,7 +5340,11 @@ class Costume {
         whenfinished();
       }
     };
-    img.src = this.dataURL;
+    if (this.libCostume) {
+      img.src = this.libCostume.src;
+    } else {
+      img.src = this.dataURL;
+    }
   }
 
   deloadCostume() {
@@ -9486,7 +9509,8 @@ var LibraryCostume = __webpack_require__(692);
 class Library {
   constructor(engine) {
     this.engine = engine;
-    this.id = this.name = "Library";
+    this.name = "Library";
+    this.id = Date.now() + "_" + Math.round(Math.random() * 9999999);
     this.costumes = [];
     this.sounds = [];
   }
@@ -23585,6 +23609,157 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ 5618:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var elements = __webpack_require__(7255);
+var AElement = __webpack_require__(3759);
+
+var selectedLibrary = (/* unused pure expression or super */ null && (-1));
+
+function createLibrarySelection(library,index) {
+    return {
+        element: "div",
+        className: "spriteContainer",
+        style: {
+            cursor: "grab",
+        },
+        GPWhenCreated: function (elm) {
+            if (selectedLibrary == index) {
+              elm.setAttribute("selected", "");
+            }
+        },
+        children: [
+            {
+              element: "div",
+              className: "spriteTextContainer",
+              textContent: library.name,
+              style: {
+                marginRight: "5px",
+              },
+            },
+            {
+              element: "button",
+              className: "greyButtonStyle",
+              textContent: "Select",
+              style: {
+                fontSize: "15px",
+                marginRight: "5px",
+              },
+              eventListeners: [
+                {
+                  event: "click",
+                  func: function (elm) {
+                    
+                  },
+                },
+              ],
+            },
+            {
+              element: "button",
+              className: "greyButtonStyle",
+              textContent: "Delete",
+              style: {
+                fontSize: "15px",
+                marginRight: "5px",
+              },
+              eventListeners: [
+                {
+                  event: "click",
+                  func: function (elm) {
+                    
+                  },
+                },
+              ],
+            },
+            {
+              element: "button",
+              className: "greyButtonStyle",
+              textContent: "Duplicate",
+              style: {
+                fontSize: "15px",
+                marginRight: "5px",
+              },
+              eventListeners: [
+                {
+                  event: "click",
+                  func: function (elm) {
+                    
+                  },
+                },
+              ],
+            },
+
+            {
+              element: "button",
+              className: "greyButtonStyle",
+              textContent: "Export",
+              style: {
+                fontSize: "15px",
+                marginRight: "5px",
+              },
+              eventListeners: [
+                {
+                  event: "click",
+                  func: async function (elm) {
+
+                  },
+                },
+              ],
+            },
+          ],
+        }
+}
+
+function reloadLibrariesSelection() {
+}
+
+var addLibraryButton = elements.getGPId("addLibraryButton");
+var libraryAddMenu = elements.getGPId("libraryAddMenu");
+
+function closeAddMenu() {
+    libraryAddMenu.hidden = true;
+    libraryAddMenu.innerHTML = "";
+}
+
+function showAddMenu() {
+    libraryAddMenu.hidden = false;
+    var elms = [
+      {
+        element: "div",
+        className: "spriteAddMenuItem",
+        eventListeners: [
+          {
+            event: "click",
+            func: function () {
+              closeAddMenu();
+            },
+          },
+        ],
+        children: [
+          {
+            element: "img",
+            src: "/icons/add.svg",
+          },
+          "New",
+        ],
+      },
+    ];
+    elements.setInnerJSON(libraryAddMenu, elms);
+}
+
+addLibraryButton.addEventListener("click", (event) => {
+    showAddMenu();
+    event.stopPropagation();
+});
+
+document.addEventListener("click", function (evt) {
+  closeAddMenu();
+});
+
+/***/ }),
+
 /***/ 5651:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -30250,7 +30425,7 @@ function switchTab(id) {
   updateTabs();
 }
 
-
+var library = __webpack_require__(1020);
 
 function hideEverything() {
   //Hide every window here.
