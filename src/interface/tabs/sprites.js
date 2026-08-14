@@ -4,7 +4,7 @@ var blocks = require("../blocks.js");
 var selectedSprite = require("../selectedsprite.js");
 var costumeViewer = require("../costumeviewer.js");
 var costumePivot = require("../costumepivoteditor.js");
-var {createTabElementJSON} = require("./util.js");
+var {createTabElementJSON} = require("./_util.js");
 
 var tabArea = elements.getGPId("tabArea");
 var modeTabs = elements.getGPId("modeTabs");

@@ -83,6 +83,7 @@ var spritesTabs = require("./sprites.js");
 
 var libraryMode = elements.getGPId("libraryMode");
 var librariesLeftPanel = elements.getGPId("librariesLeftPanel");
+var libraryTabs = require("./libraries.js");
 
 function hideEverything() {
   spritesLeftPanel.hidden = true;
@@ -91,6 +92,7 @@ function hideEverything() {
   
   libraryMode.hidden = true;
   librariesLeftPanel.hidden = true;
+  libraryTabs.hideEverything();
 
 }
 function updateModesVisibility() {
@@ -103,6 +105,7 @@ function updateModesVisibility() {
     if (currentMode == "MODE_LIBRARIES") {
         libraryMode.hidden = false;
         librariesLeftPanel.hidden = false;
+        libraryTabs.updateTabs();
     }
     
 }

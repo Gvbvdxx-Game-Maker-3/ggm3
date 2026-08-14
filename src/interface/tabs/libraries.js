@@ -3,15 +3,21 @@ var elements = require("../../gp2/elements.js");
 var AElement = require("../../gp2/aelement.js");
 var {createTabElementJSON} = require("./_util.js");
 
-var panel = elements.getGPId("templateLeftPanel");
-var tabArea = elements.getGPId("tabTemplateArea");
+var panel = elements.getGPId("librariesLeftPanel");
+var tabArea = elements.getGPId("tabLibrariesArea");
 
 const tabs = [
   {
-    label: "Tab",
-    src: "icons/code.svg",
+    label: "Graphics",
+    src: "icons/brush.svg",
     default: true,
-    id: "TAB",
+    id: "GRAPHICS",
+  },
+  {
+    label: "Sounds & Music",
+    src: "icons/speaker.svg",
+    default: true,
+    id: "SOUNDS",
   },
 ];
 
@@ -39,15 +45,19 @@ function switchTab(id) {
   updateTabs();
 }
 
+
+
 function hideEverything() {
   //Hide every window here.
 }
 function updateTabVisibility() {
     hideEverything();
-    if (currentTab == "TAB") {
-        //Show everything you need for this specific tab.
+    if (currentTab == "GRAPHICS") {
+        
     }
-    
+    if (currentTab == "SOUNDS") {
+        
+    }
 }
 
 updateTabs();
