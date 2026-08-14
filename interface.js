@@ -4307,44 +4307,6 @@ __webpack_require__(5334);
 
 /***/ }),
 
-/***/ 1129:
-/***/ ((module) => {
-
-function createTabElementJSON(label, src, whenClick, isSelected) {
-  return {
-    element: "div",
-    className: "tabButton",
-    eventListeners: [
-      {
-        event: "click",
-        func: whenClick,
-      },
-    ],
-    GPWhenCreated: function (elm) {
-      if (isSelected) {
-        elm.setAttribute("selected", "");
-      }
-    },
-    children: [
-      {
-        element: "img",
-        className: "tabIcon",
-        src,
-      },
-      {
-        element: "span",
-        textContent: label,
-      },
-    ],
-  };
-}
-
-module.exports = {
-    createTabElementJSON
-};
-
-/***/ }),
-
 /***/ 1246:
 /***/ ((module) => {
 
@@ -26944,6 +26906,44 @@ module.exports = BlockFlasher;
 
 /***/ }),
 
+/***/ 7344:
+/***/ ((module) => {
+
+function createTabElementJSON(label, src, whenClick, isSelected) {
+  return {
+    element: "div",
+    className: "tabButton",
+    eventListeners: [
+      {
+        event: "click",
+        func: whenClick,
+      },
+    ],
+    GPWhenCreated: function (elm) {
+      if (isSelected) {
+        elm.setAttribute("selected", "");
+      }
+    },
+    children: [
+      {
+        element: "img",
+        className: "tabIcon",
+        src,
+      },
+      {
+        element: "span",
+        textContent: label,
+      },
+    ],
+  };
+}
+
+module.exports = {
+    createTabElementJSON
+};
+
+/***/ }),
+
 /***/ 7367:
 /***/ (() => {
 
@@ -28748,6 +28748,7 @@ var spritesTabs = __webpack_require__(8343);
 
 var libraryMode = elements.getGPId("libraryMode");
 var librariesLeftPanel = elements.getGPId("librariesLeftPanel");
+var libraryTabs = __webpack_require__(9146);
 
 function hideEverything() {
   spritesLeftPanel.hidden = true;
@@ -28756,6 +28757,7 @@ function hideEverything() {
   
   libraryMode.hidden = true;
   librariesLeftPanel.hidden = true;
+  libraryTabs.hideEverything();
 
 }
 function updateModesVisibility() {
@@ -28768,6 +28770,7 @@ function updateModesVisibility() {
     if (currentMode == "MODE_LIBRARIES") {
         libraryMode.hidden = false;
         librariesLeftPanel.hidden = false;
+        libraryTabs.updateTabs();
     }
     
 }
@@ -29444,7 +29447,7 @@ var blocks = __webpack_require__(9436);
 var selectedSprite = __webpack_require__(3010);
 var costumeViewer = __webpack_require__(5604);
 var costumePivot = __webpack_require__(1077);
-var {createTabElementJSON} = __webpack_require__(1129);
+var {createTabElementJSON} = __webpack_require__(7344);
 
 var tabArea = elements.getGPId("tabArea");
 var modeTabs = elements.getGPId("modeTabs");
@@ -30194,6 +30197,80 @@ module.exports = {
   showExportDialog,
 };
 
+
+/***/ }),
+
+/***/ 9146:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var elements = __webpack_require__(7255);
+var AElement = __webpack_require__(3759);
+var {createTabElementJSON} = __webpack_require__(7344);
+
+var panel = elements.getGPId("librariesLeftPanel");
+var tabArea = elements.getGPId("tabLibrariesArea");
+
+const tabs = [
+  {
+    label: "Graphics",
+    src: "icons/brush.svg",
+    default: true,
+    id: "GRAPHICS",
+  },
+  {
+    label: "Sounds & Music",
+    src: "icons/speaker.svg",
+    default: true,
+    id: "SOUNDS",
+  },
+];
+
+var currentTab = tabs[0].id;
+function updateTabs() {
+  elements.setInnerJSON(
+    tabArea,
+    tabs.map((tab) =>
+      createTabElementJSON(
+        tab.label,
+        tab.src,
+        () => switchTab(tab.id),
+        currentTab == tab.id,
+      ),
+    ),
+  );
+  updateTabVisibility();
+}
+
+function switchTab(id) {
+  if (currentTab == id) {
+    return;
+  }
+  currentTab = id;
+  updateTabs();
+}
+
+
+
+function hideEverything() {
+  //Hide every window here.
+}
+function updateTabVisibility() {
+    hideEverything();
+    if (currentTab == "GRAPHICS") {
+        
+    }
+    if (currentTab == "SOUNDS") {
+        
+    }
+}
+
+updateTabs();
+
+module.exports = {
+    hideEverything,
+    updateTabs
+};
 
 /***/ }),
 
