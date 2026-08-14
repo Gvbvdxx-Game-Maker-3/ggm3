@@ -15718,8 +15718,9 @@ class GGM3Engine extends EventEmitter {
     for (var library of this.libraries) {
       if (names.indexOf(library.name) > -1) {
         var number = 1;
+        var ogName = library.name;
         while (names.indexOf(library.name) > -1) {
-          library.name = library.name + " (" + number + ")";
+          library.name = ogName + " (" + number + ")";
           number += 1;
         }
         names.push(library.name);

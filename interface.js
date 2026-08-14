@@ -23606,7 +23606,7 @@ process.umask = function() { return 0; };
 /***/ }),
 
 /***/ 5618:
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 var elements = __webpack_require__(7255);
 var AElement = __webpack_require__(3759);
@@ -23632,6 +23632,7 @@ function createLibrarySelection(library, index) {
         element: "div",
         className: "spriteTextContainer",
         textContent: library.name,
+        contenteditable: "plaintext-only",
         style: {
           marginRight: "5px",
         },
@@ -23647,7 +23648,10 @@ function createLibrarySelection(library, index) {
         eventListeners: [
           {
             event: "click",
-            func: function (elm) {},
+            func: function (elm) {
+              selectedLibrary = index;
+              reloadLibrariesSelection();
+            },
           },
         ],
       },
@@ -23679,23 +23683,24 @@ function reloadLibrariesSelection() {
     );
   }
 }
-/*
+
 makeSortable(
     libraryContainer,
     ".spriteContainer",
     (oldIndex, newIndex) => {
+
       if (oldIndex === newIndex) return;
-      var spriteToMove = deps.engine.sprites[oldIndex];
-      deps.engine.sprites.splice(oldIndex, 1);
-      deps.engine.sprites.splice(newIndex, 0, spriteToMove);
-      if (selectedLibrary) {
-        state.currentSelectedSpriteIndex = deps.engine.sprites.indexOf(
-          state.currentSelectedSprite,
-        );
+
+      var libraryToMove = engine.libraries[oldIndex];
+      engine.libraries.splice(oldIndex, 1);
+      engine.libraries.splice(newIndex, 0, libraryToMove);
+      if (oldIndex == selectedLibrary) {
+        selectedLibrary = newIndex;
+        reloadLibrariesSelection();
       }
 
     },
-  );*/
+  );
 
 var addLibraryButton = elements.getGPId("addLibraryButton");
 var libraryAddMenu = elements.getGPId("libraryAddMenu");
@@ -23717,6 +23722,7 @@ function showAddMenu() {
           func: function () {
             closeAddMenu();
             var library = engine.createEmptyLibrary();
+            selectedLibrary = engine.libraries.length - 1;
             reloadLibrariesSelection();
           },
         },
@@ -23744,6 +23750,10 @@ document.addEventListener("click", function (evt) {
 
 reloadLibrariesSelection();
 
+
+module.exports = {
+  reloadLibrariesSelection,
+};
 
 /***/ }),
 
@@ -27847,8 +27857,9 @@ class GGM3Engine extends EventEmitter {
     for (var library of this.libraries) {
       if (names.indexOf(library.name) > -1) {
         var number = 1;
+        var ogName = library.name;
         while (names.indexOf(library.name) > -1) {
-          library.name = library.name + " (" + number + ")";
+          library.name = ogName + " (" + number + ")";
           number += 1;
         }
         names.push(library.name);
