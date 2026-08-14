@@ -12,9 +12,7 @@ module.exports = {
       element: "div",
       className: "tabWindow",
       gid: "tabLibrariesWindow",
-      children: [
-        
-      ],
+      children: [],
     },
   ],
 };

@@ -1,4 +1,3 @@
-
 var elements = require("../../gp2/elements.js");
 var AElement = require("../../gp2/aelement.js");
 
@@ -34,12 +33,12 @@ function createTabElementJSON(label, src, whenClick, isSelected) {
   return {
     element: "div",
     className: "modeTabContainer",
-    children: [elm]
+    children: [elm],
   };
 }
 
 const modeTabs = [
-    {
+  {
     label: "Sprites",
     src: "icons/code.svg",
     default: true,
@@ -50,7 +49,7 @@ const modeTabs = [
     src: "icons/brush.svg",
     default: false,
     id: "MODE_LIBRARIES",
-  }
+  },
 ];
 
 var currentMode = modeTabs[0].id;
@@ -89,31 +88,29 @@ function hideEverything() {
   spritesLeftPanel.hidden = true;
   spritesMode.hidden = true;
   spritesTabs.hideEverything();
-  
+
   libraryMode.hidden = true;
   librariesLeftPanel.hidden = true;
   libraryTabs.hideEverything();
-
 }
 function updateModesVisibility() {
-    hideEverything();
-    if (currentMode == "MODE_SPRITES") {
-        spritesLeftPanel.hidden = false;
-        spritesMode.hidden = false;
-        spritesTabs.updateTabs();
-    }
-    if (currentMode == "MODE_LIBRARIES") {
-        libraryMode.hidden = false;
-        librariesLeftPanel.hidden = false;
-        libraryTabs.updateTabs();
-    }
-    
+  hideEverything();
+  if (currentMode == "MODE_SPRITES") {
+    spritesLeftPanel.hidden = false;
+    spritesMode.hidden = false;
+    spritesTabs.updateTabs();
+  }
+  if (currentMode == "MODE_LIBRARIES") {
+    libraryMode.hidden = false;
+    librariesLeftPanel.hidden = false;
+    libraryTabs.updateTabs();
+  }
 }
 
 updateModes();
 
 module.exports = {
-    hideEverything,
-    updateTabs: updateModes,
-    updateModes
+  hideEverything,
+  updateTabs: updateModes,
+  updateModes,
 };

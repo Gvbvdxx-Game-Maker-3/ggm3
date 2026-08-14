@@ -1,4 +1,1 @@
-module.exports = [
-    require("./left-sprites.js"),
-    require("./left-libraries"),
-];
+module.exports = [require("./left-sprites.js"), require("./left-libraries")];

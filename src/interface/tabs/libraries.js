@@ -1,7 +1,6 @@
-
 var elements = require("../../gp2/elements.js");
 var AElement = require("../../gp2/aelement.js");
-var {createTabElementJSON} = require("./_util.js");
+var { createTabElementJSON } = require("./_util.js");
 
 var panel = elements.getGPId("librariesLeftPanel");
 var tabArea = elements.getGPId("tabLibrariesArea");
@@ -51,18 +50,16 @@ function hideEverything() {
   //Hide every window here.
 }
 function updateTabVisibility() {
-    hideEverything();
-    if (currentTab == "GRAPHICS") {
-        
-    }
-    if (currentTab == "SOUNDS") {
-        
-    }
+  hideEverything();
+  if (currentTab == "GRAPHICS") {
+  }
+  if (currentTab == "SOUNDS") {
+  }
 }
 
 updateTabs();
 
 module.exports = {
-    hideEverything,
-    updateTabs
+  hideEverything,
+  updateTabs,
 };

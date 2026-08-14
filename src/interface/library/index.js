@@ -1,4 +1,3 @@
-
 module.exports = {
-    ...require("./selection.js")
+  ...require("./selection.js"),
 };

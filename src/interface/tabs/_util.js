@@ -28,5 +28,5 @@ function createTabElementJSON(label, src, whenClick, isSelected) {
 }
 
 module.exports = {
-    createTabElementJSON
+  createTabElementJSON,
 };
