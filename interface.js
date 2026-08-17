@@ -23695,7 +23695,6 @@ var elements = __webpack_require__(7255);
 var AElement = __webpack_require__(3759);
 var engine = __webpack_require__(9940);
 var { makeSortable } = __webpack_require__(2088);
-const library = __webpack_require__(1020);
 var libraryNameInput = elements.getGPId("libraryNameInput");
 var selectedSprite = __webpack_require__(3010);
 
@@ -23710,6 +23709,19 @@ function setCurrentLibrary(index) {
   reloadLibrariesSelection();
   var library = engine.libraries[selectedLibrary];
   libraryNameInput.value = library.name;
+}
+
+function createLibraryHeader() {
+  return {
+    element: "div",
+    className: "libraryHeader",
+    children: [
+      {
+        element: "h2",
+        textContent: "Libraries",
+      },
+    ],
+  };
 }
 
 function createLibrarySelection(library, index) {
