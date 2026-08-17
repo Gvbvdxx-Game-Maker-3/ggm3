@@ -103,7 +103,7 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
             children: [
               {
                 element: "img",
-                src: costume.dataURL,
+                src: costume.getSrc(),
                 style: {
                   width: "70px",
                   height: "70px",
@@ -135,8 +135,8 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
         tempImg.remove();
       }
       tempImg = document.createElement("img");
-      tempImg.src = costume.dataURL;
-      pivotEditorImage.src = costume.dataURL;
+      tempImg.src = costume.getSrc();
+      pivotEditorImage.src = costume.getSrc();
       var zoomScale = 1;
       function updateSize() {
         zoomScale = pivotEditorZoomInput.value / 100;

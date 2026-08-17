@@ -1,6 +1,7 @@
 var elements = require("../../gp2/elements.js");
 var AElement = require("../../gp2/aelement.js");
 var engine = require("../curengine.js");
+var GUIEvents = require("../event.js");
 
 var libraryCostumesHeaderContainer = elements.getGPId(
   "libraryCostumesHeaderContainer",
@@ -146,6 +147,7 @@ function reloadCostumes() {
                         costume.src = src;
                         engine.reloadSpriteCostumesFromLibraryCostume(costume);
                         reloadCostumes();
+                        GUIEvents.emit(GUIEvents.LIBRARY_COSTUME_UPDATED, costume);
                       };
                       reader.readAsDataURL(input.files[0]);
                     } else {

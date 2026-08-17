@@ -76,6 +76,12 @@ function setCurrentSprite(index, forced, dontSave) {
   soundViewer.reloadSounds(state.currentSelectedSprite, loadSounds);
 }
 
+var GUIEvents = require("./event.js");
+
+GUIEvents.on(GUIEvents.LIBRARY_COSTUME_UPDATED, () => {
+  loadCostumes();
+});
+
 function loadCostumes() {
   costumeViewer.reloadCostumes(state.currentSelectedSprite, loadCostumes);
 }
