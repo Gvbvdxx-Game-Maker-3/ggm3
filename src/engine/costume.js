@@ -12,6 +12,7 @@ class Costume {
     this.preferedScale = 1;
     this.currentScale = 1;
     this.mimeType = null;
+    this.linkID = linkID;
     this.canvas = document.createElement("canvas");
     this.id = idcount+"_"+ Date.now() + "_" + Math.round(Math.random() * 9999999);
     idcount += 1;
@@ -122,6 +123,15 @@ class Costume {
       this.dataURL = "";
     } else {
       img.src = this.dataURL;
+    }
+  }
+
+  getSrc() {
+    if (this.linkID) {
+      var libCostume = this.engine.findLibraryCostume(this.linkID);
+      return libCostume.src;
+    } else {
+      return this.dataURL;
     }
   }
 

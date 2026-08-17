@@ -126,12 +126,12 @@ class GGM3Engine extends EventEmitter {
   }
 
   /**
-   * Reloads all sprite costumes if they're loaded.
+   * Reloads all sprite costumes with the library costume ID.
    */
-  reloadAllSpriteCostumes() {
+  reloadSpriteCostumesFromLibraryCostume(libcostume) {
     for (var sprite of this.sprites) {
       for (var costume of sprite.costumes) {
-        if (costume.loaded) {
+        if (costume.linkID == libcostume.id) {
           costume.deloadCostume();
           costume.loadCostume();
         }
@@ -144,7 +144,7 @@ class GGM3Engine extends EventEmitter {
    */
   findLibraryCostume(id) {
     for (var library of this.libraries) {
-      for (var costume of library.costume) {
+      for (var costume of library.costumes) {
         if (costume.id == id) {
           return costume;
         }

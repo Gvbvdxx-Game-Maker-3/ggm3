@@ -30,7 +30,7 @@ function createLibraryHeader() {
     var reader = new FileReader();
     reader.onload = function () {
       var src = reader.result;
-      currentLibrary.addCostume(src);
+      currentLibrary.addCostume(src, "Costume", blob.mimeType);
       reloadCostumes();
     };
     reader.readAsDataURL(blob);
@@ -138,9 +138,21 @@ function reloadCostumes() {
                 event: "click",
                 func: function () {
                   var library = costume.library;
-                  library.removeCostume(costume);
-                  reloadCostumes();
-                  selectedSprite.markProjectDirty();
+                  fileInputWithCallback((input) => {
+                    if (input.files[0]) {
+                      var reader = new FileReader();
+                      reader.onload = function () {
+                        var src = reader.result;
+                        costume.src = src;
+                        engine.reloadSpriteCostumesFromLibraryCostume(costume);
+                        reloadCostumes();
+                      };
+                      reader.readAsDataURL(input.files[0]);
+                    } else {
+                      input.value = "";
+                      input.remove();
+                    }
+                  }, false);
                 },
               },
             ],

@@ -95,6 +95,16 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
           func: function () {
             library.doLinkDialog({
               type: "costume"
+            }).then(async (result) => {
+              if (!result) {
+                return;
+              }
+              var costume = await spr.addCostume(result.object);
+              costume.mimeType = result.mimeType;
+              costume.name = result.name;
+              spr.ensureUniqueCostumeNames();
+              reloadCostumes(spr);
+              deps.markAsDirty();
             });
           }
         }
@@ -124,13 +134,19 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
           children: [
             {
               element: "img",
-              src: costume.dataURL,
+              src: costume.getSrc(),
               className: "costumeLibraryImg",
               style: {
                 width: "70px",
                 height: "70px",
                 objectFit: "contain",
               },
+            },
+            {
+              element: "img",
+              hidden: !costume.linkID, //Only show if this is linked to a library.
+              className: "libraryLinkIcon",
+              src: "icons/library.svg"
             },
             {
               element: "input",

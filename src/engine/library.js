@@ -29,9 +29,9 @@ class Library {
     this.costumes = this.costumes.filter((c) => c.id !== costume.id);
   }
 
-  addCostume(src, name, _id) {
+  addCostume(src, name, mimeType, _id) {
     var id = _id ? _id : LibraryIDs.getUniqueID();
-    var costume = new LibraryCostume(this, src, name || "Costume", id);
+    var costume = new LibraryCostume(this, src, name || "Costume", mimeType || "image/png", id);
     this.costumes.push(costume);
     this.checkUniqueNames();
   }

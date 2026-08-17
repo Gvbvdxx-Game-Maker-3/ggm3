@@ -857,19 +857,21 @@ class Sprite {
 
   /**
    * Function used to add a costume to the sprite.
-   * @param {String} dataURL The URL of the costume image, can be a data URL or a normal URL.
+   * @param {String} source The URL or library costume for the costume image.
    * @param {String} name The name of the costume.
    * @returns {Promise<Costume>} A promise that resolves to the added costume.
    */
-  addCostume(dataURL, name) {
+  addCostume(source, name) {
     if (this.isClone) {
       throw new Error("Clones can't create their own costumes.");
     }
     var _this = this;
+    var isFromLibrary = typeof source == "object";
+    
     return new Promise(function (resolve, reject) {
       var costume = new Costume(
         _this.engine,
-        dataURL,
+        isFromLibrary ? null : source,
         name ? name : "Costume " + (_this.costumes.length + 1),
         function (success) {
           if (success) {
@@ -878,6 +880,7 @@ class Sprite {
             reject("");
           }
         },
+        isFromLibrary ? source.id : undefined,
       );
       costume.loadCostume();
       _this.costumes.push(costume);

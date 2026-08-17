@@ -46,6 +46,7 @@ function doLinkDialog(_options) {
     };
     var libraryTabsContainer = null;
     var libraryDialogList = null;
+    var libraryDialogButtons = null;
     var dialogContainer = elements.createElementsFromJSON([
         {
             element: "div",
@@ -72,6 +73,11 @@ function doLinkDialog(_options) {
                             element: "div",
                             className: "libraryDialogList",
                             GPWhenCreated: (e) => libraryDialogList = e,
+                        },
+                        {
+                            element: "div",
+                            className: "libraryDialogButtons",
+                            GPWhenCreated: (e) => libraryDialogButtons = e,
                         }
                     ]
                 }
@@ -83,6 +89,7 @@ function doLinkDialog(_options) {
 
     var selectedLibrary = 0;
     var selectedOption = -1;
+    var selectedOptionObject = null;
 
     function updateTabs() {
         elements.setInnerJSON(
@@ -134,6 +141,7 @@ function doLinkDialog(_options) {
                             event: "click",
                             func: function () {
                                 selectedOption = opt.id;
+                                selectedOptionObject = opt;
                                 displayList();
                             }
                         }
@@ -151,7 +159,9 @@ function doLinkDialog(_options) {
                             )
                             //Sound
                             : (
-                                {}
+                                {
+                                    element: "div",
+                                }
                             )
                         ),
                         {
@@ -172,6 +182,50 @@ function doLinkDialog(_options) {
 
     selectLibrary(selectedLibrary);
 
+    function cancel() {
+        resolve();
+        dialogContainer.remove();
+    }
+
+    function ok() {
+        if (!selectedOptionObject) {
+            resolve();
+            dialogContainer.remove();
+            return;
+        }
+
+        resolve({
+            id: selectedOption,
+            object: selectedOptionObject,
+            name: selectedOptionObject.name,
+        });
+        dialogContainer.remove();
+    }
+
+    elements.appendElementsFromJSON(libraryDialogButtons, [
+        {
+            element: "button",
+            className: "greyButtonStyle",
+            textContent: "OK",
+            eventListeners: [
+                {
+                    event: "click",
+                    func: ok
+                }
+            ]
+        },
+        {
+            element: "button",
+            className: "greyButtonStyle",
+            textContent: "Cancel",
+            eventListeners: [
+                {
+                    event: "click",
+                    func: cancel
+                }
+            ]
+        }
+    ]);
 
     return promise;
 }
