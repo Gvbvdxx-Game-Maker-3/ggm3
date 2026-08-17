@@ -7598,7 +7598,7 @@ var { addAppMenu } = __webpack_require__(9366);
 var loadingScreenContainer = elements.getGPId("loadingScreenContainer");
 var loadingScreenContent = elements.getGPId("loadingScreenContent");
 var selectedSprite = __webpack_require__(3010);
-var { setCurrentLibrary } = __webpack_require__(1020);
+var library = __webpack_require__(1020);
 var defaultProject = __webpack_require__(5808);
 
 var newFileMenus = [];
@@ -7618,7 +7618,7 @@ async function newProject() {
   loadingScreenContainer.hidden = false;
   await defaultProject.loadDefaultProject();
   selectedSprite.setCurrentSprite(0, true, true);
-  setCurrentLibrary(0);
+  library.projectLoadHandler();
   loadingScreenContainer.hidden = true;
 }
 
@@ -7652,7 +7652,7 @@ function loadProjectFile(file) {
       );
     }
     selectedSprite.setCurrentSprite(0, true, true);
-    setCurrentLibrary(0);
+    library.projectLoadHandler();
     loadingScreenContainer.hidden = true;
   };
   reader.readAsArrayBuffer(file);
@@ -23639,6 +23639,7 @@ var elements = __webpack_require__(7255);
 var AElement = __webpack_require__(3759);
 var engine = __webpack_require__(9940);
 var { makeSortable } = __webpack_require__(2088);
+const library = __webpack_require__(1020);
 var libraryNameInput = elements.getGPId("libraryNameInput");
 
 var selectedLibrary = -1;
@@ -23687,7 +23688,9 @@ function createLibrarySelection(library, index) {
           {
             event: "click",
             func: function (elm) {
-              setCurrentLibrary(index);
+              if (selectedLibrary !== index) {
+                setCurrentLibrary(index);
+              }
             },
           },
         ],
@@ -23802,9 +23805,17 @@ libraryNameInput.addEventListener("change", function () {
 
 reloadLibrariesSelection();
 
+function projectLoadHandler() {
+  if (engine.libraries.length == 0) {
+    engine.createEmptyLibrary(); //So things don't break when there is no libraries.
+  }
+  setCurrentLibrary(0);
+}
+
 module.exports = {
   reloadLibrariesSelection,
   setCurrentLibrary,
+  projectLoadHandler
 };
 
 
