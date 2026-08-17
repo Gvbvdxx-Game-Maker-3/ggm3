@@ -1789,12 +1789,13 @@ exports.update = update;
 /***/ ((module) => {
 
 class LibraryCostume {
-  constructor(library, src, name, id) {
+  constructor(library, src, name, mimeType, id) {
     this.library = library;
     this.engine = library.engine;
     this.src = src;
     this.id = id;
     this.name = name;
+    this.mimeType = mimeType;
   }
 }
 
@@ -1919,6 +1920,7 @@ class Costume {
     this.preferedScale = 1;
     this.currentScale = 1;
     this.mimeType = null;
+    this.linkID = linkID;
     this.canvas = document.createElement("canvas");
     this.id = idcount+"_"+ Date.now() + "_" + Math.round(Math.random() * 9999999);
     idcount += 1;
@@ -2029,6 +2031,15 @@ class Costume {
       this.dataURL = "";
     } else {
       img.src = this.dataURL;
+    }
+  }
+
+  getSrc() {
+    if (this.linkID) {
+      var libCostume = this.engine.findLibraryCostume(this.linkID);
+      return libCostume.src;
+    } else {
+      return this.dataURL;
     }
   }
 
@@ -2967,19 +2978,21 @@ class Sprite {
 
   /**
    * Function used to add a costume to the sprite.
-   * @param {String} dataURL The URL of the costume image, can be a data URL or a normal URL.
+   * @param {String} source The URL or library costume for the costume image.
    * @param {String} name The name of the costume.
    * @returns {Promise<Costume>} A promise that resolves to the added costume.
    */
-  addCostume(dataURL, name) {
+  addCostume(source, name) {
     if (this.isClone) {
       throw new Error("Clones can't create their own costumes.");
     }
     var _this = this;
+    var isFromLibrary = typeof source == "object";
+    
     return new Promise(function (resolve, reject) {
       var costume = new Costume(
         _this.engine,
-        dataURL,
+        isFromLibrary ? null : source,
         name ? name : "Costume " + (_this.costumes.length + 1),
         function (success) {
           if (success) {
@@ -2988,6 +3001,7 @@ class Sprite {
             reject("");
           }
         },
+        isFromLibrary ? source.id : undefined,
       );
       costume.loadCostume();
       _this.costumes.push(costume);
@@ -3645,9 +3659,9 @@ class Library {
     this.costumes = this.costumes.filter((c) => c.id !== costume.id);
   }
 
-  addCostume(src, name, _id) {
+  addCostume(src, name, mimeType, _id) {
     var id = _id ? _id : LibraryIDs.getUniqueID();
-    var costume = new LibraryCostume(this, src, name || "Costume", id);
+    var costume = new LibraryCostume(this, src, name || "Costume", mimeType || "image/png", id);
     this.costumes.push(costume);
     this.checkUniqueNames();
   }
@@ -15474,12 +15488,12 @@ class GGM3Engine extends EventEmitter {
   }
 
   /**
-   * Reloads all sprite costumes if they're loaded.
+   * Reloads all sprite costumes with the library costume ID.
    */
-  reloadAllSpriteCostumes() {
+  reloadSpriteCostumesFromLibraryCostume(libcostume) {
     for (var sprite of this.sprites) {
       for (var costume of sprite.costumes) {
-        if (costume.loaded) {
+        if (costume.linkID == libcostume.id) {
           costume.deloadCostume();
           costume.loadCostume();
         }
@@ -15492,7 +15506,7 @@ class GGM3Engine extends EventEmitter {
    */
   findLibraryCostume(id) {
     for (var library of this.libraries) {
-      for (var costume of library.costume) {
+      for (var costume of library.costumes) {
         if (costume.id == id) {
           return costume;
         }
