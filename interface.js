@@ -4222,7 +4222,7 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
             children: [
               {
                 element: "img",
-                src: costume.dataURL,
+                src: costume.getSrc(),
                 style: {
                   width: "70px",
                   height: "70px",
@@ -4254,8 +4254,8 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
         tempImg.remove();
       }
       tempImg = document.createElement("img");
-      tempImg.src = costume.dataURL;
-      pivotEditorImage.src = costume.dataURL;
+      tempImg.src = costume.getSrc();
+      pivotEditorImage.src = costume.getSrc();
       var zoomScale = 1;
       function updateSize() {
         zoomScale = pivotEditorZoomInput.value / 100;
@@ -8157,6 +8157,12 @@ function setCurrentSprite(index, forced, dontSave) {
   soundViewer.reloadSounds(state.currentSelectedSprite, loadSounds);
 }
 
+var GUIEvents = __webpack_require__(8320);
+
+GUIEvents.on(GUIEvents.LIBRARY_COSTUME_UPDATED, () => {
+  loadCostumes();
+});
+
 function loadCostumes() {
   costumeViewer.reloadCostumes(state.currentSelectedSprite, loadCostumes);
 }
@@ -8423,6 +8429,7 @@ createBlockContextMenu(
 var elements = __webpack_require__(7255);
 var AElement = __webpack_require__(3759);
 var engine = __webpack_require__(9940);
+var GUIEvents = __webpack_require__(8320);
 
 var libraryCostumesHeaderContainer = elements.getGPId(
   "libraryCostumesHeaderContainer",
@@ -8568,6 +8575,7 @@ function reloadCostumes() {
                         costume.src = src;
                         engine.reloadSpriteCostumesFromLibraryCostume(costume);
                         reloadCostumes();
+                        GUIEvents.emit(GUIEvents.LIBRARY_COSTUME_UPDATED, costume);
                       };
                       reader.readAsDataURL(input.files[0]);
                     } else {
@@ -30394,6 +30402,21 @@ class LibraryIDs {
 }
 
 module.exports = LibraryIDs;
+
+
+/***/ }),
+
+/***/ 8320:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var EventEmitter = __webpack_require__(228);
+
+class GUIEventTypes extends EventEmitter {
+    LIBRARY_COSTUME_UPDATED = "LIBRARY_COSTUME_UPDATED";
+}
+
+module.exports = new GUIEventTypes();
 
 
 /***/ }),
