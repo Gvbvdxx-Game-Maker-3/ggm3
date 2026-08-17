@@ -410,10 +410,10 @@ class GGM3Engine extends EventEmitter {
   }
 
   /**
-    * Deletes a library from the game.
-    * @param {Library} library The library to delete.
-    * @returns {void}
-  */
+   * Deletes a library from the game.
+   * @param {Library} library The library to delete.
+   * @returns {void}
+   */
   deleteLibrary(library) {
     if (!library.id) {
       return;
@@ -568,7 +568,7 @@ class GGM3Engine extends EventEmitter {
 
     function loop() {
       const now = performance.now();
-      
+
       const frameDuration = 1000 / _this.frameRate;
       let delta = now - previous;
 
@@ -584,10 +584,10 @@ class GGM3Engine extends EventEmitter {
         _this.render(delta, frameTimestamps.length);
       }
 
-      setTimeout(loop,1);
+      setTimeout(loop, 1);
     }
 
-    setTimeout(loop,1);
+    setTimeout(loop, 1);
   }
 
   /**
@@ -744,7 +744,7 @@ class GGM3Engine extends EventEmitter {
    * @param {Number} elapsed The time elapsed since the last frame.
    * @returns {void}
    */
-  render(elapsed,estimatedFramerate) {
+  render(elapsed, estimatedFramerate) {
     var { canvas, gl } = this;
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(1, 1, 1, 0); // Use 0,0,0,0 to respect canvas style background

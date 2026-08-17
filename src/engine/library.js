@@ -9,9 +9,7 @@ class Library {
     this.sounds = [];
   }
 
-  dispose() {
-    
-  }
+  dispose() {}
 }
 
 module.exports = Library;

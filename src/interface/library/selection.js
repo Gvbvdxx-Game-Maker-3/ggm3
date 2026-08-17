@@ -82,23 +82,17 @@ function reloadLibrariesSelection() {
   }
 }
 
-makeSortable(
-    libraryContainer,
-    ".spriteContainer",
-    (oldIndex, newIndex) => {
+makeSortable(libraryContainer, ".spriteContainer", (oldIndex, newIndex) => {
+  if (oldIndex === newIndex) return;
 
-      if (oldIndex === newIndex) return;
-
-      var libraryToMove = engine.libraries[oldIndex];
-      engine.libraries.splice(oldIndex, 1);
-      engine.libraries.splice(newIndex, 0, libraryToMove);
-      if (oldIndex == selectedLibrary) {
-        selectedLibrary = newIndex;
-        reloadLibrariesSelection();
-      }
-
-    },
-  );
+  var libraryToMove = engine.libraries[oldIndex];
+  engine.libraries.splice(oldIndex, 1);
+  engine.libraries.splice(newIndex, 0, libraryToMove);
+  if (oldIndex == selectedLibrary) {
+    selectedLibrary = newIndex;
+    reloadLibrariesSelection();
+  }
+});
 
 var addLibraryButton = elements.getGPId("addLibraryButton");
 var libraryAddMenu = elements.getGPId("libraryAddMenu");
@@ -148,8 +142,7 @@ document.addEventListener("click", function (evt) {
 
 reloadLibrariesSelection();
 
-
 module.exports = {
   reloadLibrariesSelection,
-  setCurrentLibrary
+  setCurrentLibrary,
 };

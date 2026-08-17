@@ -363,7 +363,6 @@ selectedSprite.deps.importSprite = async function (arrayBuffer) {
   selectedSprite.updateSpritesContainer();
 };
 
-
 module.exports = {
   loadProjectFile,
 };
