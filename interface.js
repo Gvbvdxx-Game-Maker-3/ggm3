@@ -8159,7 +8159,7 @@ function setCurrentSprite(index, forced, dontSave) {
 
 var GUIEvents = __webpack_require__(8320);
 
-GUIEvents.on(GUIEvents.LIBRARY_COSTUME_UPDATED, () => {
+GUIEvents.on(GUIEvents.REFRESH_SPRITE_COSTUMES, () => {
   loadCostumes();
 });
 
@@ -8575,7 +8575,7 @@ function reloadCostumes() {
                         costume.src = src;
                         engine.reloadSpriteCostumesFromLibraryCostume(costume);
                         reloadCostumes();
-                        GUIEvents.emit(GUIEvents.LIBRARY_COSTUME_UPDATED, costume);
+                        GUIEvents.emit(GUIEvents.REFRESH_SPRITE_COSTUMES);
                       };
                       reader.readAsDataURL(input.files[0]);
                     } else {
@@ -30413,7 +30413,7 @@ module.exports = LibraryIDs;
 var EventEmitter = __webpack_require__(228);
 
 class GUIEventTypes extends EventEmitter {
-    LIBRARY_COSTUME_UPDATED = "LIBRARY_COSTUME_UPDATED";
+    REFRESH_SPRITE_COSTUMES = "REFRESH_SPRITE_COSTUMES";
 }
 
 module.exports = new GUIEventTypes();
