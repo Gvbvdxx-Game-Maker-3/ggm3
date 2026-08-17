@@ -2,6 +2,7 @@ var elements = require("../../gp2/elements.js");
 var AElement = require("../../gp2/aelement.js");
 var engine = require("../curengine.js");
 var { makeSortable } = require("../drag-utils.js");
+var libraryNameInput = elements.getGPId("libraryNameInput");
 
 var selectedLibrary = -1;
 
@@ -12,6 +13,8 @@ function setCurrentLibrary(index) {
   }
   selectedLibrary = index;
   reloadLibrariesSelection();
+  var library = engine.libraries[selectedLibrary];
+  libraryNameInput.value = library.name;
 }
 
 function createLibrarySelection(library, index) {
@@ -47,8 +50,7 @@ function createLibrarySelection(library, index) {
           {
             event: "click",
             func: function (elm) {
-              selectedLibrary = index;
-              reloadLibrariesSelection();
+              setCurrentLibrary(index);
             },
           },
         ],
@@ -138,6 +140,27 @@ addLibraryButton.addEventListener("click", (event) => {
 
 document.addEventListener("click", function (evt) {
   closeAddMenu();
+});
+
+function debounce(func, delay = 60) {
+  let timeoutId;
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
+}
+
+libraryNameInput.addEventListener("change", function () {
+  var library = engine.libraries[selectedLibrary];
+  if (!library) {
+    return;
+  }
+  library.name = libraryNameInput.value;
+  engine.checkLibraryDuplicateNames();
+  libraryNameInput.value = library.name;
+  reloadLibrariesSelection();
 });
 
 reloadLibrariesSelection();

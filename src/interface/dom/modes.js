@@ -13,6 +13,11 @@ module.exports = [
     children: [
       {
         element: "div",
+        className: "selectedSpriteContainer",
+        children: require("./library-inputs.js"),
+      },
+      {
+        element: "div",
         className: "spritesContainer",
         gid: "libraryContainer",
         children: [],
