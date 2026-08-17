@@ -45,6 +45,7 @@ function doLinkDialog(_options) {
         ...options
     };
     var libraryTabsContainer = null;
+    var libraryDialogList = null;
     var dialogContainer = elements.createElementsFromJSON([
         {
             element: "div",
@@ -69,7 +70,8 @@ function doLinkDialog(_options) {
                         },
                         {
                             element: "div",
-                            className: "libraryDialogList"
+                            className: "libraryDialogList",
+                            GPWhenCreated: (e) => libraryDialogList = e,
                         }
                     ]
                 }
@@ -80,6 +82,7 @@ function doLinkDialog(_options) {
     document.body.append(dialogContainer);
 
     var selectedLibrary = 0;
+    var selectedOption = -1;
 
     function updateTabs() {
         elements.setInnerJSON(
@@ -95,8 +98,70 @@ function doLinkDialog(_options) {
         );
     }
 
-    function displayList() {
+    var listName = options.type == "costume" ? "costumes" : "sounds";
 
+    function displayList() {
+        var list = engine.libraries[selectedLibrary][listName];
+        if (list.length < 1) {
+            elements.setInnerJSON(
+                libraryDialogList,
+                [{
+                    element: "span",
+                    textContent: "This library has no " + (options.type == "costume" ? "costumes" : "sounds") + ".",
+                    style: {
+                        color: "white",
+                        fontWeight: "bold",
+                        textAlign: "center",
+                        padding: "4px 4px",
+                    },
+                }]
+            );
+        }
+        elements.setInnerJSON(
+            libraryDialogList,
+
+            list.map((opt) => {
+                return {
+                    element: "div",
+                    className: "libraryOption",
+                    GPWhenCreated: function (elm) {
+                        if (selectedOption == opt.id) {
+                            elm.setAttribute("selected", "");
+                        }
+                    },
+                    eventListeners: [
+                        {
+                            event: "click",
+                            func: function () {
+                                selectedOption = opt.id;
+                                displayList();
+                            }
+                        }
+                    ],
+                    children: [
+                        (
+                            options.type == "costume" ?
+                            //Costume
+                            (
+                                {
+                                    element: "img",
+                                    className: "costumeLibraryImg",
+                                    src: opt.src
+                                }
+                            )
+                            //Sound
+                            : (
+                                {}
+                            )
+                        ),
+                        {
+                            element: "span",
+                            textContent: opt.name
+                        }
+                    ]
+                };
+            })
+        )
     }
 
     function selectLibrary(index) {
@@ -106,7 +171,7 @@ function doLinkDialog(_options) {
     }
 
     selectLibrary(selectedLibrary);
-    
+
 
     return promise;
 }
