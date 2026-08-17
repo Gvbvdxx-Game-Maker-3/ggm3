@@ -126,6 +126,34 @@ class GGM3Engine extends EventEmitter {
   }
 
   /**
+   * Reloads all sprite costumes if they're loaded.
+   */
+  reloadAllSpriteCostumes() {
+    for (var sprite of this.sprites) {
+      for (var costume of sprite.costumes) {
+        if (costume.loaded) {
+          costume.deloadCostume();
+          costume.loadCostume();
+        }
+      }
+    }
+  }
+
+  /**
+   * Used by costumes to find the src from the library.
+   */
+  findLibraryCostume(id) {
+    for (var library of this.libraries) {
+      for (var costume of library.costume) {
+        if (costume.id == id) {
+          return costume;
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
    * Sets the cursor style value for the canvas.
    * @param {String} value Cursor style property to change to.
    */
@@ -489,12 +517,10 @@ class GGM3Engine extends EventEmitter {
   }
 
   /**
-   * 
+   *
    */
 
-  getLibraryCostume() {
-    
-  }
+  getLibraryCostume() {}
 
   /**
    * Creates a new empty sprite without emitting a sprite created event.
@@ -551,6 +577,7 @@ class GGM3Engine extends EventEmitter {
       costume.rotationCenterY = fromCostume.rotationCenterY;
       costume.preferedScale = fromCostume.preferedScale;
       costume.willPreload = fromCostume.willPreload;
+      costume.linkID = fromCostume.linkID;
       costume.renderImageAtScale();
     });
 

@@ -1,7 +1,9 @@
 var CollisionSprite = require("./mask.js");
 
+var idcount = 0;
+
 class Costume {
-  constructor(engine, dataURL, name, resolveFunction, libraryCostume) {
+  constructor(engine, dataURL, name, resolveFunction, linkID) {
     this.engine = engine;
     this.dataURL = dataURL;
     this.drawable = null;
@@ -11,8 +13,8 @@ class Costume {
     this.currentScale = 1;
     this.mimeType = null;
     this.canvas = document.createElement("canvas");
-    this.id = Date.now() + "_" + Math.round(Math.random() * 9999999);
-    this.libCostume = libraryCostume;
+    this.id = idcount+"_"+ Date.now() + "_" + Math.round(Math.random() * 9999999);
+    idcount += 1;
 
     this.name = name || "Costume";
     this.resolveFunction = resolveFunction;
@@ -114,8 +116,10 @@ class Costume {
         whenfinished();
       }
     };
-    if (this.libCostume) {
-      img.src = this.libCostume.src;
+    if (this.linkID) {
+      var libCostume = this.engine.findLibraryCostume(this.linkID);
+      img.src = libCostume.src;
+      this.dataURL = "";
     } else {
       img.src = this.dataURL;
     }

@@ -5,6 +5,7 @@ var SpriteEffects = require("./effects.js");
 var SoundManager = require("./soundmanager.js");
 var SpriteMaster = require("./spritemaster.js");
 var TWEEN = require("@tweenjs/tween.js");
+var idcount = 0;
 
 /**
  * Object for an active sprite in game.
@@ -19,9 +20,11 @@ class Sprite {
    */
   constructor(engine, name) {
     var id = "";
-    id += Date.now();
+    
+    id += idcount+"_"+ Date.now();
     id += "_";
     id += Math.round(Math.random() * 999999);
+    idcount += 1;
     this.id = id;
 
     this.costumes = [];

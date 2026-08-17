@@ -13,7 +13,6 @@ module.exports = {
       className: "tabWindow",
       gid: "tabLibrariesWindow",
       children: [
-
         {
           element: "div",
           className: "costumesContainer",

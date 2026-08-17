@@ -7,6 +7,8 @@ var costumesSelectorContainer = elements.getGPId("costumesSelectorContainer");
 
 var costumePivots = require("./costumepivoteditor.js");
 
+var library = require("./library/linkdialog.js");
+
 var { makeSortable } = require("./drag-utils.js");
 
 var deps = {
@@ -22,7 +24,7 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
     {
       element: "button",
       className: "greyButtonStyle",
-      textContent: "Import Costume",
+      textContent: "Import",
       style: {
         marginRight: "2px",
       },
@@ -79,6 +81,25 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
         },
       ],
     },
+
+    {
+      element: "button",
+      className: "greyButtonStyle",
+      textContent: "Add from library",
+      style: {
+        marginRight: "2px",
+      },
+      eventListeners: [
+        {
+          event: "click",
+          func: function () {
+            library.doLinkDialog({
+              type: "costume"
+            });
+          }
+        }
+      ]
+    }
   ]);
   if (spr.costumes.length < 1) {
     elements.setInnerJSON(costumesSelectorContainer, [
@@ -104,6 +125,7 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
             {
               element: "img",
               src: costume.dataURL,
+              className: "costumeLibraryImg",
               style: {
                 width: "70px",
                 height: "70px",

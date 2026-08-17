@@ -4,6 +4,7 @@ var engine = require("../curengine.js");
 var { makeSortable } = require("../drag-utils.js");
 var libraryNameInput = elements.getGPId("libraryNameInput");
 var selectedSprite = require("../selectedsprite.js");
+var libraryCostumes = require("./costumes.js");
 
 var selectedLibrary = -1;
 
@@ -15,20 +16,8 @@ function setCurrentLibrary(index) {
   selectedLibrary = index;
   reloadLibrariesSelection();
   var library = engine.libraries[selectedLibrary];
+  libraryCostumes.setCurrentLibrary(library, index);
   libraryNameInput.value = library.name;
-}
-
-function createLibraryHeader() {
-  return {
-    element: "div",
-    className: "libraryHeader",
-    children: [
-      {
-        element: "h2",
-        textContent: "Libraries",
-      },
-    ],
-  };
 }
 
 function createLibrarySelection(library, index) {
@@ -132,8 +121,7 @@ function showAddMenu() {
           func: function () {
             closeAddMenu();
             var library = engine.createEmptyLibrary();
-            selectedLibrary = engine.libraries.length - 1;
-            reloadLibrariesSelection();
+            setCurrentLibrary(engine.libraries.length - 1);
             selectedSprite.markProjectDirty();
           },
         },
@@ -193,5 +181,5 @@ function projectLoadHandler() {
 module.exports = {
   reloadLibrariesSelection,
   setCurrentLibrary,
-  projectLoadHandler
+  projectLoadHandler,
 };

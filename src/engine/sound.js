@@ -1,6 +1,7 @@
 var AudioEngine = require("./audio.js");
 
 var SoundEffects = require("./soundeffects.js");
+var idcount = 0;
 
 class Sound {
   constructor(engine, sprite, dataURL, onread) {
@@ -9,7 +10,8 @@ class Sound {
     this.src = dataURL;
     this.data = null;
     this.onread = onread || function () {};
-    this.id = Date.now() + "_" + Math.round(Math.random() * 9999999);
+    this.id = idcount+"_"+Date.now() + "_" + Math.round(Math.random() * 9999999);
+    idcount += 1;
     this.name = "";
     this.willPreload = true;
     this.playingOn = {};
