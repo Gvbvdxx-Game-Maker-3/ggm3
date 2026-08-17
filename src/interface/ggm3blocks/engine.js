@@ -24,3 +24,14 @@ Blockly.Blocks["engine_framerate"] = {
     });
   },
 };
+
+Blockly.Blocks["engine_estimated_fps"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "estimated current framerate",
+      args0: [],
+      extensions: ["output_number"],
+      colour: "#77a1b5",
+    });
+  },
+};

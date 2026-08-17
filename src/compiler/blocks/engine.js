@@ -11,6 +11,15 @@ JavascriptTranslation["engine_framerate"] = function (
   return "(engine.frameRate)";
 };
 
+outputBlocks.push("engine_estimated_fps");
+JavascriptTranslation["engine_estimated_fps"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  return "(engine.estimatedFramerate)";
+};
+
 JavascriptTranslation["engine_framerate_to"] = function (
   jsonblock,
   utils,

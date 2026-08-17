@@ -216,10 +216,11 @@ class ExportMainGenerator extends EventEmitter {
   async generateGameCode() {
     var spritesCodeInArray = `[${this._spriteJS.join(",")}]`;
     var engineProperties = JSON.stringify(this.engineMetadata);
-    var allCode = `{sprites:[spritesCodeInArray],engineProps:${engineProperties}}`;
-    var code = ("" + GAME_CODE_BASE).replaceAll("|%GGM3Game%|", allCode);
+    var allCode = `{sprites:[${spritesCodeInArray}],engineProps:${engineProperties}}`;
+    var code = ("" + GAME_CODE_BASE).replaceAll('"|%GGM3Game%|"', allCode); //This isn't actually put in string, its just there to prevent the JS beautify errors.
 
     this.gameCode = await compress(code);
+    console.log(this.gameCode);
   }
 
   async generate() {

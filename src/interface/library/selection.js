@@ -5,6 +5,15 @@ var { makeSortable } = require("../drag-utils.js");
 
 var selectedLibrary = -1;
 
+function setCurrentLibrary(index) {
+  if (!engine.libraries[index]) {
+    reloadLibrariesSelection(); //Still reload it.
+    return;
+  }
+  selectedLibrary = index;
+  reloadLibrariesSelection();
+}
+
 function createLibrarySelection(library, index) {
   return {
     element: "div",
@@ -22,7 +31,6 @@ function createLibrarySelection(library, index) {
         element: "div",
         className: "spriteTextContainer",
         textContent: library.name,
-        contenteditable: "plaintext-only",
         style: {
           marginRight: "5px",
         },
@@ -143,4 +151,5 @@ reloadLibrariesSelection();
 
 module.exports = {
   reloadLibrariesSelection,
+  setCurrentLibrary
 };

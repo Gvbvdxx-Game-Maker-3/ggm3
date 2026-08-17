@@ -1,7 +1,7 @@
 (function () {
 	//////////////////////////////////////////////////////////////////
 	
-	const GameContent = |%GGM3Game%|;
+	const GameContent = "|%GGM3Game%|";
 	var Game = window.Game = {};
 	var GameEvents = {};
 	

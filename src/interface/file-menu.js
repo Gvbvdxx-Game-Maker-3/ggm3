@@ -44,6 +44,7 @@ var { addAppMenu } = require("./dropdown-menus.js");
 var loadingScreenContainer = elements.getGPId("loadingScreenContainer");
 var loadingScreenContent = elements.getGPId("loadingScreenContent");
 var selectedSprite = require("./selectedsprite.js");
+var { setCurrentLibrary } = require("./library/");
 var defaultProject = require("./defaultproject.js");
 
 var newFileMenus = [];
@@ -63,6 +64,7 @@ async function newProject() {
   loadingScreenContainer.hidden = false;
   await defaultProject.loadDefaultProject();
   selectedSprite.setCurrentSprite(0, true, true);
+  setCurrentLibrary(0);
   loadingScreenContainer.hidden = true;
 }
 
@@ -96,6 +98,7 @@ function loadProjectFile(file) {
       );
     }
     selectedSprite.setCurrentSprite(0, true, true);
+    setCurrentLibrary(0);
     loadingScreenContainer.hidden = true;
   };
   reader.readAsArrayBuffer(file);
@@ -341,6 +344,25 @@ selectedSprite.deps.exportSprite = async function (sprite) {
   a.download = sprite.name + ".ggm3sprite";
   a.click();
 };
+
+selectedSprite.deps.importSprite = async function (arrayBuffer) {
+  loadingScreenContainer.hidden = false;
+  loadingScreenContent.innerHTML = "";
+
+  var monitor = new projectSaver.ProgressMonitor();
+
+  monitor.on("progress", (event) => {
+    elements.setInnerJSON(loadingScreenContent, [
+      createProgessBarJSON(event.current / event.max, true),
+    ]);
+  });
+
+  await projectSaver.loadSpriteFromZip(arrayBuffer, monitor);
+
+  loadingScreenContainer.hidden = true;
+  selectedSprite.updateSpritesContainer();
+};
+
 
 module.exports = {
   loadProjectFile,

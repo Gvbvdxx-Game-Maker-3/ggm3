@@ -8,6 +8,10 @@ class Library {
     this.costumes = [];
     this.sounds = [];
   }
+
+  dispose() {
+    
+  }
 }
 
 module.exports = Library;

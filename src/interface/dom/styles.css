@@ -227,10 +227,11 @@ body {
 
 .rightPanelContent {
   width: fit-content;
+  max-width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  min-height: 700px;
+  min-height: 0;
   box-sizing: border-box;
   position: relative;
 }
@@ -335,8 +336,11 @@ body {
   border-radius: 4px;
   display: flex;
   flex-direction: column;
-  overflow: auto;
-  flex-grow: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 100%;
 }
 
 .spriteContainer {
@@ -1339,7 +1343,9 @@ body {
   display: flex;
   width: 100%;
   flex-direction: column;
-  flex-grow: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
 }
 
 .modeTabs {

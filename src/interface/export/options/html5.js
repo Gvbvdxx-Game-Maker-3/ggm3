@@ -15,7 +15,8 @@ class HTML5ExportOption extends EventEmitter {
           name: "Single HTML file",
           id: "dataURLs",
           description:
-            "Export the game as a single HTML file that includes all assets encoded as base64 data URIs. This can severely effect device resources if this is on.\nNote: If you turn this off, you'll need to run this game on a web server.",
+            "Export the game as a single HTML file that includes all assets encoded as base64 data URIs. This can severely effect device resources if this is on."+
+            "\nNote: If you turn this off, you'll need to run this game on a web server or a browser or web app supporting fetching from file URLs.",
           type: "checkbox",
           default: true,
         },

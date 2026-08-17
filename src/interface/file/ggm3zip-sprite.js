@@ -60,7 +60,7 @@ async function saveSpriteZip(sprite, zip, progress = new ProgressMonitor()) {
   progress.calculatedMax(max);
   progress.current = 0;
 
-  var spriteJson = toSpriteJSON(sprite); //add the sprite properties, without the sound and costume properties.
+  var spriteJson = toSpriteJSON(sprite, true); //add the sprite properties, without the sound and costume properties.
 
   //Manually create the costumes array.
   var costumeData = getCostumeData(sprite);
@@ -151,7 +151,9 @@ async function loadSpriteFromZip(zipSource, progress = new ProgressMonitor()) {
   }
 
   //Add sprite properties.
-  fromSpriteJSON(sprite, spriteJson);
+  fromSpriteJSON(sprite, spriteJson, true);
+  engine.makeUniqueSpriteNames();
+  compileSprite(sprite);
 }
 
 module.exports = {

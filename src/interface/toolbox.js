@@ -6,12 +6,12 @@ function generateToolbox(defaultX, defaultY) {
         <block type="motion_gotoxy">
             <value name="X">
                 <shadow type="math_number">
-                    <field name="NUM">${+defaultX}</field>
+                    <field name="NUM">${(+defaultX).toFixed(2)}</field>
                 </shadow>
             </value>
             <value name="Y">
                 <shadow type="math_number">
-                    <field name="NUM">${+defaultY}</field>
+                    <field name="NUM">${(+defaultY).toFixed(2)}</field>
                 </shadow>
             </value>
         </block>
@@ -37,14 +37,14 @@ function generateToolbox(defaultX, defaultY) {
         <block type="motion_setx">
             <value name="X">
                 <shadow type="math_number">
-                    <field name="NUM">${defaultX}</field>
+                    <field name="NUM">${(+defaultX).toFixed(2)}</field>
                 </shadow>
             </value>
         </block>
         <block type="motion_sety">
             <value name="Y">
                 <shadow type="math_number">
-                    <field name="NUM">${defaultY}</field>
+                    <field name="NUM">${(+defaultY).toFixed(2)}</field>
                 </shadow>
             </value>
         </block>
@@ -708,6 +708,7 @@ function generateToolbox(defaultX, defaultY) {
             </value>
         </block>
         <block type="engine_framerate"></block>
+        <block type="engine_estimated_fps"></block>
     </category>
     <category name="Variables" id="data" colour="#FF8C1A" secondaryColour="#DB6E00" custom="GGM3_VARIABLE">
     </category>

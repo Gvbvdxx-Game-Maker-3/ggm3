@@ -56,7 +56,7 @@ function toEngineExportJSON() {
 
 //Sprite properties
 
-function fromSpriteJSON(sprite, spriteJson) {
+function fromSpriteJSON(sprite, spriteJson, isImport) {
   Object.assign(sprite, {
     x: spriteJson.x,
     y: spriteJson.y,
@@ -76,10 +76,27 @@ function fromSpriteJSON(sprite, spriteJson) {
     hidden: spriteJson.hidden,
     spriteProperties: spriteJson.properties || {},
   });
+
+  if (!isImport) {
+    return; //Stop here if not importing a sprite from a sprite file.
+  }
+
+  //Add things to the engine if they don't exist yet.
+  for (var propertyName of Object.keys(sprite.spriteProperties)) {
+    engine.propertyVariables[propertyName] = true;
+  }
+
+  if (spriteJson.broadcastNames) {
+    for (var name of spriteJson.broadcastNames) {
+      if (engine.broadcastNames.indexOf(name) == -1) {
+        engine.broadcastNames.push(name);
+      }
+    }
+  }
 }
 
-function toSpriteJSON(sprite) {
-  return {
+function toSpriteJSON(sprite, isExport) {
+  var spriteJson = {
     x: sprite.x,
     y: sprite.y,
     angle: sprite.angle,
@@ -98,6 +115,15 @@ function toSpriteJSON(sprite) {
     properties: getSaveableVariablesGlobal(sprite.spriteProperties),
     hidden: sprite.hidden,
   };
+
+  if (!isExport) {
+    return spriteJson; //Return normal ggm3 game file sprite.
+  }
+
+  //Return additional properties for importing from sprites.
+  spriteJson.broadcastNames = engine.broadcastNames;
+
+  return spriteJson; //return with additional properties.
 }
 function toExportableSpriteJSON(sprite) {
   return {

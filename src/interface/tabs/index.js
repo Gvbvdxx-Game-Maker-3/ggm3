@@ -46,7 +46,7 @@ const modeTabs = [
   },
   {
     label: "Libraries",
-    src: "icons/brush.svg",
+    src: "icons/library.svg",
     default: false,
     id: "MODE_LIBRARIES",
   },

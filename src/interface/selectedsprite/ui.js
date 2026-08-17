@@ -68,7 +68,25 @@ function init(state, deps) {
             event: "click",
             func: function () {
               closeSpriteAddMenu();
-              window.alert("Import feature coming soon!");
+              var fileSelect = document.createElement("input");
+              fileSelect.type = "file";
+              fileSelect.accept = ".ggm3sprite";
+              fileSelect.onchange = function () {
+                if (Array.from(fileSelect.files).length == 0) {
+                  fileSelect.value = "";
+                  fileSelect.remove();
+                  return;
+                }
+
+                var reader = new FileReader();
+                reader.onload = function () {
+                  fileSelect.value = "";
+                  fileSelect.remove();
+                  deps.importSprite(reader.result);
+                };
+                reader.readAsArrayBuffer(fileSelect.files[0]);
+              };
+              fileSelect.click();
             },
           },
         ],
@@ -282,6 +300,7 @@ function init(state, deps) {
               element: "button",
               className: "greyButtonStyle",
               textContent: "Delete",
+              hidden: engine.sprites.length == 1,
               style: {
                 fontSize: "15px",
                 marginRight: "5px",

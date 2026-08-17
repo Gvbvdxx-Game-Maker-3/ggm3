@@ -18,12 +18,12 @@ This script overrides the WebSocket constructor to modify
         constructor(url, protocols) {
             var newURL = new URL(url);
 
-            if (newURL.hostname.indexOf(githubDevName) !== -1) {
+            var devHostname = newURL.hostname.split(githubDevName)[0];
+            var devParts = devHostname.split(githubDevNameDash);
+
+            if (newURL.hostname.indexOf(githubDevName) !== -1 && newURL.hostname.startsWith(devParts[0])) {
               var targetPort = newURL.port;
               newURL.port = "";
-
-              var devHostname = newURL.hostname.split(githubDevName)[0];
-              var devParts = devHostname.split(githubDevNameDash);
 
               devParts.pop();
               devParts.push(targetPort);
