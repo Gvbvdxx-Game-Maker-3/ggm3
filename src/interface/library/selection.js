@@ -2,7 +2,6 @@ var elements = require("../../gp2/elements.js");
 var AElement = require("../../gp2/aelement.js");
 var engine = require("../curengine.js");
 var { makeSortable } = require("../drag-utils.js");
-const library = require("./index.js");
 var libraryNameInput = elements.getGPId("libraryNameInput");
 var selectedSprite = require("../selectedsprite.js");
 
@@ -17,6 +16,19 @@ function setCurrentLibrary(index) {
   reloadLibrariesSelection();
   var library = engine.libraries[selectedLibrary];
   libraryNameInput.value = library.name;
+}
+
+function createLibraryHeader() {
+  return {
+    element: "div",
+    className: "libraryHeader",
+    children: [
+      {
+        element: "h2",
+        textContent: "Libraries",
+      },
+    ],
+  };
 }
 
 function createLibrarySelection(library, index) {
