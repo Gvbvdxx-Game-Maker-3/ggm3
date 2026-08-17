@@ -4,6 +4,7 @@ var engine = require("../curengine.js");
 var { makeSortable } = require("../drag-utils.js");
 const library = require("./index.js");
 var libraryNameInput = elements.getGPId("libraryNameInput");
+var selectedSprite = require("../selectedsprite.js");
 
 var selectedLibrary = -1;
 
@@ -121,6 +122,7 @@ function showAddMenu() {
             var library = engine.createEmptyLibrary();
             selectedLibrary = engine.libraries.length - 1;
             reloadLibrariesSelection();
+            selectedSprite.markProjectDirty();
           },
         },
       ],
@@ -164,6 +166,7 @@ libraryNameInput.addEventListener("change", function () {
   engine.checkLibraryDuplicateNames();
   libraryNameInput.value = library.name;
   reloadLibrariesSelection();
+  selectedSprite.markProjectDirty();
 });
 
 reloadLibrariesSelection();

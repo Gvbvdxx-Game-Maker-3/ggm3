@@ -1,9 +1,9 @@
 class LibraryCostume {
-  constructor(library, src) {
+  constructor(library, src, id) {
     this.library = library;
     this.engine = library.engine;
     this.src = src;
-    this.id = Date.now() + "_" + Math.round(Math.random() * 9999999);
+    this.id = id;
   }
 }
 

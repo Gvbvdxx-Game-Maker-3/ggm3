@@ -45,15 +45,20 @@ function switchTab(id) {
 }
 
 var library = require("../library");
+var libraryCostumesContainer = elements.getGPId("libraryCostumesContainer");
+var librarySoundsContainer = elements.getGPId("librarySoundsContainer");
 
 function hideEverything() {
-  //Hide every window here.
+  libraryCostumesContainer.hidden = true;
+  librarySoundsContainer.hidden = true;
 }
 function updateTabVisibility() {
   hideEverything();
   if (currentTab == "GRAPHICS") {
+    libraryCostumesContainer.hidden = false;
   }
   if (currentTab == "SOUNDS") {
+    librarySoundsContainer.hidden = false;
   }
 }
 
