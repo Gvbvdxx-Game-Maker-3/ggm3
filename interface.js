@@ -3191,7 +3191,7 @@ module.exports = LibraryCostume;
 /***/ 735:
 /***/ ((module) => {
 
-module.exports = ":root {\n  --game-viewport-width: 640px;\n  --game-viewport-height: 360px;\n  --game-viewport-scale: 1;\n\n  /*windowDialogContainer*/\n  --popup-dialog-font: \"arial\";\n  /*windowDialogBox*/\n  --popup-dialog-background: hsl(0deg, 0%, 100%);\n  --popup-dialog-border-radius: 10px;\n  --popup-dialog-text-color: hsl(0deg, 0%, 0%);\n  /*windowDialogButton*/\n  --popup-dialog-button-background: hsl(224, 100%, 67%);\n  --popup-dialog-button-hover-background: hsl(224, 100%, 63%);\n  --popup-dialog-button-text-color: hsl(0deg, 0%, 100%);\n  --popup-dialog-button-radius: 5px;\n  /*windowDialogInput*/\n  --popup-dialog-input-background: hsl(0deg, 0%, 100%);\n  --popup-dialog-input-border-width: 1.5px;\n  --popup-dialog-input-border-color: hsl(0deg, 0%, 73%);\n  --popup-dialog-input-text-color: hsl(0deg, 0%, 0%);\n  /*windowDialogHeader*/\n  --popup-dialog-message-size: 16px;\n\n  --loader2-time: 2.5s;\n}\n\n.windowDialogContainer {\n  font-family: var(--popup-dialog-font);\n}\n.windowDialogBackground {\n  background: hsl(0deg, 0%, 0%);\n  z-index: 999999999999;\n}\n.windowDialogBox {\n  background: var(--popup-dialog-background);\n  border-radius: var(--popup-dialog-border-radius);\n  color: var(--popup-dialog-text-color);\n  z-index: 999999999999;\n}\n.windowDialogButton {\n  background: var(--popup-dialog-button-background);\n  color: var(--popup-dialog-button-text-color);\n  border-radius: var(--popup-dialog-button-radius);\n}\n.windowDialogButton:hover {\n  background: var(--popup-dialog-button-hover-background);\n}\n.windowDialogInput {\n  background: var(--popup-dialog-input-background);\n  border-style: solid;\n  border-width: var(--popup-dialog-input-border-width);\n  border-color: var(--popup-dialog-input-border-color);\n  color: var(--popup-dialog-input-text-color);\n  outline: none;\n}\n.windowDialogHeader {\n  font-weight: bold;\n  font-size: var(--popup-dialog-message-size);\n}\n\nbody {\n  font-family: arial;\n}\n\n.appContainer {\n  background: #363636;\n  width: 100%;\n  height: 100svh;\n  position: fixed;\n  top: 0;\n  left: 0;\n  overflow: auto;\n}\n\n.blocklyDiv {\n  width: 100%;\n  height: 100%;\n}\n\n.menuBar {\n  display: flex;\n  width: 100%;\n  min-height: 50px;\n  background: #525252;\n  overflow: unset;\n  transition: 0.2s;\n  flex-direction: row;\n}\n\n.menuBarItemLogo {\n  all: unset;\n  width: fit-content;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  user-select: none;\n  padding: 0 10px;\n}\n\n.menuBarItemLogoImg {\n  height: 30px;\n}\n\n.menuBarItem {\n  all: unset;\n  color: #ffffff;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n}\n\n.unclickableMenuBarItem {\n  all: unset;\n  color: #ffffff;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n}\n\n.menuBarItem:hover {\n  background: #363636;\n  cursor: pointer;\n}\n\n/* Dropdown menu styles */\n.menuBarMenus {\n  display: flex;\n  align-items: center;\n  flex-direction: row;\n}\n.menuParentMain {\n}\n.menuParent {\n  position: relative;\n  display: flex;\n  align-items: center;\n  padding: 0 8px;\n  z-index: 9999;\n  cursor: unset;\n  width: fit-content;\n}\n.menuBarItemLabel {\n  color: #ffffff;\n  font-weight: bold;\n  user-select: none;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  gap: 3px;\n}\n.menuParent.open > .menuBarItemLabel {\n  color: #ffffff;\n}\n.menuDropdown {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  background: #444444;\n  min-width: 160px;\n  border-radius: 6px;\n  box-shadow: 0 6px 14px rgba(0,0,0,0.3);\n  z-index: 9999;\n  display: block; /* hidden attribute controls visibility */\n  cursor: unset;\n}\n.menuDropdownItem {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 6px 8px;\n  color: #ffffff;\n  border-radius: 4px;\n  user-select: none;\n}\n.menuDropdownItem:hover {\n  background: #5a5a5a;\n  cursor: pointer;\n  box-sizing: border-box;\n}\n.menuIcon {\n  width: 16px;\n  height: 16px;\n  object-fit: contain;\n}\n.menuDropdownItemLabel {\n  color: #ffffff;\n}\n\n.panelContainer {\n  display: flex;\n  flex-direction: row;\n  width: 100svw;\n  height: calc(100svh - 50px);\n  position: absolute;\n  top: 50px;\n  left: 0px;\n  min-height: 500px;\n}\n\n.leftPanel {\n  height: calc(100svh - 50px);\n  display: flex;\n  flex-direction: column;\n  flex-grow: 1;\n  min-width: 0;\n}\n\n.rightPanel {\n  width: fit-content;\n  height: calc(100svh - 50px);\n  overflow: auto;\n  box-sizing: border-box;\n  flex-grow: 0;\n  flex-shrink: 0;\n}\n\n.rightPanelContent {\n  width: fit-content;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  min-height: 700px;\n  box-sizing: border-box;\n  position: relative;\n}\n\n.projectControls {\n  width: 100%;\n  height: 200px;\n}\n\n.projectCanvas {\n  background: #ffffff;\n  border-radius: 4px;\n  flex-shrink: 0;\n  flex-grow: 0;\n  width: calc(var(--game-viewport-width) * var(--game-viewport-scale));\n  height: calc(var(--game-viewport-height) * var(--game-viewport-scale));\n}\n\n.tabArea {\n  display: flex;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow-x: auto;\n  overflow-y: hidden;\n}\n\n.tabIcon {\n  height: 20px;\n  width: 20px;\n  object-fit: contain;\n  margin-right: 5px;\n}\n\n.tabButton {\n  all: unset;\n  color: #c7c7c7;\n  width: fit-content;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n  flex-grow: 0;\n  transform: translateY(5px);\n  border-top-left-radius: 5px;\n  border-top-right-radius: 5px;\n}\n\n.tabButton:hover {\n  background: #8f8f8f;\n  cursor: pointer;\n  color: #ffffff;\n  transform: translateY(4px);\n}\n\n.tabButton[selected] {\n  background: #8f8f8f;\n  cursor: unset;\n  color: #ffffff;\n  transform: translateY(0px);\n}\n\n.tabWindow {\n  background: #8f8f8f;\n  flex-grow: 1;\n  width: 100%;\n  color: #000000;\n  display: flex;            /* <-- CHANGED */\n  flex-direction: column;   /* <-- ADDED */\n  min-height: 0;            /* <-- ADDED (crucial for containing flex) */\n}\n\n.selectedSpriteContainer {\n  min-width: 100%;\n  max-width: calc(var(--game-viewport-scale) * var(--game-viewport-width));\n  box-sizing: border-box;\n  border-width: 5px;\n  border-style: solid;\n  border-color: black;\n  border-radius: 4px;\n  min-height: 30px;\n  height: fit-content;\n  display: flex;\n  padding: 4px 4px;\n  flex-shrink: 0;\n  flex-grow: 0;\n  flex-wrap: wrap;\n  overflow: auto;\n}\n\n.spritesContainer {\n  width: 100%;\n  box-sizing: border-box;\n  border-width: 5px;\n  border-style: solid;\n  border-color: black;\n  border-radius: 4px;\n  display: flex;\n  flex-direction: column;\n  overflow: auto;\n  flex-grow: 1;\n}\n\n.spriteContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n}\n\n.spriteTextContainer {\n  width: 200px;\n  text-wrap: wrap;\n  line-break: anywhere;\n}\n\n.spriteContainer[selected] {\n  background: #525252;\n}\n\n.selectedSpriteLabel {\n  color: white;\n  font-weight: bold;\n}\n.selectedSpriteInput {\n  all: unset;\n  padding: 3px 3px;\n  box-sizing: border-box;\n  width: fit-content;\n  color: white;\n  width: 100px;\n  border-radius: 2px;\n  background: #595959;\n}\n\n.costumesContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: column;\n  color: white;\n}\n\n.soundsContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: column;\n  color: white;\n}\n\n.costumePivotContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: row;\n  color: white;\n}\n\n.costumesInPivotContainer {\n  width: fit-content;\n  height: 100%; /* <-- This is OK now */\n  flex-grow: 0;\n  flex-shrink: 0;\n  overflow: auto; /* <-- This will now activate */\n  overflow-anchor: none;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.pivotCostumeButton {\n  min-width: 100px;\n  min-height: 100px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  box-sizing: border-box;\n  padding: 4px 4px;\n  border-radius: 10px;\n  border-width: 2px;\n  border-style: solid;\n  border-color: #000000;\n  margin: 2px;\n  user-select: none;\n  font-weight: bold;\n}\n\n.pivotCostumeButton:hover {\n  border-color: rgb(121, 121, 121);\n  cursor: pointer;\n}\n.pivotCostumeButton[selected] {\n  border-color: #ffffff;\n  cursor: unset;\n}\n\n.pivotEditor {\n  flex-grow: 1;\n  background: #212121;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  flex-shrink: 1;  /* <-- 1. ALLOWS this element to shrink */\n  min-width: 0;      /* <-- 2. THE KEY: Allows it to shrink smaller than its content */\n  overflow: hidden;    /* <-- 3. Prevents children from spilling out */\n  position: relative;\n}\n\n.pivotEditorMenuBar {\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: 64px;\n  width: 100%;\n  display: flex;      /* <-- Puts all items in one horizontal row */\n  overflow-x: auto;   /* <-- Adds horizontal scroll */\n  overflow-y: hidden; /* <-- Prevents vertical scroll */\n  align-items: center;\n}\n\n.pivotEditorMenuBar > * {\n  flex-shrink: 0;\n}\n\n.pivotEditorContainer {\n  flex-grow: 1;\n  position: relative;\n  overflow: auto;\n}\n\n.pivotEditorImageContainer {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: fit-content;\n  height: fit-content;\n  display: block;\n  background-image: url(editor/transparent.png);\n  background-size: 32px;\n  image-rendering: pixelated;\n}\n\n.pivotEditorMenuInput {\n  all: unset;\n  color: #ffffff;\n  font-weight: bold;\n  height: 100%;\n  box-sizing: border-box;\n}\n\n.pivotEditorDot {\n  background: #000000;\n  border-style: solid;\n  border-color: #ffffff;\n  box-sizing: border-box;\n  border-width: 2px;\n  border-radius: 50%;\n  width: 10px;\n  height: 10px;\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  transform: translate(-50%, -50%);\n  opacity: 0.5;\n}\n\n.costumesHeaderContainer {\n  width: 100%;\n  display: block;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  box-sizing: border-box;\n  padding: 5px 5px;\n}\n\n.soundsHeaderContainer {\n  width: 100%;\n  display: block;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  box-sizing: border-box;\n  padding: 5px 5px;\n}\n\n.costumesSelectorContainer {\n  display: flex;\n  flex-direction: column;\n  overflow: auto;\n  overflow-anchor: none;\n  flex-grow: 1;\n}\n\n.soundsSelectorContainer {\n  display: flex;\n  flex-direction: column;\n  overflow: auto;\n  flex-grow: 1;\n}\n\n.costumeContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n}\n\n.soundContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n  flex-direction: column;\n}\n\n.greyButtonStyle {\n  all: unset;\n  background: #6e6e6e;\n  color: white;\n  border-radius: 10px;\n  padding: 7px 7px;\n  box-sizing: border-box;\n  width: fit-content;\n  height: fit-content;\n  font-weight: bold;\n}\n\n.greyButtonStyle:hover {\n  background: #b8b8b8;\n  cursor: pointer;\n}\n\n.selectedCostumeInput {\n  all: unset;\n  padding: 3px 3px;\n  box-sizing: border-box;\n  width: 140px;\n  color: white;\n}\n\n.scratchCategoryMenuItemLabel {\n  color: white;\n}\n\n.projectControls {\n  background: #8f8f8f;\n  border-radius: 5px;\n  width: 100%;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  display: flex;\n}\n\n.projectButton {\n  padding: 5px;\n  font-size: 20px;\n  user-select: none;\n  margin-right: 2px;\n  border-radius: 5px;\n  min-width: 20px;\n  box-sizing: border-box;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n\n.projectButtonImg {\n  height: 20px;\n  width: 20px;\n  object-fit: contain;\n}\n\n.projectButton:hover {\n  cursor: pointer;\n  color: white;\n  background-color: rgba(0,0,0,0.5);\n}\n\n.spriteInputContainer {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  padding: 4px;\n  box-sizing: border-box;\n  border-radius: 5px;\n  background: #8f8f8f;\n  margin: 3px;\n}\n\n.projectMouseCoordinates {\n  color: white;\n  font-size: 10px;\n  font-weight: bold;\n}\n\n.addSpriteButton {\n  position: absolute;\n  bottom: 10px;\n  right: 10px;\n}\n\n.spriteAddMenu {\n  position: absolute;\n  bottom: 65px;\n  right: 10px;\n  background: #8f8f8f;\n  border-radius: 5px;\n  display: flex;\n  flex-direction: column;\n  padding: 1px;\n  box-sizing: border-box;\n  gap: 2px;\n}\n\n.spriteAddMenuItem {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  padding: 5px;\n  border-radius: 5px;\n  color: white;\n  font-weight: bold;\n  user-select: none;\n  font-size: 17px;\n  cursor: default;\n}\n\n.spriteAddMenuItem:hover {\n  cursor: pointer;\n  background: rgba(0,0,0,0.5);\n}\n\n.spriteAddMenuItem > img {\n  width: 23px;\n  height: 23px;\n  object-fit: contain;\n}\n\n.customBlockDialogBG {\n  position: fixed;\n  width: 100svw;\n  height: 100svh;\n  top: 0;\n  left: 0;\n  background: rgba(0, 0, 0, 0.5);\n}\n.customBlockDialogBox {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  border-radius: 10px;\n  box-sizing: border-box;\n  background: #5c5c5c;\n  transform: translate(-50%, -50%);\n  padding: 10px 10px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  max-width: calc(100% - 100px);\n  max-height: calc(100% - 50px);\n  overflow: auto;\n  color: #ffffff;\n}\n.customBlockWorkspace {\n  flex-grow: 1;\n  display: block;\n  min-width: calc(100% - 1px);\n  min-height: 100%;\n  max-width: 100%;\n  max-height: 100%;\n}\n\n.customBlockButtons {\n  flex-grow: 0;\n  flex-shrink: 0;\n  display: flex;\n  width: 100%;\n  align-items: center;\n  justify-content: center;\n}\n\n.loadingDialogBG {\n  background: #363636;\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  z-index: 99999999;\n}\n\n.loadingDialogBox {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  align-items: center;\n  z-index: 99999999;\n  font-weight: bold;\n  justify-content: center;\n  display: flex;\n  flex-direction: column;\n  color: #ffffff;\n}\n\n.loader2Container {\n  width: 120px;\n  height: 120px;\n  position: relative;\n}\n\n.loaderBlock1 {\n  animation-name: loaderBlock1Anim;\n  animation-duration: var(--loader2-time);\n    background-image: url(\"loading/blocks1.svg\");\n}\n\n.loaderBlock3 {\n  animation-name: loaderBlock3Anim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/blocks3.svg\");\n}\n\n.loaderBlock2 {\n  animation-name: loaderBlock2Anim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/blocks2.svg\");\n}\n\n.loaderBlockIcon {\n  animation-name: loaderBlockIconAnim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/three.svg\");\n}\n\n.loaderBlock {\n  width: 120px;\n  height: 120px;\n  animation-iteration-count: infinite;\n\n  position: absolute;\n  top: 0;\n  left: 0;\n\n  background-repeat: no-repeat;\n  background-position: center center;\n  background-size: 100% 100%;\n  transform-origin: bottom;\n\n  filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.25));\n}\n\n@keyframes loaderBlock1Anim {\n  0% {\n    transform: translate(0, -50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  10% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  15% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  85% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  100% {\n    transform: translate(0, -50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n}\n\n@keyframes loaderBlock3Anim {\n  0% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  20% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  30% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  70% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  100% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n}\n\n@keyframes loaderBlock2Anim {\n  0% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n  40% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n  45% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n    transform-origin: center;\n  }\n  85% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n    transform-origin: center;\n  }\n  100% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n}\n\n@keyframes loaderBlockIconAnim {\n  0% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n  }\n  45% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    transform-origin: center;\n  }\n  60% {\n    transform-origin: center;\n    transform: translate(0, 0) scale(1.2, 1.2) rotate(360deg);\n    animation-timing-function: ease-in;\n    filter: drop-shadow(4px 4px 8px rgba(0, 255, 13, 1));\n  }\n  75% {\n    transform-origin: center;\n    transform: translate(0, 0) scale(1, 1) rotate(360deg);\n    animation-timing-function: ease-out;\n  }\n  100% {\n    transform: translate(0, 0) scale(1, 1) rotate(360deg);\n    animation-timing-function: ease-out;\n  }\n}\n\n.errorLogsContainer {\n  width: 100%;\n  height: 100%;\n  box-sizing: border-box;\n  padding: 10px 10px;\n  display: flex;\n  flex-direction: column;\n  color: #ffffff;\n  background-color: #000000;\n  overflow: auto;\n}\n\n.errorLogError {\n  color: #ff4c4c;\n  font-weight: bold;\n  margin-bottom: 2px;\n}\n\n/* Error glow is provided via the workspace SVG filter; keep a minimal\n   class so we can target blocks in case the filter can't be applied. */\n.blocklyBlockSvg.error-glow {\n  /* Prefer the workspace SVG filter for the glow; keep a harmless\n     property so linters don't complain about an empty ruleset. */\n  outline: none;\n}\n\n.fullscreenModeContainerMain {\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: column;\n  background: #363636;\n  z-index: 99999999;\n}\n\n.fullscreenModeContainer {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.blocklyFlyoutLabelText {\n  fill: #ffffff;\n}\n\n.blocklyFlyoutButton .blocklyText {\n  fill: #ffffff;\n}\n\n.blocklyFlyoutButton:hover {\n  cursor: pointer;\n  fill: rgba(0,0,0,0.5);\n}\n\n.blocklyFlyoutButton:hover > .blocklyText {\n  font-weight: bold;\n}\n\n.loadingProgressMain {\n  width: 200px;\n  height: 30px;\n  box-sizing: border-box;\n  background: rgba(255, 255, 255, 0.3);\n  border-style: solid;\n  border-radius: 3px;\n  border-width: 3px;\n  border-color: rgba(0, 0, 0, 0.7);\n}\n.loadingProgressInner {\n  height: 100%;\n  background: rgba(255, 255, 255, 0.5);\n}\n\n.dialogBackground {\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  background-color: rgba(0, 0, 0, 0.5); /* Optional: semi-transparent background */\n  backdrop-filter: blur(2px); /* The blur effect */\n  -webkit-backdrop-filter: blur(2px); /* For Safari */\n}\n\n.gameSettingsBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n}\n\n.gameSettingSelection {\n  display: flex;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow: auto;\n  gap: 2px;\n}\n\n.gameSelectionCategory {\n  display: block;\n  flex-direction: row;\n  flex-grow: 1;\n  width: 100%;\n  overflow: auto;\n}\n\n.centerMiddle {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.infoDiv {\n\twidth: 100%;\n\theight: fit-content;\n\tmin-height: 70px;\n\tbackground: rgba(0,0,0,0.5);\n\tmargin-bottom:2px;\n\tmargin-top:2px;\n\tborder-radius: 10px;\n  padding: 5px 10px;\n  box-sizing: border-box;\n  display: block;\n}\n\n.gameBackupBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n}\n\n.gameBackupSelection {\n  display: flex;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow: auto;\n  gap: 2px;\n}\n\n.gameBackupCategory {\n  display: block;\n  flex-direction: row;\n  flex-grow: 1;\n  width: 100%;\n  overflow: auto;\n}\n\n.backupThumbnail {\n  height: 150px;\n  object-fit: contain;\n  border-radius: 10px;\n  user-select: none;\n  pointer-events: none;\n}\n\n.backupEntry {\n  display: flex;\n  padding: 5px;\n  box-sizing: border-box;\n  border-radius: 5px;\n  background: #8f8f8f;\n  margin: 3px;\n  color: white;\n  font-weight: bold;\n  flex-direction: row;\n  align-items: center;\n  gap: 8px;\n}\n\n.backupTimestamp {\n  font-size: 20px;\n  color: #c7c7c7;\n}\n\n.backupNoticeMenuBarItem {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: row;\n  gap: 3px;\n  flex-wrap: none;\n  font-size: 9px;\n}\n\n.gameExportBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n  box-sizing: border-box;\n}\n\n.exportGameTypeSelectionContainer {\n  display: flex;\n  width: 100%;\n\theight: fit-content;\n\tflex-shrink: 0;\n\tflex-grow: 0;\n  flex-direction: row;\n  padding: 2px 2px;\n  box-sizing: border-box;\n  gap: 5px;\n  text-wrap: nowrap;\n  align-items: center;\n}\n\n.exportGameTypeSelection {\n  display: flex;\n\theight: fit-content;\n\tflex-grow: 1;\n\toverflow: auto;\n\tgap: 2px;\n}\n\n.exportGameType {\n\tdisplay: flex;\n\tbackground: rgba(0,0,0,0.3);\n\tpadding: 4px 4px;\n\ttext-wrap: nowrap;\n\tborder-radius: 2px;\n\tfont-weight: bold;\n\tfont-size: 18px;\n\tcolor: rgba(255,255,255,0.5);\n\tflex-grow: 0;\n\tflex-shrink: 0;\n\tbox-sizing: border-box;\n\twidth: fit-content;\n\theight: fit-content;\n\tgap: 3px;\n\talign-items: center;\n\tuser-select: none;\n}\n\n.exportGameType > img {\n\twidth: 30px;\n\theight: 30px;\n\tobject-fit: contain;\n  padding: 3px 3px;\n}\n\n.exportGameType:hover {\n  background: rgba(0,0,0,0.2);\n  text-decoration: underline;\n  cursor: pointer;\n}\n\n.exportGameType[selected] {\n  text-decoration: unset;\n  cursor: unset;\n  background: rgba(0,0,0,0);\n}\n\n.exportGameType[selected] > img {\n  width: 30px;\n\theight: 30px;\n\tobject-fit: contain;\n  border-radius: 5px;\n  background: rgba(0,0,0,0.4);\n}\n\n.exportOptionsContainer {\n  width: 100%;\n  flex-grow: 1;\n  overflow: auto;\n\n  display: flex;\n  flex-direction: column;\n\n  gap: 4px;\n}\n\n.exportOptionsDescription {\n  width: 100%;\n  height: fit-content;\n  padding: 10px 10px;\n  border-radius: 5px;\n  color: rgba(255,255,255,0.8);\n  background: rgba(0,0,0,0.6);\n  overflow: auto;\n  display: block;\n  box-sizing: border-box;\n}\n\n.exportOptionsOptionContainer {\n  width: 100%;\n  height: fit-content;\n  padding: 10px 10px;\n  border-radius: 5px;\n  color: rgba(255,255,255,0.8);\n  background: rgba(0,0,0,0.6);\n  overflow: auto;\n  display: block;\n  box-sizing: border-box;\n}\n\n.exportOptionsOptionTitle {\n  font-weight: bold;\n  font-size: 25px;\n  margin-bottom: 3px;\n}\n\n.exportOptionsOptionDescription {\n\twhite-space: pre-wrap;\n  overflow-wrap: break-word;\n  word-break: normal;\n}\n\n.textInput {\n\tall: unset;\n\tpadding: 2px 2px;\n\twidth: fit-content;\n\theight: fit-content;\n\tbackground: rgba(255,255,255,1);\n\tcolor: rgba(0,0,0,1);\n\tborder-style: solid;\n\tborder-width: 1px;\n\tborder-color: rgba(50,50,50,1);\n\tfont-size: 13px;\n}\n\n.exportButtonsContainer {\n\tdisplay: flex;\n\tflex-direction: row;\n\tgap: 2px;\n\tpadding: 2px 2px;\n\toverflow: auto;\n}\n\n.exportButton {\n\tdisplay: flex;\n\tbackground: rgba(255,255,255,0.5);\n\tcolor: rgba(0,0,0,0.7);\n\tborder-radius: 5px;\n\tpadding: 5px 5px;\n\tfont-weight: bold;\n\talign-items: center;\n\tgap: 3px;\n\tuser-select: none;\n}\n\n.exportButton > img {\n\twidth: 30px;\n\theight: 30px;\n\tobject-fit: contain;\n\tbackground: rgba(0,0,0,0.3);\n\tpadding: 2px 2px;\n\tborder-radius: 3px;\n}\n\n.exportButton:hover {\n\tcursor: pointer;\n\tbackground: rgba(255,255,255,0.7);\n}\n\n.modeDivContainer {\n  display: flex;\n  width: 100%;\n  flex-direction: column;\n  flex-grow: 1;\n}\n\n.modeTabs {\n  display: flex;\n  width: 100%;\n  min-height: 50px;\n  height: fit-content;\n  flex-direction: row;\n  overflow: auto;\n  gap: 0.5px;\n}\n\n.modeTabContainer {\n  width: fit-content;\n  height: 50px;\n  position: relative;\n  overflow: hidden;\n}";
+module.exports = ":root {\n  --game-viewport-width: 640px;\n  --game-viewport-height: 360px;\n  --game-viewport-scale: 1;\n\n  /*windowDialogContainer*/\n  --popup-dialog-font: \"arial\";\n  /*windowDialogBox*/\n  --popup-dialog-background: hsl(0deg, 0%, 100%);\n  --popup-dialog-border-radius: 10px;\n  --popup-dialog-text-color: hsl(0deg, 0%, 0%);\n  /*windowDialogButton*/\n  --popup-dialog-button-background: hsl(224, 100%, 67%);\n  --popup-dialog-button-hover-background: hsl(224, 100%, 63%);\n  --popup-dialog-button-text-color: hsl(0deg, 0%, 100%);\n  --popup-dialog-button-radius: 5px;\n  /*windowDialogInput*/\n  --popup-dialog-input-background: hsl(0deg, 0%, 100%);\n  --popup-dialog-input-border-width: 1.5px;\n  --popup-dialog-input-border-color: hsl(0deg, 0%, 73%);\n  --popup-dialog-input-text-color: hsl(0deg, 0%, 0%);\n  /*windowDialogHeader*/\n  --popup-dialog-message-size: 16px;\n\n  --loader2-time: 2.5s;\n}\n\n.windowDialogContainer {\n  font-family: var(--popup-dialog-font);\n}\n.windowDialogBackground {\n  background: hsl(0deg, 0%, 0%);\n  z-index: 999999999999;\n}\n.windowDialogBox {\n  background: var(--popup-dialog-background);\n  border-radius: var(--popup-dialog-border-radius);\n  color: var(--popup-dialog-text-color);\n  z-index: 999999999999;\n}\n.windowDialogButton {\n  background: var(--popup-dialog-button-background);\n  color: var(--popup-dialog-button-text-color);\n  border-radius: var(--popup-dialog-button-radius);\n}\n.windowDialogButton:hover {\n  background: var(--popup-dialog-button-hover-background);\n}\n.windowDialogInput {\n  background: var(--popup-dialog-input-background);\n  border-style: solid;\n  border-width: var(--popup-dialog-input-border-width);\n  border-color: var(--popup-dialog-input-border-color);\n  color: var(--popup-dialog-input-text-color);\n  outline: none;\n}\n.windowDialogHeader {\n  font-weight: bold;\n  font-size: var(--popup-dialog-message-size);\n}\n\nbody {\n  font-family: arial;\n}\n\n.appContainer {\n  background: #363636;\n  width: 100%;\n  height: 100svh;\n  position: fixed;\n  top: 0;\n  left: 0;\n  overflow: auto;\n}\n\n.blocklyDiv {\n  width: 100%;\n  height: 100%;\n}\n\n.menuBar {\n  display: flex;\n  width: 100%;\n  min-height: 50px;\n  background: #525252;\n  overflow: unset;\n  transition: 0.2s;\n  flex-direction: row;\n}\n\n.menuBarItemLogo {\n  all: unset;\n  width: fit-content;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  user-select: none;\n  padding: 0 10px;\n}\n\n.menuBarItemLogoImg {\n  height: 30px;\n}\n\n.menuBarItem {\n  all: unset;\n  color: #ffffff;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n}\n\n.unclickableMenuBarItem {\n  all: unset;\n  color: #ffffff;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n}\n\n.menuBarItem:hover {\n  background: #363636;\n  cursor: pointer;\n}\n\n/* Dropdown menu styles */\n.menuBarMenus {\n  display: flex;\n  align-items: center;\n  flex-direction: row;\n}\n.menuParentMain {\n}\n.menuParent {\n  position: relative;\n  display: flex;\n  align-items: center;\n  padding: 0 8px;\n  z-index: 9999;\n  cursor: unset;\n  width: fit-content;\n}\n.menuBarItemLabel {\n  color: #ffffff;\n  font-weight: bold;\n  user-select: none;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  gap: 3px;\n}\n.menuParent.open > .menuBarItemLabel {\n  color: #ffffff;\n}\n.menuDropdown {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  background: #444444;\n  min-width: 160px;\n  border-radius: 6px;\n  box-shadow: 0 6px 14px rgba(0,0,0,0.3);\n  z-index: 9999;\n  display: block; /* hidden attribute controls visibility */\n  cursor: unset;\n}\n.menuDropdownItem {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 6px 8px;\n  color: #ffffff;\n  border-radius: 4px;\n  user-select: none;\n}\n.menuDropdownItem:hover {\n  background: #5a5a5a;\n  cursor: pointer;\n  box-sizing: border-box;\n}\n.menuIcon {\n  width: 16px;\n  height: 16px;\n  object-fit: contain;\n}\n.menuDropdownItemLabel {\n  color: #ffffff;\n}\n\n.panelContainer {\n  display: flex;\n  flex-direction: row;\n  width: 100svw;\n  height: calc(100svh - 50px);\n  position: absolute;\n  top: 50px;\n  left: 0px;\n  min-height: 500px;\n}\n\n.leftPanel {\n  height: calc(100svh - 50px);\n  display: flex;\n  flex-direction: column;\n  flex-grow: 1;\n  min-width: 0;\n}\n\n.rightPanel {\n  width: fit-content;\n  height: calc(100svh - 50px);\n  overflow: auto;\n  box-sizing: border-box;\n  flex-grow: 0;\n  flex-shrink: 0;\n}\n\n.rightPanelContent {\n  width: fit-content;\n  max-width: 100%;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  min-height: 0;\n  box-sizing: border-box;\n  position: relative;\n}\n\n.projectControls {\n  width: 100%;\n  height: 200px;\n}\n\n.projectCanvas {\n  background: #ffffff;\n  border-radius: 4px;\n  flex-shrink: 0;\n  flex-grow: 0;\n  width: calc(var(--game-viewport-width) * var(--game-viewport-scale));\n  height: calc(var(--game-viewport-height) * var(--game-viewport-scale));\n}\n\n.tabArea {\n  display: flex;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow-x: auto;\n  overflow-y: hidden;\n}\n\n.tabIcon {\n  height: 20px;\n  width: 20px;\n  object-fit: contain;\n  margin-right: 5px;\n}\n\n.tabButton {\n  all: unset;\n  color: #c7c7c7;\n  width: fit-content;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n  flex-grow: 0;\n  transform: translateY(5px);\n  border-top-left-radius: 5px;\n  border-top-right-radius: 5px;\n}\n\n.tabButton:hover {\n  background: #8f8f8f;\n  cursor: pointer;\n  color: #ffffff;\n  transform: translateY(4px);\n}\n\n.tabButton[selected] {\n  background: #8f8f8f;\n  cursor: unset;\n  color: #ffffff;\n  transform: translateY(0px);\n}\n\n.tabWindow {\n  background: #8f8f8f;\n  flex-grow: 1;\n  width: 100%;\n  color: #000000;\n  display: flex;            /* <-- CHANGED */\n  flex-direction: column;   /* <-- ADDED */\n  min-height: 0;            /* <-- ADDED (crucial for containing flex) */\n}\n\n.selectedSpriteContainer {\n  min-width: 100%;\n  max-width: calc(var(--game-viewport-scale) * var(--game-viewport-width));\n  box-sizing: border-box;\n  border-width: 5px;\n  border-style: solid;\n  border-color: black;\n  border-radius: 4px;\n  min-height: 30px;\n  height: fit-content;\n  display: flex;\n  padding: 4px 4px;\n  flex-shrink: 0;\n  flex-grow: 0;\n  flex-wrap: wrap;\n  overflow: auto;\n}\n\n.spritesContainer {\n  width: 100%;\n  box-sizing: border-box;\n  border-width: 5px;\n  border-style: solid;\n  border-color: black;\n  border-radius: 4px;\n  display: flex;\n  flex-direction: column;\n  overflow-y: auto;\n  overflow-x: hidden;\n  flex: 1 1 auto;\n  min-height: 0;\n  max-height: 100%;\n}\n\n.spriteContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n}\n\n.spriteTextContainer {\n  width: 200px;\n  text-wrap: wrap;\n  line-break: anywhere;\n}\n\n.spriteContainer[selected] {\n  background: #525252;\n}\n\n.selectedSpriteLabel {\n  color: white;\n  font-weight: bold;\n}\n.selectedSpriteInput {\n  all: unset;\n  padding: 3px 3px;\n  box-sizing: border-box;\n  width: fit-content;\n  color: white;\n  width: 100px;\n  border-radius: 2px;\n  background: #595959;\n}\n\n.costumesContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: column;\n  color: white;\n}\n\n.soundsContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: column;\n  color: white;\n}\n\n.costumePivotContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: row;\n  color: white;\n}\n\n.costumesInPivotContainer {\n  width: fit-content;\n  height: 100%; /* <-- This is OK now */\n  flex-grow: 0;\n  flex-shrink: 0;\n  overflow: auto; /* <-- This will now activate */\n  overflow-anchor: none;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.pivotCostumeButton {\n  min-width: 100px;\n  min-height: 100px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  box-sizing: border-box;\n  padding: 4px 4px;\n  border-radius: 10px;\n  border-width: 2px;\n  border-style: solid;\n  border-color: #000000;\n  margin: 2px;\n  user-select: none;\n  font-weight: bold;\n}\n\n.pivotCostumeButton:hover {\n  border-color: rgb(121, 121, 121);\n  cursor: pointer;\n}\n.pivotCostumeButton[selected] {\n  border-color: #ffffff;\n  cursor: unset;\n}\n\n.pivotEditor {\n  flex-grow: 1;\n  background: #212121;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  flex-shrink: 1;  /* <-- 1. ALLOWS this element to shrink */\n  min-width: 0;      /* <-- 2. THE KEY: Allows it to shrink smaller than its content */\n  overflow: hidden;    /* <-- 3. Prevents children from spilling out */\n  position: relative;\n}\n\n.pivotEditorMenuBar {\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: 64px;\n  width: 100%;\n  display: flex;      /* <-- Puts all items in one horizontal row */\n  overflow-x: auto;   /* <-- Adds horizontal scroll */\n  overflow-y: hidden; /* <-- Prevents vertical scroll */\n  align-items: center;\n}\n\n.pivotEditorMenuBar > * {\n  flex-shrink: 0;\n}\n\n.pivotEditorContainer {\n  flex-grow: 1;\n  position: relative;\n  overflow: auto;\n}\n\n.pivotEditorImageContainer {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: fit-content;\n  height: fit-content;\n  display: block;\n  background-image: url(editor/transparent.png);\n  background-size: 32px;\n  image-rendering: pixelated;\n}\n\n.pivotEditorMenuInput {\n  all: unset;\n  color: #ffffff;\n  font-weight: bold;\n  height: 100%;\n  box-sizing: border-box;\n}\n\n.pivotEditorDot {\n  background: #000000;\n  border-style: solid;\n  border-color: #ffffff;\n  box-sizing: border-box;\n  border-width: 2px;\n  border-radius: 50%;\n  width: 10px;\n  height: 10px;\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  transform: translate(-50%, -50%);\n  opacity: 0.5;\n}\n\n.costumesHeaderContainer {\n  width: 100%;\n  display: block;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  box-sizing: border-box;\n  padding: 5px 5px;\n}\n\n.soundsHeaderContainer {\n  width: 100%;\n  display: block;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  box-sizing: border-box;\n  padding: 5px 5px;\n}\n\n.costumesSelectorContainer {\n  display: flex;\n  flex-direction: column;\n  overflow: auto;\n  overflow-anchor: none;\n  flex-grow: 1;\n}\n\n.soundsSelectorContainer {\n  display: flex;\n  flex-direction: column;\n  overflow: auto;\n  flex-grow: 1;\n}\n\n.costumeContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n}\n\n.soundContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n  flex-direction: column;\n}\n\n.greyButtonStyle {\n  all: unset;\n  background: #6e6e6e;\n  color: white;\n  border-radius: 10px;\n  padding: 7px 7px;\n  box-sizing: border-box;\n  width: fit-content;\n  height: fit-content;\n  font-weight: bold;\n}\n\n.greyButtonStyle:hover {\n  background: #b8b8b8;\n  cursor: pointer;\n}\n\n.selectedCostumeInput {\n  all: unset;\n  padding: 3px 3px;\n  box-sizing: border-box;\n  width: 140px;\n  color: white;\n}\n\n.scratchCategoryMenuItemLabel {\n  color: white;\n}\n\n.projectControls {\n  background: #8f8f8f;\n  border-radius: 5px;\n  width: 100%;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  display: flex;\n}\n\n.projectButton {\n  padding: 5px;\n  font-size: 20px;\n  user-select: none;\n  margin-right: 2px;\n  border-radius: 5px;\n  min-width: 20px;\n  box-sizing: border-box;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n\n.projectButtonImg {\n  height: 20px;\n  width: 20px;\n  object-fit: contain;\n}\n\n.projectButton:hover {\n  cursor: pointer;\n  color: white;\n  background-color: rgba(0,0,0,0.5);\n}\n\n.spriteInputContainer {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  padding: 4px;\n  box-sizing: border-box;\n  border-radius: 5px;\n  background: #8f8f8f;\n  margin: 3px;\n}\n\n.projectMouseCoordinates {\n  color: white;\n  font-size: 10px;\n  font-weight: bold;\n}\n\n.addSpriteButton {\n  position: absolute;\n  bottom: 10px;\n  right: 10px;\n}\n\n.spriteAddMenu {\n  position: absolute;\n  bottom: 65px;\n  right: 10px;\n  background: #8f8f8f;\n  border-radius: 5px;\n  display: flex;\n  flex-direction: column;\n  padding: 1px;\n  box-sizing: border-box;\n  gap: 2px;\n}\n\n.spriteAddMenuItem {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  padding: 5px;\n  border-radius: 5px;\n  color: white;\n  font-weight: bold;\n  user-select: none;\n  font-size: 17px;\n  cursor: default;\n}\n\n.spriteAddMenuItem:hover {\n  cursor: pointer;\n  background: rgba(0,0,0,0.5);\n}\n\n.spriteAddMenuItem > img {\n  width: 23px;\n  height: 23px;\n  object-fit: contain;\n}\n\n.customBlockDialogBG {\n  position: fixed;\n  width: 100svw;\n  height: 100svh;\n  top: 0;\n  left: 0;\n  background: rgba(0, 0, 0, 0.5);\n}\n.customBlockDialogBox {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  border-radius: 10px;\n  box-sizing: border-box;\n  background: #5c5c5c;\n  transform: translate(-50%, -50%);\n  padding: 10px 10px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  max-width: calc(100% - 100px);\n  max-height: calc(100% - 50px);\n  overflow: auto;\n  color: #ffffff;\n}\n.customBlockWorkspace {\n  flex-grow: 1;\n  display: block;\n  min-width: calc(100% - 1px);\n  min-height: 100%;\n  max-width: 100%;\n  max-height: 100%;\n}\n\n.customBlockButtons {\n  flex-grow: 0;\n  flex-shrink: 0;\n  display: flex;\n  width: 100%;\n  align-items: center;\n  justify-content: center;\n}\n\n.loadingDialogBG {\n  background: #363636;\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  z-index: 99999999;\n}\n\n.loadingDialogBox {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  align-items: center;\n  z-index: 99999999;\n  font-weight: bold;\n  justify-content: center;\n  display: flex;\n  flex-direction: column;\n  color: #ffffff;\n}\n\n.loader2Container {\n  width: 120px;\n  height: 120px;\n  position: relative;\n}\n\n.loaderBlock1 {\n  animation-name: loaderBlock1Anim;\n  animation-duration: var(--loader2-time);\n    background-image: url(\"loading/blocks1.svg\");\n}\n\n.loaderBlock3 {\n  animation-name: loaderBlock3Anim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/blocks3.svg\");\n}\n\n.loaderBlock2 {\n  animation-name: loaderBlock2Anim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/blocks2.svg\");\n}\n\n.loaderBlockIcon {\n  animation-name: loaderBlockIconAnim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/three.svg\");\n}\n\n.loaderBlock {\n  width: 120px;\n  height: 120px;\n  animation-iteration-count: infinite;\n\n  position: absolute;\n  top: 0;\n  left: 0;\n\n  background-repeat: no-repeat;\n  background-position: center center;\n  background-size: 100% 100%;\n  transform-origin: bottom;\n\n  filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.25));\n}\n\n@keyframes loaderBlock1Anim {\n  0% {\n    transform: translate(0, -50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  10% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  15% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  85% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  100% {\n    transform: translate(0, -50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n}\n\n@keyframes loaderBlock3Anim {\n  0% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  20% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  30% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  70% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  100% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n}\n\n@keyframes loaderBlock2Anim {\n  0% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n  40% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n  45% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n    transform-origin: center;\n  }\n  85% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n    transform-origin: center;\n  }\n  100% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n}\n\n@keyframes loaderBlockIconAnim {\n  0% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n  }\n  45% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    transform-origin: center;\n  }\n  60% {\n    transform-origin: center;\n    transform: translate(0, 0) scale(1.2, 1.2) rotate(360deg);\n    animation-timing-function: ease-in;\n    filter: drop-shadow(4px 4px 8px rgba(0, 255, 13, 1));\n  }\n  75% {\n    transform-origin: center;\n    transform: translate(0, 0) scale(1, 1) rotate(360deg);\n    animation-timing-function: ease-out;\n  }\n  100% {\n    transform: translate(0, 0) scale(1, 1) rotate(360deg);\n    animation-timing-function: ease-out;\n  }\n}\n\n.errorLogsContainer {\n  width: 100%;\n  height: 100%;\n  box-sizing: border-box;\n  padding: 10px 10px;\n  display: flex;\n  flex-direction: column;\n  color: #ffffff;\n  background-color: #000000;\n  overflow: auto;\n}\n\n.errorLogError {\n  color: #ff4c4c;\n  font-weight: bold;\n  margin-bottom: 2px;\n}\n\n/* Error glow is provided via the workspace SVG filter; keep a minimal\n   class so we can target blocks in case the filter can't be applied. */\n.blocklyBlockSvg.error-glow {\n  /* Prefer the workspace SVG filter for the glow; keep a harmless\n     property so linters don't complain about an empty ruleset. */\n  outline: none;\n}\n\n.fullscreenModeContainerMain {\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: column;\n  background: #363636;\n  z-index: 99999999;\n}\n\n.fullscreenModeContainer {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.blocklyFlyoutLabelText {\n  fill: #ffffff;\n}\n\n.blocklyFlyoutButton .blocklyText {\n  fill: #ffffff;\n}\n\n.blocklyFlyoutButton:hover {\n  cursor: pointer;\n  fill: rgba(0,0,0,0.5);\n}\n\n.blocklyFlyoutButton:hover > .blocklyText {\n  font-weight: bold;\n}\n\n.loadingProgressMain {\n  width: 200px;\n  height: 30px;\n  box-sizing: border-box;\n  background: rgba(255, 255, 255, 0.3);\n  border-style: solid;\n  border-radius: 3px;\n  border-width: 3px;\n  border-color: rgba(0, 0, 0, 0.7);\n}\n.loadingProgressInner {\n  height: 100%;\n  background: rgba(255, 255, 255, 0.5);\n}\n\n.dialogBackground {\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  background-color: rgba(0, 0, 0, 0.5); /* Optional: semi-transparent background */\n  backdrop-filter: blur(2px); /* The blur effect */\n  -webkit-backdrop-filter: blur(2px); /* For Safari */\n}\n\n.gameSettingsBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n}\n\n.gameSettingSelection {\n  display: flex;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow: auto;\n  gap: 2px;\n}\n\n.gameSelectionCategory {\n  display: block;\n  flex-direction: row;\n  flex-grow: 1;\n  width: 100%;\n  overflow: auto;\n}\n\n.centerMiddle {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.infoDiv {\n\twidth: 100%;\n\theight: fit-content;\n\tmin-height: 70px;\n\tbackground: rgba(0,0,0,0.5);\n\tmargin-bottom:2px;\n\tmargin-top:2px;\n\tborder-radius: 10px;\n  padding: 5px 10px;\n  box-sizing: border-box;\n  display: block;\n}\n\n.gameBackupBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n}\n\n.gameBackupSelection {\n  display: flex;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow: auto;\n  gap: 2px;\n}\n\n.gameBackupCategory {\n  display: block;\n  flex-direction: row;\n  flex-grow: 1;\n  width: 100%;\n  overflow: auto;\n}\n\n.backupThumbnail {\n  height: 150px;\n  object-fit: contain;\n  border-radius: 10px;\n  user-select: none;\n  pointer-events: none;\n}\n\n.backupEntry {\n  display: flex;\n  padding: 5px;\n  box-sizing: border-box;\n  border-radius: 5px;\n  background: #8f8f8f;\n  margin: 3px;\n  color: white;\n  font-weight: bold;\n  flex-direction: row;\n  align-items: center;\n  gap: 8px;\n}\n\n.backupTimestamp {\n  font-size: 20px;\n  color: #c7c7c7;\n}\n\n.backupNoticeMenuBarItem {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: row;\n  gap: 3px;\n  flex-wrap: none;\n  font-size: 9px;\n}\n\n.gameExportBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n  box-sizing: border-box;\n}\n\n.exportGameTypeSelectionContainer {\n  display: flex;\n  width: 100%;\n\theight: fit-content;\n\tflex-shrink: 0;\n\tflex-grow: 0;\n  flex-direction: row;\n  padding: 2px 2px;\n  box-sizing: border-box;\n  gap: 5px;\n  text-wrap: nowrap;\n  align-items: center;\n}\n\n.exportGameTypeSelection {\n  display: flex;\n\theight: fit-content;\n\tflex-grow: 1;\n\toverflow: auto;\n\tgap: 2px;\n}\n\n.exportGameType {\n\tdisplay: flex;\n\tbackground: rgba(0,0,0,0.3);\n\tpadding: 4px 4px;\n\ttext-wrap: nowrap;\n\tborder-radius: 2px;\n\tfont-weight: bold;\n\tfont-size: 18px;\n\tcolor: rgba(255,255,255,0.5);\n\tflex-grow: 0;\n\tflex-shrink: 0;\n\tbox-sizing: border-box;\n\twidth: fit-content;\n\theight: fit-content;\n\tgap: 3px;\n\talign-items: center;\n\tuser-select: none;\n}\n\n.exportGameType > img {\n\twidth: 30px;\n\theight: 30px;\n\tobject-fit: contain;\n  padding: 3px 3px;\n}\n\n.exportGameType:hover {\n  background: rgba(0,0,0,0.2);\n  text-decoration: underline;\n  cursor: pointer;\n}\n\n.exportGameType[selected] {\n  text-decoration: unset;\n  cursor: unset;\n  background: rgba(0,0,0,0);\n}\n\n.exportGameType[selected] > img {\n  width: 30px;\n\theight: 30px;\n\tobject-fit: contain;\n  border-radius: 5px;\n  background: rgba(0,0,0,0.4);\n}\n\n.exportOptionsContainer {\n  width: 100%;\n  flex-grow: 1;\n  overflow: auto;\n\n  display: flex;\n  flex-direction: column;\n\n  gap: 4px;\n}\n\n.exportOptionsDescription {\n  width: 100%;\n  height: fit-content;\n  padding: 10px 10px;\n  border-radius: 5px;\n  color: rgba(255,255,255,0.8);\n  background: rgba(0,0,0,0.6);\n  overflow: auto;\n  display: block;\n  box-sizing: border-box;\n}\n\n.exportOptionsOptionContainer {\n  width: 100%;\n  height: fit-content;\n  padding: 10px 10px;\n  border-radius: 5px;\n  color: rgba(255,255,255,0.8);\n  background: rgba(0,0,0,0.6);\n  overflow: auto;\n  display: block;\n  box-sizing: border-box;\n}\n\n.exportOptionsOptionTitle {\n  font-weight: bold;\n  font-size: 25px;\n  margin-bottom: 3px;\n}\n\n.exportOptionsOptionDescription {\n\twhite-space: pre-wrap;\n  overflow-wrap: break-word;\n  word-break: normal;\n}\n\n.textInput {\n\tall: unset;\n\tpadding: 2px 2px;\n\twidth: fit-content;\n\theight: fit-content;\n\tbackground: rgba(255,255,255,1);\n\tcolor: rgba(0,0,0,1);\n\tborder-style: solid;\n\tborder-width: 1px;\n\tborder-color: rgba(50,50,50,1);\n\tfont-size: 13px;\n}\n\n.exportButtonsContainer {\n\tdisplay: flex;\n\tflex-direction: row;\n\tgap: 2px;\n\tpadding: 2px 2px;\n\toverflow: auto;\n}\n\n.exportButton {\n\tdisplay: flex;\n\tbackground: rgba(255,255,255,0.5);\n\tcolor: rgba(0,0,0,0.7);\n\tborder-radius: 5px;\n\tpadding: 5px 5px;\n\tfont-weight: bold;\n\talign-items: center;\n\tgap: 3px;\n\tuser-select: none;\n}\n\n.exportButton > img {\n\twidth: 30px;\n\theight: 30px;\n\tobject-fit: contain;\n\tbackground: rgba(0,0,0,0.3);\n\tpadding: 2px 2px;\n\tborder-radius: 3px;\n}\n\n.exportButton:hover {\n\tcursor: pointer;\n\tbackground: rgba(255,255,255,0.7);\n}\n\n.modeDivContainer {\n  display: flex;\n  width: 100%;\n  flex-direction: column;\n  flex: 1 1 auto;\n  min-height: 0;\n  position: relative;\n}\n\n.modeTabs {\n  display: flex;\n  width: 100%;\n  min-height: 50px;\n  height: fit-content;\n  flex-direction: row;\n  overflow: auto;\n  gap: 0.5px;\n}\n\n.modeTabContainer {\n  width: fit-content;\n  height: 50px;\n  position: relative;\n  overflow: hidden;\n}";
 
 /***/ }),
 
@@ -4675,7 +4675,7 @@ async function saveSpriteZip(sprite, zip, progress = new ProgressMonitor()) {
   progress.calculatedMax(max);
   progress.current = 0;
 
-  var spriteJson = toSpriteJSON(sprite); //add the sprite properties, without the sound and costume properties.
+  var spriteJson = toSpriteJSON(sprite, true); //add the sprite properties, without the sound and costume properties.
 
   //Manually create the costumes array.
   var costumeData = getCostumeData(sprite);
@@ -4768,7 +4768,9 @@ async function loadSpriteFromZip(zipSource, progress = new ProgressMonitor()) {
   }
 
   //Add sprite properties.
-  fromSpriteJSON(sprite, spriteJson);
+  fromSpriteJSON(sprite, spriteJson, true);
+  engine.makeUniqueSpriteNames();
+  compileSprite(sprite);
 }
 
 module.exports = {
@@ -7596,6 +7598,7 @@ var { addAppMenu } = __webpack_require__(9366);
 var loadingScreenContainer = elements.getGPId("loadingScreenContainer");
 var loadingScreenContent = elements.getGPId("loadingScreenContent");
 var selectedSprite = __webpack_require__(3010);
+var { setCurrentLibrary } = __webpack_require__(1020);
 var defaultProject = __webpack_require__(5808);
 
 var newFileMenus = [];
@@ -7615,6 +7618,7 @@ async function newProject() {
   loadingScreenContainer.hidden = false;
   await defaultProject.loadDefaultProject();
   selectedSprite.setCurrentSprite(0, true, true);
+  setCurrentLibrary(0);
   loadingScreenContainer.hidden = true;
 }
 
@@ -7648,6 +7652,7 @@ function loadProjectFile(file) {
       );
     }
     selectedSprite.setCurrentSprite(0, true, true);
+    setCurrentLibrary(0);
     loadingScreenContainer.hidden = true;
   };
   reader.readAsArrayBuffer(file);
@@ -7893,6 +7898,25 @@ selectedSprite.deps.exportSprite = async function (sprite) {
   a.download = sprite.name + ".ggm3sprite";
   a.click();
 };
+
+selectedSprite.deps.importSprite = async function (arrayBuffer) {
+  loadingScreenContainer.hidden = false;
+  loadingScreenContent.innerHTML = "";
+
+  var monitor = new projectSaver.ProgressMonitor();
+
+  monitor.on("progress", (event) => {
+    elements.setInnerJSON(loadingScreenContent, [
+      createProgessBarJSON(event.current / event.max, true),
+    ]);
+  });
+
+  await projectSaver.loadSpriteFromZip(arrayBuffer, monitor);
+
+  loadingScreenContainer.hidden = true;
+  selectedSprite.updateSpritesContainer();
+};
+
 
 module.exports = {
   loadProjectFile,
@@ -9512,6 +9536,10 @@ class Library {
     this.costumes = [];
     this.sounds = [];
   }
+
+  dispose() {
+    
+  }
 }
 
 module.exports = Library;
@@ -10101,10 +10129,11 @@ class ExportMainGenerator extends EventEmitter {
   async generateGameCode() {
     var spritesCodeInArray = `[${this._spriteJS.join(",")}]`;
     var engineProperties = JSON.stringify(this.engineMetadata);
-    var allCode = `{sprites:[spritesCodeInArray],engineProps:${engineProperties}}`;
-    var code = ("" + GAME_CODE_BASE).replaceAll("|%GGM3Game%|", allCode);
+    var allCode = `{sprites:[${spritesCodeInArray}],engineProps:${engineProperties}}`;
+    var code = ("" + GAME_CODE_BASE).replaceAll('"|%GGM3Game%|"', allCode); //This isn't actually put in string, its just there to prevent the JS beautify errors.
 
     this.gameCode = await compress(code);
+    console.log(this.gameCode);
   }
 
   async generate() {
@@ -21927,12 +21956,12 @@ function generateToolbox(defaultX, defaultY) {
         <block type="motion_gotoxy">
             <value name="X">
                 <shadow type="math_number">
-                    <field name="NUM">${+defaultX}</field>
+                    <field name="NUM">${(+defaultX).toFixed(2)}</field>
                 </shadow>
             </value>
             <value name="Y">
                 <shadow type="math_number">
-                    <field name="NUM">${+defaultY}</field>
+                    <field name="NUM">${(+defaultY).toFixed(2)}</field>
                 </shadow>
             </value>
         </block>
@@ -21958,14 +21987,14 @@ function generateToolbox(defaultX, defaultY) {
         <block type="motion_setx">
             <value name="X">
                 <shadow type="math_number">
-                    <field name="NUM">${defaultX}</field>
+                    <field name="NUM">${(+defaultX).toFixed(2)}</field>
                 </shadow>
             </value>
         </block>
         <block type="motion_sety">
             <value name="Y">
                 <shadow type="math_number">
-                    <field name="NUM">${defaultY}</field>
+                    <field name="NUM">${(+defaultY).toFixed(2)}</field>
                 </shadow>
             </value>
         </block>
@@ -22629,6 +22658,7 @@ function generateToolbox(defaultX, defaultY) {
             </value>
         </block>
         <block type="engine_framerate"></block>
+        <block type="engine_estimated_fps"></block>
     </category>
     <category name="Variables" id="data" colour="#FF8C1A" secondaryColour="#DB6E00" custom="GGM3_VARIABLE">
     </category>
@@ -23615,6 +23645,15 @@ var { makeSortable } = __webpack_require__(2088);
 
 var selectedLibrary = -1;
 
+function setCurrentLibrary(index) {
+  if (!engine.libraries[index]) {
+    reloadLibrariesSelection(); //Still reload it.
+    return;
+  }
+  selectedLibrary = index;
+  reloadLibrariesSelection();
+}
+
 function createLibrarySelection(library, index) {
   return {
     element: "div",
@@ -23632,7 +23671,6 @@ function createLibrarySelection(library, index) {
         element: "div",
         className: "spriteTextContainer",
         textContent: library.name,
-        contenteditable: "plaintext-only",
         style: {
           marginRight: "5px",
         },
@@ -23753,6 +23791,7 @@ reloadLibrariesSelection();
 
 module.exports = {
   reloadLibrariesSelection,
+  setCurrentLibrary
 };
 
 /***/ }),
@@ -23830,7 +23869,25 @@ function init(state, deps) {
             event: "click",
             func: function () {
               closeSpriteAddMenu();
-              window.alert("Import feature coming soon!");
+              var fileSelect = document.createElement("input");
+              fileSelect.type = "file";
+              fileSelect.accept = ".ggm3sprite";
+              fileSelect.onchange = function () {
+                if (Array.from(fileSelect.files).length == 0) {
+                  fileSelect.value = "";
+                  fileSelect.remove();
+                  return;
+                }
+
+                var reader = new FileReader();
+                reader.onload = function () {
+                  fileSelect.value = "";
+                  fileSelect.remove();
+                  deps.importSprite(reader.result);
+                };
+                reader.readAsArrayBuffer(fileSelect.files[0]);
+              };
+              fileSelect.click();
             },
           },
         ],
@@ -24044,6 +24101,7 @@ function init(state, deps) {
               element: "button",
               className: "greyButtonStyle",
               textContent: "Delete",
+              hidden: engine.sprites.length == 1,
               style: {
                 fontSize: "15px",
                 marginRight: "5px",
@@ -24256,6 +24314,8 @@ async function loadDefaultProject() {
   var sprite = engine.createEmptySprite();
   var costume = sprite.addCostume(logo);
   sprite.size = 40;
+
+  var library = engine.createEmptyLibrary();
 }
 
 module.exports = {
@@ -24923,7 +24983,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("(function () {\n\t//////////////////////////////////////////////////////////////////\n\t\n\tconst GameContent = |%GGM3Game%|;\n\tvar Game = window.Game = {};\n\tvar GameEvents = {};\n\t\n\t//////////////////////////////////////////////////////////////////\n\t\n\tGameEvents.progress = [];\n\tGameEvents.loaded = [];\n\tGameEvents.error = [];\n\n\tfunction _game_removeEventListener(eventName, func) {\n\t\tif (typeof eventName !== \"string\") {\n\t\t\tthrow new Error(\"Event name isn't a string.\");\n\t\t\treturn;\n\t\t}\n\t\tvar eventArray = GameEvents[eventName];\n\t\tif (eventArray) {\n\t\t\tGameEvents[eventName] = eventArray.filter((f) => !(func == f));\n\t\t} else {\n\t\t\tthrow new Error(\"Event doesn't exist\");\n\t\t\treturn;\n\t\t}\n\t}\n\t\n\tfunction _game_addEventListener(eventName, func, options = {}) {\n\t\tif (typeof eventName !== \"string\") {\n\t\t\tthrow new Error(\"Event name isn't a string.\");\n\t\t\treturn;\n\t\t}\n\t\tvar safeOptions = options || {};\n\t\tvar eventArray = GameEvents[eventName];\n\t\tif (eventArray) {\n\t\t\tif (safeOptions.once) {\n\t\t\t\tvar wrapper = function (...incomingArgs) {\n\t\t\t\t\tvar result = func(...incomingArgs);\n\t\t\t\t\t_game_removeEventListener(eventName, wrapper);\n\t\t\t\t\treturn result;\n\t\t\t\t};\n\t\t\t\teventArray.push(wrapper);\n\t\t\t} else {\n\t\t\t\teventArray.push(func);\n\t\t\t}\n\t\t} else {\n\t\t\tthrow new Error(\"Event doesn't exist\");\n\t\t\treturn;\n\t\t}\n\t}\n\n\tfunction _callEvent(eventName, ...args) {\n\t\tvar eventArray = GameEvents[eventName];\n\t\tif (!eventArray) {\n\t\t\treturn;\n\t\t}\n\t\teventArray.forEach((f) => f(...args));\n\t}\n\n\tGame.addEventListener = _game_addEventListener;\n\tGame.removeEventListener = _game_removeEventListener;\n\t\n\t//////////////////////////////////////////////////////////////////\n\t\n\tGame.engine = null;\n\tfunction attachEngine(engine) {\n\t\tif (!engine) {\n\t\t\tthrow new Error(\"No GGM3Engine provided.\");\n\t\t\treturn;\n\t\t}\n\t\tif (!engine.__isGGM3Engine__) {\n\t\t\tthrow new Error(\"Engine provided isn't a GGM3Engine.\");\n\t\t\treturn;\n\t\t}\n\t\tGame.engine = engine;\n\t};\n\t\n\t//////////////////////////////////////////////////////////////////\n\n\t//Most of these used from from-to.js\n\n\tfunction _fromEnginePropertyNames(from) {\n\t  engine.propertyVariables = {};\n\t  for (var name of from || []) {\n\t    engine.propertyVariables[name] = true;\n\t  }\n\t}\n\tfunction fromEngineJSON(mainJSON) {\n\t  Object.assign(engine, {\n\t    globalVariables: mainJSON.globalVariables || {},\n\t    broadcastNames: mainJSON.broadcastNames || [],\n\t    frameRate: mainJSON.frameRate || 60,\n\t    gameWidth: mainJSON.gameWidth || engine.DEFAULT_WIDTH,\n\t    gameHeight: mainJSON.gameHeight || engine.DEFAULT_HEIGHT,\n\t  });\n\t  _fromEnginePropertyNames(mainJSON.spriteProperties);\n\t  engine.updateCanvasSize();\n\t}\n\t\n\tfunction fromSpriteJSON(sprite, spriteJson) {\n\t  Object.assign(sprite, {\n\t    x: spriteJson.x,\n\t    y: spriteJson.y,\n\t    angle: spriteJson.angle,\n\t    scaleX: spriteJson.scaleX,\n\t    scaleY: spriteJson.scaleY,\n\t    skewX: spriteJson.skewX || 0,\n\t    skewY: spriteJson.skewY || 0,\n\t    size: spriteJson.size,\n\t\t\t//blocklyXML isn't used in exports since we're using pre-generated code, and also because there is no Blockly library included.\n\t    //blocklyXML: spriteJson.blocklyXML\n\t    //  ? Blockly.Xml.textToDom(spriteJson.blocklyXML)\n\t    //  : null,\n\t    name: spriteJson.name,\n\t    costumeIndex: spriteJson.costumeIndex,\n\t    zIndex: spriteJson.zIndex,\n\t    variables: spriteJson.variables,\n\t    hidden: spriteJson.hidden,\n\t    spriteProperties: spriteJson.properties || {},\n\t  });\n\t}\n\n\tfunction fromCostumeJSON(costume, costumeJson) {\n\t  Object.assign(costume, {\n\t    id: costumeJson.id,\n\t    rotationCenterX: costumeJson.rotationCenterX,\n\t    rotationCenterY: costumeJson.rotationCenterY,\n\t    preferedScale: costumeJson.preferedScale,\n\t    willPreload: costumeJson.willPreload,\n\t    mimeType: costumeJson.mimeType,\n\t  });\n\t}\n\n\tfunction fromSoundJSON(sound, soundJson) {\n\t  Object.assign(sound, {\n\t    id: soundJson.id,\n\t    willPreload: soundJson.willPreload,\n\t    mimeType: soundJson.mimeType,\n\t  });\n\t}\n\n\t//////////////////////////////////////////////////////////////////\n\n\t//Function used to assign the generated sprite \n\tfunction assignSpriteLogic(spr, functions) { //spr is the GGM3 sprite class, not an JSON object.\n\t\tfor (var id of Object.keys(functions)) { //ID: Function\n\t\t\tvar spriteFunction = functions[id];\n\n\t\t\tspr.addFunction();\n\t\t}\n\t}\n\n\t//////////////////////////////////////////////////////////////////\n\n\tfunction _startPreloading() {\n\t\tif (!Game.engine) {\n\t\t\tthrow new Error(\"There is no attached GGM3Engine to load the game into.\");\n\t\t\treturn;\n\t\t}\n\t}\n\t\n\tGame.startPreloading = _startPreloading;\n\n\t//////////////////////////////////////////////////////////////////\n})();");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("(function () {\n\t//////////////////////////////////////////////////////////////////\n\t\n\tconst GameContent = \"|%GGM3Game%|\";\n\tvar Game = window.Game = {};\n\tvar GameEvents = {};\n\t\n\t//////////////////////////////////////////////////////////////////\n\t\n\tGameEvents.progress = [];\n\tGameEvents.loaded = [];\n\tGameEvents.error = [];\n\n\tfunction _game_removeEventListener(eventName, func) {\n\t\tif (typeof eventName !== \"string\") {\n\t\t\tthrow new Error(\"Event name isn't a string.\");\n\t\t\treturn;\n\t\t}\n\t\tvar eventArray = GameEvents[eventName];\n\t\tif (eventArray) {\n\t\t\tGameEvents[eventName] = eventArray.filter((f) => !(func == f));\n\t\t} else {\n\t\t\tthrow new Error(\"Event doesn't exist\");\n\t\t\treturn;\n\t\t}\n\t}\n\t\n\tfunction _game_addEventListener(eventName, func, options = {}) {\n\t\tif (typeof eventName !== \"string\") {\n\t\t\tthrow new Error(\"Event name isn't a string.\");\n\t\t\treturn;\n\t\t}\n\t\tvar safeOptions = options || {};\n\t\tvar eventArray = GameEvents[eventName];\n\t\tif (eventArray) {\n\t\t\tif (safeOptions.once) {\n\t\t\t\tvar wrapper = function (...incomingArgs) {\n\t\t\t\t\tvar result = func(...incomingArgs);\n\t\t\t\t\t_game_removeEventListener(eventName, wrapper);\n\t\t\t\t\treturn result;\n\t\t\t\t};\n\t\t\t\teventArray.push(wrapper);\n\t\t\t} else {\n\t\t\t\teventArray.push(func);\n\t\t\t}\n\t\t} else {\n\t\t\tthrow new Error(\"Event doesn't exist\");\n\t\t\treturn;\n\t\t}\n\t}\n\n\tfunction _callEvent(eventName, ...args) {\n\t\tvar eventArray = GameEvents[eventName];\n\t\tif (!eventArray) {\n\t\t\treturn;\n\t\t}\n\t\teventArray.forEach((f) => f(...args));\n\t}\n\n\tGame.addEventListener = _game_addEventListener;\n\tGame.removeEventListener = _game_removeEventListener;\n\t\n\t//////////////////////////////////////////////////////////////////\n\t\n\tGame.engine = null;\n\tfunction attachEngine(engine) {\n\t\tif (!engine) {\n\t\t\tthrow new Error(\"No GGM3Engine provided.\");\n\t\t\treturn;\n\t\t}\n\t\tif (!engine.__isGGM3Engine__) {\n\t\t\tthrow new Error(\"Engine provided isn't a GGM3Engine.\");\n\t\t\treturn;\n\t\t}\n\t\tGame.engine = engine;\n\t};\n\t\n\t//////////////////////////////////////////////////////////////////\n\n\t//Most of these used from from-to.js\n\n\tfunction _fromEnginePropertyNames(from) {\n\t  engine.propertyVariables = {};\n\t  for (var name of from || []) {\n\t    engine.propertyVariables[name] = true;\n\t  }\n\t}\n\tfunction fromEngineJSON(mainJSON) {\n\t  Object.assign(engine, {\n\t    globalVariables: mainJSON.globalVariables || {},\n\t    broadcastNames: mainJSON.broadcastNames || [],\n\t    frameRate: mainJSON.frameRate || 60,\n\t    gameWidth: mainJSON.gameWidth || engine.DEFAULT_WIDTH,\n\t    gameHeight: mainJSON.gameHeight || engine.DEFAULT_HEIGHT,\n\t  });\n\t  _fromEnginePropertyNames(mainJSON.spriteProperties);\n\t  engine.updateCanvasSize();\n\t}\n\t\n\tfunction fromSpriteJSON(sprite, spriteJson) {\n\t  Object.assign(sprite, {\n\t    x: spriteJson.x,\n\t    y: spriteJson.y,\n\t    angle: spriteJson.angle,\n\t    scaleX: spriteJson.scaleX,\n\t    scaleY: spriteJson.scaleY,\n\t    skewX: spriteJson.skewX || 0,\n\t    skewY: spriteJson.skewY || 0,\n\t    size: spriteJson.size,\n\t\t\t//blocklyXML isn't used in exports since we're using pre-generated code, and also because there is no Blockly library included.\n\t    //blocklyXML: spriteJson.blocklyXML\n\t    //  ? Blockly.Xml.textToDom(spriteJson.blocklyXML)\n\t    //  : null,\n\t    name: spriteJson.name,\n\t    costumeIndex: spriteJson.costumeIndex,\n\t    zIndex: spriteJson.zIndex,\n\t    variables: spriteJson.variables,\n\t    hidden: spriteJson.hidden,\n\t    spriteProperties: spriteJson.properties || {},\n\t  });\n\t}\n\n\tfunction fromCostumeJSON(costume, costumeJson) {\n\t  Object.assign(costume, {\n\t    id: costumeJson.id,\n\t    rotationCenterX: costumeJson.rotationCenterX,\n\t    rotationCenterY: costumeJson.rotationCenterY,\n\t    preferedScale: costumeJson.preferedScale,\n\t    willPreload: costumeJson.willPreload,\n\t    mimeType: costumeJson.mimeType,\n\t  });\n\t}\n\n\tfunction fromSoundJSON(sound, soundJson) {\n\t  Object.assign(sound, {\n\t    id: soundJson.id,\n\t    willPreload: soundJson.willPreload,\n\t    mimeType: soundJson.mimeType,\n\t  });\n\t}\n\n\t//////////////////////////////////////////////////////////////////\n\n\t//Function used to assign the generated sprite \n\tfunction assignSpriteLogic(spr, functions) { //spr is the GGM3 sprite class, not an JSON object.\n\t\tfor (var id of Object.keys(functions)) { //ID: Function\n\t\t\tvar spriteFunction = functions[id];\n\n\t\t\tspr.addFunction();\n\t\t}\n\t}\n\n\t//////////////////////////////////////////////////////////////////\n\n\tfunction _startPreloading() {\n\t\tif (!Game.engine) {\n\t\t\tthrow new Error(\"There is no attached GGM3Engine to load the game into.\");\n\t\t\treturn;\n\t\t}\n\t}\n\t\n\tGame.startPreloading = _startPreloading;\n\n\t//////////////////////////////////////////////////////////////////\n})();");
 
 /***/ }),
 
@@ -27147,6 +27207,17 @@ Blockly.Blocks["engine_framerate"] = {
   },
 };
 
+Blockly.Blocks["engine_estimated_fps"] = {
+  init: function () {
+    this.jsonInit({
+      message0: "estimated current framerate",
+      args0: [],
+      extensions: ["output_number"],
+      colour: "#77a1b5",
+    });
+  },
+};
+
 
 /***/ }),
 
@@ -27223,7 +27294,7 @@ function toEngineExportJSON() {
 
 //Sprite properties
 
-function fromSpriteJSON(sprite, spriteJson) {
+function fromSpriteJSON(sprite, spriteJson, isImport) {
   Object.assign(sprite, {
     x: spriteJson.x,
     y: spriteJson.y,
@@ -27243,10 +27314,27 @@ function fromSpriteJSON(sprite, spriteJson) {
     hidden: spriteJson.hidden,
     spriteProperties: spriteJson.properties || {},
   });
+
+  if (!isImport) {
+    return; //Stop here if not importing a sprite from a sprite file.
+  }
+
+  //Add things to the engine if they don't exist yet.
+  for (var propertyName of Object.keys(sprite.spriteProperties)) {
+    engine.propertyVariables[propertyName] = true;
+  }
+
+  if (spriteJson.broadcastNames) {
+    for (var name of spriteJson.broadcastNames) {
+      if (engine.broadcastNames.indexOf(name) == -1) {
+        engine.broadcastNames.push(name);
+      }
+    }
+  }
 }
 
-function toSpriteJSON(sprite) {
-  return {
+function toSpriteJSON(sprite, isExport) {
+  var spriteJson = {
     x: sprite.x,
     y: sprite.y,
     angle: sprite.angle,
@@ -27265,6 +27353,15 @@ function toSpriteJSON(sprite) {
     properties: getSaveableVariablesGlobal(sprite.spriteProperties),
     hidden: sprite.hidden,
   };
+
+  if (!isExport) {
+    return spriteJson; //Return normal ggm3 game file sprite.
+  }
+
+  //Return additional properties for importing from sprites.
+  spriteJson.broadcastNames = engine.broadcastNames;
+
+  return spriteJson; //return with additional properties.
 }
 function toExportableSpriteJSON(sprite) {
   return {
@@ -27505,6 +27602,7 @@ class GGM3Engine extends EventEmitter {
     this.libraries = [];
     this.frameRate = this.DEFAULT_FRAMERATE;
     this._frameRate = this.frameRate;
+    this.frameTimestamps = [];
     this._iTime = 0;
     this.sMath = sMath;
     this.exportMode = false;
@@ -27819,6 +27917,19 @@ class GGM3Engine extends EventEmitter {
   }
 
   /**
+    * Deletes a library from the game.
+    * @param {Library} library The library to delete.
+    * @returns {void}
+  */
+  deleteLibrary(library) {
+    if (!library.id) {
+      return;
+    }
+    library.dispose();
+    this.libraries = this.libraries.filter((l) => l.id !== library.id);
+  }
+
+  /**
    * Empties the project by deleting all sprites, resetting all variables, stopping the game, and resetting the resolution, framerate, and cursor style to default values.
    */
   emptyProject() {
@@ -27827,6 +27938,10 @@ class GGM3Engine extends EventEmitter {
       _this.deleteSprite(s);
     });
     this.sprites = [];
+    this.libraries.forEach((l) => {
+      _this.deleteLibrary(l);
+    });
+    this.libraries = [];
     this.spriteProperties = {};
     this.globalVariables = {};
     this.propertyVariables = {};
@@ -27955,23 +28070,31 @@ class GGM3Engine extends EventEmitter {
    */
   startRenderLoop() {
     const _this = this;
-
     let previous = performance.now();
+    const frameTimestamps = this.frameTimestamps;
 
     function loop() {
-      setTimeout(loop, 1);
-      var now = performance.now();
-
-      var frameDuration = 1000 / _this.frameRate;
-
+      const now = performance.now();
+      
+      const frameDuration = 1000 / _this.frameRate;
       let delta = now - previous;
+
       if (delta >= frameDuration) {
-        previous = now;
-        _this.render(delta);
+        previous = now - (delta % frameDuration);
+
+        while (frameTimestamps.length > 0 && frameTimestamps[0] <= now - 1000) {
+          frameTimestamps.shift();
+        }
+
+        frameTimestamps.push(now);
+
+        _this.render(delta, frameTimestamps.length);
       }
+
+      setTimeout(loop,1);
     }
 
-    setTimeout(loop, 1);
+    setTimeout(loop,1);
   }
 
   /**
@@ -28128,7 +28251,7 @@ class GGM3Engine extends EventEmitter {
    * @param {Number} elapsed The time elapsed since the last frame.
    * @returns {void}
    */
-  render(elapsed) {
+  render(elapsed,estimatedFramerate) {
     var { canvas, gl } = this;
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(1, 1, 1, 0); // Use 0,0,0,0 to respect canvas style background
@@ -28136,6 +28259,7 @@ class GGM3Engine extends EventEmitter {
 
     this._iTime += elapsed / 1000;
     this.elapsedFrameTime = elapsed;
+    this.estimatedFramerate = estimatedFramerate;
     if (this._frameRate !== this.frameRate) {
       this._frameRate = this.frameRate;
       this.emit(this.FRAMERATE_CHANGED, this._frameRate);
@@ -28885,7 +29009,7 @@ const modeTabs = [
   },
   {
     label: "Libraries",
-    src: "icons/brush.svg",
+    src: "icons/library.svg",
     default: false,
     id: "MODE_LIBRARIES",
   },
@@ -29594,6 +29718,15 @@ JavascriptTranslation["engine_framerate"] = function (
   options,
 ) {
   return "(engine.frameRate)";
+};
+
+outputBlocks.push("engine_estimated_fps");
+JavascriptTranslation["engine_estimated_fps"] = function (
+  jsonblock,
+  utils,
+  options,
+) {
+  return "(engine.estimatedFramerate)";
 };
 
 JavascriptTranslation["engine_framerate_to"] = function (
@@ -31343,7 +31476,8 @@ class HTML5ExportOption extends EventEmitter {
           name: "Single HTML file",
           id: "dataURLs",
           description:
-            "Export the game as a single HTML file that includes all assets encoded as base64 data URIs. This can severely effect device resources if this is on.\nNote: If you turn this off, you'll need to run this game on a web server.",
+            "Export the game as a single HTML file that includes all assets encoded as base64 data URIs. This can severely effect device resources if this is on."+
+            "\nNote: If you turn this off, you'll need to run this game on a web server or a browser or web app supporting fetching from file URLs.",
           type: "checkbox",
           default: true,
         },

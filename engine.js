@@ -3616,6 +3616,10 @@ class Library {
     this.costumes = [];
     this.sounds = [];
   }
+
+  dispose() {
+    
+  }
 }
 
 module.exports = Library;
@@ -15366,6 +15370,7 @@ class GGM3Engine extends EventEmitter {
     this.libraries = [];
     this.frameRate = this.DEFAULT_FRAMERATE;
     this._frameRate = this.frameRate;
+    this.frameTimestamps = [];
     this._iTime = 0;
     this.sMath = sMath;
     this.exportMode = false;
@@ -15680,6 +15685,19 @@ class GGM3Engine extends EventEmitter {
   }
 
   /**
+    * Deletes a library from the game.
+    * @param {Library} library The library to delete.
+    * @returns {void}
+  */
+  deleteLibrary(library) {
+    if (!library.id) {
+      return;
+    }
+    library.dispose();
+    this.libraries = this.libraries.filter((l) => l.id !== library.id);
+  }
+
+  /**
    * Empties the project by deleting all sprites, resetting all variables, stopping the game, and resetting the resolution, framerate, and cursor style to default values.
    */
   emptyProject() {
@@ -15688,6 +15706,10 @@ class GGM3Engine extends EventEmitter {
       _this.deleteSprite(s);
     });
     this.sprites = [];
+    this.libraries.forEach((l) => {
+      _this.deleteLibrary(l);
+    });
+    this.libraries = [];
     this.spriteProperties = {};
     this.globalVariables = {};
     this.propertyVariables = {};
@@ -15816,23 +15838,31 @@ class GGM3Engine extends EventEmitter {
    */
   startRenderLoop() {
     const _this = this;
-
     let previous = performance.now();
+    const frameTimestamps = this.frameTimestamps;
 
     function loop() {
-      setTimeout(loop, 1);
-      var now = performance.now();
-
-      var frameDuration = 1000 / _this.frameRate;
-
+      const now = performance.now();
+      
+      const frameDuration = 1000 / _this.frameRate;
       let delta = now - previous;
+
       if (delta >= frameDuration) {
-        previous = now;
-        _this.render(delta);
+        previous = now - (delta % frameDuration);
+
+        while (frameTimestamps.length > 0 && frameTimestamps[0] <= now - 1000) {
+          frameTimestamps.shift();
+        }
+
+        frameTimestamps.push(now);
+
+        _this.render(delta, frameTimestamps.length);
       }
+
+      setTimeout(loop,1);
     }
 
-    setTimeout(loop, 1);
+    setTimeout(loop,1);
   }
 
   /**
@@ -15989,7 +16019,7 @@ class GGM3Engine extends EventEmitter {
    * @param {Number} elapsed The time elapsed since the last frame.
    * @returns {void}
    */
-  render(elapsed) {
+  render(elapsed,estimatedFramerate) {
     var { canvas, gl } = this;
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(1, 1, 1, 0); // Use 0,0,0,0 to respect canvas style background
@@ -15997,6 +16027,7 @@ class GGM3Engine extends EventEmitter {
 
     this._iTime += elapsed / 1000;
     this.elapsedFrameTime = elapsed;
+    this.estimatedFramerate = estimatedFramerate;
     if (this._frameRate !== this.frameRate) {
       this._frameRate = this.frameRate;
       this.emit(this.FRAMERATE_CHANGED, this._frameRate);
