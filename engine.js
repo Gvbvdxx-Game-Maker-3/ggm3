@@ -1789,11 +1789,11 @@ exports.update = update;
 /***/ ((module) => {
 
 class LibraryCostume {
-  constructor(library, src) {
+  constructor(library, src, id) {
     this.library = library;
     this.engine = library.engine;
     this.src = src;
-    this.id = Date.now() + "_" + Math.round(Math.random() * 9999999);
+    this.id = id;
   }
 }
 
@@ -3606,6 +3606,7 @@ module.exports = Thread;
 /***/ 3728:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+var LibraryIDs = __webpack_require__(8297);
 var LibraryCostume = __webpack_require__(692);
 
 class Library {
@@ -3617,7 +3618,25 @@ class Library {
     this.sounds = [];
   }
 
-  dispose() {}
+  removeCostume(costume) {
+    costume.id = null;
+    costume.src = null;
+    this.costumes = this.costumes.filter((c) => c.id !== costume.id);
+  }
+
+  addCostume(src, _id) {
+    var id = _id ? _id : LibraryIDs.getUniqueID();
+    var costume = new LibraryCostume(this, src, id);
+    this.costumes.push(costume);
+  }
+
+  dispose() {
+    for (var costume of this.costumes) {
+      costume.id = null;
+      costume.src = null;
+    }
+    this.costumes = [];
+  }
 }
 
 module.exports = Library;
@@ -15762,6 +15781,14 @@ class GGM3Engine extends EventEmitter {
   }
 
   /**
+   * 
+   */
+
+  getLibraryCostume() {
+    
+  }
+
+  /**
    * Creates a new empty sprite without emitting a sprite created event.
    * @returns {Sprite} The newly created sprite.
    */
@@ -16394,6 +16421,23 @@ function calculateMatrix(sprite, dst) {
 
 module.exports = calculateMatrix;
 
+
+/***/ }),
+
+/***/ 8297:
+/***/ ((module) => {
+
+var count = 0;
+
+class LibraryIDs {
+    static getUniqueID() {
+        var genId = "LIB_" + Date.now() + "_" + Math.round(Math.random() * 9999999) + "_" + Math.round(Math.random() * 9999999) + "_" + count;
+        count += 1;
+        return genId;
+    }
+}
+
+module.exports = LibraryIDs;
 
 /***/ }),
 
