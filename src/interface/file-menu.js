@@ -44,7 +44,7 @@ var { addAppMenu } = require("./dropdown-menus.js");
 var loadingScreenContainer = elements.getGPId("loadingScreenContainer");
 var loadingScreenContent = elements.getGPId("loadingScreenContent");
 var selectedSprite = require("./selectedsprite.js");
-var { setCurrentLibrary } = require("./library/");
+var library = require("./library/");
 var defaultProject = require("./defaultproject.js");
 
 var newFileMenus = [];
@@ -64,7 +64,7 @@ async function newProject() {
   loadingScreenContainer.hidden = false;
   await defaultProject.loadDefaultProject();
   selectedSprite.setCurrentSprite(0, true, true);
-  setCurrentLibrary(0);
+  library.projectLoadHandler();
   loadingScreenContainer.hidden = true;
 }
 
@@ -98,7 +98,7 @@ function loadProjectFile(file) {
       );
     }
     selectedSprite.setCurrentSprite(0, true, true);
-    setCurrentLibrary(0);
+    library.projectLoadHandler();
     loadingScreenContainer.hidden = true;
   };
   reader.readAsArrayBuffer(file);

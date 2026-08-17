@@ -2,6 +2,7 @@ var elements = require("../../gp2/elements.js");
 var AElement = require("../../gp2/aelement.js");
 var engine = require("../curengine.js");
 var { makeSortable } = require("../drag-utils.js");
+const library = require("./index.js");
 var libraryNameInput = elements.getGPId("libraryNameInput");
 
 var selectedLibrary = -1;
@@ -50,7 +51,9 @@ function createLibrarySelection(library, index) {
           {
             event: "click",
             func: function (elm) {
-              setCurrentLibrary(index);
+              if (selectedLibrary !== index) {
+                setCurrentLibrary(index);
+              }
             },
           },
         ],
@@ -165,7 +168,15 @@ libraryNameInput.addEventListener("change", function () {
 
 reloadLibrariesSelection();
 
+function projectLoadHandler() {
+  if (engine.libraries.length == 0) {
+    engine.createEmptyLibrary(); //So things don't break when there is no libraries.
+  }
+  setCurrentLibrary(0);
+}
+
 module.exports = {
   reloadLibrariesSelection,
   setCurrentLibrary,
+  projectLoadHandler
 };
