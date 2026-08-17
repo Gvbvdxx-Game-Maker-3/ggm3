@@ -31,7 +31,10 @@ function createLibraryHeader() {
     var reader = new FileReader();
     reader.onload = function () {
       var src = reader.result;
-      currentLibrary.addCostume(src, "Costume", blob.mimeType);
+      var n = (""+blob.name).split(".");
+      n.pop();
+      var n2 = n.join(".");
+      var costume = currentLibrary.addCostume(src, n2 || "Costume", blob.mimeType);
       reloadCostumes();
     };
     reader.readAsDataURL(blob);

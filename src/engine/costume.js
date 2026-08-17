@@ -22,6 +22,11 @@ class Costume {
     this.mask = null;
     this.loaded = false;
     this.willPreload = true;
+
+    if (this.linkID) {
+      var libCostume = this.engine.findLibraryCostume(this.linkID);
+      this.mimeType = libCostume.mimeType;
+    }
   }
 
   removeLibraryCostume() {
@@ -129,6 +134,7 @@ class Costume {
   getSrc() {
     if (this.linkID) {
       var libCostume = this.engine.findLibraryCostume(this.linkID);
+      this.mimeType = libCostume.mimeType;
       return libCostume.src;
     } else {
       return this.dataURL;
