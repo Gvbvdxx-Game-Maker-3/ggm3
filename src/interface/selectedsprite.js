@@ -78,7 +78,7 @@ function setCurrentSprite(index, forced, dontSave) {
 
 var GUIEvents = require("./event.js");
 
-GUIEvents.on(GUIEvents.LIBRARY_COSTUME_UPDATED, () => {
+GUIEvents.on(GUIEvents.REFRESH_SPRITE_COSTUMES, () => {
   loadCostumes();
 });
 

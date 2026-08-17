@@ -147,7 +147,7 @@ function reloadCostumes() {
                         costume.src = src;
                         engine.reloadSpriteCostumesFromLibraryCostume(costume);
                         reloadCostumes();
-                        GUIEvents.emit(GUIEvents.LIBRARY_COSTUME_UPDATED, costume);
+                        GUIEvents.emit(GUIEvents.REFRESH_SPRITE_COSTUMES);
                       };
                       reader.readAsDataURL(input.files[0]);
                     } else {

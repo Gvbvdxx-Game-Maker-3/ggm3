@@ -2,7 +2,7 @@
 var EventEmitter = require("eventemitter3");
 
 class GUIEventTypes extends EventEmitter {
-    LIBRARY_COSTUME_UPDATED = "LIBRARY_COSTUME_UPDATED";
+    REFRESH_SPRITE_COSTUMES = "REFRESH_SPRITE_COSTUMES";
 }
 
 module.exports = new GUIEventTypes();
