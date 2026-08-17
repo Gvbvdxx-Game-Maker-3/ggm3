@@ -1789,11 +1789,12 @@ exports.update = update;
 /***/ ((module) => {
 
 class LibraryCostume {
-  constructor(library, src, id) {
+  constructor(library, src, name, id) {
     this.library = library;
     this.engine = library.engine;
     this.src = src;
     this.id = id;
+    this.name = name;
   }
 }
 
@@ -1906,8 +1907,10 @@ module.exports = SoundEffects;
 
 var CollisionSprite = __webpack_require__(4447);
 
+var idcount = 0;
+
 class Costume {
-  constructor(engine, dataURL, name, resolveFunction, libraryCostume) {
+  constructor(engine, dataURL, name, resolveFunction, linkID) {
     this.engine = engine;
     this.dataURL = dataURL;
     this.drawable = null;
@@ -1917,8 +1920,8 @@ class Costume {
     this.currentScale = 1;
     this.mimeType = null;
     this.canvas = document.createElement("canvas");
-    this.id = Date.now() + "_" + Math.round(Math.random() * 9999999);
-    this.libCostume = libraryCostume;
+    this.id = idcount+"_"+ Date.now() + "_" + Math.round(Math.random() * 9999999);
+    idcount += 1;
 
     this.name = name || "Costume";
     this.resolveFunction = resolveFunction;
@@ -2020,8 +2023,10 @@ class Costume {
         whenfinished();
       }
     };
-    if (this.libCostume) {
-      img.src = this.libCostume.src;
+    if (this.linkID) {
+      var libCostume = this.engine.findLibraryCostume(this.linkID);
+      img.src = libCostume.src;
+      this.dataURL = "";
     } else {
       img.src = this.dataURL;
     }
@@ -2110,6 +2115,7 @@ var SpriteEffects = __webpack_require__(9009);
 var SoundManager = __webpack_require__(5873);
 var SpriteMaster = __webpack_require__(3044);
 var TWEEN = __webpack_require__(484);
+var idcount = 0;
 
 /**
  * Object for an active sprite in game.
@@ -2124,9 +2130,11 @@ class Sprite {
    */
   constructor(engine, name) {
     var id = "";
-    id += Date.now();
+    
+    id += idcount+"_"+ Date.now();
     id += "_";
     id += Math.round(Math.random() * 999999);
+    idcount += 1;
     this.id = id;
 
     this.costumes = [];
@@ -3608,26 +3616,72 @@ module.exports = Thread;
 
 var LibraryIDs = __webpack_require__(8297);
 var LibraryCostume = __webpack_require__(692);
+var idcount = 0;
 
 class Library {
   constructor(engine) {
     this.engine = engine;
     this.name = "Library";
-    this.id = Date.now() + "_" + Math.round(Math.random() * 9999999);
+    this.id = idcount + "_" + Date.now() + "_" + Math.round(Math.random() * 9999999);
+    idcount += 1;
     this.costumes = [];
     this.sounds = [];
   }
 
   removeCostume(costume) {
+    //Unlink the costume from sprites by copying the data url to ones with the link id.
+    for (var sprite of this.engine.sprites) {
+      for (var sc of sprite.costumes) {
+        if (sc.linkID == costume.id) {
+          sc.linkID = null;
+          sc.dataURL = costume.src;
+        }
+      }
+    }
+    
+    //Actually dispose the costume now.
     costume.id = null;
     costume.src = null;
     this.costumes = this.costumes.filter((c) => c.id !== costume.id);
   }
 
-  addCostume(src, _id) {
+  addCostume(src, name, _id) {
     var id = _id ? _id : LibraryIDs.getUniqueID();
-    var costume = new LibraryCostume(this, src, id);
+    var costume = new LibraryCostume(this, src, name || "Costume", id);
     this.costumes.push(costume);
+    this.checkUniqueNames();
+  }
+
+  checkUniqueNames() {
+    var names = [];
+    for (var costume of this.costumes) {
+      if (names.indexOf(costume.name) > -1) {
+        var number = 1;
+        var ogName = costume.name;
+        while (names.indexOf(costume.name) > -1) {
+          costume.name = ogName + " (" + number + ")";
+          number += 1;
+        }
+        names.push(costume.name);
+      } else {
+        names.push(costume.name);
+      }
+    }
+
+    var names = [];
+    for (var sound of this.sounds) {
+      if (names.indexOf(sound.name) > -1) {
+        var number = 1;
+        var ogName = sound.name;
+        while (names.indexOf(sound.name) > -1) {
+          sound.name = ogName + " (" + number + ")";
+          number += 1;
+        }
+        names.push(sound.name);
+      } else {
+        names.push(sound.name);
+      }
+    }
   }
 
   dispose() {
@@ -14622,6 +14676,7 @@ module.exports = ScratchMath;
 var AudioEngine = __webpack_require__(6733);
 
 var SoundEffects = __webpack_require__(1352);
+var idcount = 0;
 
 class Sound {
   constructor(engine, sprite, dataURL, onread) {
@@ -14630,7 +14685,8 @@ class Sound {
     this.src = dataURL;
     this.data = null;
     this.onread = onread || function () {};
-    this.id = Date.now() + "_" + Math.round(Math.random() * 9999999);
+    this.id = idcount+"_"+Date.now() + "_" + Math.round(Math.random() * 9999999);
+    idcount += 1;
     this.name = "";
     this.willPreload = true;
     this.playingOn = {};
@@ -15418,6 +15474,34 @@ class GGM3Engine extends EventEmitter {
   }
 
   /**
+   * Reloads all sprite costumes if they're loaded.
+   */
+  reloadAllSpriteCostumes() {
+    for (var sprite of this.sprites) {
+      for (var costume of sprite.costumes) {
+        if (costume.loaded) {
+          costume.deloadCostume();
+          costume.loadCostume();
+        }
+      }
+    }
+  }
+
+  /**
+   * Used by costumes to find the src from the library.
+   */
+  findLibraryCostume(id) {
+    for (var library of this.libraries) {
+      for (var costume of library.costume) {
+        if (costume.id == id) {
+          return costume;
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
    * Sets the cursor style value for the canvas.
    * @param {String} value Cursor style property to change to.
    */
@@ -15781,12 +15865,10 @@ class GGM3Engine extends EventEmitter {
   }
 
   /**
-   * 
+   *
    */
 
-  getLibraryCostume() {
-    
-  }
+  getLibraryCostume() {}
 
   /**
    * Creates a new empty sprite without emitting a sprite created event.
@@ -15843,6 +15925,7 @@ class GGM3Engine extends EventEmitter {
       costume.rotationCenterY = fromCostume.rotationCenterY;
       costume.preferedScale = fromCostume.preferedScale;
       costume.willPreload = fromCostume.willPreload;
+      costume.linkID = fromCostume.linkID;
       costume.renderImageAtScale();
     });
 
@@ -16430,14 +16513,23 @@ module.exports = calculateMatrix;
 var count = 0;
 
 class LibraryIDs {
-    static getUniqueID() {
-        var genId = "LIB_" + Date.now() + "_" + Math.round(Math.random() * 9999999) + "_" + Math.round(Math.random() * 9999999) + "_" + count;
-        count += 1;
-        return genId;
-    }
+  static getUniqueID() {
+    var genId =
+      "LIB_" +
+      Date.now() +
+      "_" +
+      Math.round(Math.random() * 9999999) +
+      "_" +
+      Math.round(Math.random() * 9999999) +
+      "_" +
+      count;
+    count += 1;
+    return genId;
+  }
 }
 
 module.exports = LibraryIDs;
+
 
 /***/ }),
 
