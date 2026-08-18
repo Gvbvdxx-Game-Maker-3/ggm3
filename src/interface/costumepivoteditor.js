@@ -111,9 +111,26 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
                 },
               },
               {
-                element: "span",
-                textContent: costume.name,
-              },
+                element: "div",
+                style: {
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: "3px"
+                },
+                children: [
+                  {
+                    element: "img",
+                    hidden: !costume.linkID, //Only show if this is linked to a library.
+                    className: "libraryLinkIcon",
+                    src: "icons/library.svg"
+                  },
+                  {
+                    element: "span",
+                    textContent: costume.name,
+                  },
+                ]
+              }
             ],
           };
         }),
@@ -147,20 +164,22 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
         //pivotEditorImageContainer.style.scale = pivotEditorZoomInput.value / 100;
         pivotEditorImage.style.width = `${zoomScale * tempImg.width}px`;
         pivotEditorImage.style.height = `${zoomScale * tempImg.height}px`;
+        pivotEditorImageContainer.style.width = pivotEditorImage.style.width;
+        pivotEditorImageContainer.style.height = pivotEditorImage.style.height;
 
-        pivotEditorXInput.value = costume.rotationCenterX;
-        pivotEditorYInput.value = costume.rotationCenterY;
+        pivotEditorXInput.value = costume.rotationCenterX.toFixed(2);
+        pivotEditorYInput.value = costume.rotationCenterY.toFixed(2);
       }
       updateSize();
       pivotEditorZoomInput.oninput = function () {
         updateSize();
       };
-      pivotEditorXInput.oninput = function () {
+      pivotEditorXInput.onchange = function () {
         costume.rotationCenterX = +pivotEditorXInput.value || 0;
         updateSize();
         deps.markAsDirty();
       };
-      pivotEditorYInput.oninput = function () {
+      pivotEditorYInput.onchange = function () {
         costume.rotationCenterY = +pivotEditorYInput.value || 0;
         updateSize();
         deps.markAsDirty();
