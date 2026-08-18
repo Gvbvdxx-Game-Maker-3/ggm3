@@ -489,6 +489,215 @@ module.exports = JavascriptTranslation;
 
 /***/ }),
 
+/***/ 66:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var elements = __webpack_require__(7255);
+var AElement = __webpack_require__(3759);
+var engine = __webpack_require__(9940);
+var GUIEvents = __webpack_require__(8320);
+
+var librarySoundsHeaderContainer = elements.getGPId(
+  "librarySoundsHeaderContainer",
+);
+var librarySoundsSelectorContainer = elements.getGPId(
+  "librarySoundsSelectorContainer",
+);
+var { makeSortable } = __webpack_require__(2088);
+
+var selectedSprite = __webpack_require__(3010);
+
+var currentLibrary = null;
+
+function fileInputWithCallback(cb, multiple) {
+  var input = document.createElement("input");
+  input.type = "file";
+  input.accept = "audio/*";
+  input.multiple = multiple;
+  input.onchange = async function () {
+    cb(input);
+  };
+  input.click();
+}
+
+function createLibraryHeader() {
+  function addSoundFromBlob(blob) {
+    var reader = new FileReader();
+    reader.onload = function () {
+      var src = reader.result;
+      var n = ("" + blob.name).split(".");
+      n.pop();
+      var n2 = n.join(".");
+      var sound = currentLibrary.addSound(src, n2 || "Sound", blob.mimeType);
+      reloadSounds();
+    };
+    reader.readAsDataURL(blob);
+  }
+  elements.setInnerJSON(librarySoundsHeaderContainer, [
+    {
+      element: "button",
+      className: "greyButtonStyle",
+      textContent: "Import Library Sound",
+      style: {
+        marginRight: "2px",
+      },
+      eventListeners: [
+        {
+          event: "click",
+          func: function () {
+            fileInputWithCallback((input) => {
+              if (input.files[0]) {
+                for (var file of Array.from(input.files)) {
+                  addSoundFromBlob(file);
+                }
+              } else {
+                input.value = "";
+                input.remove();
+              }
+            }, true);
+          },
+        },
+      ],
+    },
+  ]);
+}
+
+function reloadSounds() {
+  if (currentLibrary.sounds.length < 1) {
+    elements.setInnerJSON(librarySoundsSelectorContainer, [
+      {
+        element: "span",
+        textContent: "This library has no sounds.",
+        style: {
+          fontWeight: "bold",
+          textDecoration: "underline",
+        },
+      },
+    ]);
+  }
+  elements.setInnerJSON(
+    librarySoundsSelectorContainer,
+    currentLibrary.sounds.map((sound, index) => {
+      return {
+        element: "div",
+        className: "soundContainer",
+        children: [
+          {
+            element: "audio",
+            src: sound.src,
+            controls: true,
+          },
+          {
+            element: "div",
+            style: {
+              display: "flex",
+              flexDirection: "row",
+            },
+            children: [
+              {
+                element: "input",
+                value: sound.name,
+                className: "selectedCostumeInput",
+                eventListeners: [
+                  {
+                    event: "change",
+                    func: function () {
+                      sound.name = this.value.trim();
+                      sound.library.checkUniqueNames();
+                      reloadSounds();
+                      selectedSprite.markProjectDirty();
+                    },
+                  },
+                ],
+              },
+              {
+                element: "button",
+                className: "greyButtonStyle",
+                textContent: "Delete",
+                style: {
+                  marginRight: "2px",
+                  fontSize: "12px",
+                },
+                eventListeners: [
+                  {
+                    event: "click",
+                    func: function () {
+                      var library = sound.library;
+                      library.removeSound(sound);
+                      reloadSounds();
+                      selectedSprite.markProjectDirty();
+                      GUIEvents.emit(GUIEvents.REFRESH_SPRITE_SOUNDS);
+                    },
+                  },
+                ],
+              },
+              {
+                element: "button",
+                className: "greyButtonStyle",
+                textContent: "Replace",
+                style: {
+                  marginRight: "2px",
+                  fontSize: "12px",
+                },
+                eventListeners: [
+                  {
+                    event: "click",
+                    func: function () {
+                      var library = sound.library;
+                      fileInputWithCallback((input) => {
+                        if (input.files[0]) {
+                          var reader = new FileReader();
+                          reader.onload = function () {
+                            var src = reader.result;
+                            sound.src = src;
+                            engine.reloadSpriteSoundsFromLibrarySound(sound);
+                            reloadSounds();
+                            GUIEvents.emit(GUIEvents.REFRESH_SPRITE_SOUNDS);
+                          };
+                          reader.readAsDataURL(input.files[0]);
+                        } else {
+                          input.value = "";
+                          input.remove();
+                        }
+                      }, false);
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      };
+    }),
+  );
+}
+
+function setCurrentLibrary(lib) {
+  currentLibrary = lib;
+  createLibraryHeader();
+  reloadSounds();
+
+  makeSortable(
+    librarySoundsSelectorContainer,
+    ".soundContainer",
+    (oldIndex, newIndex) => {
+      if (oldIndex === newIndex) return;
+
+      var toMove = currentLibrary.sounds[oldIndex];
+      currentLibrary.sounds.splice(oldIndex, 1);
+      currentLibrary.sounds.splice(newIndex, 0, toMove);
+      reloadSounds();
+    },
+  );
+}
+
+module.exports = {
+  setCurrentLibrary,
+};
+
+
+/***/ }),
+
 /***/ 73:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -3248,7 +3457,7 @@ module.exports = LibraryCostume;
 /***/ 735:
 /***/ ((module) => {
 
-module.exports = ":root {\n  --game-viewport-width: 640px;\n  --game-viewport-height: 360px;\n  --game-viewport-scale: 1;\n\n  /*windowDialogContainer*/\n  --popup-dialog-font: \"arial\";\n  /*windowDialogBox*/\n  --popup-dialog-background: hsl(0deg, 0%, 100%);\n  --popup-dialog-border-radius: 10px;\n  --popup-dialog-text-color: hsl(0deg, 0%, 0%);\n  /*windowDialogButton*/\n  --popup-dialog-button-background: hsl(224, 100%, 67%);\n  --popup-dialog-button-hover-background: hsl(224, 100%, 63%);\n  --popup-dialog-button-text-color: hsl(0deg, 0%, 100%);\n  --popup-dialog-button-radius: 5px;\n  /*windowDialogInput*/\n  --popup-dialog-input-background: hsl(0deg, 0%, 100%);\n  --popup-dialog-input-border-width: 1.5px;\n  --popup-dialog-input-border-color: hsl(0deg, 0%, 73%);\n  --popup-dialog-input-text-color: hsl(0deg, 0%, 0%);\n  /*windowDialogHeader*/\n  --popup-dialog-message-size: 16px;\n\n  --loader2-time: 2.5s;\n}\n\n.windowDialogContainer {\n  font-family: var(--popup-dialog-font);\n}\n.windowDialogBackground {\n  background: hsl(0deg, 0%, 0%);\n  z-index: 999999999999;\n}\n.windowDialogBox {\n  background: var(--popup-dialog-background);\n  border-radius: var(--popup-dialog-border-radius);\n  color: var(--popup-dialog-text-color);\n  z-index: 999999999999;\n}\n.windowDialogButton {\n  background: var(--popup-dialog-button-background);\n  color: var(--popup-dialog-button-text-color);\n  border-radius: var(--popup-dialog-button-radius);\n}\n.windowDialogButton:hover {\n  background: var(--popup-dialog-button-hover-background);\n}\n.windowDialogInput {\n  background: var(--popup-dialog-input-background);\n  border-style: solid;\n  border-width: var(--popup-dialog-input-border-width);\n  border-color: var(--popup-dialog-input-border-color);\n  color: var(--popup-dialog-input-text-color);\n  outline: none;\n}\n.windowDialogHeader {\n  font-weight: bold;\n  font-size: var(--popup-dialog-message-size);\n}\n\nbody {\n  font-family: arial;\n}\n\n.appContainer {\n  background: #363636;\n  width: 100%;\n  height: 100svh;\n  position: fixed;\n  top: 0;\n  left: 0;\n  overflow: auto;\n}\n\n.blocklyDiv {\n  width: 100%;\n  height: 100%;\n}\n\n.menuBar {\n  display: flex;\n  width: 100%;\n  min-height: 50px;\n  background: #525252;\n  overflow: unset;\n  transition: 0.2s;\n  flex-direction: row;\n}\n\n.menuBarItemLogo {\n  all: unset;\n  width: fit-content;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  user-select: none;\n  padding: 0 10px;\n}\n\n.menuBarItemLogoImg {\n  height: 30px;\n}\n\n.menuBarItem {\n  all: unset;\n  color: #ffffff;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n}\n\n.unclickableMenuBarItem {\n  all: unset;\n  color: #ffffff;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n}\n\n.menuBarItem:hover {\n  background: #363636;\n  cursor: pointer;\n}\n\n/* Dropdown menu styles */\n.menuBarMenus {\n  display: flex;\n  align-items: center;\n  flex-direction: row;\n}\n.menuParentMain {\n}\n.menuParent {\n  position: relative;\n  display: flex;\n  align-items: center;\n  padding: 0 8px;\n  z-index: 9999;\n  cursor: unset;\n  width: fit-content;\n}\n.menuBarItemLabel {\n  color: #ffffff;\n  font-weight: bold;\n  user-select: none;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  gap: 3px;\n}\n.menuParent.open > .menuBarItemLabel {\n  color: #ffffff;\n}\n.menuDropdown {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  background: #444444;\n  min-width: 160px;\n  border-radius: 6px;\n  box-shadow: 0 6px 14px rgba(0,0,0,0.3);\n  z-index: 9999;\n  display: block; /* hidden attribute controls visibility */\n  cursor: unset;\n}\n.menuDropdownItem {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 6px 8px;\n  color: #ffffff;\n  border-radius: 4px;\n  user-select: none;\n}\n.menuDropdownItem:hover {\n  background: #5a5a5a;\n  cursor: pointer;\n  box-sizing: border-box;\n}\n.menuIcon {\n  width: 16px;\n  height: 16px;\n  object-fit: contain;\n}\n.menuDropdownItemLabel {\n  color: #ffffff;\n}\n\n.panelContainer {\n  display: flex;\n  flex-direction: row;\n  width: 100svw;\n  height: calc(100svh - 50px);\n  position: absolute;\n  top: 50px;\n  left: 0px;\n  min-height: 500px;\n}\n\n.leftPanel {\n  height: calc(100svh - 50px);\n  display: flex;\n  flex-direction: column;\n  flex-grow: 1;\n  min-width: 0;\n}\n\n.rightPanel {\n  width: fit-content;\n  height: calc(100svh - 50px);\n  overflow: auto;\n  box-sizing: border-box;\n  flex-grow: 0;\n  flex-shrink: 0;\n}\n\n.rightPanelContent {\n  width: fit-content;\n  max-width: 100%;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  min-height: 0;\n  box-sizing: border-box;\n  position: relative;\n}\n\n.projectControls {\n  width: 100%;\n  height: 200px;\n}\n\n.projectCanvas {\n  background: #ffffff;\n  border-radius: 4px;\n  flex-shrink: 0;\n  flex-grow: 0;\n  width: calc(var(--game-viewport-width) * var(--game-viewport-scale));\n  height: calc(var(--game-viewport-height) * var(--game-viewport-scale));\n}\n\n.tabArea {\n  display: flex;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow-x: auto;\n  overflow-y: hidden;\n}\n\n.tabIcon {\n  height: 20px;\n  width: 20px;\n  object-fit: contain;\n  margin-right: 5px;\n}\n\n.tabButton {\n  all: unset;\n  color: #c7c7c7;\n  width: fit-content;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n  flex-grow: 0;\n  transform: translateY(5px);\n  border-top-left-radius: 10px;\n  border-top-right-radius: 10px;\n}\n\n.tabButton:hover {\n  background: #8f8f8f;\n  cursor: pointer;\n  color: #ffffff;\n  transform: translateY(4px);\n}\n\n.tabButton[selected] {\n  background: #8f8f8f;\n  cursor: unset;\n  color: #ffffff;\n  transform: translateY(0px);\n}\n\n.tabWindow {\n  background: #8f8f8f;\n  flex-grow: 1;\n  width: 100%;\n  color: #000000;\n  display: flex;            /* <-- CHANGED */\n  flex-direction: column;   /* <-- ADDED */\n  min-height: 0;            /* <-- ADDED (crucial for containing flex) */\n}\n\n.selectedSpriteContainer {\n  min-width: 100%;\n  max-width: calc(var(--game-viewport-scale) * var(--game-viewport-width));\n  box-sizing: border-box;\n  border-width: 5px;\n  border-style: solid;\n  border-color: black;\n  border-radius: 4px;\n  min-height: 30px;\n  height: fit-content;\n  display: flex;\n  padding: 4px 4px;\n  flex-shrink: 0;\n  flex-grow: 0;\n  flex-wrap: wrap;\n  overflow: auto;\n}\n\n.spritesContainer {\n  width: 100%;\n  box-sizing: border-box;\n  border-width: 5px;\n  border-style: solid;\n  border-color: black;\n  border-radius: 4px;\n  display: flex;\n  flex-direction: column;\n  overflow-y: auto;\n  overflow-x: hidden;\n  flex: 1 1 auto;\n  max-height: 100%;\n}\n\n.spriteContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n}\n\n.spriteTextContainer {\n  width: 200px;\n  text-wrap: wrap;\n  line-break: anywhere;\n}\n\n.spriteContainer[selected] {\n  background: #525252;\n}\n\n.selectedSpriteLabel {\n  color: white;\n  font-weight: bold;\n}\n.selectedSpriteInput {\n  all: unset;\n  padding: 3px 3px;\n  box-sizing: border-box;\n  width: fit-content;\n  color: white;\n  width: 100px;\n  border-radius: 2px;\n  background: #595959;\n  border-color: rgba(0,0,0,0);\n  border-style: solid;\n  border-width: 2px;\n  transition: 0.1s;\n}\n.selectedSpriteInput:focus {\n  border-color: white;\n}\n\n.costumesContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: column;\n  color: white;\n}\n\n.soundsContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: column;\n  color: white;\n}\n\n.costumePivotContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: row;\n  color: white;\n}\n\n.costumesInPivotContainer {\n  width: fit-content;\n  height: 100%; /* <-- This is OK now */\n  flex-grow: 0;\n  flex-shrink: 0;\n  overflow: auto; /* <-- This will now activate */\n  overflow-anchor: none;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.pivotCostumeButton {\n  min-width: 100px;\n  min-height: 100px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  box-sizing: border-box;\n  padding: 4px 4px;\n  border-radius: 10px;\n  border-width: 2px;\n  border-style: solid;\n  border-color: #000000;\n  margin: 2px;\n  user-select: none;\n  font-weight: bold;\n}\n\n.pivotCostumeButton:hover {\n  border-color: rgb(121, 121, 121);\n  cursor: pointer;\n}\n.pivotCostumeButton[selected] {\n  border-color: #ffffff;\n  cursor: unset;\n}\n\n.pivotEditor {\n  flex-grow: 1;\n  background: #212121;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  flex-shrink: 1;  /* <-- 1. ALLOWS this element to shrink */\n  min-width: 0;      /* <-- 2. THE KEY: Allows it to shrink smaller than its content */\n  overflow: hidden;    /* <-- 3. Prevents children from spilling out */\n  position: relative;\n}\n\n.pivotEditorMenuBar {\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: 64px;\n  width: 100%;\n  display: flex;      /* <-- Puts all items in one horizontal row */\n  overflow-x: auto;   /* <-- Adds horizontal scroll */\n  overflow-y: hidden; /* <-- Prevents vertical scroll */\n  align-items: center;\n}\n\n.pivotEditorMenuBar > * {\n  flex-shrink: 0;\n}\n\n.pivotEditorContainer {\n  flex-grow: 1;\n  position: relative;\n  overflow: auto;\n}\n\n.pivotEditorImageContainer {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: fit-content;\n  height: fit-content;\n  display: flex;\n  background-image: url(editor/transparent.png);\n  background-size: 32px;\n  image-rendering: pixelated;\n  overflow: hidden;\n  flex-wrap: nowrap;\n}\n\n.pivotEditorMenuInput {\n  all: unset;\n  color: #ffffff;\n  font-weight: bold;\n  height: 100%;\n  box-sizing: border-box;\n}\n\n.pivotEditorDot {\n  background: #000000;\n  border-style: solid;\n  border-color: #ffffff;\n  box-sizing: border-box;\n  border-width: 2px;\n  border-radius: 50%;\n  width: 10px;\n  height: 10px;\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  transform: translate(-50%, -50%);\n  opacity: 0.5;\n}\n\n.costumesHeaderContainer {\n  width: 100%;\n  display: block;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  box-sizing: border-box;\n  padding: 5px 5px;\n}\n\n.soundsHeaderContainer {\n  width: 100%;\n  display: block;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  box-sizing: border-box;\n  padding: 5px 5px;\n}\n\n.costumesSelectorContainer {\n  display: flex;\n  flex-direction: column;\n  overflow: auto;\n  overflow-anchor: none;\n  flex-grow: 1;\n}\n\n.soundsSelectorContainer {\n  display: flex;\n  flex-direction: column;\n  overflow: auto;\n  flex-grow: 1;\n}\n\n.costumeContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n}\n\n.soundContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n  flex-direction: column;\n}\n\n.greyButtonStyle {\n  all: unset;\n  background: #6e6e6e;\n  color: white;\n  border-radius: 10px;\n  padding: 7px 7px;\n  box-sizing: border-box;\n  width: fit-content;\n  height: fit-content;\n  font-weight: bold;\n}\n\n.greyButtonStyle:hover {\n  background: #b8b8b8;\n  cursor: pointer;\n}\n\n.selectedCostumeInput {\n  all: unset;\n  padding: 3px 3px;\n  box-sizing: border-box;\n  width: 140px;\n  color: white;\n}\n\n.scratchCategoryMenuItemLabel {\n  color: white;\n}\n\n.projectControls {\n  background: #8f8f8f;\n  border-radius: 5px;\n  width: 100%;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  display: flex;\n}\n\n.projectButton {\n  padding: 5px;\n  font-size: 20px;\n  user-select: none;\n  margin-right: 2px;\n  border-radius: 5px;\n  min-width: 20px;\n  box-sizing: border-box;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n\n.projectButtonImg {\n  height: 20px;\n  width: 20px;\n  object-fit: contain;\n}\n\n.projectButton:hover {\n  cursor: pointer;\n  color: white;\n  background-color: rgba(0,0,0,0.5);\n}\n\n.spriteInputContainer {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  padding: 4px;\n  box-sizing: border-box;\n  border-radius: 5px;\n  background: #8f8f8f;\n  margin: 3px;\n}\n\n.projectMouseCoordinates {\n  color: white;\n  font-size: 10px;\n  font-weight: bold;\n}\n\n.addSpriteButton {\n  position: absolute;\n  bottom: 10px;\n  right: 10px;\n}\n\n.spriteAddMenu {\n  position: absolute;\n  bottom: 65px;\n  right: 10px;\n  background: #8f8f8f;\n  border-radius: 5px;\n  display: flex;\n  flex-direction: column;\n  padding: 1px;\n  box-sizing: border-box;\n  gap: 2px;\n}\n\n.spriteAddMenuItem {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  padding: 5px;\n  border-radius: 5px;\n  color: white;\n  font-weight: bold;\n  user-select: none;\n  font-size: 17px;\n  cursor: default;\n}\n\n.spriteAddMenuItem:hover {\n  cursor: pointer;\n  background: rgba(0,0,0,0.5);\n}\n\n.spriteAddMenuItem > img {\n  width: 23px;\n  height: 23px;\n  object-fit: contain;\n}\n\n.customBlockDialogBG {\n  position: fixed;\n  width: 100svw;\n  height: 100svh;\n  top: 0;\n  left: 0;\n  background: rgba(0, 0, 0, 0.5);\n}\n.customBlockDialogBox {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  border-radius: 10px;\n  box-sizing: border-box;\n  background: #5c5c5c;\n  transform: translate(-50%, -50%);\n  padding: 10px 10px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  max-width: calc(100% - 100px);\n  max-height: calc(100% - 50px);\n  overflow: auto;\n  color: #ffffff;\n}\n.customBlockWorkspace {\n  flex-grow: 1;\n  display: block;\n  min-width: calc(100% - 1px);\n  min-height: 100%;\n  max-width: 100%;\n  max-height: 100%;\n}\n\n.customBlockButtons {\n  flex-grow: 0;\n  flex-shrink: 0;\n  display: flex;\n  width: 100%;\n  align-items: center;\n  justify-content: center;\n}\n\n.loadingDialogBG {\n  background: #363636;\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  z-index: 99999999;\n}\n\n.loadingDialogBox {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  align-items: center;\n  z-index: 99999999;\n  font-weight: bold;\n  justify-content: center;\n  display: flex;\n  flex-direction: column;\n  color: #ffffff;\n}\n\n.loader2Container {\n  width: 120px;\n  height: 120px;\n  position: relative;\n}\n\n.loaderBlock1 {\n  animation-name: loaderBlock1Anim;\n  animation-duration: var(--loader2-time);\n    background-image: url(\"loading/blocks1.svg\");\n}\n\n.loaderBlock3 {\n  animation-name: loaderBlock3Anim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/blocks3.svg\");\n}\n\n.loaderBlock2 {\n  animation-name: loaderBlock2Anim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/blocks2.svg\");\n}\n\n.loaderBlockIcon {\n  animation-name: loaderBlockIconAnim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/three.svg\");\n}\n\n.loaderBlock {\n  width: 120px;\n  height: 120px;\n  animation-iteration-count: infinite;\n\n  position: absolute;\n  top: 0;\n  left: 0;\n\n  background-repeat: no-repeat;\n  background-position: center center;\n  background-size: 100% 100%;\n  transform-origin: bottom;\n\n  filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.25));\n}\n\n@keyframes loaderBlock1Anim {\n  0% {\n    transform: translate(0, -50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  10% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  15% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  85% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  100% {\n    transform: translate(0, -50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n}\n\n@keyframes loaderBlock3Anim {\n  0% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  20% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  30% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  70% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  100% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n}\n\n@keyframes loaderBlock2Anim {\n  0% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n  40% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n  45% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n    transform-origin: center;\n  }\n  85% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n    transform-origin: center;\n  }\n  100% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n}\n\n@keyframes loaderBlockIconAnim {\n  0% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n  }\n  45% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    transform-origin: center;\n  }\n  60% {\n    transform-origin: center;\n    transform: translate(0, 0) scale(1.2, 1.2) rotate(360deg);\n    animation-timing-function: ease-in;\n    filter: drop-shadow(4px 4px 8px rgba(0, 255, 13, 1));\n  }\n  75% {\n    transform-origin: center;\n    transform: translate(0, 0) scale(1, 1) rotate(360deg);\n    animation-timing-function: ease-out;\n  }\n  100% {\n    transform: translate(0, 0) scale(1, 1) rotate(360deg);\n    animation-timing-function: ease-out;\n  }\n}\n\n.errorLogsContainer {\n  width: 100%;\n  height: 100%;\n  box-sizing: border-box;\n  padding: 10px 10px;\n  display: flex;\n  flex-direction: column;\n  color: #ffffff;\n  background-color: #000000;\n  overflow: auto;\n}\n\n.errorLogError {\n  color: #ff4c4c;\n  font-weight: bold;\n  margin-bottom: 2px;\n}\n\n/* Error glow is provided via the workspace SVG filter; keep a minimal\n   class so we can target blocks in case the filter can't be applied. */\n.blocklyBlockSvg.error-glow {\n  /* Prefer the workspace SVG filter for the glow; keep a harmless\n     property so linters don't complain about an empty ruleset. */\n  outline: none;\n}\n\n.fullscreenModeContainerMain {\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: column;\n  background: #363636;\n  z-index: 99999999;\n}\n\n.fullscreenModeContainer {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.blocklyFlyoutLabelText {\n  fill: #ffffff;\n}\n\n.blocklyFlyoutButton .blocklyText {\n  fill: #ffffff;\n}\n\n.blocklyFlyoutButton:hover {\n  cursor: pointer;\n  fill: rgba(0,0,0,0.5);\n}\n\n.blocklyFlyoutButton:hover > .blocklyText {\n  font-weight: bold;\n}\n\n.loadingProgressMain {\n  width: 200px;\n  height: 30px;\n  box-sizing: border-box;\n  background: rgba(255, 255, 255, 0.3);\n  border-style: solid;\n  border-radius: 3px;\n  border-width: 3px;\n  border-color: rgba(0, 0, 0, 0.7);\n}\n.loadingProgressInner {\n  height: 100%;\n  background: rgba(255, 255, 255, 0.5);\n}\n\n.dialogBackground {\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  background-color: rgba(0, 0, 0, 0.5); /* Optional: semi-transparent background */\n  backdrop-filter: blur(2px); /* The blur effect */\n  -webkit-backdrop-filter: blur(2px); /* For Safari */\n}\n\n.gameSettingsBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n}\n\n.gameSettingSelection {\n  display: flex;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow: auto;\n  gap: 2px;\n}\n\n.gameSelectionCategory {\n  display: block;\n  flex-direction: row;\n  flex-grow: 1;\n  width: 100%;\n  overflow: auto;\n}\n\n.centerMiddle {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.infoDiv {\n\twidth: 100%;\n\theight: fit-content;\n\tmin-height: 70px;\n\tbackground: rgba(0,0,0,0.5);\n\tmargin-bottom:2px;\n\tmargin-top:2px;\n\tborder-radius: 10px;\n  padding: 5px 10px;\n  box-sizing: border-box;\n  display: block;\n}\n\n.gameBackupBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n}\n\n.gameBackupSelection {\n  display: flex;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow: auto;\n  gap: 2px;\n}\n\n.gameBackupCategory {\n  display: block;\n  flex-direction: row;\n  flex-grow: 1;\n  width: 100%;\n  overflow: auto;\n}\n\n.backupThumbnail {\n  height: 150px;\n  object-fit: contain;\n  border-radius: 10px;\n  user-select: none;\n  pointer-events: none;\n}\n\n.backupEntry {\n  display: flex;\n  padding: 5px;\n  box-sizing: border-box;\n  border-radius: 5px;\n  background: #8f8f8f;\n  margin: 3px;\n  color: white;\n  font-weight: bold;\n  flex-direction: row;\n  align-items: center;\n  gap: 8px;\n}\n\n.backupTimestamp {\n  font-size: 20px;\n  color: #c7c7c7;\n}\n\n.backupNoticeMenuBarItem {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: row;\n  gap: 3px;\n  flex-wrap: none;\n  font-size: 9px;\n}\n\n.gameExportBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n  box-sizing: border-box;\n}\n\n.exportGameTypeSelectionContainer {\n  display: flex;\n  width: 100%;\n\theight: fit-content;\n\tflex-shrink: 0;\n\tflex-grow: 0;\n  flex-direction: row;\n  padding: 2px 2px;\n  box-sizing: border-box;\n  gap: 5px;\n  text-wrap: nowrap;\n  align-items: center;\n}\n\n.exportGameTypeSelection {\n  display: flex;\n\theight: fit-content;\n\tflex-grow: 1;\n\toverflow: auto;\n\tgap: 2px;\n}\n\n.exportGameType {\n\tdisplay: flex;\n\tbackground: rgba(0,0,0,0.3);\n\tpadding: 4px 4px;\n\ttext-wrap: nowrap;\n\tborder-radius: 2px;\n\tfont-weight: bold;\n\tfont-size: 18px;\n\tcolor: rgba(255,255,255,0.5);\n\tflex-grow: 0;\n\tflex-shrink: 0;\n\tbox-sizing: border-box;\n\twidth: fit-content;\n\theight: fit-content;\n\tgap: 3px;\n\talign-items: center;\n\tuser-select: none;\n}\n\n.exportGameType > img {\n\twidth: 30px;\n\theight: 30px;\n\tobject-fit: contain;\n  padding: 3px 3px;\n}\n\n.exportGameType:hover {\n  background: rgba(0,0,0,0.2);\n  text-decoration: underline;\n  cursor: pointer;\n}\n\n.exportGameType[selected] {\n  text-decoration: unset;\n  cursor: unset;\n  background: rgba(0,0,0,0);\n}\n\n.exportGameType[selected] > img {\n  width: 30px;\n\theight: 30px;\n\tobject-fit: contain;\n  border-radius: 5px;\n  background: rgba(0,0,0,0.4);\n}\n\n.exportOptionsContainer {\n  width: 100%;\n  flex-grow: 1;\n  overflow: auto;\n\n  display: flex;\n  flex-direction: column;\n\n  gap: 4px;\n}\n\n.exportOptionsDescription {\n  width: 100%;\n  height: fit-content;\n  padding: 10px 10px;\n  border-radius: 5px;\n  color: rgba(255,255,255,0.8);\n  background: rgba(0,0,0,0.6);\n  overflow: auto;\n  display: block;\n  box-sizing: border-box;\n}\n\n.exportOptionsOptionContainer {\n  width: 100%;\n  height: fit-content;\n  padding: 10px 10px;\n  border-radius: 5px;\n  color: rgba(255,255,255,0.8);\n  background: rgba(0,0,0,0.6);\n  overflow: auto;\n  display: block;\n  box-sizing: border-box;\n}\n\n.exportOptionsOptionTitle {\n  font-weight: bold;\n  font-size: 25px;\n  margin-bottom: 3px;\n}\n\n.exportOptionsOptionDescription {\n\twhite-space: pre-wrap;\n  overflow-wrap: break-word;\n  word-break: normal;\n}\n\n.textInput {\n\tall: unset;\n\tpadding: 2px 2px;\n\twidth: fit-content;\n\theight: fit-content;\n\tbackground: rgba(255,255,255,1);\n\tcolor: rgba(0,0,0,1);\n\tborder-style: solid;\n\tborder-width: 1px;\n\tborder-color: rgba(50,50,50,1);\n\tfont-size: 13px;\n}\n\n.exportButtonsContainer {\n\tdisplay: flex;\n\tflex-direction: row;\n\tgap: 2px;\n\tpadding: 2px 2px;\n\toverflow: auto;\n}\n\n.exportButton {\n\tdisplay: flex;\n\tbackground: rgba(255,255,255,0.5);\n\tcolor: rgba(0,0,0,0.7);\n\tborder-radius: 5px;\n\tpadding: 5px 5px;\n\tfont-weight: bold;\n\talign-items: center;\n\tgap: 3px;\n\tuser-select: none;\n}\n\n.exportButton > img {\n\twidth: 30px;\n\theight: 30px;\n\tobject-fit: contain;\n\tbackground: rgba(0,0,0,0.3);\n\tpadding: 2px 2px;\n\tborder-radius: 3px;\n}\n\n.exportButton:hover {\n\tcursor: pointer;\n\tbackground: rgba(255,255,255,0.7);\n}\n\n.modeDivContainer {\n  display: flex;\n  width: 100%;\n  flex-direction: column;\n  flex: 1 1 auto;\n  min-height: 350px;\n  position: relative;\n}\n\n.modeTabs {\n  display: flex;\n  width: 100%;\n  min-height: 50px;\n  height: fit-content;\n  flex-direction: row;\n  overflow: auto;\n  gap: 0.5px;\n}\n\n.modeTabContainer {\n  width: fit-content;\n  height: 50px;\n  position: relative;\n  overflow: hidden;\n}\n\n.costumeLibraryImg {\n  padding: 5px 5px;\n  background: rgba(0,0,0,0.5);\n  border-radius: 4px;\n  width: 70px;\n  height: 70px;\n  object-fit: contain;\n}\n\n.linkLibraryDialogBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n}\n\n.libraryDialogList {\n  width: 100%;\n  flex-grow: 1;\n  flex-shrink: 1;\n  overflow: auto;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  gap: 2px;\n}\n\n.libraryOption {\n  min-width: 100px;\n  min-height: 100px;\n  width: fit-content;\n  height: fit-content;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  box-sizing: border-box;\n  padding: 4px 4px;\n  border-radius: 10px;\n  border-width: 4px;\n  border-style: solid;\n  border-color: #000000;\n  margin: 2px;\n  user-select: none;\n  font-weight: bold;\n}\n\n.libraryOption:hover {\n  border-color: rgb(121, 121, 121);\n  cursor: pointer;\n}\n.libraryOption[selected] {\n  border-color: #32d600;\n  cursor: unset;\n}\n\n.libraryDialogButtons {\n  flex-grow: 0;\n  flex-shrink: 0;\n  display: flex;\n  width: 100%;\n  align-items: center;\n  justify-content: center;\n}\n\n.libraryLinkIcon {\n  width: 20px;\n  height: 20px;\n  object-fit: contain;\n  padding: 4px 4px;\n}";
+module.exports = ":root {\n  --game-viewport-width: 640px;\n  --game-viewport-height: 360px;\n  --game-viewport-scale: 1;\n\n  /*windowDialogContainer*/\n  --popup-dialog-font: \"arial\";\n  /*windowDialogBox*/\n  --popup-dialog-background: hsl(0deg, 0%, 100%);\n  --popup-dialog-border-radius: 10px;\n  --popup-dialog-text-color: hsl(0deg, 0%, 0%);\n  /*windowDialogButton*/\n  --popup-dialog-button-background: hsl(224, 100%, 67%);\n  --popup-dialog-button-hover-background: hsl(224, 100%, 63%);\n  --popup-dialog-button-text-color: hsl(0deg, 0%, 100%);\n  --popup-dialog-button-radius: 5px;\n  /*windowDialogInput*/\n  --popup-dialog-input-background: hsl(0deg, 0%, 100%);\n  --popup-dialog-input-border-width: 1.5px;\n  --popup-dialog-input-border-color: hsl(0deg, 0%, 73%);\n  --popup-dialog-input-text-color: hsl(0deg, 0%, 0%);\n  /*windowDialogHeader*/\n  --popup-dialog-message-size: 16px;\n\n  --loader2-time: 2.5s;\n}\n\n.windowDialogContainer {\n  font-family: var(--popup-dialog-font);\n}\n.windowDialogBackground {\n  background: hsl(0deg, 0%, 0%);\n  z-index: 999999999999;\n}\n.windowDialogBox {\n  background: var(--popup-dialog-background);\n  border-radius: var(--popup-dialog-border-radius);\n  color: var(--popup-dialog-text-color);\n  z-index: 999999999999;\n}\n.windowDialogButton {\n  background: var(--popup-dialog-button-background);\n  color: var(--popup-dialog-button-text-color);\n  border-radius: var(--popup-dialog-button-radius);\n}\n.windowDialogButton:hover {\n  background: var(--popup-dialog-button-hover-background);\n}\n.windowDialogInput {\n  background: var(--popup-dialog-input-background);\n  border-style: solid;\n  border-width: var(--popup-dialog-input-border-width);\n  border-color: var(--popup-dialog-input-border-color);\n  color: var(--popup-dialog-input-text-color);\n  outline: none;\n}\n.windowDialogHeader {\n  font-weight: bold;\n  font-size: var(--popup-dialog-message-size);\n}\n\nbody {\n  font-family: arial;\n}\n\n.appContainer {\n  background: #363636;\n  width: 100%;\n  height: 100svh;\n  position: fixed;\n  top: 0;\n  left: 0;\n  overflow: auto;\n}\n\n.blocklyDiv {\n  width: 100%;\n  height: 100%;\n}\n\n.menuBar {\n  display: flex;\n  width: 100%;\n  min-height: 50px;\n  background: #525252;\n  overflow: unset;\n  transition: 0.2s;\n  flex-direction: row;\n}\n\n.menuBarItemLogo {\n  all: unset;\n  width: fit-content;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  user-select: none;\n  padding: 0 10px;\n}\n\n.menuBarItemLogoImg {\n  height: 30px;\n}\n\n.menuBarItem {\n  all: unset;\n  color: #ffffff;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n}\n\n.unclickableMenuBarItem {\n  all: unset;\n  color: #ffffff;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n}\n\n.menuBarItem:hover {\n  background: #363636;\n  cursor: pointer;\n}\n\n/* Dropdown menu styles */\n.menuBarMenus {\n  display: flex;\n  align-items: center;\n  flex-direction: row;\n}\n.menuParentMain {\n}\n.menuParent {\n  position: relative;\n  display: flex;\n  align-items: center;\n  padding: 0 8px;\n  z-index: 9999;\n  cursor: unset;\n  width: fit-content;\n}\n.menuBarItemLabel {\n  color: #ffffff;\n  font-weight: bold;\n  user-select: none;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  gap: 3px;\n}\n.menuParent.open > .menuBarItemLabel {\n  color: #ffffff;\n}\n.menuDropdown {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  background: #444444;\n  min-width: 160px;\n  border-radius: 6px;\n  box-shadow: 0 6px 14px rgba(0,0,0,0.3);\n  z-index: 9999;\n  display: block; /* hidden attribute controls visibility */\n  cursor: unset;\n}\n.menuDropdownItem {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 6px 8px;\n  color: #ffffff;\n  border-radius: 4px;\n  user-select: none;\n}\n.menuDropdownItem:hover {\n  background: #5a5a5a;\n  cursor: pointer;\n  box-sizing: border-box;\n}\n.menuIcon {\n  width: 16px;\n  height: 16px;\n  object-fit: contain;\n}\n.menuDropdownItemLabel {\n  color: #ffffff;\n}\n\n.panelContainer {\n  display: flex;\n  flex-direction: row;\n  width: 100svw;\n  height: calc(100svh - 50px);\n  position: absolute;\n  top: 50px;\n  left: 0px;\n  min-height: 500px;\n}\n\n.leftPanel {\n  height: calc(100svh - 50px);\n  display: flex;\n  flex-direction: column;\n  flex-grow: 1;\n  min-width: 0;\n}\n\n.rightPanel {\n  width: fit-content;\n  height: calc(100svh - 50px);\n  overflow: auto;\n  box-sizing: border-box;\n  flex-grow: 0;\n  flex-shrink: 0;\n}\n\n.rightPanelContent {\n  width: fit-content;\n  max-width: 100%;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  min-height: 0;\n  box-sizing: border-box;\n  position: relative;\n}\n\n.projectControls {\n  width: 100%;\n  height: 200px;\n}\n\n.projectCanvas {\n  background: #ffffff;\n  border-radius: 4px;\n  flex-shrink: 0;\n  flex-grow: 0;\n  width: calc(var(--game-viewport-width) * var(--game-viewport-scale));\n  height: calc(var(--game-viewport-height) * var(--game-viewport-scale));\n}\n\n.tabArea {\n  display: flex;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow-x: auto;\n  overflow-y: hidden;\n}\n\n.tabIcon {\n  height: 20px;\n  width: 20px;\n  object-fit: contain;\n  margin-right: 5px;\n}\n\n.tabButton {\n  all: unset;\n  color: #c7c7c7;\n  width: fit-content;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n  flex-grow: 0;\n  transform: translateY(5px);\n  border-top-left-radius: 10px;\n  border-top-right-radius: 10px;\n}\n\n.tabButton:hover {\n  background: #8f8f8f;\n  cursor: pointer;\n  color: #ffffff;\n  transform: translateY(4px);\n}\n\n.tabButton[selected] {\n  background: #8f8f8f;\n  cursor: unset;\n  color: #ffffff;\n  transform: translateY(0px);\n}\n\n.tabWindow {\n  background: #8f8f8f;\n  flex-grow: 1;\n  width: 100%;\n  color: #000000;\n  display: flex;            /* <-- CHANGED */\n  flex-direction: column;   /* <-- ADDED */\n  min-height: 0;            /* <-- ADDED (crucial for containing flex) */\n}\n\n.selectedSpriteContainer {\n  min-width: 100%;\n  max-width: calc(var(--game-viewport-scale) * var(--game-viewport-width));\n  box-sizing: border-box;\n  border-width: 5px;\n  border-style: solid;\n  border-color: black;\n  border-radius: 4px;\n  min-height: 30px;\n  height: fit-content;\n  display: flex;\n  padding: 4px 4px;\n  flex-shrink: 0;\n  flex-grow: 0;\n  flex-wrap: wrap;\n  overflow: auto;\n}\n\n.spritesContainer {\n  width: 100%;\n  box-sizing: border-box;\n  border-width: 5px;\n  border-style: solid;\n  border-color: black;\n  border-radius: 4px;\n  display: flex;\n  flex-direction: column;\n  overflow-y: auto;\n  overflow-x: hidden;\n  flex: 1 1 auto;\n  max-height: 100%;\n}\n\n.spriteContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n}\n\n.spriteTextContainer {\n  width: 200px;\n  text-wrap: wrap;\n  line-break: anywhere;\n}\n\n.spriteContainer[selected] {\n  background: #525252;\n}\n\n.selectedSpriteLabel {\n  color: white;\n  font-weight: bold;\n}\n.selectedSpriteInput {\n  all: unset;\n  padding: 3px 3px;\n  box-sizing: border-box;\n  width: fit-content;\n  color: white;\n  width: 100px;\n  border-radius: 2px;\n  background: #595959;\n  border-color: rgba(0,0,0,0);\n  border-style: solid;\n  border-width: 2px;\n  transition: 0.1s;\n}\n.selectedSpriteInput:focus {\n  border-color: white;\n}\n\n.costumesContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: column;\n  color: white;\n}\n\n.soundsContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: column;\n  color: white;\n}\n\n.costumePivotContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: row;\n  color: white;\n}\n\n.costumesInPivotContainer {\n  width: fit-content;\n  height: 100%; /* <-- This is OK now */\n  flex-grow: 0;\n  flex-shrink: 0;\n  overflow: auto; /* <-- This will now activate */\n  overflow-anchor: none;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.pivotCostumeButton {\n  min-width: 100px;\n  min-height: 100px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  box-sizing: border-box;\n  padding: 4px 4px;\n  border-radius: 10px;\n  border-width: 2px;\n  border-style: solid;\n  border-color: #000000;\n  margin: 2px;\n  user-select: none;\n  font-weight: bold;\n}\n\n.pivotCostumeButton:hover {\n  border-color: rgb(121, 121, 121);\n  cursor: pointer;\n}\n.pivotCostumeButton[selected] {\n  border-color: #ffffff;\n  cursor: unset;\n}\n\n.pivotEditor {\n  flex-grow: 1;\n  background: #212121;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  flex-shrink: 1;  /* <-- 1. ALLOWS this element to shrink */\n  min-width: 0;      /* <-- 2. THE KEY: Allows it to shrink smaller than its content */\n  overflow: hidden;    /* <-- 3. Prevents children from spilling out */\n  position: relative;\n}\n\n.pivotEditorMenuBar {\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: 64px;\n  width: 100%;\n  display: flex;      /* <-- Puts all items in one horizontal row */\n  overflow-x: auto;   /* <-- Adds horizontal scroll */\n  overflow-y: hidden; /* <-- Prevents vertical scroll */\n  align-items: center;\n}\n\n.pivotEditorMenuBar > * {\n  flex-shrink: 0;\n}\n\n.pivotEditorContainer {\n  flex-grow: 1;\n  position: relative;\n  overflow: auto;\n}\n\n.pivotEditorImageContainer {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: fit-content;\n  height: fit-content;\n  display: flex;\n  background-image: url(editor/transparent.png);\n  background-size: 32px;\n  image-rendering: pixelated;\n  overflow: hidden;\n  flex-wrap: nowrap;\n}\n\n.pivotEditorImage {\n  pointer-events: none;\n  user-select: none;\n}\n\n.pivotEditorMenuInput {\n  all: unset;\n  color: #ffffff;\n  font-weight: bold;\n  height: 100%;\n  box-sizing: border-box;\n}\n\n.pivotEditorDot {\n  background: #000000;\n  border-style: solid;\n  border-color: #ffffff;\n  box-sizing: border-box;\n  border-width: 2px;\n  border-radius: 50%;\n  width: 10px;\n  height: 10px;\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  transform: translate(-50%, -50%);\n  opacity: 0.5;\n}\n\n.costumesHeaderContainer {\n  width: 100%;\n  display: block;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  box-sizing: border-box;\n  padding: 5px 5px;\n}\n\n.soundsHeaderContainer {\n  width: 100%;\n  display: block;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  box-sizing: border-box;\n  padding: 5px 5px;\n}\n\n.costumesSelectorContainer {\n  display: flex;\n  flex-direction: column;\n  overflow: auto;\n  overflow-anchor: none;\n  flex-grow: 1;\n}\n\n.soundsSelectorContainer {\n  display: flex;\n  flex-direction: column;\n  overflow: auto;\n  flex-grow: 1;\n}\n\n.costumeContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n}\n\n.soundContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n  flex-direction: column;\n}\n\n.greyButtonStyle {\n  all: unset;\n  background: #6e6e6e;\n  color: white;\n  border-radius: 10px;\n  padding: 7px 7px;\n  box-sizing: border-box;\n  width: fit-content;\n  height: fit-content;\n  font-weight: bold;\n}\n\n.greyButtonStyle:hover {\n  background: #b8b8b8;\n  cursor: pointer;\n}\n\n.selectedCostumeInput {\n  all: unset;\n  padding: 3px 3px;\n  box-sizing: border-box;\n  width: 140px;\n  color: white;\n}\n\n.scratchCategoryMenuItemLabel {\n  color: white;\n}\n\n.projectControls {\n  background: #8f8f8f;\n  border-radius: 5px;\n  width: 100%;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  display: flex;\n}\n\n.projectButton {\n  padding: 5px;\n  font-size: 20px;\n  user-select: none;\n  margin-right: 2px;\n  border-radius: 5px;\n  min-width: 20px;\n  box-sizing: border-box;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n\n.projectButtonImg {\n  height: 20px;\n  width: 20px;\n  object-fit: contain;\n}\n\n.projectButton:hover {\n  cursor: pointer;\n  color: white;\n  background-color: rgba(0,0,0,0.5);\n}\n\n.spriteInputContainer {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  padding: 4px;\n  box-sizing: border-box;\n  border-radius: 5px;\n  background: #8f8f8f;\n  margin: 3px;\n}\n\n.projectMouseCoordinates {\n  color: white;\n  font-size: 10px;\n  font-weight: bold;\n}\n\n.addSpriteButton {\n  position: absolute;\n  bottom: 10px;\n  right: 10px;\n}\n\n.spriteAddMenu {\n  position: absolute;\n  bottom: 65px;\n  right: 10px;\n  background: #8f8f8f;\n  border-radius: 5px;\n  display: flex;\n  flex-direction: column;\n  padding: 1px;\n  box-sizing: border-box;\n  gap: 2px;\n}\n\n.spriteAddMenuItem {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  padding: 5px;\n  border-radius: 5px;\n  color: white;\n  font-weight: bold;\n  user-select: none;\n  font-size: 17px;\n  cursor: default;\n}\n\n.spriteAddMenuItem:hover {\n  cursor: pointer;\n  background: rgba(0,0,0,0.5);\n}\n\n.spriteAddMenuItem > img {\n  width: 23px;\n  height: 23px;\n  object-fit: contain;\n}\n\n.customBlockDialogBG {\n  position: fixed;\n  width: 100svw;\n  height: 100svh;\n  top: 0;\n  left: 0;\n  background: rgba(0, 0, 0, 0.5);\n}\n.customBlockDialogBox {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  border-radius: 10px;\n  box-sizing: border-box;\n  background: #5c5c5c;\n  transform: translate(-50%, -50%);\n  padding: 10px 10px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  max-width: calc(100% - 100px);\n  max-height: calc(100% - 50px);\n  overflow: auto;\n  color: #ffffff;\n}\n.customBlockWorkspace {\n  flex-grow: 1;\n  display: block;\n  min-width: calc(100% - 1px);\n  min-height: 100%;\n  max-width: 100%;\n  max-height: 100%;\n}\n\n.customBlockButtons {\n  flex-grow: 0;\n  flex-shrink: 0;\n  display: flex;\n  width: 100%;\n  align-items: center;\n  justify-content: center;\n}\n\n.loadingDialogBG {\n  background: #363636;\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  z-index: 99999999;\n}\n\n.loadingDialogBox {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  align-items: center;\n  z-index: 99999999;\n  font-weight: bold;\n  justify-content: center;\n  display: flex;\n  flex-direction: column;\n  color: #ffffff;\n}\n\n.loader2Container {\n  width: 120px;\n  height: 120px;\n  position: relative;\n}\n\n.loaderBlock1 {\n  animation-name: loaderBlock1Anim;\n  animation-duration: var(--loader2-time);\n    background-image: url(\"loading/blocks1.svg\");\n}\n\n.loaderBlock3 {\n  animation-name: loaderBlock3Anim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/blocks3.svg\");\n}\n\n.loaderBlock2 {\n  animation-name: loaderBlock2Anim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/blocks2.svg\");\n}\n\n.loaderBlockIcon {\n  animation-name: loaderBlockIconAnim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/three.svg\");\n}\n\n.loaderBlock {\n  width: 120px;\n  height: 120px;\n  animation-iteration-count: infinite;\n\n  position: absolute;\n  top: 0;\n  left: 0;\n\n  background-repeat: no-repeat;\n  background-position: center center;\n  background-size: 100% 100%;\n  transform-origin: bottom;\n\n  filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.25));\n}\n\n@keyframes loaderBlock1Anim {\n  0% {\n    transform: translate(0, -50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  10% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  15% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  85% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  100% {\n    transform: translate(0, -50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n}\n\n@keyframes loaderBlock3Anim {\n  0% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  20% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  30% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  70% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  100% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n}\n\n@keyframes loaderBlock2Anim {\n  0% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n  40% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n  45% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n    transform-origin: center;\n  }\n  85% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n    transform-origin: center;\n  }\n  100% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n}\n\n@keyframes loaderBlockIconAnim {\n  0% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n  }\n  45% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    transform-origin: center;\n  }\n  60% {\n    transform-origin: center;\n    transform: translate(0, 0) scale(1.2, 1.2) rotate(360deg);\n    animation-timing-function: ease-in;\n    filter: drop-shadow(4px 4px 8px rgba(0, 255, 13, 1));\n  }\n  75% {\n    transform-origin: center;\n    transform: translate(0, 0) scale(1, 1) rotate(360deg);\n    animation-timing-function: ease-out;\n  }\n  100% {\n    transform: translate(0, 0) scale(1, 1) rotate(360deg);\n    animation-timing-function: ease-out;\n  }\n}\n\n.errorLogsContainer {\n  width: 100%;\n  height: 100%;\n  box-sizing: border-box;\n  padding: 10px 10px;\n  display: flex;\n  flex-direction: column;\n  color: #ffffff;\n  background-color: #000000;\n  overflow: auto;\n}\n\n.errorLogError {\n  color: #ff4c4c;\n  font-weight: bold;\n  margin-bottom: 2px;\n}\n\n/* Error glow is provided via the workspace SVG filter; keep a minimal\n   class so we can target blocks in case the filter can't be applied. */\n.blocklyBlockSvg.error-glow {\n  /* Prefer the workspace SVG filter for the glow; keep a harmless\n     property so linters don't complain about an empty ruleset. */\n  outline: none;\n}\n\n.fullscreenModeContainerMain {\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: column;\n  background: #363636;\n  z-index: 99999999;\n}\n\n.fullscreenModeContainer {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.blocklyFlyoutLabelText {\n  fill: #ffffff;\n}\n\n.blocklyFlyoutButton .blocklyText {\n  fill: #ffffff;\n}\n\n.blocklyFlyoutButton:hover {\n  cursor: pointer;\n  fill: rgba(0,0,0,0.5);\n}\n\n.blocklyFlyoutButton:hover > .blocklyText {\n  font-weight: bold;\n}\n\n.loadingProgressMain {\n  width: 200px;\n  height: 30px;\n  box-sizing: border-box;\n  background: rgba(255, 255, 255, 0.3);\n  border-style: solid;\n  border-radius: 3px;\n  border-width: 3px;\n  border-color: rgba(0, 0, 0, 0.7);\n}\n.loadingProgressInner {\n  height: 100%;\n  background: rgba(255, 255, 255, 0.5);\n}\n\n.dialogBackground {\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  background-color: rgba(0, 0, 0, 0.5); /* Optional: semi-transparent background */\n  backdrop-filter: blur(2px); /* The blur effect */\n  -webkit-backdrop-filter: blur(2px); /* For Safari */\n}\n\n.gameSettingsBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n}\n\n.gameSettingSelection {\n  display: flex;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow: auto;\n  gap: 2px;\n}\n\n.gameSelectionCategory {\n  display: block;\n  flex-direction: row;\n  flex-grow: 1;\n  width: 100%;\n  overflow: auto;\n}\n\n.centerMiddle {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.infoDiv {\n\twidth: 100%;\n\theight: fit-content;\n\tmin-height: 70px;\n\tbackground: rgba(0,0,0,0.5);\n\tmargin-bottom:2px;\n\tmargin-top:2px;\n\tborder-radius: 10px;\n  padding: 5px 10px;\n  box-sizing: border-box;\n  display: block;\n}\n\n.gameBackupBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n}\n\n.gameBackupSelection {\n  display: flex;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow: auto;\n  gap: 2px;\n}\n\n.gameBackupCategory {\n  display: block;\n  flex-direction: row;\n  flex-grow: 1;\n  width: 100%;\n  overflow: auto;\n}\n\n.backupThumbnail {\n  height: 150px;\n  object-fit: contain;\n  border-radius: 10px;\n  user-select: none;\n  pointer-events: none;\n}\n\n.backupEntry {\n  display: flex;\n  padding: 5px;\n  box-sizing: border-box;\n  border-radius: 5px;\n  background: #8f8f8f;\n  margin: 3px;\n  color: white;\n  font-weight: bold;\n  flex-direction: row;\n  align-items: center;\n  gap: 8px;\n}\n\n.backupTimestamp {\n  font-size: 20px;\n  color: #c7c7c7;\n}\n\n.backupNoticeMenuBarItem {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: row;\n  gap: 3px;\n  flex-wrap: none;\n  font-size: 9px;\n}\n\n.gameExportBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n  box-sizing: border-box;\n}\n\n.exportGameTypeSelectionContainer {\n  display: flex;\n  width: 100%;\n\theight: fit-content;\n\tflex-shrink: 0;\n\tflex-grow: 0;\n  flex-direction: row;\n  padding: 2px 2px;\n  box-sizing: border-box;\n  gap: 5px;\n  text-wrap: nowrap;\n  align-items: center;\n}\n\n.exportGameTypeSelection {\n  display: flex;\n\theight: fit-content;\n\tflex-grow: 1;\n\toverflow: auto;\n\tgap: 2px;\n}\n\n.exportGameType {\n\tdisplay: flex;\n\tbackground: rgba(0,0,0,0.3);\n\tpadding: 4px 4px;\n\ttext-wrap: nowrap;\n\tborder-radius: 2px;\n\tfont-weight: bold;\n\tfont-size: 18px;\n\tcolor: rgba(255,255,255,0.5);\n\tflex-grow: 0;\n\tflex-shrink: 0;\n\tbox-sizing: border-box;\n\twidth: fit-content;\n\theight: fit-content;\n\tgap: 3px;\n\talign-items: center;\n\tuser-select: none;\n}\n\n.exportGameType > img {\n\twidth: 30px;\n\theight: 30px;\n\tobject-fit: contain;\n  padding: 3px 3px;\n}\n\n.exportGameType:hover {\n  background: rgba(0,0,0,0.2);\n  text-decoration: underline;\n  cursor: pointer;\n}\n\n.exportGameType[selected] {\n  text-decoration: unset;\n  cursor: unset;\n  background: rgba(0,0,0,0);\n}\n\n.exportGameType[selected] > img {\n  width: 30px;\n\theight: 30px;\n\tobject-fit: contain;\n  border-radius: 5px;\n  background: rgba(0,0,0,0.4);\n}\n\n.exportOptionsContainer {\n  width: 100%;\n  flex-grow: 1;\n  overflow: auto;\n\n  display: flex;\n  flex-direction: column;\n\n  gap: 4px;\n}\n\n.exportOptionsDescription {\n  width: 100%;\n  height: fit-content;\n  padding: 10px 10px;\n  border-radius: 5px;\n  color: rgba(255,255,255,0.8);\n  background: rgba(0,0,0,0.6);\n  overflow: auto;\n  display: block;\n  box-sizing: border-box;\n}\n\n.exportOptionsOptionContainer {\n  width: 100%;\n  height: fit-content;\n  padding: 10px 10px;\n  border-radius: 5px;\n  color: rgba(255,255,255,0.8);\n  background: rgba(0,0,0,0.6);\n  overflow: auto;\n  display: block;\n  box-sizing: border-box;\n}\n\n.exportOptionsOptionTitle {\n  font-weight: bold;\n  font-size: 25px;\n  margin-bottom: 3px;\n}\n\n.exportOptionsOptionDescription {\n\twhite-space: pre-wrap;\n  overflow-wrap: break-word;\n  word-break: normal;\n}\n\n.textInput {\n\tall: unset;\n\tpadding: 2px 2px;\n\twidth: fit-content;\n\theight: fit-content;\n\tbackground: rgba(255,255,255,1);\n\tcolor: rgba(0,0,0,1);\n\tborder-style: solid;\n\tborder-width: 1px;\n\tborder-color: rgba(50,50,50,1);\n\tfont-size: 13px;\n}\n\n.exportButtonsContainer {\n\tdisplay: flex;\n\tflex-direction: row;\n\tgap: 2px;\n\tpadding: 2px 2px;\n\toverflow: auto;\n}\n\n.exportButton {\n\tdisplay: flex;\n\tbackground: rgba(255,255,255,0.5);\n\tcolor: rgba(0,0,0,0.7);\n\tborder-radius: 5px;\n\tpadding: 5px 5px;\n\tfont-weight: bold;\n\talign-items: center;\n\tgap: 3px;\n\tuser-select: none;\n}\n\n.exportButton > img {\n\twidth: 30px;\n\theight: 30px;\n\tobject-fit: contain;\n\tbackground: rgba(0,0,0,0.3);\n\tpadding: 2px 2px;\n\tborder-radius: 3px;\n}\n\n.exportButton:hover {\n\tcursor: pointer;\n\tbackground: rgba(255,255,255,0.7);\n}\n\n.modeDivContainer {\n  display: flex;\n  width: 100%;\n  flex-direction: column;\n  flex: 1 1 auto;\n  min-height: 350px;\n  position: relative;\n}\n\n.modeTabs {\n  display: flex;\n  width: 100%;\n  min-height: 50px;\n  height: fit-content;\n  flex-direction: row;\n  overflow: auto;\n  gap: 0.5px;\n}\n\n.modeTabContainer {\n  width: fit-content;\n  height: 50px;\n  position: relative;\n  overflow: hidden;\n}\n\n.costumeLibraryImg {\n  padding: 5px 5px;\n  background: rgba(0,0,0,0.5);\n  border-radius: 4px;\n  width: 70px;\n  height: 70px;\n  object-fit: contain;\n}\n\n.linkLibraryDialogBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n}\n\n.libraryDialogList {\n  width: 100%;\n  flex-grow: 1;\n  flex-shrink: 1;\n  overflow: auto;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  gap: 2px;\n}\n\n.libraryOption {\n  min-width: 100px;\n  min-height: 100px;\n  width: fit-content;\n  height: fit-content;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  box-sizing: border-box;\n  padding: 4px 4px;\n  border-radius: 10px;\n  border-width: 4px;\n  border-style: solid;\n  border-color: #000000;\n  margin: 2px;\n  user-select: none;\n  font-weight: bold;\n}\n\n.libraryOption:hover {\n  border-color: rgb(121, 121, 121);\n  cursor: pointer;\n}\n.libraryOption[selected] {\n  border-color: #32d600;\n  cursor: unset;\n}\n\n.libraryDialogButtons {\n  flex-grow: 0;\n  flex-shrink: 0;\n  display: flex;\n  width: 100%;\n  align-items: center;\n  justify-content: center;\n}\n\n.libraryLinkIcon {\n  width: 20px;\n  height: 20px;\n  object-fit: contain;\n  padding: 4px 4px;\n}";
 
 /***/ }),
 
@@ -4034,7 +4243,8 @@ module.exports = { loadBlockMenus, helpers };
 module.exports = {
   ...__webpack_require__(5618),
   ...__webpack_require__(3325),
-  ...__webpack_require__(7370)
+  ...__webpack_require__(66),
+  ...__webpack_require__(7370),
 };
 
 
@@ -4254,21 +4464,21 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
                   display: "flex",
                   flexDirection: "row",
                   alignItems: "center",
-                  gap: "3px"
+                  gap: "3px",
                 },
                 children: [
                   {
                     element: "img",
                     hidden: !costume.linkID, //Only show if this is linked to a library.
                     className: "libraryLinkIcon",
-                    src: "icons/library.svg"
+                    src: "icons/library.svg",
                   },
                   {
                     element: "span",
                     textContent: costume.name,
                   },
-                ]
-              }
+                ],
+              },
             ],
           };
         }),
@@ -5318,7 +5528,8 @@ class Costume {
     this.mimeType = null;
     this.linkID = linkID;
     this.canvas = document.createElement("canvas");
-    this.id = idcount+"_"+ Date.now() + "_" + Math.round(Math.random() * 9999999);
+    this.id =
+      idcount + "_" + Date.now() + "_" + Math.round(Math.random() * 9999999);
     idcount += 1;
 
     this.name = name || "Costume";
@@ -6482,8 +6693,8 @@ class Sprite {
    */
   constructor(engine, name) {
     var id = "";
-    
-    id += idcount+"_"+ Date.now();
+
+    id += idcount + "_" + Date.now();
     id += "_";
     id += Math.round(Math.random() * 999999);
     idcount += 1;
@@ -7329,7 +7540,7 @@ class Sprite {
     }
     var _this = this;
     var isFromLibrary = typeof source == "object";
-    
+
     return new Promise(function (resolve, reject) {
       var costume = new Costume(
         _this.engine,
@@ -7356,14 +7567,18 @@ class Sprite {
    * @param {String} name The name of the costume.
    * @returns {Costume} The added costume.
    */
-  addCostumeWithoutLoading(url, name) {
+  addCostumeWithoutLoading(source, name) {
     if (this.isClone) {
       throw new Error("Clones can't create their own costumes.");
     }
+    var isFromLibrary = typeof source == "object";
+
     var costume = new Costume(
       this.engine,
-      url,
+      isFromLibrary ? null : source,
       name ? name : "Costume " + (this.costumes.length + 1),
+      null,
+      isFromLibrary ? source.id : undefined
     );
     this.costumes.push(costume);
     this.ensureUniqueCostumeNames();
@@ -7376,19 +7591,20 @@ class Sprite {
    * @param {String} name The name of the sound.
    * @returns {Promise<Sound>} A promise that resolves to the added sound.
    */
-  addSound(dataURL, name) {
+  addSound(source, name) {
     if (this.isClone) {
       throw new Error("Clones can't create their own sounds.");
     }
     var _this = this;
+    var isFromLibrary = typeof source == "object";
     return new Promise(function (resolve, reject) {
-      var s = new Sound(_this.engine, _this, dataURL, function (success) {
+      var s = new Sound(_this.engine, _this, isFromLibrary ? null : source, function (success) {
         if (success) {
           resolve(s);
         } else {
           reject("");
         }
-      });
+      }, isFromLibrary ? source.id : undefined);
       s.loadSound();
       s.name = name ? name : "Sound " + (_this.sounds.length + 1);
       _this.sounds.push(s);
@@ -7402,11 +7618,12 @@ class Sprite {
    * @param {String} name The name of the sound.
    * @returns {Sound} The added sound.
    */
-  addSoundWithoutLoading(url, name) {
+  addSoundWithoutLoading(source, name) {
     if (this.isClone) {
       throw new Error("Clones can't create their own sounds.");
     }
-    var s = new Sound(this.engine, this, url);
+    var isFromLibrary = typeof source == "object";
+    var s = new Sound(this.engine, this, isFromLibrary ? null : source, null, isFromLibrary ? source.id : undefined);
     s.name = name ? name : "Sound " + (this.sounds.length + 1);
     this.sounds.push(s);
     this.ensureUniqueSoundNames();
@@ -8207,6 +8424,10 @@ GUIEvents.on(GUIEvents.REFRESH_SPRITE_COSTUMES, () => {
   loadCostumes();
 });
 
+GUIEvents.on(GUIEvents.REFRESH_SPRITE_SOUNDS, () => {
+  loadSounds();
+});
+
 function loadCostumes() {
   costumeViewer.reloadCostumes(state.currentSelectedSprite, loadCostumes);
 }
@@ -8503,10 +8724,14 @@ function createLibraryHeader() {
     var reader = new FileReader();
     reader.onload = function () {
       var src = reader.result;
-      var n = (""+blob.name).split(".");
+      var n = ("" + blob.name).split(".");
       n.pop();
       var n2 = n.join(".");
-      var costume = currentLibrary.addCostume(src, n2 || "Costume", blob.mimeType);
+      var costume = currentLibrary.addCostume(
+        src,
+        n2 || "Costume",
+        blob.mimeType,
+      );
       reloadCostumes();
     };
     reader.readAsDataURL(blob);
@@ -8563,7 +8788,7 @@ function reloadCostumes() {
           {
             element: "img",
             src: costume.src,
-            className: "costumeLibraryImg"
+            className: "costumeLibraryImg",
           },
           {
             element: "input",
@@ -8597,6 +8822,7 @@ function reloadCostumes() {
                   library.removeCostume(costume);
                   reloadCostumes();
                   selectedSprite.markProjectDirty();
+                  GUIEvents.emit(GUIEvents.REFRESH_SPRITE_COSTUMES);
                 },
               },
             ],
@@ -8640,7 +8866,10 @@ function reloadCostumes() {
   );
 }
 
+var sounds = __webpack_require__(66);
+
 function setCurrentLibrary(lib) {
+  sounds.setCurrentLibrary(lib);
   currentLibrary = lib;
   createLibraryHeader();
   reloadCostumes();
@@ -9843,7 +10072,8 @@ class Library {
   constructor(engine) {
     this.engine = engine;
     this.name = "Library";
-    this.id = idcount + "_" + Date.now() + "_" + Math.round(Math.random() * 9999999);
+    this.id =
+      idcount + "_" + Date.now() + "_" + Math.round(Math.random() * 9999999);
     idcount += 1;
     this.costumes = [];
     this.sounds = [];
@@ -9859,7 +10089,7 @@ class Library {
         }
       }
     }
-    
+
     //Actually dispose the costume now.
     costume.id = null;
     costume.src = null;
@@ -9868,15 +10098,28 @@ class Library {
 
   addCostume(src, name, mimeType, _id) {
     var id = _id ? _id : LibraryIDs.getUniqueID();
-    var costume = new LibraryCostume(this, src, name || "Costume", mimeType || "image/png", id);
+    var costume = new LibraryCostume(
+      this,
+      src,
+      name || "Costume",
+      mimeType || "image/png",
+      id,
+    );
     this.costumes.push(costume);
     this.checkUniqueNames();
   }
 
-
   removeSound(sound) {
     //Unlink the sound from sprites by copying the data url to ones with the link id.
-    
+    for (var sprite of this.engine.sprites) {
+      for (var snd of sprite.sounds) {
+        if (snd.linkID == sound.id) {
+          snd.linkID = null;
+          snd.dataURL = sound.src;
+        }
+      }
+    }
+
     //Actually dispose the sound now.
     sound.id = null;
     sound.src = null;
@@ -9885,7 +10128,13 @@ class Library {
 
   addSound(src, name, mimeType, _id) {
     var id = _id ? _id : LibraryIDs.getUniqueID();
-    var sound = new LibrarySound(this, src, name || "Sound", mimeType || "image/png", id);
+    var sound = new LibrarySound(
+      this,
+      src,
+      name || "Sound",
+      mimeType || "image/png",
+      id,
+    );
     this.sounds.push(sound);
     this.checkUniqueNames();
   }
@@ -9923,11 +10172,8 @@ class Library {
   }
 
   dispose() {
-    for (var costume of this.costumes) {
-      costume.id = null;
-      costume.src = null;
-    }
-    this.costumes = [];
+    this.costumes.forEach((costume) => this.removeCostume(costume));
+    this.sounds.forEach((sound) => this.removeSound(sound));
   }
 }
 
@@ -23350,13 +23596,14 @@ var SoundEffects = __webpack_require__(1352);
 var idcount = 0;
 
 class Sound {
-  constructor(engine, sprite, dataURL, onread) {
+  constructor(engine, sprite, dataURL, onread, linkID) {
     this.engine = engine;
     this.sprite = sprite;
     this.src = dataURL;
     this.data = null;
     this.onread = onread || function () {};
-    this.id = idcount+"_"+Date.now() + "_" + Math.round(Math.random() * 9999999);
+    this.id =
+      idcount + "_" + Date.now() + "_" + Math.round(Math.random() * 9999999);
     idcount += 1;
     this.name = "";
     this.willPreload = true;
@@ -23364,11 +23611,26 @@ class Sound {
     this.mimeType = "audio/mp3";
     this.loading = false;
     this.effects = new SoundEffects(this);
+    this.linkID = linkID;
+
+    if (this.linkID) {
+      var libSound = this.engine.findLibrarySound(this.linkID);
+      this.mimeType = libSound.mimeType;
+      this.src = null;
+    }
   }
 
   getSoundIdentifier() {
     //used by sound manager.
     return this.name;
+  }
+
+  getSrc() {
+    if (this.linkID) {
+      var libSound = this.engine.findLibrarySound(this.linkID);
+      return libSound.src;
+    }
+    return this.src;
   }
 
   get dataURL() {
@@ -23423,7 +23685,7 @@ class Sound {
       return;
     }
     this.loading = true;
-    var data = await AudioEngine.loadSoundFromURL(this.src);
+    var data = await AudioEngine.loadSoundFromURL(this.getSrc());
     this.data = data;
     if (this.onread) {
       this.onread(true);
@@ -23659,23 +23921,25 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
         {
           event: "click",
           func: function () {
-            library.doLinkDialog({
-              type: "costume"
-            }).then(async (result) => {
-              if (!result) {
-                return;
-              }
-              var costume = await spr.addCostume(result.object);
-              costume.mimeType = result.mimeType;
-              costume.name = result.name;
-              spr.ensureUniqueCostumeNames();
-              reloadCostumes(spr);
-              deps.markAsDirty();
-            });
-          }
-        }
-      ]
-    }
+            library
+              .doLinkDialog({
+                type: "costume",
+              })
+              .then(async (result) => {
+                if (!result) {
+                  return;
+                }
+                var costume = await spr.addCostume(result.object);
+                costume.mimeType = result.mimeType;
+                costume.name = result.name;
+                spr.ensureUniqueCostumeNames();
+                reloadCostumes(spr);
+                deps.markAsDirty();
+              });
+          },
+        },
+      ],
+    },
   ]);
   if (spr.costumes.length < 1) {
     elements.setInnerJSON(costumesSelectorContainer, [
@@ -23712,7 +23976,7 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
               element: "img",
               hidden: !costume.linkID, //Only show if this is linked to a library.
               className: "libraryLinkIcon",
-              src: "icons/library.svg"
+              src: "icons/library.svg",
             },
             {
               element: "input",
@@ -24125,6 +24389,31 @@ function createLibrarySelection(library, index) {
               if (selectedLibrary !== index) {
                 setCurrentLibrary(index);
               }
+            },
+          },
+        ],
+      },
+      {
+        element: "button",
+        className: "greyButtonStyle",
+        textContent: "Delete",
+        hidden: engine.libraries.length < 2,
+        style: {
+          fontSize: "15px",
+          marginRight: "5px",
+        },
+        eventListeners: [
+          {
+            event: "click",
+            func: function (elm) {
+              engine.deleteLibrary(library);
+              if (selectedLibrary > engine.libraries.length-1) {
+                selectedLibrary = engine.libraries.length-1;
+              }
+              if (selectedLibrary < 0) {
+                selectedLibrary = 0;
+              }
+              setCurrentLibrary(index);
             },
           },
         ],
@@ -27725,205 +28014,204 @@ function createTabElementJSON(label, src, whenClick, isSelected) {
 }
 
 function doLinkDialog(_options) {
-    var resolve = null;
-    var reject = null;
-    var promise = new Promise((_resolve, _reject) => {
-        resolve = _resolve;
-        reject = _reject;
-    });
-    var options = {
-        type: "costume",
-        ...options
-    };
-    var libraryTabsContainer = null;
-    var libraryDialogList = null;
-    var libraryDialogButtons = null;
-    var dialogContainer = elements.createElementsFromJSON([
+  var resolve = null;
+  var reject = null;
+  var promise = new Promise((_resolve, _reject) => {
+    resolve = _resolve;
+    reject = _reject;
+  });
+  var options = {
+    type: "costume",
+    ..._options,
+  };
+  var libraryTabsContainer = null;
+  var libraryDialogList = null;
+  var libraryDialogButtons = null;
+  var dialogContainer = elements.createElementsFromJSON([
+    {
+      element: "div",
+      children: [
+        { element: "div", className: "dialogBackground" },
         {
-            element: "div",
-            children: [
-                { element: "div", className: "dialogBackground" },
-                {
-                    element: "div",
-                    className: "centerMiddle linkLibraryDialogBox",
-                    children: [
-                        {
-                            element: "h2",
-                            textContent: `Select ${options.type} from library:`,
-                            style: {
-                                textAlign: "center",
-                                flexShrink: "0px",
-                            },
-                        },
-                        {
-                            element: "div",
-                            className: "tabArea",
-                            GPWhenCreated: (e) => libraryTabsContainer = e,
-                        },
-                        {
-                            element: "div",
-                            className: "libraryDialogList",
-                            GPWhenCreated: (e) => libraryDialogList = e,
-                        },
-                        {
-                            element: "div",
-                            className: "libraryDialogButtons",
-                            GPWhenCreated: (e) => libraryDialogButtons = e,
-                        }
-                    ]
-                }
-            ]
-        }
-    ])[0];
-
-    document.body.append(dialogContainer);
-
-    var selectedLibrary = 0;
-    var selectedOption = -1;
-    var selectedOptionObject = null;
-
-    function updateTabs() {
-        elements.setInnerJSON(
-            libraryTabsContainer,
-            engine.libraries.map((library, index) => {
-                return createTabElementJSON(
-                    library.name,
-                    "icons/library.svg",
-                    () => selectLibrary(index),
-                    selectedLibrary == index
-                );
-            })
-        );
-    }
-
-    var listName = options.type == "costume" ? "costumes" : "sounds";
-
-    function displayList() {
-        var list = engine.libraries[selectedLibrary][listName];
-        if (list.length < 1) {
-            elements.setInnerJSON(
-                libraryDialogList,
-                [{
-                    element: "span",
-                    textContent: "This library has no " + (options.type == "costume" ? "costumes" : "sounds") + ".",
-                    style: {
-                        color: "white",
-                        fontWeight: "bold",
-                        textAlign: "center",
-                        padding: "4px 4px",
-                    },
-                }]
-            );
-        }
-        elements.setInnerJSON(
-            libraryDialogList,
-
-            list.map((opt) => {
-                return {
-                    element: "div",
-                    className: "libraryOption",
-                    GPWhenCreated: function (elm) {
-                        if (selectedOption == opt.id) {
-                            elm.setAttribute("selected", "");
-                        }
-                    },
-                    eventListeners: [
-                        {
-                            event: "click",
-                            func: function () {
-                                selectedOption = opt.id;
-                                selectedOptionObject = opt;
-                                displayList();
-                            }
-                        }
-                    ],
-                    children: [
-                        (
-                            options.type == "costume" ?
-                            //Costume
-                            (
-                                {
-                                    element: "img",
-                                    className: "costumeLibraryImg",
-                                    src: opt.src
-                                }
-                            )
-                            //Sound
-                            : (
-                                {
-                                    element: "div",
-                                }
-                            )
-                        ),
-                        {
-                            element: "span",
-                            textContent: opt.name
-                        }
-                    ]
-                };
-            })
-        )
-    }
-
-    function selectLibrary(index) {
-        selectedLibrary = index;
-        updateTabs();
-        displayList();
-    }
-
-    selectLibrary(selectedLibrary);
-
-    function cancel() {
-        resolve();
-        dialogContainer.remove();
-    }
-
-    function ok() {
-        if (!selectedOptionObject) {
-            resolve();
-            dialogContainer.remove();
-            return;
-        }
-
-        resolve({
-            id: selectedOption,
-            object: selectedOptionObject,
-            name: selectedOptionObject.name,
-        });
-        dialogContainer.remove();
-    }
-
-    elements.appendElementsFromJSON(libraryDialogButtons, [
-        {
-            element: "button",
-            className: "greyButtonStyle",
-            textContent: "OK",
-            eventListeners: [
-                {
-                    event: "click",
-                    func: ok
-                }
-            ]
+          element: "div",
+          className: "centerMiddle linkLibraryDialogBox",
+          children: [
+            {
+              element: "h2",
+              textContent: `Select ${options.type} from library:`,
+              style: {
+                textAlign: "center",
+                flexShrink: "0px",
+              },
+            },
+            {
+              element: "div",
+              className: "tabArea",
+              GPWhenCreated: (e) => (libraryTabsContainer = e),
+            },
+            {
+              element: "div",
+              className: "libraryDialogList",
+              GPWhenCreated: (e) => (libraryDialogList = e),
+            },
+            {
+              element: "div",
+              className: "libraryDialogButtons",
+              GPWhenCreated: (e) => (libraryDialogButtons = e),
+            },
+          ],
         },
-        {
-            element: "button",
-            className: "greyButtonStyle",
-            textContent: "Cancel",
-            eventListeners: [
-                {
-                    event: "click",
-                    func: cancel
-                }
-            ]
-        }
-    ]);
+      ],
+    },
+  ])[0];
 
-    return promise;
+  document.body.append(dialogContainer);
+
+  var selectedLibrary = 0;
+  var selectedOption = -1;
+  var selectedOptionObject = null;
+
+  function updateTabs() {
+    elements.setInnerJSON(
+      libraryTabsContainer,
+      engine.libraries.map((library, index) => {
+        return createTabElementJSON(
+          library.name,
+          "icons/library.svg",
+          () => selectLibrary(index),
+          selectedLibrary == index,
+        );
+      }),
+    );
+  }
+
+  var listName = options.type == "costume" ? "costumes" : "sounds";
+
+  function displayList() {
+    var list = engine.libraries[selectedLibrary][listName];
+    if (list.length < 1) {
+      elements.setInnerJSON(libraryDialogList, [
+        {
+          element: "span",
+          textContent:
+            "This library has no " +
+            (options.type == "costume" ? "costumes" : "sounds") +
+            ".",
+          style: {
+            color: "white",
+            fontWeight: "bold",
+            textAlign: "center",
+            padding: "4px 4px",
+          },
+        },
+      ]);
+    }
+    elements.setInnerJSON(
+      libraryDialogList,
+
+      list.map((opt) => {
+        return {
+          element: "div",
+          className: "libraryOption",
+          GPWhenCreated: function (elm) {
+            if (selectedOption == opt.id) {
+              elm.setAttribute("selected", "");
+            }
+          },
+          eventListeners: [
+            {
+              event: "click",
+              func: function () {
+                selectedOption = opt.id;
+                selectedOptionObject = opt;
+                displayList();
+              },
+            },
+          ],
+          children: [
+            options.type == "costume"
+              ? //Costume
+                {
+                  element: "img",
+                  className: "costumeLibraryImg",
+                  src: opt.src,
+                }
+              : //Sound
+                {
+                  element: "img",
+                  className: "costumeLibraryImg",
+                  src: "icons/speaker.svg",
+                },
+            {
+              element: "span",
+              textContent: opt.name,
+            },
+          ],
+        };
+      }),
+    );
+  }
+
+  function selectLibrary(index) {
+    selectedLibrary = index;
+    updateTabs();
+    displayList();
+  }
+
+  selectLibrary(selectedLibrary);
+
+  function cancel() {
+    resolve();
+    dialogContainer.remove();
+  }
+
+  function ok() {
+    if (!selectedOptionObject) {
+      resolve();
+      dialogContainer.remove();
+      return;
+    }
+
+    resolve({
+      id: selectedOption,
+      object: selectedOptionObject,
+      name: selectedOptionObject.name,
+    });
+    dialogContainer.remove();
+  }
+
+  elements.appendElementsFromJSON(libraryDialogButtons, [
+    {
+      element: "button",
+      className: "greyButtonStyle",
+      textContent: "OK",
+      eventListeners: [
+        {
+          event: "click",
+          func: ok,
+        },
+      ],
+    },
+    {
+      element: "button",
+      className: "greyButtonStyle",
+      textContent: "Cancel",
+      eventListeners: [
+        {
+          event: "click",
+          func: cancel,
+        },
+      ],
+    },
+  ]);
+
+  return promise;
 }
 
 module.exports = {
-    doLinkDialog
+  doLinkDialog,
 };
+
 
 /***/ }),
 
@@ -28350,6 +28638,34 @@ class GGM3Engine extends EventEmitter {
         }
       }
     }
+  }
+
+  /**
+   * Reloads all sprite sounds with the library sound ID.
+   */
+  reloadSpriteSoundsFromLibrarySound(libsound) {
+    for (var sprite of this.sprites) {
+      for (var sound of sprite.sound) {
+        if (sound.linkID == libsound.id) {
+          sound.deloadSound();
+          sound.loadSound();
+        }
+      }
+    }
+  }
+
+  /**
+   * Used by sounds to find the src from the library.
+   */
+  findLibrarySound(id) {
+    for (var library of this.libraries) {
+      for (var sound of library.sounds) {
+        if (sound.id == id) {
+          return sound;
+        }
+      }
+    }
+    return null;
   }
 
   /**
@@ -30374,6 +30690,7 @@ module.exports = {
                 {
                   element: "img",
                   gid: "pivotEditorImage",
+                  className: "pivotEditorImage",
                 },
                 {
                   element: "div",
@@ -30474,11 +30791,11 @@ module.exports = LibraryIDs;
 /***/ 8320:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var EventEmitter = __webpack_require__(228);
 
 class GUIEventTypes extends EventEmitter {
-    REFRESH_SPRITE_COSTUMES = "REFRESH_SPRITE_COSTUMES";
+  REFRESH_SPRITE_COSTUMES = "REFRESH_SPRITE_COSTUMES";
+  REFRESH_SPRITE_SOUNDS = "REFRESH_SPRITE_SOUNDS";
 }
 
 module.exports = new GUIEventTypes();
@@ -31843,6 +32160,8 @@ var soundsSelectorContainer = elements.getGPId("soundsSelectorContainer");
 
 var { makeSortable } = __webpack_require__(2088);
 
+var library = __webpack_require__(7370);
+
 var deps = {
   markAsDirty: () => {},
 };
@@ -31852,7 +32171,7 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
     {
       element: "button",
       className: "greyButtonStyle",
-      textContent: "Import Sound",
+      textContent: "Import",
       style: {
         marginRight: "2px",
       },
@@ -31910,6 +32229,37 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
         },
       ],
     },
+
+    {
+      element: "button",
+      className: "greyButtonStyle",
+      textContent: "Add from library",
+      style: {
+        marginRight: "2px",
+      },
+      eventListeners: [
+        {
+          event: "click",
+          func: function () {
+            library
+              .doLinkDialog({
+                type: "sound",
+              })
+              .then(async (result) => {
+                if (!result) {
+                  return;
+                }
+                var sound = await spr.addSound(result.object);
+                sound.mimeType = result.mimeType;
+                sound.name = result.name;
+                spr.ensureUniqueSoundNames();
+                reloadSounds(spr);
+                deps.markAsDirty();
+              });
+          },
+        },
+      ],
+    },
   ]);
   if (spr.sounds.length < 1) {
     elements.setInnerJSON(soundsSelectorContainer, [
@@ -31933,7 +32283,7 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
             {
               element: "audio",
               controls: true,
-              src: sound.src,
+              src: sound.getSrc(),
               style: {
                 objectFit: "contain",
               },
@@ -31948,6 +32298,12 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
                 flexDirection: "row",
               },
               children: [
+                {
+                  element: "img",
+                  hidden: !sound.linkID, //Only show if this is linked to a library.
+                  className: "libraryLinkIcon",
+                  src: "icons/library.svg",
+                },
                 {
                   element: "input",
                   value: sound.name,

@@ -1941,7 +1941,8 @@ class Costume {
     this.mimeType = null;
     this.linkID = linkID;
     this.canvas = document.createElement("canvas");
-    this.id = idcount+"_"+ Date.now() + "_" + Math.round(Math.random() * 9999999);
+    this.id =
+      idcount + "_" + Date.now() + "_" + Math.round(Math.random() * 9999999);
     idcount += 1;
 
     this.name = name || "Costume";
@@ -2166,8 +2167,8 @@ class Sprite {
    */
   constructor(engine, name) {
     var id = "";
-    
-    id += idcount+"_"+ Date.now();
+
+    id += idcount + "_" + Date.now();
     id += "_";
     id += Math.round(Math.random() * 999999);
     idcount += 1;
@@ -3013,7 +3014,7 @@ class Sprite {
     }
     var _this = this;
     var isFromLibrary = typeof source == "object";
-    
+
     return new Promise(function (resolve, reject) {
       var costume = new Costume(
         _this.engine,
@@ -3040,14 +3041,18 @@ class Sprite {
    * @param {String} name The name of the costume.
    * @returns {Costume} The added costume.
    */
-  addCostumeWithoutLoading(url, name) {
+  addCostumeWithoutLoading(source, name) {
     if (this.isClone) {
       throw new Error("Clones can't create their own costumes.");
     }
+    var isFromLibrary = typeof source == "object";
+
     var costume = new Costume(
       this.engine,
-      url,
+      isFromLibrary ? null : source,
       name ? name : "Costume " + (this.costumes.length + 1),
+      null,
+      isFromLibrary ? source.id : undefined
     );
     this.costumes.push(costume);
     this.ensureUniqueCostumeNames();
@@ -3060,19 +3065,20 @@ class Sprite {
    * @param {String} name The name of the sound.
    * @returns {Promise<Sound>} A promise that resolves to the added sound.
    */
-  addSound(dataURL, name) {
+  addSound(source, name) {
     if (this.isClone) {
       throw new Error("Clones can't create their own sounds.");
     }
     var _this = this;
+    var isFromLibrary = typeof source == "object";
     return new Promise(function (resolve, reject) {
-      var s = new Sound(_this.engine, _this, dataURL, function (success) {
+      var s = new Sound(_this.engine, _this, isFromLibrary ? null : source, function (success) {
         if (success) {
           resolve(s);
         } else {
           reject("");
         }
-      });
+      }, isFromLibrary ? source.id : undefined);
       s.loadSound();
       s.name = name ? name : "Sound " + (_this.sounds.length + 1);
       _this.sounds.push(s);
@@ -3086,11 +3092,12 @@ class Sprite {
    * @param {String} name The name of the sound.
    * @returns {Sound} The added sound.
    */
-  addSoundWithoutLoading(url, name) {
+  addSoundWithoutLoading(source, name) {
     if (this.isClone) {
       throw new Error("Clones can't create their own sounds.");
     }
-    var s = new Sound(this.engine, this, url);
+    var isFromLibrary = typeof source == "object";
+    var s = new Sound(this.engine, this, isFromLibrary ? null : source, null, isFromLibrary ? source.id : undefined);
     s.name = name ? name : "Sound " + (this.sounds.length + 1);
     this.sounds.push(s);
     this.ensureUniqueSoundNames();
@@ -3662,7 +3669,8 @@ class Library {
   constructor(engine) {
     this.engine = engine;
     this.name = "Library";
-    this.id = idcount + "_" + Date.now() + "_" + Math.round(Math.random() * 9999999);
+    this.id =
+      idcount + "_" + Date.now() + "_" + Math.round(Math.random() * 9999999);
     idcount += 1;
     this.costumes = [];
     this.sounds = [];
@@ -3678,7 +3686,7 @@ class Library {
         }
       }
     }
-    
+
     //Actually dispose the costume now.
     costume.id = null;
     costume.src = null;
@@ -3687,15 +3695,28 @@ class Library {
 
   addCostume(src, name, mimeType, _id) {
     var id = _id ? _id : LibraryIDs.getUniqueID();
-    var costume = new LibraryCostume(this, src, name || "Costume", mimeType || "image/png", id);
+    var costume = new LibraryCostume(
+      this,
+      src,
+      name || "Costume",
+      mimeType || "image/png",
+      id,
+    );
     this.costumes.push(costume);
     this.checkUniqueNames();
   }
 
-
   removeSound(sound) {
     //Unlink the sound from sprites by copying the data url to ones with the link id.
-    
+    for (var sprite of this.engine.sprites) {
+      for (var snd of sprite.sounds) {
+        if (snd.linkID == sound.id) {
+          snd.linkID = null;
+          snd.dataURL = sound.src;
+        }
+      }
+    }
+
     //Actually dispose the sound now.
     sound.id = null;
     sound.src = null;
@@ -3704,7 +3725,13 @@ class Library {
 
   addSound(src, name, mimeType, _id) {
     var id = _id ? _id : LibraryIDs.getUniqueID();
-    var sound = new LibrarySound(this, src, name || "Sound", mimeType || "image/png", id);
+    var sound = new LibrarySound(
+      this,
+      src,
+      name || "Sound",
+      mimeType || "image/png",
+      id,
+    );
     this.sounds.push(sound);
     this.checkUniqueNames();
   }
@@ -3742,11 +3769,8 @@ class Library {
   }
 
   dispose() {
-    for (var costume of this.costumes) {
-      costume.id = null;
-      costume.src = null;
-    }
-    this.costumes = [];
+    this.costumes.forEach((costume) => this.removeCostume(costume));
+    this.sounds.forEach((sound) => this.removeSound(sound));
   }
 }
 
@@ -14736,13 +14760,14 @@ var SoundEffects = __webpack_require__(1352);
 var idcount = 0;
 
 class Sound {
-  constructor(engine, sprite, dataURL, onread) {
+  constructor(engine, sprite, dataURL, onread, linkID) {
     this.engine = engine;
     this.sprite = sprite;
     this.src = dataURL;
     this.data = null;
     this.onread = onread || function () {};
-    this.id = idcount+"_"+Date.now() + "_" + Math.round(Math.random() * 9999999);
+    this.id =
+      idcount + "_" + Date.now() + "_" + Math.round(Math.random() * 9999999);
     idcount += 1;
     this.name = "";
     this.willPreload = true;
@@ -14750,11 +14775,26 @@ class Sound {
     this.mimeType = "audio/mp3";
     this.loading = false;
     this.effects = new SoundEffects(this);
+    this.linkID = linkID;
+
+    if (this.linkID) {
+      var libSound = this.engine.findLibrarySound(this.linkID);
+      this.mimeType = libSound.mimeType;
+      this.src = null;
+    }
   }
 
   getSoundIdentifier() {
     //used by sound manager.
     return this.name;
+  }
+
+  getSrc() {
+    if (this.linkID) {
+      var libSound = this.engine.findLibrarySound(this.linkID);
+      return libSound.src;
+    }
+    return this.src;
   }
 
   get dataURL() {
@@ -14809,7 +14849,7 @@ class Sound {
       return;
     }
     this.loading = true;
-    var data = await AudioEngine.loadSoundFromURL(this.src);
+    var data = await AudioEngine.loadSoundFromURL(this.getSrc());
     this.data = data;
     if (this.onread) {
       this.onread(true);
@@ -15542,6 +15582,34 @@ class GGM3Engine extends EventEmitter {
         }
       }
     }
+  }
+
+  /**
+   * Reloads all sprite sounds with the library sound ID.
+   */
+  reloadSpriteSoundsFromLibrarySound(libsound) {
+    for (var sprite of this.sprites) {
+      for (var sound of sprite.sound) {
+        if (sound.linkID == libsound.id) {
+          sound.deloadSound();
+          sound.loadSound();
+        }
+      }
+    }
+  }
+
+  /**
+   * Used by sounds to find the src from the library.
+   */
+  findLibrarySound(id) {
+    for (var library of this.libraries) {
+      for (var sound of library.sounds) {
+        if (sound.id == id) {
+          return sound;
+        }
+      }
+    }
+    return null;
   }
 
   /**

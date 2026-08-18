@@ -1,1 +1,45 @@
-<!doctype html><html><head><link rel="icon" href="favicon.png"/><title>Gvbvdxx Game Maker 3</title><script src="githubdev-fix.js"></script><script defer="defer" src="interface.js"></script><script defer="defer" src="terser.js"></script></head><body><noscript>Please enable JavaScript to use Gvbvdxx Game Maker 3.</noscript><script src="scratch-blocks/blockly_compressed_vertical.js"></script><script src="scratch-blocks/blocks_compressed_vertical.js"></script><script src="scratch-blocks/blocks_compressed.js"></script><script src="scratch-blocks/messages.js"></script><script src="scratch-blocks/scratch_msgs.js"></script></body></html>
+<!doctype html><html><head><link rel="icon" href="favicon.png"/><title>Gvbvdxx Game Maker 3</title><script src="githubdev-fix.js"></script><script defer="defer" src="interface.js"></script><script defer="defer" src="terser.js"></script></head><body><noscript>Please enable JavaScript to use Gvbvdxx Game Maker 3.</noscript><div class="loadingScreen"><div class="loader"></div></div><style>.loadingScreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100svh;
+        background-color: #363636;
+        color: #ffffff;
+        font-family: arial;
+      }
+
+      .loader {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100px;
+        height: 100px;
+        border-radius: 100%;
+        border-style: solid;
+        border-width: 20px;
+        border-color: #4bbd47;
+        animation: prixClipFix 1.5s steps(100)
+          infinite;
+      }
+
+      @keyframes prixClipFix {
+        0% {
+          clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+        50% {
+          clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
+          transform: translate(-50%, -50%) rotate(180deg);
+        }
+        100% {
+          clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }</style><script>window.addEventListener("load", function () {
+        const loadingScreen = document.querySelector(".loadingScreen");
+        if (loadingScreen) {
+          loadingScreen.remove();
+        }
+      });</script><script src="scratch-blocks/blockly_compressed_vertical.js"></script><script src="scratch-blocks/blocks_compressed_vertical.js"></script><script src="scratch-blocks/blocks_compressed.js"></script><script src="scratch-blocks/messages.js"></script><script src="scratch-blocks/scratch_msgs.js"></script></body></html>
