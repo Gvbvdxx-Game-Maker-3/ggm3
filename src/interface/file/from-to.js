@@ -171,7 +171,7 @@ function toCostumeJSON(costume) {
     preferedScale: costume.preferedScale,
     willPreload: costume.willPreload,
     mimeType: costume.mimeType,
-    linkID: costume.linkID
+    linkID: costume.linkID,
   };
 }
 
@@ -194,7 +194,7 @@ function fromSoundJSON(sound, soundJson) {
     id: soundJson.id,
     willPreload: soundJson.willPreload,
     mimeType: soundJson.mimeType,
-    linkID: soundJson.linkID
+    linkID: soundJson.linkID,
   });
 }
 
@@ -228,8 +228,8 @@ function toLibraryJSON(library) {
 
 function fromLibraryJSON(library, libraryJson) {
   Object.assign(library, {
-    name: ""+libraryJson.name,
-    id: libraryJson.id
+    name: "" + libraryJson.name,
+    id: libraryJson.id,
   });
 }
 
@@ -245,9 +245,9 @@ function toLibraryCostumeJSON(libCostume) {
 
 function fromLibraryCostumeJSON(libCostume, libCostumeJson) {
   Object.assign(libCostume, {
-    name: ""+libCostumeJson.name,
+    name: "" + libCostumeJson.name,
     id: libCostumeJson.id,
-    mimeType: libCostumeJson.mimeType
+    mimeType: libCostumeJson.mimeType,
   });
 }
 
@@ -262,11 +262,10 @@ function toLibrarySoundJSON(libSound) {
 
 function fromLibrarySoundJSON(libSound, libSoundJson) {
   Object.assign(libSound, {
-    name: ""+libSoundJson.name,
-    id: libSoundJson.id
+    name: "" + libSoundJson.name,
+    id: libSoundJson.id,
   });
 }
-
 
 module.exports = {
   fromEngineJSON,
@@ -293,5 +292,5 @@ module.exports = {
   fromLibraryCostumeJSON,
 
   toLibrarySoundJSON,
-  fromLibrarySoundJSON
+  fromLibrarySoundJSON,
 };

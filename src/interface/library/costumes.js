@@ -34,11 +34,7 @@ function createLibraryHeader() {
       var n = ("" + blob.name).split(".");
       n.pop();
       var n2 = n.join(".");
-      var costume = currentLibrary.addCostume(
-        src,
-        n2 || "Costume",
-        blob.type,
-      );
+      var costume = currentLibrary.addCostume(src, n2 || "Costume", blob.type);
       reloadCostumes();
     };
     reader.readAsDataURL(blob);

@@ -1,5 +1,10 @@
 var engine = require("../curengine.js");
-var { toSoundJSON, toCostumeJSON, toLibraryCostumeJSON, toLibrarySoundJSON } = require("./from-to.js");
+var {
+  toSoundJSON,
+  toCostumeJSON,
+  toLibraryCostumeJSON,
+  toLibrarySoundJSON,
+} = require("./from-to.js");
 
 //file names
 
@@ -32,7 +37,9 @@ function getCostumeData(sprite, spriteIndex) {
   var costumeIndex = 0;
   for (var costume of sprite.costumes) {
     data.push({
-      fileName: costume.linkID ? null : getCostumeFileName(spriteIndex || 0, costumeIndex),
+      fileName: costume.linkID
+        ? null
+        : getCostumeFileName(spriteIndex || 0, costumeIndex),
       dataURL: costume.linkID ? null : costume.dataURL,
       isLinked: !!costume.linkID,
       costumeJson: toCostumeJSON(costume),
@@ -48,7 +55,9 @@ function getSoundData(sprite, spriteIndex) {
   var soundIndex = 0;
   for (var sound of sprite.sounds) {
     data.push({
-      fileName: sound.linkID ? null : getSoundFileName(spriteIndex || 0, soundIndex),
+      fileName: sound.linkID
+        ? null
+        : getSoundFileName(spriteIndex || 0, soundIndex),
       dataURL: sound.linkID ? null : sound.dataURL,
       isLinked: !!sound.linkID,
       soundJson: toSoundJSON(sound),
@@ -60,7 +69,6 @@ function getSoundData(sprite, spriteIndex) {
 }
 
 //library files
-
 
 function getLibraryCostumeData(library, libraryIndex) {
   var data = [];
@@ -94,14 +102,19 @@ function getLibrarySoundData(library, libraryIndex) {
 
 //array buffer loading for costumes and sounds.
 
-var { fromCostumeJSON, fromSoundJSON, fromLibraryCostumeJSON, fromLibrarySoundJSON } = require("./from-to.js");
+var {
+  fromCostumeJSON,
+  fromSoundJSON,
+  fromLibraryCostumeJSON,
+  fromLibrarySoundJSON,
+} = require("./from-to.js");
 
 async function loadLibraryCostume(library, costumeJson, fileDataURL) {
   var libCostume = library.addCostume(
     fileDataURL,
     costumeJson.name,
     costumeJson.mimeType,
-    costumeJson.id
+    costumeJson.id,
   );
 
   fromLibraryCostumeJSON(libCostume, costumeJson);
@@ -113,7 +126,7 @@ async function loadLibrarySound(library, soundJson, fileDataURL) {
     fileDataURL,
     soundJson.name,
     soundJson.mimeType,
-    soundJson.id
+    soundJson.id,
   );
 
   fromLibrarySoundJSON(libSound, soundJson);
@@ -121,12 +134,13 @@ async function loadLibrarySound(library, soundJson, fileDataURL) {
 }
 
 async function loadCostume(sprite, costumeJson, fileDataURL) {
-
   if (costumeJson.linkID) {
     //Different loading behavior for costumes from libraries.
     var libCostume = engine.findLibraryCostume(costumeJson.linkID);
     if (!libCostume) {
-      throw new Error(`Coudln't find a library costume for ID "${costumeJson.linkID}".`);
+      throw new Error(
+        `Coudln't find a library costume for ID "${costumeJson.linkID}".`,
+      );
     }
     if (costumeJson.willPreload) {
       var costume = await sprite.addCostume(libCostume, costumeJson.name);
@@ -153,11 +167,12 @@ async function loadCostume(sprite, costumeJson, fileDataURL) {
 }
 
 async function loadSound(sprite, soundJson, fileDataURL) {
-
   if (soundJson.linkID) {
     var libSound = engine.findLibrarySound(soundJson.linkID);
     if (!libSound) {
-      throw new Error(`Couldn't find a library sound for ID "${soundJson.linkID}".`);
+      throw new Error(
+        `Couldn't find a library sound for ID "${soundJson.linkID}".`,
+      );
     }
 
     if (soundJson.willPreload) {
@@ -190,5 +205,6 @@ module.exports = {
 
   loadCostume,
   loadSound,
-  loadLibraryCostume
+  loadLibraryCostume,
+  loadLibrarySound,
 };

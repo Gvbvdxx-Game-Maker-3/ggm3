@@ -17,6 +17,7 @@ var {
   loadCostume,
   loadSound,
   loadLibraryCostume,
+  loadLibrarySound,
 } = require("./asset.js");
 
 const {
@@ -34,7 +35,7 @@ const {
   fromSoundJSON,
   fromLibraryJSON,
   fromLibraryCostumeJSON,
-  fromLibrarySoundJSON
+  fromLibrarySoundJSON,
 } = require("./from-to.js");
 
 var {
@@ -74,8 +75,12 @@ async function saveProjectZip(progress = new ProgressMonitor()) {
     var libraryJson = toLibraryJSON(library);
 
     zip.folder(`${RESOURCE_FOLDER}/lib${libraryIndex}`);
-    zip.folder(`${RESOURCE_FOLDER}/lib${libraryIndex}/${RESOURCE_COSTUMES_FOLDER}`);
-    zip.folder(`${RESOURCE_FOLDER}/lib${libraryIndex}/${RESOURCE_SOUNDS_FOLDER}`);
+    zip.folder(
+      `${RESOURCE_FOLDER}/lib${libraryIndex}/${RESOURCE_COSTUMES_FOLDER}`,
+    );
+    zip.folder(
+      `${RESOURCE_FOLDER}/lib${libraryIndex}/${RESOURCE_SOUNDS_FOLDER}`,
+    );
 
     var costumeData = getLibraryCostumeData(library, libraryIndex);
     libraryJson.costumes = [];
@@ -132,14 +137,15 @@ async function saveProjectZip(progress = new ProgressMonitor()) {
     var soundData = getSoundData(sprite, spriteIndex);
     spriteJson.sounds = [];
     for (var file of soundData) {
-      var arrayBuffer = await dataURLToArrayBuffer(file.dataURL);
-      var filePath = `${RESOURCE_FOLDER}/${spriteIndex}/${RESOURCE_SOUNDS_FOLDER}/${file.fileName}`;
-      zip.file(filePath, arrayBuffer);
-      progress.current += 1;
-
       var soundJson = file.soundJson; //get sound property data.
-      soundJson.file = filePath; //add file path to read later.
+      if (!file.isLinked) {
+        var arrayBuffer = await dataURLToArrayBuffer(file.dataURL);
+        var filePath = `${RESOURCE_FOLDER}/${spriteIndex}/${RESOURCE_SOUNDS_FOLDER}/${file.fileName}`;
+        zip.file(filePath, arrayBuffer);
+        soundJson.file = filePath; //add file path to read later.
+      }
       spriteJson.sounds.push(soundJson);
+      progress.current += 1;
     }
 
     spriteArray.push(spriteJson);
@@ -209,7 +215,7 @@ async function loadProjectZip(zipSource, progress = new ProgressMonitor()) {
   for (var libraryJson of librariesArray) {
     var library = engine.createEmptyLibrary();
 
-    for (var costumeJson of libraryJson.costumes) {
+    for (var costumeJson of (libraryJson.costumes || [])) {
       var filePath = costumeJson.file;
       var mimeType = costumeJson.mimeType ? costumeJson.mimeType : "image/png";
       var dataURL = null;
@@ -223,12 +229,12 @@ async function loadProjectZip(zipSource, progress = new ProgressMonitor()) {
       }
       var arrayBuffer = await file.async("arraybuffer");
       dataURL = await arrayBufferToDataURL(arrayBuffer, mimeType);
-      
+
       await loadLibraryCostume(library, costumeJson, dataURL);
       progress.current += 1;
     }
 
-    for (var soundJson of libraryJson.sounds) {
+    for (var soundJson of (libraryJson.sounds || [])) {
       var filePath = soundJson.file;
       var mimeType = soundJson.mimeType ? soundJson.mimeType : "audio/wav";
       var dataURL = null;
@@ -242,7 +248,7 @@ async function loadProjectZip(zipSource, progress = new ProgressMonitor()) {
       }
       var arrayBuffer = await file.async("arraybuffer");
       dataURL = await arrayBufferToDataURL(arrayBuffer, mimeType);
-      
+
       await loadLibrarySound(library, soundJson, dataURL);
       progress.current += 1;
     }
@@ -280,17 +286,20 @@ async function loadProjectZip(zipSource, progress = new ProgressMonitor()) {
 
     for (var soundJson of spriteJson.sounds) {
       var mimeType = soundJson.mimeType ? soundJson.mimeType : "audio/mp3"; //Fallback to MP3 file type if it doesn't have a mime type.
-      var filePath = soundJson.file;
+      var dataURL = null;
+      if (!soundJson.linkID) {
+        var filePath = soundJson.file;
 
-      var file = zip.file(filePath); //Find the file
-      if (!file) {
-        throw new Error(
-          `Unable to locate file path "${filePath}" in the ggm3 file.`,
-        );
-        return;
+        var file = zip.file(filePath); //Find the file
+        if (!file) {
+          throw new Error(
+            `Unable to locate file path "${filePath}" in the ggm3 file.`,
+          );
+          return;
+        }
+        var arrayBuffer = await file.async("arraybuffer");
+        dataURL = await arrayBufferToDataURL(arrayBuffer, mimeType);
       }
-      var arrayBuffer = await file.async("arraybuffer");
-      var dataURL = await arrayBufferToDataURL(arrayBuffer, mimeType);
 
       await loadSound(sprite, soundJson, dataURL);
       progress.current += 1;

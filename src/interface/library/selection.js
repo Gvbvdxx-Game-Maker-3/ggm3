@@ -74,8 +74,8 @@ function createLibrarySelection(library, index) {
             event: "click",
             func: function (elm) {
               engine.deleteLibrary(library);
-              if (selectedLibrary > engine.libraries.length-1) {
-                selectedLibrary = engine.libraries.length-1;
+              if (selectedLibrary > engine.libraries.length - 1) {
+                selectedLibrary = engine.libraries.length - 1;
               }
               if (selectedLibrary < 0) {
                 selectedLibrary = 0;
