@@ -66,29 +66,37 @@ async function saveSpriteZip(sprite, zip, progress = new ProgressMonitor()) {
   var costumeData = getCostumeData(sprite);
   spriteJson.costumes = [];
 
-  for (var file of costumeData) {
-    var arrayBuffer = await dataURLToArrayBuffer(file.dataURL);
-    var filePath = `${RESOURCE_FOLDER}/${RESOURCE_COSTUMES_FOLDER}/${file.fileName}`;
-    zip.file(filePath, arrayBuffer);
-    progress.current += 1;
+  //This will break some code written in sprites if they use the 
+  // library costumes feature but there isn't a direct way to 
+  // convert it to a non-library resource yet.
 
-    var costumeJson = file.costumeJson; //get costume property data.
-    costumeJson.file = filePath; //add file path to read later.
-    spriteJson.costumes.push(costumeJson);
+  for (var file of costumeData) {
+    if (!file.isLinked) {
+      var arrayBuffer = await dataURLToArrayBuffer(file.dataURL);
+      var filePath = `${RESOURCE_FOLDER}/${RESOURCE_COSTUMES_FOLDER}/${file.fileName}`;
+      zip.file(filePath, arrayBuffer);
+      progress.current += 1;
+
+      var costumeJson = file.costumeJson; //get costume property data.
+      costumeJson.file = filePath; //add file path to read later.
+      spriteJson.costumes.push(costumeJson);
+    }
   }
 
   //Manually create the sounds array.
   var soundData = getSoundData(sprite);
   spriteJson.sounds = [];
   for (var file of soundData) {
-    var arrayBuffer = await dataURLToArrayBuffer(file.dataURL);
-    var filePath = `${RESOURCE_FOLDER}/${RESOURCE_SOUNDS_FOLDER}/${file.fileName}`;
-    zip.file(filePath, arrayBuffer);
-    progress.current += 1;
+    if (!file.isLinked) {
+      var arrayBuffer = await dataURLToArrayBuffer(file.dataURL);
+      var filePath = `${RESOURCE_FOLDER}/${RESOURCE_SOUNDS_FOLDER}/${file.fileName}`;
+      zip.file(filePath, arrayBuffer);
+      progress.current += 1;
 
-    var soundJson = file.soundJson; //get sound property data.
-    soundJson.file = filePath; //add file path to read later.
-    spriteJson.sounds.push(soundJson);
+      var soundJson = file.soundJson; //get sound property data.
+      soundJson.file = filePath; //add file path to read later.
+      spriteJson.sounds.push(soundJson);
+    }
   }
 
   zip.file(SPRITE_FILE, JSON.stringify(spriteJson));
