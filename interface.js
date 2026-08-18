@@ -8388,23 +8388,23 @@ var {
 
 function getCostumeFileName(spriteIndex, costumeIndex) {
   var fileName =
-    "sprite_" + spriteIndex + "_costume_" + costumeIndex + ".image";
+    "sprite_" + spriteIndex + "_costume_" + costumeIndex + ".img";
   return fileName;
 }
 
 function getSoundFileName(spriteIndex, soundIndex) {
-  var fileName = "sprite_" + spriteIndex + "_sound_" + soundIndex + ".mp3";
+  var fileName = "sprite_" + spriteIndex + "_sound_" + soundIndex + ".aud";
   return fileName;
 }
 
 function getLibraryCostumeFileName(libraryIndex, costumeIndex) {
   var fileName =
-    "library_" + libraryIndex + "_costume_" + costumeIndex + ".image";
+    "library_" + libraryIndex + "_costume_" + costumeIndex + ".img";
   return fileName;
 }
 
 function getLibrarySoundFileName(libraryIndex, soundIndex) {
-  var fileName = "library_" + libraryIndex + "_sound_" + soundIndex + ".mp3";
+  var fileName = "library_" + libraryIndex + "_sound_" + soundIndex + ".aud";
   return fileName;
 }
 
