@@ -14,7 +14,8 @@ class Costume {
     this.mimeType = null;
     this.linkID = linkID;
     this.canvas = document.createElement("canvas");
-    this.id = idcount+"_"+ Date.now() + "_" + Math.round(Math.random() * 9999999);
+    this.id =
+      idcount + "_" + Date.now() + "_" + Math.round(Math.random() * 9999999);
     idcount += 1;
 
     this.name = name || "Costume";

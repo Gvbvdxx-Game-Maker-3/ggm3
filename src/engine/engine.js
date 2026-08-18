@@ -140,6 +140,34 @@ class GGM3Engine extends EventEmitter {
   }
 
   /**
+   * Reloads all sprite sounds with the library sound ID.
+   */
+  reloadSpriteSoundsFromLibrarySound(libsound) {
+    for (var sprite of this.sprites) {
+      for (var sound of sprite.sound) {
+        if (sound.linkID == libsound.id) {
+          sound.deloadSound();
+          sound.loadSound();
+        }
+      }
+    }
+  }
+
+  /**
+   * Used by sounds to find the src from the library.
+   */
+  findLibrarySound(id) {
+    for (var library of this.libraries) {
+      for (var sound of library.sounds) {
+        if (sound.id == id) {
+          return sound;
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
    * Used by costumes to find the src from the library.
    */
   findLibraryCostume(id) {

@@ -116,21 +116,21 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
                   display: "flex",
                   flexDirection: "row",
                   alignItems: "center",
-                  gap: "3px"
+                  gap: "3px",
                 },
                 children: [
                   {
                     element: "img",
                     hidden: !costume.linkID, //Only show if this is linked to a library.
                     className: "libraryLinkIcon",
-                    src: "icons/library.svg"
+                    src: "icons/library.svg",
                   },
                   {
                     element: "span",
                     textContent: costume.name,
                   },
-                ]
-              }
+                ],
+              },
             ],
           };
         }),

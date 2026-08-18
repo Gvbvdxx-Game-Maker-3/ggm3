@@ -20,8 +20,8 @@ class Sprite {
    */
   constructor(engine, name) {
     var id = "";
-    
-    id += idcount+"_"+ Date.now();
+
+    id += idcount + "_" + Date.now();
     id += "_";
     id += Math.round(Math.random() * 999999);
     idcount += 1;
@@ -867,7 +867,7 @@ class Sprite {
     }
     var _this = this;
     var isFromLibrary = typeof source == "object";
-    
+
     return new Promise(function (resolve, reject) {
       var costume = new Costume(
         _this.engine,
@@ -894,14 +894,18 @@ class Sprite {
    * @param {String} name The name of the costume.
    * @returns {Costume} The added costume.
    */
-  addCostumeWithoutLoading(url, name) {
+  addCostumeWithoutLoading(source, name) {
     if (this.isClone) {
       throw new Error("Clones can't create their own costumes.");
     }
+    var isFromLibrary = typeof source == "object";
+
     var costume = new Costume(
       this.engine,
-      url,
+      isFromLibrary ? null : source,
       name ? name : "Costume " + (this.costumes.length + 1),
+      null,
+      isFromLibrary ? source.id : undefined
     );
     this.costumes.push(costume);
     this.ensureUniqueCostumeNames();
@@ -914,19 +918,20 @@ class Sprite {
    * @param {String} name The name of the sound.
    * @returns {Promise<Sound>} A promise that resolves to the added sound.
    */
-  addSound(dataURL, name) {
+  addSound(source, name) {
     if (this.isClone) {
       throw new Error("Clones can't create their own sounds.");
     }
     var _this = this;
+    var isFromLibrary = typeof source == "object";
     return new Promise(function (resolve, reject) {
-      var s = new Sound(_this.engine, _this, dataURL, function (success) {
+      var s = new Sound(_this.engine, _this, isFromLibrary ? null : source, function (success) {
         if (success) {
           resolve(s);
         } else {
           reject("");
         }
-      });
+      }, isFromLibrary ? source.id : undefined);
       s.loadSound();
       s.name = name ? name : "Sound " + (_this.sounds.length + 1);
       _this.sounds.push(s);
@@ -940,11 +945,12 @@ class Sprite {
    * @param {String} name The name of the sound.
    * @returns {Sound} The added sound.
    */
-  addSoundWithoutLoading(url, name) {
+  addSoundWithoutLoading(source, name) {
     if (this.isClone) {
       throw new Error("Clones can't create their own sounds.");
     }
-    var s = new Sound(this.engine, this, url);
+    var isFromLibrary = typeof source == "object";
+    var s = new Sound(this.engine, this, isFromLibrary ? null : source, null, isFromLibrary ? source.id : undefined);
     s.name = name ? name : "Sound " + (this.sounds.length + 1);
     this.sounds.push(s);
     this.ensureUniqueSoundNames();

@@ -7,6 +7,8 @@ var soundsSelectorContainer = elements.getGPId("soundsSelectorContainer");
 
 var { makeSortable } = require("./drag-utils.js");
 
+var library = require("./library/linkdialog.js");
+
 var deps = {
   markAsDirty: () => {},
 };
@@ -16,7 +18,7 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
     {
       element: "button",
       className: "greyButtonStyle",
-      textContent: "Import Sound",
+      textContent: "Import",
       style: {
         marginRight: "2px",
       },
@@ -74,6 +76,37 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
         },
       ],
     },
+
+    {
+      element: "button",
+      className: "greyButtonStyle",
+      textContent: "Add from library",
+      style: {
+        marginRight: "2px",
+      },
+      eventListeners: [
+        {
+          event: "click",
+          func: function () {
+            library
+              .doLinkDialog({
+                type: "sound",
+              })
+              .then(async (result) => {
+                if (!result) {
+                  return;
+                }
+                var sound = await spr.addSound(result.object);
+                sound.mimeType = result.mimeType;
+                sound.name = result.name;
+                spr.ensureUniqueSoundNames();
+                reloadSounds(spr);
+                deps.markAsDirty();
+              });
+          },
+        },
+      ],
+    },
   ]);
   if (spr.sounds.length < 1) {
     elements.setInnerJSON(soundsSelectorContainer, [
@@ -97,7 +130,7 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
             {
               element: "audio",
               controls: true,
-              src: sound.src,
+              src: sound.getSrc(),
               style: {
                 objectFit: "contain",
               },
@@ -112,6 +145,12 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
                 flexDirection: "row",
               },
               children: [
+                {
+                  element: "img",
+                  hidden: !sound.linkID, //Only show if this is linked to a library.
+                  className: "libraryLinkIcon",
+                  src: "icons/library.svg",
+                },
                 {
                   element: "input",
                   value: sound.name,

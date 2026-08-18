@@ -26,6 +26,7 @@ module.exports = {
                 {
                   element: "img",
                   gid: "pivotEditorImage",
+                  className: "pivotEditorImage",
                 },
                 {
                   element: "div",

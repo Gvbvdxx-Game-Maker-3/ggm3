@@ -7,7 +7,8 @@ class Library {
   constructor(engine) {
     this.engine = engine;
     this.name = "Library";
-    this.id = idcount + "_" + Date.now() + "_" + Math.round(Math.random() * 9999999);
+    this.id =
+      idcount + "_" + Date.now() + "_" + Math.round(Math.random() * 9999999);
     idcount += 1;
     this.costumes = [];
     this.sounds = [];
@@ -23,7 +24,7 @@ class Library {
         }
       }
     }
-    
+
     //Actually dispose the costume now.
     costume.id = null;
     costume.src = null;
@@ -32,15 +33,28 @@ class Library {
 
   addCostume(src, name, mimeType, _id) {
     var id = _id ? _id : LibraryIDs.getUniqueID();
-    var costume = new LibraryCostume(this, src, name || "Costume", mimeType || "image/png", id);
+    var costume = new LibraryCostume(
+      this,
+      src,
+      name || "Costume",
+      mimeType || "image/png",
+      id,
+    );
     this.costumes.push(costume);
     this.checkUniqueNames();
   }
 
-
   removeSound(sound) {
     //Unlink the sound from sprites by copying the data url to ones with the link id.
-    
+    for (var sprite of this.engine.sprites) {
+      for (var snd of sprite.sounds) {
+        if (snd.linkID == sound.id) {
+          snd.linkID = null;
+          snd.dataURL = sound.src;
+        }
+      }
+    }
+
     //Actually dispose the sound now.
     sound.id = null;
     sound.src = null;
@@ -49,7 +63,13 @@ class Library {
 
   addSound(src, name, mimeType, _id) {
     var id = _id ? _id : LibraryIDs.getUniqueID();
-    var sound = new LibrarySound(this, src, name || "Sound", mimeType || "image/png", id);
+    var sound = new LibrarySound(
+      this,
+      src,
+      name || "Sound",
+      mimeType || "image/png",
+      id,
+    );
     this.sounds.push(sound);
     this.checkUniqueNames();
   }
@@ -87,11 +107,8 @@ class Library {
   }
 
   dispose() {
-    for (var costume of this.costumes) {
-      costume.id = null;
-      costume.src = null;
-    }
-    this.costumes = [];
+    this.costumes.forEach((costume) => this.removeCostume(costume));
+    this.sounds.forEach((sound) => this.removeSound(sound));
   }
 }
 

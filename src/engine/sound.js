@@ -4,13 +4,14 @@ var SoundEffects = require("./soundeffects.js");
 var idcount = 0;
 
 class Sound {
-  constructor(engine, sprite, dataURL, onread) {
+  constructor(engine, sprite, dataURL, onread, linkID) {
     this.engine = engine;
     this.sprite = sprite;
     this.src = dataURL;
     this.data = null;
     this.onread = onread || function () {};
-    this.id = idcount+"_"+Date.now() + "_" + Math.round(Math.random() * 9999999);
+    this.id =
+      idcount + "_" + Date.now() + "_" + Math.round(Math.random() * 9999999);
     idcount += 1;
     this.name = "";
     this.willPreload = true;
@@ -18,11 +19,26 @@ class Sound {
     this.mimeType = "audio/mp3";
     this.loading = false;
     this.effects = new SoundEffects(this);
+    this.linkID = linkID;
+
+    if (this.linkID) {
+      var libSound = this.engine.findLibrarySound(this.linkID);
+      this.mimeType = libSound.mimeType;
+      this.src = null;
+    }
   }
 
   getSoundIdentifier() {
     //used by sound manager.
     return this.name;
+  }
+
+  getSrc() {
+    if (this.linkID) {
+      var libSound = this.engine.findLibrarySound(this.linkID);
+      return libSound.src;
+    }
+    return this.src;
   }
 
   get dataURL() {
@@ -77,7 +93,7 @@ class Sound {
       return;
     }
     this.loading = true;
-    var data = await AudioEngine.loadSoundFromURL(this.src);
+    var data = await AudioEngine.loadSoundFromURL(this.getSrc());
     this.data = data;
     if (this.onread) {
       this.onread(true);

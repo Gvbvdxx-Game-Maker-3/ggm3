@@ -506,6 +506,11 @@ body {
   flex-wrap: nowrap;
 }
 
+.pivotEditorImage {
+  pointer-events: none;
+  user-select: none;
+}
+
 .pivotEditorMenuInput {
   all: unset;
   color: #ffffff;

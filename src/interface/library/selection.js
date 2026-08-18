@@ -60,6 +60,31 @@ function createLibrarySelection(library, index) {
           },
         ],
       },
+      {
+        element: "button",
+        className: "greyButtonStyle",
+        textContent: "Delete",
+        hidden: engine.libraries.length < 2,
+        style: {
+          fontSize: "15px",
+          marginRight: "5px",
+        },
+        eventListeners: [
+          {
+            event: "click",
+            func: function (elm) {
+              engine.deleteLibrary(library);
+              if (selectedLibrary > engine.libraries.length-1) {
+                selectedLibrary = engine.libraries.length-1;
+              }
+              if (selectedLibrary < 0) {
+                selectedLibrary = 0;
+              }
+              setCurrentLibrary(index);
+            },
+          },
+        ],
+      },
     ],
   };
 }

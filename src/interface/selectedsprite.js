@@ -82,6 +82,10 @@ GUIEvents.on(GUIEvents.REFRESH_SPRITE_COSTUMES, () => {
   loadCostumes();
 });
 
+GUIEvents.on(GUIEvents.REFRESH_SPRITE_SOUNDS, () => {
+  loadSounds();
+});
+
 function loadCostumes() {
   costumeViewer.reloadCostumes(state.currentSelectedSprite, loadCostumes);
 }

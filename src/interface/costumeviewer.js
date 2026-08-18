@@ -93,23 +93,25 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
         {
           event: "click",
           func: function () {
-            library.doLinkDialog({
-              type: "costume"
-            }).then(async (result) => {
-              if (!result) {
-                return;
-              }
-              var costume = await spr.addCostume(result.object);
-              costume.mimeType = result.mimeType;
-              costume.name = result.name;
-              spr.ensureUniqueCostumeNames();
-              reloadCostumes(spr);
-              deps.markAsDirty();
-            });
-          }
-        }
-      ]
-    }
+            library
+              .doLinkDialog({
+                type: "costume",
+              })
+              .then(async (result) => {
+                if (!result) {
+                  return;
+                }
+                var costume = await spr.addCostume(result.object);
+                costume.mimeType = result.mimeType;
+                costume.name = result.name;
+                spr.ensureUniqueCostumeNames();
+                reloadCostumes(spr);
+                deps.markAsDirty();
+              });
+          },
+        },
+      ],
+    },
   ]);
   if (spr.costumes.length < 1) {
     elements.setInnerJSON(costumesSelectorContainer, [
@@ -146,7 +148,7 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
               element: "img",
               hidden: !costume.linkID, //Only show if this is linked to a library.
               className: "libraryLinkIcon",
-              src: "icons/library.svg"
+              src: "icons/library.svg",
             },
             {
               element: "input",

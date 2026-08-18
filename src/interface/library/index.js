@@ -1,5 +1,6 @@
 module.exports = {
   ...require("./selection.js"),
   ...require("./costumes.js"),
-  ...require("./linkdialog.js")
+  ...require("./sounds.js"),
+  ...require("./linkdialog.js"),
 };
