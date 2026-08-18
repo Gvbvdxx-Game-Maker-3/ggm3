@@ -352,6 +352,25 @@ if (true) {
 
 /***/ }),
 
+/***/ 389:
+/***/ ((module) => {
+
+class LibrarySound {
+  constructor(library, src, name, mimeType, id) {
+    this.library = library;
+    this.engine = library.engine;
+    this.src = src;
+    this.id = id;
+    this.name = name;
+    this.mimeType = mimeType;
+  }
+}
+
+module.exports = LibrarySound;
+
+
+/***/ }),
+
 /***/ 425:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -3636,6 +3655,7 @@ module.exports = Thread;
 
 var LibraryIDs = __webpack_require__(8297);
 var LibraryCostume = __webpack_require__(692);
+var LibrarySound = __webpack_require__(389);
 var idcount = 0;
 
 class Library {
@@ -3669,6 +3689,23 @@ class Library {
     var id = _id ? _id : LibraryIDs.getUniqueID();
     var costume = new LibraryCostume(this, src, name || "Costume", mimeType || "image/png", id);
     this.costumes.push(costume);
+    this.checkUniqueNames();
+  }
+
+
+  removeSound(sound) {
+    //Unlink the sound from sprites by copying the data url to ones with the link id.
+    
+    //Actually dispose the sound now.
+    sound.id = null;
+    sound.src = null;
+    this.sounds = this.sounds.filter((s) => s.id !== sound.id);
+  }
+
+  addSound(src, name, mimeType, _id) {
+    var id = _id ? _id : LibraryIDs.getUniqueID();
+    var sound = new LibrarySound(this, src, name || "Sound", mimeType || "image/png", id);
+    this.sounds.push(sound);
     this.checkUniqueNames();
   }
 
