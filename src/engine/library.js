@@ -42,6 +42,7 @@ class Library {
     );
     this.costumes.push(costume);
     this.checkUniqueNames();
+    return costume;
   }
 
   removeSound(sound) {
@@ -67,11 +68,12 @@ class Library {
       this,
       src,
       name || "Sound",
-      mimeType || "image/png",
+      mimeType || "audio/wav",
       id,
     );
     this.sounds.push(sound);
     this.checkUniqueNames();
+    return sound;
   }
 
   checkUniqueNames() {

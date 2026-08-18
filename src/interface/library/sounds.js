@@ -34,7 +34,7 @@ function createLibraryHeader() {
       var n = ("" + blob.name).split(".");
       n.pop();
       var n2 = n.join(".");
-      var sound = currentLibrary.addSound(src, n2 || "Sound", blob.mimeType);
+      var sound = currentLibrary.addSound(src, n2 || "Sound", blob.type);
       reloadSounds();
     };
     reader.readAsDataURL(blob);

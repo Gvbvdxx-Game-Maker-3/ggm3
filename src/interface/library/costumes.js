@@ -37,7 +37,7 @@ function createLibraryHeader() {
       var costume = currentLibrary.addCostume(
         src,
         n2 || "Costume",
-        blob.mimeType,
+        blob.type,
       );
       reloadCostumes();
     };

@@ -158,6 +158,7 @@ function fromCostumeJSON(costume, costumeJson) {
     preferedScale: costumeJson.preferedScale,
     willPreload: costumeJson.willPreload,
     mimeType: costumeJson.mimeType,
+    linkID: costumeJson.linkID,
   });
 }
 
@@ -170,6 +171,7 @@ function toCostumeJSON(costume) {
     preferedScale: costume.preferedScale,
     willPreload: costume.willPreload,
     mimeType: costume.mimeType,
+    linkID: costume.linkID
   };
 }
 
@@ -192,6 +194,7 @@ function fromSoundJSON(sound, soundJson) {
     id: soundJson.id,
     willPreload: soundJson.willPreload,
     mimeType: soundJson.mimeType,
+    linkID: soundJson.linkID
   });
 }
 
@@ -201,6 +204,7 @@ function toSoundJSON(sound) {
     id: sound.id,
     willPreload: sound.willPreload,
     mimeType: sound.mimeType,
+    linkID: sound.linkID,
   };
 }
 
@@ -212,6 +216,57 @@ function toExportableSoundJSON(sound) {
     mimeType: sound.mimeType,
   };
 }
+
+//Libraries
+
+function toLibraryJSON(library) {
+  return {
+    name: library.name,
+    id: library.id,
+  };
+}
+
+function fromLibraryJSON(library, libraryJson) {
+  Object.assign(library, {
+    name: ""+libraryJson.name,
+    id: libraryJson.id
+  });
+}
+
+//Library costumes
+
+function toLibraryCostumeJSON(libCostume) {
+  return {
+    name: libCostume.name,
+    id: libCostume.id,
+    mimeType: libCostume.mimeType,
+  };
+}
+
+function fromLibraryCostumeJSON(libCostume, libCostumeJson) {
+  Object.assign(libCostume, {
+    name: ""+libCostumeJson.name,
+    id: libCostumeJson.id,
+    mimeType: libCostumeJson.mimeType
+  });
+}
+
+//Library sounds
+
+function toLibrarySoundJSON(libSound) {
+  return {
+    name: libSound.name,
+    id: libSound.id,
+  };
+}
+
+function fromLibrarySoundJSON(libSound, libSoundJson) {
+  Object.assign(libSound, {
+    name: ""+libSoundJson.name,
+    id: libSoundJson.id
+  });
+}
+
 
 module.exports = {
   fromEngineJSON,
@@ -230,4 +285,13 @@ module.exports = {
   fromSoundJSON,
   toSoundJSON,
   toExportableSoundJSON,
+
+  toLibraryJSON,
+  fromLibraryJSON,
+
+  toLibraryCostumeJSON,
+  fromLibraryCostumeJSON,
+
+  toLibrarySoundJSON,
+  fromLibrarySoundJSON
 };
