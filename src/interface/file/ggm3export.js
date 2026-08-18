@@ -81,6 +81,7 @@ class ExportMainGenerator extends EventEmitter {
     this.gameCode = null;
     this.canceled = false;
     this._spriteJS = [];
+    this._libraryJS = [];
     this.useDataURL = true;
     this.uniqueIDCounter = 0;
     this._spriteAssets = [];
@@ -124,19 +125,18 @@ class ExportMainGenerator extends EventEmitter {
     this.engineCode = await this.getEngineCode();
   }
 
-  async spriteToJS(sprite) {
-    var baseObject = FromTo.toExportableSpriteJSON(sprite);
+  async libraryToJS(library) {
 
     var costumeList = [];
-    for (var costume of sprite.costumes) {
+    for (var costume of library.costumes) {
       this.uniqueIDCounter += 1;
-      var uid = "c" + this.uniqueIDCounter;
-      var costumeJson = FromTo.toExportableCostumeJSON(costume);
+      var uid = "limg" + this.uniqueIDCounter;
+      var costumeJson = FromTo.toLibraryCostumeJSON(costume);
       if (this.useDataURL) {
-        costumeJson.url = costume.dataURL;
+        costumeJson.url = costume.src;
       } else {
         costumeJson.url = `${ASSET_PATH}${uid}.${getFileExtension(costume.mimeType)}`;
-        var buffer = await DataURL.dataURLToArrayBuffer(costume.dataURL);
+        var buffer = await DataURL.dataURLToArrayBuffer(costume.src);
         this._spriteAssets.push({
           path: costumeJson.url,
           buffer: buffer,
@@ -149,19 +149,78 @@ class ExportMainGenerator extends EventEmitter {
     }
 
     var soundList = [];
-    for (var sound of sprite.sounds) {
+    for (var sound of library.sounds) {
       this.uniqueIDCounter += 1;
-      var uid = "s" + this.uniqueIDCounter;
+      var uid = "lsnd" + this.uniqueIDCounter;
       var soundJson = FromTo.toExportableSoundJSON(sound);
       if (this.useDataURL) {
-        soundJson.url = sound.dataURL;
+        soundJson.url = sound.src;
       } else {
         soundJson.url = `${ASSET_PATH}${uid}.${getFileExtension(sound.mimeType)}`;
-        var buffer = await DataURL.dataURLToArrayBuffer(sound.dataURL);
+        var buffer = await DataURL.dataURLToArrayBuffer(sound.src);
         this._spriteAssets.push({
           path: soundJson.url,
           buffer: buffer,
         });
+      }
+      soundList.push(soundJson);
+      if (this.canceled) {
+        return;
+      }
+    }
+
+    var baseObject = FromTo.toLibraryJSON(library);
+
+    baseObject.costumes = costumeList;
+    baseObject.sounds = soundList;
+
+    var js = JSON.stringify(baseObject); //No need for any actual non-json code.
+
+    this._libraryJS.push(js);
+  }
+
+  async spriteToJS(sprite) {
+    var baseObject = FromTo.toExportableSpriteJSON(sprite);
+
+    var costumeList = [];
+    for (var costume of sprite.costumes) {
+      this.uniqueIDCounter += 1;
+      var uid = "img" + this.uniqueIDCounter;
+      var costumeJson = FromTo.toExportableCostumeJSON(costume);
+      if (!costumeJson.isLinked) {
+        if (this.useDataURL) {
+          costumeJson.url = costume.dataURL;
+        } else {
+          costumeJson.url = `${ASSET_PATH}${uid}.${getFileExtension(costume.mimeType)}`;
+          var buffer = await DataURL.dataURLToArrayBuffer(costume.dataURL);
+          this._spriteAssets.push({
+            path: costumeJson.url,
+            buffer: buffer,
+          });
+        }
+      }
+      costumeList.push(costumeJson);
+      if (this.canceled) {
+        return;
+      }
+    }
+
+    var soundList = [];
+    for (var sound of sprite.sounds) {
+      this.uniqueIDCounter += 1;
+      var uid = "snd" + this.uniqueIDCounter;
+      var soundJson = FromTo.toExportableSoundJSON(sound);
+      if (!soundJson.isLinked) {
+        if (this.useDataURL) {
+          soundJson.url = sound.dataURL;
+        } else {
+          soundJson.url = `${ASSET_PATH}${uid}.${getFileExtension(sound.mimeType)}`;
+          var buffer = await DataURL.dataURLToArrayBuffer(sound.dataURL);
+          this._spriteAssets.push({
+            path: soundJson.url,
+            buffer: buffer,
+          });
+        }
       }
       soundList.push(soundJson);
       if (this.canceled) {
@@ -215,8 +274,9 @@ class ExportMainGenerator extends EventEmitter {
 
   async generateGameCode() {
     var spritesCodeInArray = `[${this._spriteJS.join(",")}]`;
+    var librariesCodeInArray = `[${this._libraryJS.join(",")}]`;
     var engineProperties = JSON.stringify(this.engineMetadata);
-    var allCode = `{sprites:[${spritesCodeInArray}],engineProps:${engineProperties}}`;
+    var allCode = `{sprites:[${spritesCodeInArray}],libraries:${librariesCodeInArray},engineProps:${engineProperties}}`;
     var code = ("" + GAME_CODE_BASE).replaceAll('"|%GGM3Game%|"', allCode); //This isn't actually put in string, its just there to prevent the JS beautify errors.
 
     this.gameCode = await compress(code);
@@ -231,6 +291,7 @@ class ExportMainGenerator extends EventEmitter {
       this.generateEngineCode.bind(this),
       this.generateEngineMetadata.bind(this),
       ...engine.sprites.map((sprite) => this.spriteToJS.bind(this, sprite)),
+      ...engine.libraries.map((library) => this.libraryToJS.bind(this, library)),
       this.generateGameCode.bind(this),
     ]);
 
@@ -249,6 +310,7 @@ class ExportMainGenerator extends EventEmitter {
     this.cancel();
     this.engineCode = null;
     this._spriteJS = [];
+    this._libraryJS = [];
     this._spriteAssets = [];
   }
 }

@@ -5,6 +5,12 @@
   var Game = (window.Game = {});
   var GameEvents = {};
 
+  //This makes it add it and then remove it which
+  // should trick the compression logic to include it no matter what.
+  window._ = GameContent;
+  window._ = "";
+  delete window._;
+
   //////////////////////////////////////////////////////////////////
 
   GameEvents.progress = [];

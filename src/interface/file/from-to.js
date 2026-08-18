@@ -184,6 +184,8 @@ function toExportableCostumeJSON(costume) {
     preferedScale: costume.preferedScale,
     willPreload: costume.willPreload,
     mimeType: costume.mimeType,
+    isLinked: !!costume.linkID,
+    linkID: costume.linkID
   };
 }
 
@@ -214,6 +216,8 @@ function toExportableSoundJSON(sound) {
     id: sound.id,
     willPreload: sound.willPreload,
     mimeType: sound.mimeType,
+    isLinked: !!sound.linkID,
+    linkID: sound.linkID
   };
 }
 

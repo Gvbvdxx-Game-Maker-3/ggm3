@@ -567,6 +567,7 @@ class GGM3Engine extends EventEmitter {
    * @returns {Sprite} The newly created sprite.
    */
   duplicateSprite(fromSprite) {
+    var _this = this;
     var newSprite = this.__createEmptySpriteNoEvent();
     newSprite.name = fromSprite.name + " " + Math.round(Date.now());
     this.makeUniqueSpriteNames();
@@ -599,18 +600,25 @@ class GGM3Engine extends EventEmitter {
     }
 
     fromSprite.costumes.forEach(async (fromCostume) => {
-      var costume = await newSprite.addCostume(fromCostume.dataURL);
+      var libCostume = null;
+      if (fromCostume.linkID) {
+        libCostume = _this.findLibraryCostume(fromCostume.linkID);
+      }
+      var costume = await newSprite.addCostume(libCostume || fromCostume.dataURL);
       costume.name = fromCostume.name;
       costume.rotationCenterX = fromCostume.rotationCenterX;
       costume.rotationCenterY = fromCostume.rotationCenterY;
       costume.preferedScale = fromCostume.preferedScale;
       costume.willPreload = fromCostume.willPreload;
-      costume.linkID = fromCostume.linkID;
       costume.renderImageAtScale();
     });
 
     fromSprite.sounds.forEach(async (fromSound) => {
-      var sound = await newSprite.addSound(fromSound.src);
+      var libSound = null;
+      if (fromSound.linkID) {
+        libSound = _this.findLibrarySound(fromSound.linkID);
+      }
+      var sound = await newSprite.addSound(libSound || fromSound.src);
       sound.name = fromSound.name;
       sound.willPreload = sound.willPreload;
     });

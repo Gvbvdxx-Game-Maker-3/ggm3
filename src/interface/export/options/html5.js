@@ -12,10 +12,10 @@ class HTML5ExportOption extends EventEmitter {
         "Export your game as an HTML5 package that can be hosted on the web or can run locally.",
       options: [
         {
-          name: "Single HTML file",
+          name: "Built in assets",
           id: "dataURLs",
           description:
-            "Export the game as a single HTML file that includes all assets encoded as base64 data URIs. This can severely effect device resources if this is on." +
+            "Export the game logic with all assets encoded as base64 data URIs. This can severely effect device resources if this is on." +
             "\nNote: If you turn this off, you'll need to run this game on a web server or a browser or web app supporting fetching from file URLs.",
           type: "checkbox",
           default: true,

@@ -1215,7 +1215,7 @@ body {
 .exportGameType {
 	display: flex;
 	background: rgba(0,0,0,0.3);
-	padding: 4px 4px;
+	padding: 3px 3px;
 	text-wrap: nowrap;
 	border-radius: 2px;
 	font-weight: bold;
@@ -1229,6 +1229,9 @@ body {
 	gap: 3px;
 	align-items: center;
 	user-select: none;
+  border-style: solid;
+  border-width: 3px;
+  border-color: rgba(0,0,0,0);
 }
 
 .exportGameType > img {
@@ -1248,6 +1251,7 @@ body {
   text-decoration: unset;
   cursor: unset;
   background: rgba(0,0,0,0);
+  border-bottom-color: rgba(255, 255, 255, 1);
 }
 
 .exportGameType[selected] > img {

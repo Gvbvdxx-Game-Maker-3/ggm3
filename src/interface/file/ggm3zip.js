@@ -192,7 +192,7 @@ async function loadProjectZip(zipSource, progress = new ProgressMonitor()) {
 
   //Calculate the amount of assets to be loaded.
   var max = 0;
-  for (var library of engineJson.libraries) {
+  for (var library of (engineJson.libraries || [])) {
     var costumes = library.costumes || [];
     var sounds = library.sounds || [];
     max += costumes.length;
