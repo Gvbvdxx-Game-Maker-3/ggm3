@@ -1,5 +1,6 @@
 var LibraryIDs = require("./libraryid.js");
 var LibraryCostume = require("./librarycostume.js");
+var LibrarySound = require("./librarysound.js");
 var idcount = 0;
 
 class Library {
@@ -33,6 +34,23 @@ class Library {
     var id = _id ? _id : LibraryIDs.getUniqueID();
     var costume = new LibraryCostume(this, src, name || "Costume", mimeType || "image/png", id);
     this.costumes.push(costume);
+    this.checkUniqueNames();
+  }
+
+
+  removeSound(sound) {
+    //Unlink the sound from sprites by copying the data url to ones with the link id.
+    
+    //Actually dispose the sound now.
+    sound.id = null;
+    sound.src = null;
+    this.sounds = this.sounds.filter((s) => s.id !== sound.id);
+  }
+
+  addSound(src, name, mimeType, _id) {
+    var id = _id ? _id : LibraryIDs.getUniqueID();
+    var sound = new LibrarySound(this, src, name || "Sound", mimeType || "image/png", id);
+    this.sounds.push(sound);
     this.checkUniqueNames();
   }
 
