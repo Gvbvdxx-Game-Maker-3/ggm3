@@ -6287,6 +6287,7 @@ var {
   loadCostume,
   loadSound,
   loadLibraryCostume,
+  loadLibrarySound,
 } = __webpack_require__(2695);
 
 const {
@@ -6304,7 +6305,7 @@ const {
   fromSoundJSON,
   fromLibraryJSON,
   fromLibraryCostumeJSON,
-  fromLibrarySoundJSON
+  fromLibrarySoundJSON,
 } = __webpack_require__(7405);
 
 var {
@@ -6344,8 +6345,12 @@ async function saveProjectZip(progress = new ProgressMonitor()) {
     var libraryJson = toLibraryJSON(library);
 
     zip.folder(`${RESOURCE_FOLDER}/lib${libraryIndex}`);
-    zip.folder(`${RESOURCE_FOLDER}/lib${libraryIndex}/${RESOURCE_COSTUMES_FOLDER}`);
-    zip.folder(`${RESOURCE_FOLDER}/lib${libraryIndex}/${RESOURCE_SOUNDS_FOLDER}`);
+    zip.folder(
+      `${RESOURCE_FOLDER}/lib${libraryIndex}/${RESOURCE_COSTUMES_FOLDER}`,
+    );
+    zip.folder(
+      `${RESOURCE_FOLDER}/lib${libraryIndex}/${RESOURCE_SOUNDS_FOLDER}`,
+    );
 
     var costumeData = getLibraryCostumeData(library, libraryIndex);
     libraryJson.costumes = [];
@@ -6402,14 +6407,15 @@ async function saveProjectZip(progress = new ProgressMonitor()) {
     var soundData = getSoundData(sprite, spriteIndex);
     spriteJson.sounds = [];
     for (var file of soundData) {
-      var arrayBuffer = await dataURLToArrayBuffer(file.dataURL);
-      var filePath = `${RESOURCE_FOLDER}/${spriteIndex}/${RESOURCE_SOUNDS_FOLDER}/${file.fileName}`;
-      zip.file(filePath, arrayBuffer);
-      progress.current += 1;
-
       var soundJson = file.soundJson; //get sound property data.
-      soundJson.file = filePath; //add file path to read later.
+      if (!file.isLinked) {
+        var arrayBuffer = await dataURLToArrayBuffer(file.dataURL);
+        var filePath = `${RESOURCE_FOLDER}/${spriteIndex}/${RESOURCE_SOUNDS_FOLDER}/${file.fileName}`;
+        zip.file(filePath, arrayBuffer);
+        soundJson.file = filePath; //add file path to read later.
+      }
       spriteJson.sounds.push(soundJson);
+      progress.current += 1;
     }
 
     spriteArray.push(spriteJson);
@@ -6481,7 +6487,7 @@ async function loadProjectZip(zipSource, progress = new ProgressMonitor()) {
   for (var libraryJson of librariesArray) {
     var library = engine.createEmptyLibrary();
 
-    for (var costumeJson of libraryJson.costumes) {
+    for (var costumeJson of (libraryJson.costumes || [])) {
       var filePath = costumeJson.file;
       var mimeType = costumeJson.mimeType ? costumeJson.mimeType : "image/png";
       var dataURL = null;
@@ -6496,12 +6502,12 @@ async function loadProjectZip(zipSource, progress = new ProgressMonitor()) {
       }
       var arrayBuffer = await file.async("arraybuffer");
       dataURL = await arrayBufferToDataURL(arrayBuffer, mimeType);
-      
+
       await loadLibraryCostume(library, costumeJson, dataURL);
       progress.current += 1;
     }
 
-    for (var soundJson of libraryJson.sounds) {
+    for (var soundJson of (libraryJson.sounds || [])) {
       var filePath = soundJson.file;
       var mimeType = soundJson.mimeType ? soundJson.mimeType : "audio/wav";
       var dataURL = null;
@@ -6516,7 +6522,7 @@ async function loadProjectZip(zipSource, progress = new ProgressMonitor()) {
       }
       var arrayBuffer = await file.async("arraybuffer");
       dataURL = await arrayBufferToDataURL(arrayBuffer, mimeType);
-      
+
       await loadLibrarySound(library, soundJson, dataURL);
       progress.current += 1;
     }
@@ -6555,18 +6561,21 @@ async function loadProjectZip(zipSource, progress = new ProgressMonitor()) {
 
     for (var soundJson of spriteJson.sounds) {
       var mimeType = soundJson.mimeType ? soundJson.mimeType : "audio/mp3"; //Fallback to MP3 file type if it doesn't have a mime type.
-      var filePath = soundJson.file;
+      var dataURL = null;
+      if (!soundJson.linkID) {
+        var filePath = soundJson.file;
 
-      var file = zip.file(filePath); //Find the file
-      if (!file) {
-        throw new Error(
-          `Unable to locate file path "${filePath}" in the ggm3 file.`,
-        );
-        // removed by dead control flow
+        var file = zip.file(filePath); //Find the file
+        if (!file) {
+          throw new Error(
+            `Unable to locate file path "${filePath}" in the ggm3 file.`,
+          );
+          // removed by dead control flow
 
+        }
+        var arrayBuffer = await file.async("arraybuffer");
+        dataURL = await arrayBufferToDataURL(arrayBuffer, mimeType);
       }
-      var arrayBuffer = await file.async("arraybuffer");
-      var dataURL = await arrayBufferToDataURL(arrayBuffer, mimeType);
 
       await loadSound(sprite, soundJson, dataURL);
       progress.current += 1;
@@ -7685,7 +7694,7 @@ class Sprite {
       isFromLibrary ? null : source,
       name ? name : "Costume " + (this.costumes.length + 1),
       null,
-      isFromLibrary ? source.id : undefined
+      isFromLibrary ? source.id : undefined,
     );
     this.costumes.push(costume);
     this.ensureUniqueCostumeNames();
@@ -7705,13 +7714,19 @@ class Sprite {
     var _this = this;
     var isFromLibrary = typeof source == "object";
     return new Promise(function (resolve, reject) {
-      var s = new Sound(_this.engine, _this, isFromLibrary ? null : source, function (success) {
-        if (success) {
-          resolve(s);
-        } else {
-          reject("");
-        }
-      }, isFromLibrary ? source.id : undefined);
+      var s = new Sound(
+        _this.engine,
+        _this,
+        isFromLibrary ? null : source,
+        function (success) {
+          if (success) {
+            resolve(s);
+          } else {
+            reject("");
+          }
+        },
+        isFromLibrary ? source.id : undefined,
+      );
       s.loadSound();
       s.name = name ? name : "Sound " + (_this.sounds.length + 1);
       _this.sounds.push(s);
@@ -7730,7 +7745,13 @@ class Sprite {
       throw new Error("Clones can't create their own sounds.");
     }
     var isFromLibrary = typeof source == "object";
-    var s = new Sound(this.engine, this, isFromLibrary ? null : source, null, isFromLibrary ? source.id : undefined);
+    var s = new Sound(
+      this.engine,
+      this,
+      isFromLibrary ? null : source,
+      null,
+      isFromLibrary ? source.id : undefined,
+    );
     s.name = name ? name : "Sound " + (this.sounds.length + 1);
     this.sounds.push(s);
     this.ensureUniqueSoundNames();
@@ -8356,7 +8377,12 @@ module.exports = {
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 var engine = __webpack_require__(9940);
-var { toSoundJSON, toCostumeJSON, toLibraryCostumeJSON, toLibrarySoundJSON } = __webpack_require__(7405);
+var {
+  toSoundJSON,
+  toCostumeJSON,
+  toLibraryCostumeJSON,
+  toLibrarySoundJSON,
+} = __webpack_require__(7405);
 
 //file names
 
@@ -8389,7 +8415,9 @@ function getCostumeData(sprite, spriteIndex) {
   var costumeIndex = 0;
   for (var costume of sprite.costumes) {
     data.push({
-      fileName: costume.linkID ? null : getCostumeFileName(spriteIndex || 0, costumeIndex),
+      fileName: costume.linkID
+        ? null
+        : getCostumeFileName(spriteIndex || 0, costumeIndex),
       dataURL: costume.linkID ? null : costume.dataURL,
       isLinked: !!costume.linkID,
       costumeJson: toCostumeJSON(costume),
@@ -8405,7 +8433,9 @@ function getSoundData(sprite, spriteIndex) {
   var soundIndex = 0;
   for (var sound of sprite.sounds) {
     data.push({
-      fileName: sound.linkID ? null : getSoundFileName(spriteIndex || 0, soundIndex),
+      fileName: sound.linkID
+        ? null
+        : getSoundFileName(spriteIndex || 0, soundIndex),
       dataURL: sound.linkID ? null : sound.dataURL,
       isLinked: !!sound.linkID,
       soundJson: toSoundJSON(sound),
@@ -8417,7 +8447,6 @@ function getSoundData(sprite, spriteIndex) {
 }
 
 //library files
-
 
 function getLibraryCostumeData(library, libraryIndex) {
   var data = [];
@@ -8451,14 +8480,19 @@ function getLibrarySoundData(library, libraryIndex) {
 
 //array buffer loading for costumes and sounds.
 
-var { fromCostumeJSON, fromSoundJSON, fromLibraryCostumeJSON, fromLibrarySoundJSON } = __webpack_require__(7405);
+var {
+  fromCostumeJSON,
+  fromSoundJSON,
+  fromLibraryCostumeJSON,
+  fromLibrarySoundJSON,
+} = __webpack_require__(7405);
 
 async function loadLibraryCostume(library, costumeJson, fileDataURL) {
   var libCostume = library.addCostume(
     fileDataURL,
     costumeJson.name,
     costumeJson.mimeType,
-    costumeJson.id
+    costumeJson.id,
   );
 
   fromLibraryCostumeJSON(libCostume, costumeJson);
@@ -8470,7 +8504,7 @@ async function loadLibrarySound(library, soundJson, fileDataURL) {
     fileDataURL,
     soundJson.name,
     soundJson.mimeType,
-    soundJson.id
+    soundJson.id,
   );
 
   fromLibrarySoundJSON(libSound, soundJson);
@@ -8478,12 +8512,13 @@ async function loadLibrarySound(library, soundJson, fileDataURL) {
 }
 
 async function loadCostume(sprite, costumeJson, fileDataURL) {
-
   if (costumeJson.linkID) {
     //Different loading behavior for costumes from libraries.
     var libCostume = engine.findLibraryCostume(costumeJson.linkID);
     if (!libCostume) {
-      throw new Error(`Coudln't find a library costume for ID "${costumeJson.linkID}".`);
+      throw new Error(
+        `Coudln't find a library costume for ID "${costumeJson.linkID}".`,
+      );
     }
     if (costumeJson.willPreload) {
       var costume = await sprite.addCostume(libCostume, costumeJson.name);
@@ -8510,11 +8545,12 @@ async function loadCostume(sprite, costumeJson, fileDataURL) {
 }
 
 async function loadSound(sprite, soundJson, fileDataURL) {
-
   if (soundJson.linkID) {
     var libSound = engine.findLibrarySound(soundJson.linkID);
     if (!libSound) {
-      throw new Error(`Couldn't find a library sound for ID "${soundJson.linkID}".`);
+      throw new Error(
+        `Couldn't find a library sound for ID "${soundJson.linkID}".`,
+      );
     }
 
     if (soundJson.willPreload) {
@@ -8547,7 +8583,8 @@ module.exports = {
 
   loadCostume,
   loadSound,
-  loadLibraryCostume
+  loadLibraryCostume,
+  loadLibrarySound,
 };
 
 
@@ -8943,11 +8980,7 @@ function createLibraryHeader() {
       var n = ("" + blob.name).split(".");
       n.pop();
       var n2 = n.join(".");
-      var costume = currentLibrary.addCostume(
-        src,
-        n2 || "Costume",
-        blob.type,
-      );
+      var costume = currentLibrary.addCostume(src, n2 || "Costume", blob.type);
       reloadCostumes();
     };
     reader.readAsDataURL(blob);
@@ -24625,8 +24658,8 @@ function createLibrarySelection(library, index) {
             event: "click",
             func: function (elm) {
               engine.deleteLibrary(library);
-              if (selectedLibrary > engine.libraries.length-1) {
-                selectedLibrary = engine.libraries.length-1;
+              if (selectedLibrary > engine.libraries.length - 1) {
+                selectedLibrary = engine.libraries.length - 1;
               }
               if (selectedLibrary < 0) {
                 selectedLibrary = 0;
@@ -28621,7 +28654,7 @@ function toCostumeJSON(costume) {
     preferedScale: costume.preferedScale,
     willPreload: costume.willPreload,
     mimeType: costume.mimeType,
-    linkID: costume.linkID
+    linkID: costume.linkID,
   };
 }
 
@@ -28644,7 +28677,7 @@ function fromSoundJSON(sound, soundJson) {
     id: soundJson.id,
     willPreload: soundJson.willPreload,
     mimeType: soundJson.mimeType,
-    linkID: soundJson.linkID
+    linkID: soundJson.linkID,
   });
 }
 
@@ -28678,8 +28711,8 @@ function toLibraryJSON(library) {
 
 function fromLibraryJSON(library, libraryJson) {
   Object.assign(library, {
-    name: ""+libraryJson.name,
-    id: libraryJson.id
+    name: "" + libraryJson.name,
+    id: libraryJson.id,
   });
 }
 
@@ -28695,9 +28728,9 @@ function toLibraryCostumeJSON(libCostume) {
 
 function fromLibraryCostumeJSON(libCostume, libCostumeJson) {
   Object.assign(libCostume, {
-    name: ""+libCostumeJson.name,
+    name: "" + libCostumeJson.name,
     id: libCostumeJson.id,
-    mimeType: libCostumeJson.mimeType
+    mimeType: libCostumeJson.mimeType,
   });
 }
 
@@ -28712,11 +28745,10 @@ function toLibrarySoundJSON(libSound) {
 
 function fromLibrarySoundJSON(libSound, libSoundJson) {
   Object.assign(libSound, {
-    name: ""+libSoundJson.name,
-    id: libSoundJson.id
+    name: "" + libSoundJson.name,
+    id: libSoundJson.id,
   });
 }
-
 
 module.exports = {
   fromEngineJSON,
@@ -28743,7 +28775,7 @@ module.exports = {
   fromLibraryCostumeJSON,
 
   toLibrarySoundJSON,
-  fromLibrarySoundJSON
+  fromLibrarySoundJSON,
 };
 
 

@@ -3052,7 +3052,7 @@ class Sprite {
       isFromLibrary ? null : source,
       name ? name : "Costume " + (this.costumes.length + 1),
       null,
-      isFromLibrary ? source.id : undefined
+      isFromLibrary ? source.id : undefined,
     );
     this.costumes.push(costume);
     this.ensureUniqueCostumeNames();
@@ -3072,13 +3072,19 @@ class Sprite {
     var _this = this;
     var isFromLibrary = typeof source == "object";
     return new Promise(function (resolve, reject) {
-      var s = new Sound(_this.engine, _this, isFromLibrary ? null : source, function (success) {
-        if (success) {
-          resolve(s);
-        } else {
-          reject("");
-        }
-      }, isFromLibrary ? source.id : undefined);
+      var s = new Sound(
+        _this.engine,
+        _this,
+        isFromLibrary ? null : source,
+        function (success) {
+          if (success) {
+            resolve(s);
+          } else {
+            reject("");
+          }
+        },
+        isFromLibrary ? source.id : undefined,
+      );
       s.loadSound();
       s.name = name ? name : "Sound " + (_this.sounds.length + 1);
       _this.sounds.push(s);
@@ -3097,7 +3103,13 @@ class Sprite {
       throw new Error("Clones can't create their own sounds.");
     }
     var isFromLibrary = typeof source == "object";
-    var s = new Sound(this.engine, this, isFromLibrary ? null : source, null, isFromLibrary ? source.id : undefined);
+    var s = new Sound(
+      this.engine,
+      this,
+      isFromLibrary ? null : source,
+      null,
+      isFromLibrary ? source.id : undefined,
+    );
     s.name = name ? name : "Sound " + (this.sounds.length + 1);
     this.sounds.push(s);
     this.ensureUniqueSoundNames();
