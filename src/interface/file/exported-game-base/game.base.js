@@ -7,9 +7,9 @@
 
   //This makes it add it and then remove it which
   // should trick the compression logic to include it no matter what.
-  window._ = GameContent;
-  window._ = "";
-  delete window._;
+  window.__content__ = GameContent;
+  window.__content__ = "";
+  delete window.__content__;
 
   //////////////////////////////////////////////////////////////////
 
