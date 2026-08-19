@@ -6,6 +6,11 @@
   
   Game.content = "|%GGM3Game%|"; //String makes the beautifier not break the code. This is replaced with the actual game code when generating the game.
 
+  //Hack to force-include Game.content.
+  window.__content__ = Game.content;
+  window.__content__ = null;
+  delete window.__content__;
+
   //////////////////////////////////////////////////////////////////
 
   GameEvents.progress = [];
