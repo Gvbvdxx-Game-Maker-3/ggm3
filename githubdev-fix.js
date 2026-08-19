@@ -1,1 +1,39 @@
-!function(){var t=".app.github.dev";if(window.location.hostname.indexOf(t)>-1){var o=window.WebSocket;window.WebSocket=class extends o{constructor(o,e){var n=new URL(o),s=n.hostname.split(t)[0].split("-");if(-1!==n.hostname.indexOf(t)&&n.hostname.startsWith(s[0])){var i=n.port;n.port="",s.pop(),s.push(i),n.hostname=s.join("-")+t}super(o=n.href,e)}}}}();
+/*
+Fix for Webpack Dev Server's hot reload not
+  working on Github Codespaces due to WebSocket connection issues.
+This script overrides the WebSocket constructor to modify
+  the URL for the hot reload connection, ensuring it works
+  correctly in the Codespace environment.
+*/
+
+(function () {
+    var githubDevName = ".app.github.dev";
+    var githubDevNameDash = "-";
+    var isGithubDev = (window.location.hostname.indexOf(githubDevName) > -1);
+    if (!isGithubDev) return;
+    
+
+    var OriginalWebsocket = window.WebSocket;
+    class WebSocket extends OriginalWebsocket {
+        constructor(url, protocols) {
+            var newURL = new URL(url);
+
+            var devHostname = newURL.hostname.split(githubDevName)[0];
+            var devParts = devHostname.split(githubDevNameDash);
+
+            if (newURL.hostname.indexOf(githubDevName) !== -1 && newURL.hostname.startsWith(devParts[0])) {
+              var targetPort = newURL.port;
+              newURL.port = "";
+
+              devParts.pop();
+              devParts.push(targetPort);
+              newURL.hostname = devParts.join(githubDevNameDash) + githubDevName;
+            }
+
+            url = newURL.href;
+            super(url, protocols);
+        }
+    }
+
+    window.WebSocket = WebSocket;
+})();
