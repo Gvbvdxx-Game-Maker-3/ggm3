@@ -11,9 +11,11 @@ var libraryCostumesSelectorContainer = elements.getGPId(
 );
 var { makeSortable } = require("../drag-utils.js");
 
-var selectedSprite = require("../selectedsprite.js");
-
 var currentLibrary = null;
+
+function markProjectDirty() {
+  GUIEvents.emit(GUIEvents.MARK_PROJECT_DIRTY);
+}
 
 function fileInputWithCallback(cb, multiple) {
   var input = document.createElement("input");
@@ -36,6 +38,8 @@ function createLibraryHeader() {
       var n2 = n.join(".");
       var costume = currentLibrary.addCostume(src, n2 || "Costume", blob.type);
       reloadCostumes();
+      markProjectDirty();
+      GUIEvents.emit(GUIEvents.REFRESH_SPRITE_COSTUMES);
     };
     reader.readAsDataURL(blob);
   }
@@ -104,7 +108,7 @@ function reloadCostumes() {
                   costume.name = this.value.trim();
                   costume.library.checkUniqueNames();
                   reloadCostumes();
-                  selectedSprite.markProjectDirty();
+                  markProjectDirty();
                 },
               },
             ],
@@ -124,7 +128,7 @@ function reloadCostumes() {
                   var library = costume.library;
                   library.removeCostume(costume);
                   reloadCostumes();
-                  selectedSprite.markProjectDirty();
+                  markProjectDirty();
                   GUIEvents.emit(GUIEvents.REFRESH_SPRITE_COSTUMES);
                 },
               },
@@ -151,6 +155,7 @@ function reloadCostumes() {
                         costume.src = src;
                         engine.reloadSpriteCostumesFromLibraryCostume(costume);
                         reloadCostumes();
+                        markProjectDirty();
                         GUIEvents.emit(GUIEvents.REFRESH_SPRITE_COSTUMES);
                       };
                       reader.readAsDataURL(input.files[0]);

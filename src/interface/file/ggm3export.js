@@ -8,16 +8,25 @@ var { getSpriteFunctionsCode } = require("./spritestuff.js");
 const ENGINE_FILE_URL = "engine.js?v=" + Date.now();
 const ASSET_PATH = "assets/";
 
-const GAME_CODE_BASE__ = require("!!raw-loader!./exported-game-base/game.base.js");
-const GAME_CODE_BASE = GAME_CODE_BASE__.default
-  ? GAME_CODE_BASE__.default
-  : GAME_CODE_BASE__;
+function findCode(mod) {
+  if (typeof mod.default !== "undefined") {
+    return mod.default;
+  }
+  return mod;
+}
+
+var GAME_CODE_BASE = findCode(require("!!raw-loader!./exported-game-base/game.base.js"));
+
+var RUNTIME_CODE_BASE = findCode(require("!!raw-loader!./exported-game-base/runtime.base.js"));
+
+var RUNTIME_HTML_BASE = findCode(require("!!raw-loader!./exported-game-base/html.base.html"));
+
 
 function getEngine() {
   return fetch(ENGINE_FILE_URL).then((res) => res.text());
 }
 
-function getFileExtension(mimeType) {
+function getFileExtension(mimeType,fallback) {
   switch (mimeType) {
     case "image/png":
       return "png";
@@ -34,7 +43,7 @@ function getFileExtension(mimeType) {
     case "audio/mpeg":
       return "mp3";
     default:
-      return "data";
+      return fallback || "data";
   }
 }
 
@@ -65,7 +74,9 @@ async function compress(code) {
     }
     return result.code;
   } catch (e) {
-    window.alert("Unable to minify: " + e);
+    console.error(e);
+    console.error(code);
+    
     return code;
   }
 }
@@ -79,12 +90,14 @@ class ExportMainGenerator extends EventEmitter {
     super();
     this.engineCode = null;
     this.gameCode = null;
+    this.htmlCode = null;
+    this.runtimeCode = null;
     this.canceled = false;
     this._spriteJS = [];
     this._libraryJS = [];
     this.useDataURL = true;
     this.uniqueIDCounter = 0;
-    this._spriteAssets = [];
+    this._spriteAssets = []; 
   }
 
   getFiles() {
@@ -96,8 +109,10 @@ class ExportMainGenerator extends EventEmitter {
       }
     }
     return {
+      "index.html": this.htmlCode,
       "engine.js": this.engineCode,
       "game.js": this.gameCode,
+      "runtime.js": this.runtimeCode,
       ...spriteFiles,
     };
   }
@@ -125,17 +140,36 @@ class ExportMainGenerator extends EventEmitter {
     this.engineCode = await this.getEngineCode();
   }
 
+  getStartingID() {
+    var count = 0;
+    var result = "";
+    while (count < 10) {
+      result += "" + (Math.round(Math.random() * 8) + 1);
+      count += 1;
+    }
+    return +result;
+  }
+
+  getFileNum(num) {
+    var n = (+num || 0) * this._idnum;
+    return n;
+  }
+
+  getUidAddAmount () {
+    return Math.round(Math.random() * 999);
+  }
+
   async libraryToJS(library) {
 
     var costumeList = [];
     for (var costume of library.costumes) {
-      this.uniqueIDCounter += 1;
-      var uid = "limg" + this.uniqueIDCounter;
+      this.uniqueIDCounter += this.getUidAddAmount();
+      var uid = "limg" + this.getFileNum(this.uniqueIDCounter);
       var costumeJson = FromTo.toLibraryCostumeJSON(costume);
       if (this.useDataURL) {
         costumeJson.url = costume.src;
       } else {
-        costumeJson.url = `${ASSET_PATH}${uid}.${getFileExtension(costume.mimeType)}`;
+        costumeJson.url = `${ASSET_PATH}${uid}.${getFileExtension(costume.mimeType, "png")}`;
         var buffer = await DataURL.dataURLToArrayBuffer(costume.src);
         this._spriteAssets.push({
           path: costumeJson.url,
@@ -150,13 +184,13 @@ class ExportMainGenerator extends EventEmitter {
 
     var soundList = [];
     for (var sound of library.sounds) {
-      this.uniqueIDCounter += 1;
-      var uid = "lsnd" + this.uniqueIDCounter;
+      this.uniqueIDCounter += this.getUidAddAmount();
+      var uid = "lsnd" + this.getFileNum(this.uniqueIDCounter);
       var soundJson = FromTo.toExportableSoundJSON(sound);
       if (this.useDataURL) {
         soundJson.url = sound.src;
       } else {
-        soundJson.url = `${ASSET_PATH}${uid}.${getFileExtension(sound.mimeType)}`;
+        soundJson.url = `${ASSET_PATH}${uid}.${getFileExtension(sound.mimeType, "mp3")}`;
         var buffer = await DataURL.dataURLToArrayBuffer(sound.src);
         this._spriteAssets.push({
           path: soundJson.url,
@@ -184,14 +218,14 @@ class ExportMainGenerator extends EventEmitter {
 
     var costumeList = [];
     for (var costume of sprite.costumes) {
-      this.uniqueIDCounter += 1;
-      var uid = "img" + this.uniqueIDCounter;
       var costumeJson = FromTo.toExportableCostumeJSON(costume);
       if (!costumeJson.isLinked) {
+        this.uniqueIDCounter += this.getUidAddAmount();
+        var uid = "img" + this.getFileNum(this.uniqueIDCounter);
         if (this.useDataURL) {
           costumeJson.url = costume.dataURL;
         } else {
-          costumeJson.url = `${ASSET_PATH}${uid}.${getFileExtension(costume.mimeType)}`;
+          costumeJson.url = `${ASSET_PATH}${uid}.${getFileExtension(costume.mimeType, "png")}`;
           var buffer = await DataURL.dataURLToArrayBuffer(costume.dataURL);
           this._spriteAssets.push({
             path: costumeJson.url,
@@ -207,14 +241,14 @@ class ExportMainGenerator extends EventEmitter {
 
     var soundList = [];
     for (var sound of sprite.sounds) {
-      this.uniqueIDCounter += 1;
-      var uid = "snd" + this.uniqueIDCounter;
       var soundJson = FromTo.toExportableSoundJSON(sound);
       if (!soundJson.isLinked) {
+        this.uniqueIDCounter += this.getUidAddAmount();
+        var uid = "snd" + this.getFileNum(this.uniqueIDCounter);
         if (this.useDataURL) {
           soundJson.url = sound.dataURL;
         } else {
-          soundJson.url = `${ASSET_PATH}${uid}.${getFileExtension(sound.mimeType)}`;
+          soundJson.url = `${ASSET_PATH}${uid}.${getFileExtension(sound.mimeType, "png")}`;
           var buffer = await DataURL.dataURLToArrayBuffer(sound.dataURL);
           this._spriteAssets.push({
             path: soundJson.url,
@@ -280,12 +314,25 @@ class ExportMainGenerator extends EventEmitter {
     var code = ("" + GAME_CODE_BASE).replaceAll('"|%GGM3Game%|"', allCode); //This isn't actually put in string, its just there to prevent the JS beautify errors.
 
     this.gameCode = await compress(code);
-    console.log(this.gameCode);
+  }
+
+  async generateRuntimeCode() {
+    var code = ("" + RUNTIME_CODE_BASE);
+
+    this.runtimeCode = await compress(code);
+  }
+  
+  async generateHtmlCode () {
+
+    var code = ("" + RUNTIME_HTML_BASE);
+
+    this.htmlCode = code;
   }
 
   async generate() {
     this.cleanup();
     this.canceled = false;
+    this._idnum = this.getStartingID();
 
     var wasCanceled = await this.cancelableAsyncChain([
       this.generateEngineCode.bind(this),
@@ -293,6 +340,8 @@ class ExportMainGenerator extends EventEmitter {
       ...engine.sprites.map((sprite) => this.spriteToJS.bind(this, sprite)),
       ...engine.libraries.map((library) => this.libraryToJS.bind(this, library)),
       this.generateGameCode.bind(this),
+      this.generateRuntimeCode.bind(this),
+      this.generateHtmlCode.bind(this),
     ]);
 
     if (wasCanceled) {
@@ -309,9 +358,12 @@ class ExportMainGenerator extends EventEmitter {
   cleanup() {
     this.cancel();
     this.engineCode = null;
+    this.runtimeCode = null;
+    this.htmlCode = null;
     this._spriteJS = [];
     this._libraryJS = [];
     this._spriteAssets = [];
+    this._idnum = 0;
   }
 }
 

@@ -33,7 +33,7 @@ module.exports = {
   },
   optimization: {
     splitChunks: false,
-    minimize: true,
+    minimize: false,
   },
   output: {
     path: path.resolve(__dirname, "dist"),

@@ -11,9 +11,11 @@ var librarySoundsSelectorContainer = elements.getGPId(
 );
 var { makeSortable } = require("../drag-utils.js");
 
-var selectedSprite = require("../selectedsprite.js");
-
 var currentLibrary = null;
+
+function markProjectDirty() {
+  GUIEvents.emit(GUIEvents.MARK_PROJECT_DIRTY);
+}
 
 function fileInputWithCallback(cb, multiple) {
   var input = document.createElement("input");
@@ -36,6 +38,8 @@ function createLibraryHeader() {
       var n2 = n.join(".");
       var sound = currentLibrary.addSound(src, n2 || "Sound", blob.type);
       reloadSounds();
+      markProjectDirty();
+      GUIEvents.emit(GUIEvents.REFRESH_SPRITE_SOUNDS);
     };
     reader.readAsDataURL(blob);
   }
@@ -111,7 +115,7 @@ function reloadSounds() {
                       sound.name = this.value.trim();
                       sound.library.checkUniqueNames();
                       reloadSounds();
-                      selectedSprite.markProjectDirty();
+                      markProjectDirty();
                     },
                   },
                 ],
@@ -131,7 +135,7 @@ function reloadSounds() {
                       var library = sound.library;
                       library.removeSound(sound);
                       reloadSounds();
-                      selectedSprite.markProjectDirty();
+                      markProjectDirty();
                       GUIEvents.emit(GUIEvents.REFRESH_SPRITE_SOUNDS);
                     },
                   },
@@ -158,6 +162,7 @@ function reloadSounds() {
                             sound.src = src;
                             engine.reloadSpriteSoundsFromLibrarySound(sound);
                             reloadSounds();
+                            markProjectDirty();
                             GUIEvents.emit(GUIEvents.REFRESH_SPRITE_SOUNDS);
                           };
                           reader.readAsDataURL(input.files[0]);

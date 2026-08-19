@@ -8,6 +8,7 @@ var soundsSelectorContainer = elements.getGPId("soundsSelectorContainer");
 var { makeSortable } = require("./drag-utils.js");
 
 var library = require("./library/linkdialog.js");
+var librarySelection = require("./library/selection.js");
 
 var deps = {
   markAsDirty: () => {},
@@ -161,6 +162,48 @@ function reloadSounds(spr, reloadTabCallback = function () {}) {
                       func: function () {
                         sound.name = this.value.trim();
                         spr.ensureUniqueSoundNames();
+                        reloadSounds(spr);
+                        reloadTabCallback(spr);
+                        deps.markAsDirty();
+                      },
+                    },
+                  ],
+                },
+                {
+                  element: "button",
+                  className: "greyButtonStyle",
+                  textContent: "Add & convert to library",
+                  hidden: !!sound.linkID,
+                  style: {
+                    marginRight: "2px",
+                    fontSize: "12px",
+                  },
+                  eventListeners: [
+                    {
+                      event: "click",
+                      func: function () {
+                        var selectedLibrary =
+                          librarySelection.getCurrentLibrary();
+                        if (!selectedLibrary) {
+                          window.alert(
+                            "No selected library. Select a library in the Library tab first.",
+                          );
+                          return;
+                        }
+
+                        var libSound = selectedLibrary.addSound(
+                          sound.getSrc(),
+                          sound.name,
+                          sound.mimeType || "audio/wav",
+                        );
+                        sound.linkID = libSound.id;
+                        sound.mimeType = libSound.mimeType;
+                        sound.dataURL = null;
+                        sound.deloadSound();
+                        sound.loadSound();
+
+                        librarySelection.refreshCurrentLibrary();
+
                         reloadSounds(spr);
                         reloadTabCallback(spr);
                         deps.markAsDirty();

@@ -8,6 +8,7 @@ var costumesSelectorContainer = elements.getGPId("costumesSelectorContainer");
 var costumePivots = require("./costumepivoteditor.js");
 
 var library = require("./library/linkdialog.js");
+var librarySelection = require("./library/selection.js");
 
 var { makeSortable } = require("./drag-utils.js");
 
@@ -160,6 +161,47 @@ function reloadCostumes(spr, reloadTabCallback = function () {}) {
                   func: function () {
                     costume.name = this.value.trim();
                     spr.ensureUniqueCostumeNames();
+                    reloadCostumes(spr);
+                    reloadTabCallback(spr);
+                    deps.markAsDirty();
+                  },
+                },
+              ],
+            },
+            {
+              element: "button",
+              className: "greyButtonStyle",
+              textContent: "Add & convert to library",
+              hidden: !!costume.linkID,
+              style: {
+                marginRight: "2px",
+                fontSize: "12px",
+              },
+              eventListeners: [
+                {
+                  event: "click",
+                  func: function () {
+                    var selectedLibrary = librarySelection.getCurrentLibrary();
+                    if (!selectedLibrary) {
+                      window.alert(
+                        "No selected library. Select a library in the Library tab first.",
+                      );
+                      return;
+                    }
+
+                    var libCostume = selectedLibrary.addCostume(
+                      costume.getSrc(),
+                      costume.name,
+                      costume.mimeType || "image/png",
+                    );
+                    costume.linkID = libCostume.id;
+                    costume.mimeType = libCostume.mimeType;
+                    costume.dataURL = null;
+                    costume.deloadCostume();
+                    costume.loadCostume();
+
+                    librarySelection.refreshCurrentLibrary();
+
                     reloadCostumes(spr);
                     reloadTabCallback(spr);
                     deps.markAsDirty();

@@ -86,6 +86,10 @@ GUIEvents.on(GUIEvents.REFRESH_SPRITE_SOUNDS, () => {
   loadSounds();
 });
 
+GUIEvents.on(GUIEvents.MARK_PROJECT_DIRTY, () => {
+  deps.markProjectDirty();
+});
+
 function loadCostumes() {
   costumeViewer.reloadCostumes(state.currentSelectedSprite, loadCostumes);
 }

@@ -3,10 +3,25 @@ var AElement = require("../../gp2/aelement.js");
 var engine = require("../curengine.js");
 var { makeSortable } = require("../drag-utils.js");
 var libraryNameInput = elements.getGPId("libraryNameInput");
-var selectedSprite = require("../selectedsprite.js");
+var GUIEvents = require("../event.js");
 var libraryCostumes = require("./costumes.js");
 
 var selectedLibrary = -1;
+
+function getCurrentLibrary() {
+  return engine.libraries[selectedLibrary] || null;
+}
+
+function markProjectDirty() {
+  GUIEvents.emit(GUIEvents.MARK_PROJECT_DIRTY);
+}
+
+function refreshCurrentLibrary() {
+  if (!engine.libraries[selectedLibrary]) {
+    return;
+  }
+  setCurrentLibrary(selectedLibrary);
+}
 
 function setCurrentLibrary(index) {
   if (!engine.libraries[index]) {
@@ -147,7 +162,7 @@ function showAddMenu() {
             closeAddMenu();
             var library = engine.createEmptyLibrary();
             setCurrentLibrary(engine.libraries.length - 1);
-            selectedSprite.markProjectDirty();
+            markProjectDirty();
           },
         },
       ],
@@ -191,7 +206,7 @@ libraryNameInput.addEventListener("change", function () {
   engine.checkLibraryDuplicateNames();
   libraryNameInput.value = library.name;
   reloadLibrariesSelection();
-  selectedSprite.markProjectDirty();
+  markProjectDirty();
 });
 
 reloadLibrariesSelection();
@@ -206,5 +221,7 @@ function projectLoadHandler() {
 module.exports = {
   reloadLibrariesSelection,
   setCurrentLibrary,
+  getCurrentLibrary,
+  refreshCurrentLibrary,
   projectLoadHandler,
 };

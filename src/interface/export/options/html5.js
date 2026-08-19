@@ -59,7 +59,7 @@ class HTML5ExportOption extends EventEmitter {
     this.zip = new jszip();
     for (var filename of Object.keys(files)) {
       var data = files[filename];
-      if (data) {
+      if (data !== null) {
         await this.zip.file(filename, data);
       } else {
         await this.zip.folder(filename);

@@ -1,15 +1,10 @@
 (function () {
   //////////////////////////////////////////////////////////////////
 
-  const GameContent = "|%GGM3Game%|"; //String makes the beautifier not break the code. This is replaced with the actual game code when generating the game.
   var Game = (window.Game = {});
   var GameEvents = {};
-
-  //This makes it add it and then remove it which
-  // should trick the compression logic to include it no matter what.
-  window.__content__ = GameContent;
-  window.__content__ = "";
-  delete window.__content__;
+  
+  Game.content = "|%GGM3Game%|"; //String makes the beautifier not break the code. This is replaced with the actual game code when generating the game.
 
   //////////////////////////////////////////////////////////////////
 
@@ -80,6 +75,8 @@
     }
     Game.engine = engine;
   }
+
+  Game.attachEngine = attachEngine;
 
   //////////////////////////////////////////////////////////////////
 
