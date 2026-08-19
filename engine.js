@@ -15493,6 +15493,11 @@ class GGM3Engine extends EventEmitter {
 
   /**
    * @readonly
+   * @type {String} Event emitted when a frame is drawn. */
+  FRAME_RENDERED = "FRAME_RENDERED";
+
+  /**
+   * @readonly
    * @type {String} Event emitted when a sprite is created. */
   SPRITE_CREATED = "SPRITE_CREATED";
   /**
@@ -16081,8 +16086,8 @@ class GGM3Engine extends EventEmitter {
   }
 
   /**
-   * Starts the render loop of the game, which updates and renders every sprite in the game every frame. The framerate can be changed by setting the `frameRate` property, but it defaults to 60 FPS.
-   * The render loop uses a fixed timestep method, which means that if the game lags for some reason, it will update the game state multiple times in a row to catch up, and then render. This ensures that the game state is always consistent and not affected by lag spikes, but it also means that if the game is running too slow, it may skip rendering some frames to catch up.
+   * Starts the render loop of the game, which updates and renders every sprite in the game every frame.
+   * The framerate can be changed by setting the `frameRate` property, but it defaults to 60 FPS.
    * @returns {void}
    */
   startRenderLoop() {
@@ -16299,6 +16304,8 @@ class GGM3Engine extends EventEmitter {
     } else {
       this._editDragging = null;
     }
+
+    this.emit(this.FRAME_RENDERED, elapsed, estimatedFramerate, this._iTime);
   }
 
   /**
