@@ -66,8 +66,8 @@ async function saveSpriteZip(sprite, zip, progress = new ProgressMonitor()) {
   var costumeData = getCostumeData(sprite);
   spriteJson.costumes = [];
 
-  //This will break some code written in sprites if they use the 
-  // library costumes feature but there isn't a direct way to 
+  //This will break some code written in sprites if they use the
+  // library costumes feature but there isn't a direct way to
   // convert it to a non-library resource yet.
 
   for (var file of costumeData) {

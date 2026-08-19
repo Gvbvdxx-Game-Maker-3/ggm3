@@ -9,8 +9,7 @@ var {
 //file names
 
 function getCostumeFileName(spriteIndex, costumeIndex) {
-  var fileName =
-    "sprite_" + spriteIndex + "_costume_" + costumeIndex + ".img";
+  var fileName = "sprite_" + spriteIndex + "_costume_" + costumeIndex + ".img";
   return fileName;
 }
 

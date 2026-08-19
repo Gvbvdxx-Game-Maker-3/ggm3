@@ -15,18 +15,23 @@ function findCode(mod) {
   return mod;
 }
 
-var GAME_CODE_BASE = findCode(require("!!raw-loader!./exported-game-base/game.base.js"));
+var GAME_CODE_BASE = findCode(
+  require("!!raw-loader!./exported-game-base/game.base.js"),
+);
 
-var RUNTIME_CODE_BASE = findCode(require("!!raw-loader!./exported-game-base/runtime.base.js"));
+var RUNTIME_CODE_BASE = findCode(
+  require("!!raw-loader!./exported-game-base/runtime.base.js"),
+);
 
-var RUNTIME_HTML_BASE = findCode(require("!!raw-loader!./exported-game-base/html.base.html"));
-
+var RUNTIME_HTML_BASE = findCode(
+  require("!!raw-loader!./exported-game-base/html.base.html"),
+);
 
 function getEngine() {
   return fetch(ENGINE_FILE_URL).then((res) => res.text());
 }
 
-function getFileExtension(mimeType,fallback) {
+function getFileExtension(mimeType, fallback) {
   switch (mimeType) {
     case "image/png":
       return "png";
@@ -76,7 +81,7 @@ async function compress(code) {
   } catch (e) {
     console.error(e);
     console.error(code);
-    
+
     return code;
   }
 }
@@ -97,7 +102,7 @@ class ExportMainGenerator extends EventEmitter {
     this._libraryJS = [];
     this.useDataURL = true;
     this.uniqueIDCounter = 0;
-    this._spriteAssets = []; 
+    this._spriteAssets = [];
   }
 
   getFiles() {
@@ -155,12 +160,11 @@ class ExportMainGenerator extends EventEmitter {
     return n;
   }
 
-  getUidAddAmount () {
+  getUidAddAmount() {
     return Math.round(Math.random() * 999);
   }
 
   async libraryToJS(library) {
-
     var costumeList = [];
     for (var costume of library.costumes) {
       this.uniqueIDCounter += this.getUidAddAmount();
@@ -317,14 +321,13 @@ class ExportMainGenerator extends EventEmitter {
   }
 
   async generateRuntimeCode() {
-    var code = ("" + RUNTIME_CODE_BASE);
+    var code = "" + RUNTIME_CODE_BASE;
 
     this.runtimeCode = await compress(code);
   }
-  
-  async generateHtmlCode () {
 
-    var code = ("" + RUNTIME_HTML_BASE);
+  async generateHtmlCode() {
+    var code = "" + RUNTIME_HTML_BASE;
 
     this.htmlCode = code;
   }
@@ -338,7 +341,9 @@ class ExportMainGenerator extends EventEmitter {
       this.generateEngineCode.bind(this),
       this.generateEngineMetadata.bind(this),
       ...engine.sprites.map((sprite) => this.spriteToJS.bind(this, sprite)),
-      ...engine.libraries.map((library) => this.libraryToJS.bind(this, library)),
+      ...engine.libraries.map((library) =>
+        this.libraryToJS.bind(this, library),
+      ),
       this.generateGameCode.bind(this),
       this.generateRuntimeCode.bind(this),
       this.generateHtmlCode.bind(this),

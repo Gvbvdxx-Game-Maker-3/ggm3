@@ -192,7 +192,7 @@ async function loadProjectZip(zipSource, progress = new ProgressMonitor()) {
 
   //Calculate the amount of assets to be loaded.
   var max = 0;
-  for (var library of (engineJson.libraries || [])) {
+  for (var library of engineJson.libraries || []) {
     var costumes = library.costumes || [];
     var sounds = library.sounds || [];
     max += costumes.length;
@@ -215,7 +215,7 @@ async function loadProjectZip(zipSource, progress = new ProgressMonitor()) {
   for (var libraryJson of librariesArray) {
     var library = engine.createEmptyLibrary();
 
-    for (var costumeJson of (libraryJson.costumes || [])) {
+    for (var costumeJson of libraryJson.costumes || []) {
       var filePath = costumeJson.file;
       var mimeType = costumeJson.mimeType ? costumeJson.mimeType : "image/png";
       var dataURL = null;
@@ -234,7 +234,7 @@ async function loadProjectZip(zipSource, progress = new ProgressMonitor()) {
       progress.current += 1;
     }
 
-    for (var soundJson of (libraryJson.sounds || [])) {
+    for (var soundJson of libraryJson.sounds || []) {
       var filePath = soundJson.file;
       var mimeType = soundJson.mimeType ? soundJson.mimeType : "audio/wav";
       var dataURL = null;

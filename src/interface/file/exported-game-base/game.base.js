@@ -3,7 +3,7 @@
 
   var Game = (window.Game = {});
   var GameEvents = {};
-  
+
   Game.content = "|%GGM3Game%|"; //String makes the beautifier not break the code. This is replaced with the actual game code when generating the game.
 
   //////////////////////////////////////////////////////////////////
@@ -71,7 +71,7 @@
   function getEngine() {
     return Game.engine;
   }
-  
+
   function attachEngine(eng) {
     if (engine) {
       throw new Error("GGM3Engine was already attached.");
@@ -213,11 +213,11 @@
           costumeJson.url,
           costumeJson.name,
           costumeJson.mimeType,
-          costumeJson.id
+          costumeJson.id,
         );
 
         fromLibraryCostumeJSON(libCostume, costumeJson);
-        
+
         progressMonitor.current += 1;
         sendProgress();
       }
@@ -227,7 +227,7 @@
           soundJson.url,
           soundJson.name,
           soundJson.mimeType,
-          soundJson.id
+          soundJson.id,
         );
 
         fromLibrarySoundJSON(libSound, soundJson);
@@ -274,7 +274,7 @@
           }
 
           fromCostumeJSON(costume, costumeJson);
-          
+
           progressMonitor.current += 1;
           sendProgress();
         }
@@ -293,7 +293,7 @@
           }
 
           fromSoundJSON(sound, soundJson);
-          
+
           progressMonitor.current += 1;
           sendProgress();
         }
@@ -301,7 +301,7 @@
     }
 
     //Run the functions to add them to the sprite.
-    functions.forEach((f) => f()); 
+    functions.forEach((f) => f());
   }
 
   async function loadGame() {
@@ -310,14 +310,14 @@
       return;
     }
 
-    try{
+    try {
       var content = Game.content;
       engine.emptyProject();
       fromEngineJSON(content.engineProps);
       determineLoadSize(content);
       await loadLibraries(content.libraries);
       await loadSprites(content.sprites);
-    }catch(e){
+    } catch (e) {
       _callEvent("error", e);
       throw e;
       return;
