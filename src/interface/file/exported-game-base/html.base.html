@@ -1,9 +1,72 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-
+        <title>(((GGM3Title)))</title>
     </head>
     <body>
+
+        <style>
+            body {
+                background: rgb(0,0,0);
+            }
+
+            #loadingbar {
+                background: rgb(100,100,100);
+                border-radius: 0.5vmin;
+                border-color: rgb(50,50,50);
+                border-style: solid;
+                border-width: 2px;
+                box-sizing: border-box;
+                width: 100vmin;
+                height: 5vmin;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                overflow: hidden;
+            }
+            #loadingbar-inner {
+                border-radius: 0.5vmin;
+                background: rgb(255,255,255);
+                width: 50%;
+                height: 100%;
+            }
+
+            #clicktoplay {
+
+            }
+
+            #gameCanvas {
+                background: rgb(255,255,255);
+                image-rendering: pixelated;
+                user-select: none;
+                width: 640px;
+                height: 360px;
+            }
+
+            #gameContent {
+                display: block;
+                overflow: hidden;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+        </style>
+        <style>
+            [hidden] {
+                display: none !important;
+            }
+        </style>
+
+        <div id="gameContent" hidden>
+            <canvas id="gameCanvas"></canvas>
+        </div>
+
+        <div id="loadingbar" hidden>
+            <div id="loadingbar-inner"></div>
+        </div>
+
         <script src="engine.js"></script>
         <script src="game.js"></script>
         <script src="runtime.js"></script>

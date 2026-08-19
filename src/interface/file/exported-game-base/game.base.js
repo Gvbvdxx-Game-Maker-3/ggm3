@@ -317,6 +317,7 @@
 
     try{
       var content = Game.content;
+      engine.emptyProject();
       fromEngineJSON(content.engineProps);
       determineLoadSize(content);
       await loadLibraries(content.libraries);
