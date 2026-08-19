@@ -16062,7 +16062,9 @@ class GGM3Engine extends EventEmitter {
       if (fromCostume.linkID) {
         libCostume = _this.findLibraryCostume(fromCostume.linkID);
       }
-      var costume = await newSprite.addCostume(libCostume || fromCostume.dataURL);
+      var costume = await newSprite.addCostume(
+        libCostume || fromCostume.dataURL,
+      );
       costume.name = fromCostume.name;
       costume.rotationCenterX = fromCostume.rotationCenterX;
       costume.rotationCenterY = fromCostume.rotationCenterY;
