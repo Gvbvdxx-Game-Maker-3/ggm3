@@ -16004,12 +16004,6 @@ class GGM3Engine extends EventEmitter {
   }
 
   /**
-   *
-   */
-
-  getLibraryCostume() {}
-
-  /**
    * Creates a new empty sprite without emitting a sprite created event.
    * @returns {Sprite} The newly created sprite.
    */
