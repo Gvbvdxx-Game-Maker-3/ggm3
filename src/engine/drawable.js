@@ -1,6 +1,7 @@
 var twgl = require("twgl.js");
 
 class Drawable {
+  //This is probably unused but keeping it here just because.
   static getImageCanvas(img, scale = 1) {
     var canvas = document.createElement("canvas");
     var ctx = canvas.getContext("2d");
@@ -9,12 +10,14 @@ class Drawable {
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     return canvas;
   }
-  constructor(engine, canvas, id) {
+
+  constructor(engine, textureSource, id) {
+    //Changed to textureSource because we can provide different types rather than just an canvas.
     this.engine = engine;
-    this.gl = engine && engine.gl ? engine.gl : null;
+    this.gl = engine.renderer.gl;
     this.isOutdated = true;
     this.texture = null;
-    this.canvas = canvas || document.createElement("canvas");
+    this.textureSource = textureSource;
     this.disposed = false;
 
     // Create initial texture only if GL is available and canvas has size
@@ -31,14 +34,7 @@ class Drawable {
   update() {
     if (!this.isOutdated) return;
 
-    // Ensure GL and canvas are available
-    if (!this.gl) {
-      // Try to recover the GL reference from engine
-      if (this.engine && this.engine.gl) this.gl = this.engine.gl;
-      if (!this.gl) return;
-    }
-
-    if (!this.canvas || this.canvas.width === 0 || this.canvas.height === 0) {
+    if (!this.textureSource) {
       // Nothing to upload
       this.isOutdated = false;
       return;
@@ -47,6 +43,7 @@ class Drawable {
     if (this.texture) {
       try {
         this.gl.deleteTexture(this.texture);
+        this.engine.activeTextures -= 1;
       } catch (e) {
         // ignore GL errors
       }
@@ -54,12 +51,15 @@ class Drawable {
     }
 
     try {
+      var source = this.textureSource;
+
       this.texture = twgl.createTexture(this.gl, {
-        src: this.canvas,
-        mag: this.gl ? this.gl.NEAREST : undefined,
-        min: this.gl ? this.gl.NEAREST : undefined,
-        wrap: this.gl ? this.gl.CLAMP_TO_EDGE : undefined,
+        src: source,
+        mag: this.gl.NEAREST,
+        min: this.gl.NEAREST,
+        wrap: this.gl.CLAMP_TO_EDGE,
       });
+      this.engine.activeTextures += 1;
     } catch (e) {
       console.warn("Drawable: failed to create texture", e);
       this.texture = null;
@@ -71,14 +71,15 @@ class Drawable {
     if (this.disposed) return;
     this.disposed = true;
     try {
-      if (this.texture && this.gl) {
+      if (this.texture) {
         try {
           this.gl.deleteTexture(this.texture);
+          this.engine.activeTextures -= 1;
         } catch (e) {}
       }
     } finally {
       this.texture = null;
-      this.canvas = null;
+      this.textureSource = null;
       this.gl = null;
       this.engine = null;
     }

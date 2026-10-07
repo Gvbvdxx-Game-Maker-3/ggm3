@@ -37,7 +37,6 @@ function switchFullscreenMode() {
       canvas.style.width = scale * engine.gameWidth + "px";
       canvas.style.height = scale * engine.gameHeight + "px";
       engine.screenScale = scale;
-      engine.updateCanvasSize();
     }
     window.onresize = handleResize;
     handleResize();
@@ -49,7 +48,6 @@ function switchFullscreenMode() {
     canvas.style.width = "unset";
     canvas.style.height = "unset";
     engine.screenScale = 1;
-    engine.updateCanvasSize();
     tabs.updateTabs();
   }
 }

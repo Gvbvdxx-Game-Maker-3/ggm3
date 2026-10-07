@@ -1,4 +1,5 @@
 var CollisionSprite = require("./mask.js");
+var { TextureCanvas } = require("./texturecanvas.js"); //Optimization: use a shared canvas rather than individual ones for rendering the graphics.
 
 var idcount = 0;
 
@@ -13,7 +14,6 @@ class Costume {
     this.currentScale = 1;
     this.mimeType = null;
     this.linkID = linkID;
-    this.canvas = document.createElement("canvas");
     this.id =
       idcount + "_" + Date.now() + "_" + Math.round(Math.random() * 9999999);
     idcount += 1;
@@ -23,6 +23,11 @@ class Costume {
     this.mask = null;
     this.loaded = false;
     this.willPreload = true;
+
+    this.textureWidth = 1;
+    this.textureHeight = 1;
+    this.width = 1;
+    this.height = 1;
 
     if (this.linkID) {
       var libCostume = this.engine.findLibraryCostume(this.linkID);
@@ -45,41 +50,20 @@ class Costume {
       this.engine.disposeDrawable(this.drawable); //Make sure we aren't leaking memory when resetting the drawable.
     }
     var img = this.img;
-    var canvas = this.canvas;
-    var ctx = canvas.getContext("2d");
+    var renderResult = TextureCanvas.renderScaledImage(img, this.preferedScale);
+    var imageData = renderResult.imageData;
 
-    // Keep pixel-art edges crisp and avoid interpolation fringes on transparent pixels.
-    if (ctx) {
-      ctx.imageSmoothingEnabled = false;
-      if (typeof ctx.webkitImageSmoothingEnabled !== "undefined") {
-        ctx.webkitImageSmoothingEnabled = false;
-      }
-      if (typeof ctx.mozImageSmoothingEnabled !== "undefined") {
-        ctx.mozImageSmoothingEnabled = false;
-      }
-      if (typeof ctx.msImageSmoothingEnabled !== "undefined") {
-        ctx.msImageSmoothingEnabled = false;
-      }
-    }
+    this.textureWidth = renderResult.width;
+    this.textureHeight = renderResult.height;
+    this.width = img.width;
+    this.height = img.height;
 
-    canvas.width = img.width * this.preferedScale;
-    canvas.height = img.height * this.preferedScale;
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    this.mask = new CollisionSprite(
-      ctx.getImageData(0, 0, canvas.width, canvas.height),
-    );
+    this.mask = new CollisionSprite(imageData);
 
-    this.drawable = this.engine.newDrawable(canvas);
+    this.drawable = this.engine.newDrawable(imageData);
     this.loading = false;
     this.loaded = true;
     this.currentScale = this.preferedScale;
-
-    canvas.style.imageRendering = "pixelated";
-    canvas.style.zIndex = "999999999999999";
-    canvas.style.position = "absolute";
-    canvas.style.top = "0";
-    canvas.style.left = "0";
-    //document.body.appendChild(canvas); // For debugging purposes
   }
 
   getFinalRotationCenter() {
@@ -159,8 +143,6 @@ class Costume {
     this.mask = null;
     this.loading = false;
     this.loaded = false;
-    this.canvas.width = 1;
-    this.canvas.height = 1;
   }
 
   rerenderAtResolution(res) {
@@ -201,9 +183,6 @@ class Costume {
       this.img.src = "";
       this.img = null;
     }
-    this.canvas.width = 1;
-    this.canvas.height = 1;
-    this.canvas.remove();
     this.resolveFunction = null;
     this.drawable = null;
     this.mask = null;
