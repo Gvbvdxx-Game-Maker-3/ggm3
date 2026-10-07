@@ -5526,6 +5526,7 @@ module.exports = JavascriptTranslation;
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 var CollisionSprite = __webpack_require__(4447);
+var { TextureCanvas } = __webpack_require__(6836); //Optimization: use a shared canvas rather than individual ones for rendering the graphics.
 
 var idcount = 0;
 
@@ -5540,7 +5541,6 @@ class Costume {
     this.currentScale = 1;
     this.mimeType = null;
     this.linkID = linkID;
-    this.canvas = document.createElement("canvas");
     this.id =
       idcount + "_" + Date.now() + "_" + Math.round(Math.random() * 9999999);
     idcount += 1;
@@ -5550,6 +5550,11 @@ class Costume {
     this.mask = null;
     this.loaded = false;
     this.willPreload = true;
+
+    this.textureWidth = 1;
+    this.textureHeight = 1;
+    this.width = 1;
+    this.height = 1;
 
     if (this.linkID) {
       var libCostume = this.engine.findLibraryCostume(this.linkID);
@@ -5572,41 +5577,20 @@ class Costume {
       this.engine.disposeDrawable(this.drawable); //Make sure we aren't leaking memory when resetting the drawable.
     }
     var img = this.img;
-    var canvas = this.canvas;
-    var ctx = canvas.getContext("2d");
+    var renderResult = TextureCanvas.renderScaledImage(img, this.preferedScale);
+    var imageData = renderResult.imageData;
 
-    // Keep pixel-art edges crisp and avoid interpolation fringes on transparent pixels.
-    if (ctx) {
-      ctx.imageSmoothingEnabled = false;
-      if (typeof ctx.webkitImageSmoothingEnabled !== "undefined") {
-        ctx.webkitImageSmoothingEnabled = false;
-      }
-      if (typeof ctx.mozImageSmoothingEnabled !== "undefined") {
-        ctx.mozImageSmoothingEnabled = false;
-      }
-      if (typeof ctx.msImageSmoothingEnabled !== "undefined") {
-        ctx.msImageSmoothingEnabled = false;
-      }
-    }
+    this.textureWidth = renderResult.width;
+    this.textureHeight = renderResult.height;
+    this.width = img.width;
+    this.height = img.height;
 
-    canvas.width = img.width * this.preferedScale;
-    canvas.height = img.height * this.preferedScale;
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    this.mask = new CollisionSprite(
-      ctx.getImageData(0, 0, canvas.width, canvas.height),
-    );
+    this.mask = new CollisionSprite(imageData);
 
-    this.drawable = this.engine.newDrawable(canvas);
+    this.drawable = this.engine.newDrawable(imageData);
     this.loading = false;
     this.loaded = true;
     this.currentScale = this.preferedScale;
-
-    canvas.style.imageRendering = "pixelated";
-    canvas.style.zIndex = "999999999999999";
-    canvas.style.position = "absolute";
-    canvas.style.top = "0";
-    canvas.style.left = "0";
-    //document.body.appendChild(canvas); // For debugging purposes
   }
 
   getFinalRotationCenter() {
@@ -5686,8 +5670,6 @@ class Costume {
     this.mask = null;
     this.loading = false;
     this.loaded = false;
-    this.canvas.width = 1;
-    this.canvas.height = 1;
   }
 
   rerenderAtResolution(res) {
@@ -5728,9 +5710,6 @@ class Costume {
       this.img.src = "";
       this.img = null;
     }
-    this.canvas.width = 1;
-    this.canvas.height = 1;
-    this.canvas.remove();
     this.resolveFunction = null;
     this.drawable = null;
     this.mask = null;
@@ -21847,6 +21826,219 @@ function resizeCanvasToDisplaySize(canvas, multiplier) {
 
 /***/ }),
 
+/***/ 4428:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var calculateMatrix = __webpack_require__(8190);
+var twgl = __webpack_require__(4391);
+var SHADERS = __webpack_require__(425);
+
+class EngineRenderer {
+  constructor(engine, canvas) {
+    this.engine = engine;
+    this.canvas = canvas;
+    this.gl = null;
+  }
+
+  initCanvas() {
+    if (this.gl) {
+      return;
+    }
+    var canvas = this.canvas;
+    canvas.width = 640;
+    canvas.height = 360;
+    const contextAttribs = {
+      alpha: false,
+      stencil: true,
+      antialias: false,
+      preserveDrawingBuffer: true,
+    };
+    var gl =
+      canvas.getContext("webgl", contextAttribs) ||
+      canvas.getContext("experimental-webgl", contextAttribs) ||
+      canvas.getContext("webgl2", contextAttribs);
+
+    var fragmentShader = SHADERS.FRAGMENT_SHADER;
+    this._gl_spriteProgramInfo = twgl.createProgramInfo(gl, [
+      SHADERS.VERTEX_SHADER,
+      fragmentShader,
+    ]);
+
+    this.gl = gl;
+  }
+
+  updateCanvasSize() {
+    var canvas = this.canvas;
+    var { gameWidth, gameHeight, screenScale } = this.engine;
+    var cwidth = gameWidth * screenScale;
+    var cheight = gameHeight * screenScale;
+
+    var needsUpdate = cwidth !== canvas.width || cheight !== canvas.height;
+    if (needsUpdate) {
+      canvas.width = cwidth;
+      canvas.height = cheight;
+      this.glCalculation();
+      this.engine.emit(this.RESOLUTION_UPDATED);
+    }
+  }
+
+  /**
+   * Internal function used to get GL calculations so frames can be drawn correctly.
+   * @returns {Void}
+   */
+  glCalculation() {
+    var gl = this.gl;
+
+    gl.disable(gl.DEPTH_TEST);
+    gl.disable(gl.CULL_FACE);
+
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+    this._gl_position = [-0, -0, 1, -0, -0, 1, -0, 1, 1, -0, 1, 1];
+    this._gl_texcoord = [
+      0,
+      0, // Bottom-left vertex maps to (0,0)
+      1,
+      0, // Bottom-right vertex maps to (1,0)
+      0,
+      1, // Top-left vertex maps to (0,1)
+      0,
+      1, // Top-left vertex maps to (0,1)
+      1,
+      0, // Bottom-right vertex maps to (1,0)
+      1,
+      1, // Top-right vertex maps to (1,1)
+    ];
+    this._gl_quadBufferInfo = twgl.createBufferInfoFromArrays(gl, {
+      a_position: {
+        // This now matches `attribute vec2 a_position`
+        numComponents: 2,
+        data: this._gl_position,
+      },
+      a_texCoord: {
+        // This now matches `attribute vec2 a_texCoord`
+        numComponents: 2,
+        data: this._gl_texcoord,
+      },
+    });
+
+    var projectionMatrix = twgl.m4.ortho(
+      0,
+      this.canvas.width,
+      this.canvas.height,
+      0,
+      -1,
+      1,
+    );
+
+    this._gl_projectionMatrix = projectionMatrix;
+  }
+
+  /**
+   * Renders the game scene, this shouldn't be called directly.
+   * @param {Number} elapsed The time elapsed since the last frame.
+   * @returns {void}
+   */
+  drawGameFrame({
+        spritesArray, //Sorted sprites to draw.
+        isLoopFrame,
+    }) {
+    this.updateCanvasSize(); //This should happen right before we actually draw anything, this stops the black screen glitch from happening when resizing.
+
+    var { canvas, gl, engine } = this;
+    
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.clearColor(1, 1, 1, 0); // Use 0,0,0,0 to respect canvas style background
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    this.drawSprites(spritesArray);
+  }
+
+  drawSprites(sprites) {
+    var _this = this;
+    sprites.forEach((spr) => {
+        _this.renderSprite(spr);
+      });
+  }
+
+  /**
+   * Renders a sprite.
+   * @param {Sprite} spr The sprite to render.
+   * @returns {void}
+   */
+  renderSprite(spr) {
+    if (spr.hidden) {
+      return;
+    }
+    if (spr.alpha <= 0) {
+      return;
+    }
+    var {
+      gl,
+      _gl_spriteProgramInfo,
+      _gl_projectionMatrix,
+      _gl_quadBufferInfo,
+      engine,
+      canvas
+    } = this;
+    var {gameWidth,gameHeight,screenScale} = engine;
+    if (spr.costumes[spr.costumeIndex]) {
+      var costume = spr.costumes[spr.costumeIndex];
+      var drawable = costume.drawable;
+      if (costume.drawable) {
+        costume.drawable.update(); //This updates the costume texture if needed.
+        var center = costume.getFinalRotationCenter();
+        var matrixInfo = {
+          x: spr.x * screenScale + canvas.width / 2,
+          y: -spr.y * screenScale + canvas.height / 2,
+          rotation: spr.angle * (Math.PI / 180),
+          rotationCenterX: center[0],
+          rotationCenterY: center[1],
+          textureWidth: costume.textureWidth,
+          textureHeight: costume.textureHeight,
+          scaleX:
+            ((spr.scaleX * (spr.size / 100)) / costume.currentScale) *
+            screenScale,
+          scaleY:
+            ((spr.scaleY * (spr.size / 100)) / costume.currentScale) *
+            screenScale,
+          skewX: spr.skewX * (Math.PI / 180),
+          skewY: spr.skewY * (Math.PI / 180),
+        };
+        var modelMatrix = calculateMatrix(matrixInfo);
+
+        //var modelMatrix = twgl.m4.identity();
+        //modelMatrix = twgl.m4.scale(modelMatrix, [100, 100, 1]);
+        var uniforms = {
+          u_modelMatrix: modelMatrix,
+          u_skin: drawable.texture,
+          u_projectionMatrix: _gl_projectionMatrix,
+
+          u_ghost: spr.alpha / 100,
+          ...spr.effects.getRenderableEffects(),
+        };
+
+        //window.alert(JSON.stringify(uniforms));
+
+        gl.useProgram(_gl_spriteProgramInfo.program);
+        twgl.setBuffersAndAttributes(
+          gl,
+          _gl_spriteProgramInfo,
+          _gl_quadBufferInfo,
+        );
+        twgl.setUniforms(_gl_spriteProgramInfo, uniforms);
+        twgl.drawBufferInfo(gl, _gl_quadBufferInfo);
+      }
+    }
+  }
+}
+
+module.exports = { EngineRenderer };
+
+
+/***/ }),
+
 /***/ 4447:
 /***/ ((module) => {
 
@@ -25989,6 +26181,7 @@ module.exports = JavascriptTranslation;
 var twgl = __webpack_require__(4391);
 
 class Drawable {
+  //This is probably unused but keeping it here just because.
   static getImageCanvas(img, scale = 1) {
     var canvas = document.createElement("canvas");
     var ctx = canvas.getContext("2d");
@@ -25997,12 +26190,14 @@ class Drawable {
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     return canvas;
   }
-  constructor(engine, canvas, id) {
+
+  constructor(engine, textureSource, id) {
+    //Changed to textureSource because we can provide different types rather than just an canvas.
     this.engine = engine;
-    this.gl = engine && engine.gl ? engine.gl : null;
+    this.gl = engine.renderer.gl;
     this.isOutdated = true;
     this.texture = null;
-    this.canvas = canvas || document.createElement("canvas");
+    this.textureSource = textureSource;
     this.disposed = false;
 
     // Create initial texture only if GL is available and canvas has size
@@ -26019,14 +26214,7 @@ class Drawable {
   update() {
     if (!this.isOutdated) return;
 
-    // Ensure GL and canvas are available
-    if (!this.gl) {
-      // Try to recover the GL reference from engine
-      if (this.engine && this.engine.gl) this.gl = this.engine.gl;
-      if (!this.gl) return;
-    }
-
-    if (!this.canvas || this.canvas.width === 0 || this.canvas.height === 0) {
+    if (!this.textureSource) {
       // Nothing to upload
       this.isOutdated = false;
       return;
@@ -26035,6 +26223,7 @@ class Drawable {
     if (this.texture) {
       try {
         this.gl.deleteTexture(this.texture);
+        this.engine.activeTextures -= 1;
       } catch (e) {
         // ignore GL errors
       }
@@ -26042,12 +26231,15 @@ class Drawable {
     }
 
     try {
+      var source = this.textureSource;
+
       this.texture = twgl.createTexture(this.gl, {
-        src: this.canvas,
-        mag: this.gl ? this.gl.NEAREST : undefined,
-        min: this.gl ? this.gl.NEAREST : undefined,
-        wrap: this.gl ? this.gl.CLAMP_TO_EDGE : undefined,
+        src: source,
+        mag: this.gl.NEAREST,
+        min: this.gl.NEAREST,
+        wrap: this.gl.CLAMP_TO_EDGE,
       });
+      this.engine.activeTextures += 1;
     } catch (e) {
       console.warn("Drawable: failed to create texture", e);
       this.texture = null;
@@ -26059,14 +26251,15 @@ class Drawable {
     if (this.disposed) return;
     this.disposed = true;
     try {
-      if (this.texture && this.gl) {
+      if (this.texture) {
         try {
           this.gl.deleteTexture(this.texture);
+          this.engine.activeTextures -= 1;
         } catch (e) {}
       }
     } finally {
       this.texture = null;
-      this.canvas = null;
+      this.textureSource = null;
       this.gl = null;
       this.engine = null;
     }
@@ -27077,6 +27270,60 @@ audioEngine.Player = AudioBufferPlayer;
 audioEngine.AudioBufferPlayer = AudioBufferPlayer;
 
 module.exports = audioEngine;
+
+
+/***/ }),
+
+/***/ 6836:
+/***/ ((module) => {
+
+var canvas = document.createElement("canvas");
+var ctx = canvas.getContext("2d");
+
+class TextureCanvasRenderResult {
+  constructor(dx, dy, w, h) {
+    this.imageData = ctx.getImageData(dx, dy, w, h);
+    this.width = w;
+    this.height = h;
+  }
+}
+
+class TextureCanvas {
+  static clearCanvas() {
+    canvas.width = 1;
+    canvas.height = 1;
+    ctx.clearRect(0, 0, 1, 1);
+  }
+
+  static renderScaledImage(img, scale) {
+    canvas.width = img.width * scale;
+    canvas.height = img.height * scale;
+
+    ctx.imageSmoothingEnabled = false;
+    if (typeof ctx.webkitImageSmoothingEnabled !== "undefined") {
+      ctx.webkitImageSmoothingEnabled = false;
+    }
+    if (typeof ctx.mozImageSmoothingEnabled !== "undefined") {
+      ctx.mozImageSmoothingEnabled = false;
+    }
+    if (typeof ctx.msImageSmoothingEnabled !== "undefined") {
+      ctx.msImageSmoothingEnabled = false;
+    }
+
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    var result = new TextureCanvasRenderResult(
+      0,
+      0,
+      canvas.width,
+      canvas.height,
+    );
+    this.clearCanvas();
+
+    return result;
+  }
+}
+
+module.exports = { TextureCanvas };
 
 
 /***/ }),
@@ -29035,17 +29282,16 @@ module.exports = {
  * LICENSE file in the root directory of this source tree.
  */
 
-var twgl = __webpack_require__(4391);
 var TWEEN = __webpack_require__(484);
 
 var Drawable = __webpack_require__(6065);
 var Sprite = __webpack_require__(2242);
-var calculateMatrix = __webpack_require__(8190);
 var sMath = __webpack_require__(4912);
 var EventEmitter = __webpack_require__(228);
 var CollisionSprite = __webpack_require__(4447);
-var SHADERS = __webpack_require__(425);
 var Library = __webpack_require__(3728);
+
+var {EngineRenderer} = __webpack_require__(4428);
 
 var created = false;
 
@@ -29066,6 +29312,12 @@ class GGM3Engine extends EventEmitter {
    * @readonly
    * @type {String} Event emitted when a frame is drawn. */
   FRAME_RENDERED = "FRAME_RENDERED";
+
+  /**
+   * @readonly
+   * @type {String} Event emitted right before a frame is drawn. */
+
+  BEFORE_FRAME_RENDER = "BEFORE_FRAME_RENDER";
 
   /**
    * @readonly
@@ -29134,6 +29386,7 @@ class GGM3Engine extends EventEmitter {
     this._iTime = 0;
     this.sMath = sMath;
     this.exportMode = false;
+    this.activeTextures = 0;
     this.tween = new TWEEN.Group();
     this.keyNames = {
       " ": "space-bar",
@@ -29143,7 +29396,7 @@ class GGM3Engine extends EventEmitter {
       ArrowDown: "down-arrow",
     };
     this.keysPressed = {};
-    this.initCanvas();
+    this.renderer = new EngineRenderer(this, this.canvas);
     this.generateMouseMask();
     this.startRenderLoop();
     this.spriteMap = {};
@@ -29155,8 +29408,9 @@ class GGM3Engine extends EventEmitter {
     this.gameWidth = this.DEFAULT_WIDTH;
     this.gameHeight = this.DEFAULT_HEIGHT;
     this.screenScale = 1;
-    this.updateCanvasSize();
-    this.calculateGLStuff();
+    this.renderer.initCanvas();
+    this.renderer.updateCanvasSize();
+    this.renderer.glCalculation();
     this.changeCursorStyle(this.DEFAULT_CURSOR_STYLE);
   }
 
@@ -29230,7 +29484,7 @@ class GGM3Engine extends EventEmitter {
   }
 
   /**
-   * Sets the internal width of the game (unscaled), `updateCanvasSize` needs to be called right after this function.
+   * Sets the internal width of the game (unscaled).
    * @param {Number} v Width in pixels, if none provided or invalid number, it defaults to the original width.
    */
   setWidth(v) {
@@ -29241,7 +29495,7 @@ class GGM3Engine extends EventEmitter {
   }
 
   /**
-   * Sets the internal height of the game (unscaled), `updateCanvasSize` needs to be called right after this function.
+   * Sets the internal height of the game (unscaled.
    * @param {Number} v Height in pixels, if none provided or invalid number, it defaults to the original height.
    */
   setHeight(v) {
@@ -29333,24 +29587,6 @@ class GGM3Engine extends EventEmitter {
    */
   removeBroadcastName(name) {
     this.broadcastNames = this.broadcastNames.filter((n) => n !== name);
-  }
-
-  /**
-   * This updates the game screen size if the game screen size needs to be updated.
-   * Call this after setting `gameWidth`, `gameHeight`, or `screenScale`.
-   */
-  updateCanvasSize() {
-    var { canvas, gameWidth, gameHeight, screenScale } = this;
-    var cwidth = gameWidth * screenScale;
-    var cheight = gameHeight * screenScale;
-
-    var needsUpdate = cwidth !== canvas.width || cheight !== canvas.height;
-    if (needsUpdate) {
-      canvas.width = cwidth;
-      canvas.height = cheight;
-      this.calculateGLStuff();
-      this.emit(this.RESOLUTION_UPDATED);
-    }
   }
 
   /**
@@ -29683,7 +29919,7 @@ class GGM3Engine extends EventEmitter {
 
         frameTimestamps.push(now);
 
-        _this.render(delta, frameTimestamps.length);
+        _this.runRenderFunc(delta, frameTimestamps.length);
       }
 
       setTimeout(loop, 1);
@@ -29692,13 +29928,51 @@ class GGM3Engine extends EventEmitter {
     setTimeout(loop, 1);
   }
 
+  runRenderFunc(elapsed, estimatedFramerate) {
+    this._iTime += elapsed / 1000;
+    this.elapsedFrameTime = elapsed;
+    this.estimatedFramerate = estimatedFramerate;
+    if (this._frameRate !== this.frameRate) {
+      this._frameRate = this.frameRate;
+      this.emit(this.FRAMERATE_CHANGED, this._frameRate);
+    }
+
+    while (this.broadcastQueue.length > 0) {
+      var broadcastFunc = this.broadcastQueue.shift();
+      broadcastFunc();
+    }
+
+    if (this.editMode) {
+      this.tickEditMode();
+    } else {
+      this._editDragging = null;
+    }
+
+    this.emit(this.BEFORE_FRAME_RENDER, elapsed, estimatedFramerate, this._iTime);
+
+    var sprs = this.getAllTopSprites()
+    var sprsReversed = sprs.reverse();
+    sprsReversed.forEach((spr) => {
+      engine.tickSprite(spr);
+    });
+    this.tween.update(engine._iTime * 1000);
+
+    this.renderer.drawGameFrame({
+      elapsed,
+      estimatedFramerate,
+      spritesArray: sprsReversed
+    });
+
+    this.emit(this.FRAME_RENDERED, elapsed, estimatedFramerate, this._iTime);
+  }
+
   /**
    * Creates a new drawable and adds it to the game.
-   * @param {HTMLCanvasElement} canvas The canvas to use for the drawable.
+   * @param {HTMLCanvasElement} textureSource The texture source to use for the drawable. See https://twgljs.org/docs/module-twgl.html#.TextureOptions
    * @returns {Drawable} The newly created drawable.
    */
-  newDrawable(canvas) {
-    var drawable = new Drawable(this, canvas, this.drawables.length);
+  newDrawable(textureSource) {
+    var drawable = new Drawable(this, textureSource, this.drawables.length);
     this.drawables.push(drawable);
     return drawable;
   }
@@ -29709,7 +29983,7 @@ class GGM3Engine extends EventEmitter {
    */
   disposeDrawable(drawable) {
     drawable.dispose();
-    this.drawables = this.drawables.filter((d) => d.id !== drawable.id);
+    this.drawables = this.drawables.filter((d) => d !== drawable); //whoops I don't assign an ID so just compare them directly, it should be safe since its based on the object memory address (a javascript internal thing) not the actual class type.
   }
 
   /**
@@ -29753,132 +30027,6 @@ class GGM3Engine extends EventEmitter {
     c.width = 0;
     c.height = 0;
     c.remove();
-  }
-
-  /**
-   * Initializes the canvas for rendering.
-   * @returns {void}
-   */
-  initCanvas() {
-    if (this.gl) {
-      return;
-    }
-    var canvas = this.canvas;
-    canvas.width = 640;
-    canvas.height = 360;
-    const contextAttribs = {
-      alpha: false,
-      stencil: true,
-      antialias: false,
-      preserveDrawingBuffer: true,
-    };
-    var gl =
-      canvas.getContext("webgl", contextAttribs) ||
-      canvas.getContext("experimental-webgl", contextAttribs) ||
-      canvas.getContext("webgl2", contextAttribs);
-
-    var fragmentShader = SHADERS.FRAGMENT_SHADER;
-    this._gl_spriteProgramInfo = twgl.createProgramInfo(gl, [
-      SHADERS.VERTEX_SHADER,
-      fragmentShader,
-    ]);
-
-    this.gl = gl;
-  }
-
-  /**
-   * Internal function used to get webGL rendering information.
-   * @returns {Void}
-   */
-  calculateGLStuff() {
-    var gl = this.gl;
-
-    gl.disable(gl.DEPTH_TEST);
-    gl.disable(gl.CULL_FACE);
-
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
-    this._gl_position = [-0, -0, 1, -0, -0, 1, -0, 1, 1, -0, 1, 1];
-    this._gl_texcoord = [
-      0,
-      0, // Bottom-left vertex maps to (0,0)
-      1,
-      0, // Bottom-right vertex maps to (1,0)
-      0,
-      1, // Top-left vertex maps to (0,1)
-      0,
-      1, // Top-left vertex maps to (0,1)
-      1,
-      0, // Bottom-right vertex maps to (1,0)
-      1,
-      1, // Top-right vertex maps to (1,1)
-    ];
-    this._gl_quadBufferInfo = twgl.createBufferInfoFromArrays(gl, {
-      a_position: {
-        // This now matches `attribute vec2 a_position`
-        numComponents: 2,
-        data: this._gl_position,
-      },
-      a_texCoord: {
-        // This now matches `attribute vec2 a_texCoord`
-        numComponents: 2,
-        data: this._gl_texcoord,
-      },
-    });
-
-    var projectionMatrix = twgl.m4.ortho(
-      0,
-      this.canvas.width,
-      this.canvas.height,
-      0,
-      -1,
-      1,
-    );
-
-    this._gl_projectionMatrix = projectionMatrix;
-
-    this.render(1 / this.frameRate);
-  }
-
-  /**
-   * Renders the game scene, this shouldn't be called directly.
-   * @param {Number} elapsed The time elapsed since the last frame.
-   * @returns {void}
-   */
-  render(elapsed, estimatedFramerate) {
-    var { canvas, gl } = this;
-    gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.clearColor(1, 1, 1, 0); // Use 0,0,0,0 to respect canvas style background
-    gl.clear(gl.COLOR_BUFFER_BIT);
-
-    this._iTime += elapsed / 1000;
-    this.elapsedFrameTime = elapsed;
-    this.estimatedFramerate = estimatedFramerate;
-    if (this._frameRate !== this.frameRate) {
-      this._frameRate = this.frameRate;
-      this.emit(this.FRAMERATE_CHANGED, this._frameRate);
-    }
-    this.tween.update(this._iTime * 1000);
-
-    var _this = this;
-    while (this.broadcastQueue.length > 0) {
-      var broadcastFunc = this.broadcastQueue.shift();
-      broadcastFunc();
-    }
-    this.getAllTopSprites()
-      .reverse()
-      .forEach((spr) => {
-        _this.tickSprite(spr);
-        _this.renderSprite(spr);
-      });
-    if (this.editMode) {
-      this.tickEditMode();
-    } else {
-      this._editDragging = null;
-    }
-
-    this.emit(this.FRAME_RENDERED, elapsed, estimatedFramerate, this._iTime);
   }
 
   /**
@@ -29941,8 +30089,8 @@ class GGM3Engine extends EventEmitter {
   }
 
   /**
-   * Updates the state of a sprite.
-   * @param {Sprite} sprite The sprite to update.
+   * Tells the sprite that a frame has passed, this calls the written code for that sprite.
+   * @param {Sprite} sprite The sprite to emit on.
    * @returns {void}
    */
   tickSprite(sprite) {
@@ -30038,74 +30186,6 @@ class GGM3Engine extends EventEmitter {
         }
       } else {
         this._previousMouseDown = false;
-      }
-    }
-  }
-
-  /**
-   * Renders a sprite.
-   * @param {Sprite} spr The sprite to render.
-   * @returns {void}
-   */
-  renderSprite(spr) {
-    if (spr.hidden) {
-      return;
-    }
-    if (spr.alpha <= 0) {
-      return;
-    }
-    var {
-      gl,
-      _gl_spriteProgramInfo,
-      _gl_projectionMatrix,
-      _gl_quadBufferInfo,
-      _iTime,
-    } = this;
-    if (spr.costumes[spr.costumeIndex]) {
-      var costume = spr.costumes[spr.costumeIndex];
-      var drawable = costume.drawable;
-      if (costume.drawable) {
-        costume.drawable.update(); //This updates the costume texture if needed.
-        var center = costume.getFinalRotationCenter();
-        var modelMatrix = calculateMatrix({
-          x: spr.x * this.screenScale + this.canvas.width / 2,
-          y: -spr.y * this.screenScale + this.canvas.height / 2,
-          rotation: spr.angle * (Math.PI / 180),
-          rotationCenterX: center[0],
-          rotationCenterY: center[1],
-          textureWidth: costume.canvas.width,
-          textureHeight: costume.canvas.height,
-          scaleX:
-            ((spr.scaleX * (spr.size / 100)) / costume.currentScale) *
-            this.screenScale,
-          scaleY:
-            ((spr.scaleY * (spr.size / 100)) / costume.currentScale) *
-            this.screenScale,
-          skewX: spr.skewX * (Math.PI / 180),
-          skewY: spr.skewY * (Math.PI / 180),
-        });
-
-        //var modelMatrix = twgl.m4.identity();
-        //modelMatrix = twgl.m4.scale(modelMatrix, [100, 100, 1]);
-        var uniforms = {
-          u_modelMatrix: modelMatrix,
-          u_skin: drawable.texture,
-          u_projectionMatrix: _gl_projectionMatrix,
-
-          u_ghost: spr.alpha / 100,
-          ...spr.effects.getRenderableEffects(),
-        };
-
-        //window.alert(JSON.stringify(uniforms));
-
-        gl.useProgram(_gl_spriteProgramInfo.program);
-        twgl.setBuffersAndAttributes(
-          gl,
-          _gl_spriteProgramInfo,
-          _gl_quadBufferInfo,
-        );
-        twgl.setUniforms(_gl_spriteProgramInfo, uniforms);
-        twgl.drawBufferInfo(gl, _gl_quadBufferInfo);
       }
     }
   }
@@ -32342,7 +32422,6 @@ function switchFullscreenMode() {
       canvas.style.width = scale * engine.gameWidth + "px";
       canvas.style.height = scale * engine.gameHeight + "px";
       engine.screenScale = scale;
-      engine.updateCanvasSize();
     }
     window.onresize = handleResize;
     handleResize();
@@ -32354,7 +32433,6 @@ function switchFullscreenMode() {
     canvas.style.width = "unset";
     canvas.style.height = "unset";
     engine.screenScale = 1;
-    engine.updateCanvasSize();
     tabs.updateTabs();
   }
 }
