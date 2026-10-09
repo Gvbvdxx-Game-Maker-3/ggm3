@@ -8,487 +8,6 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 20:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var JavascriptTranslation = {};
-var utilFunctions = __webpack_require__(9547);
-var outputBlocks = __webpack_require__(7147);
-
-outputBlocks.push("motion_xposition");
-JavascriptTranslation["motion_xposition"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  return `sprite.x`;
-};
-
-outputBlocks.push("motion_yposition");
-JavascriptTranslation["motion_yposition"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  return `sprite.y`;
-};
-
-outputBlocks.push("motion_direction");
-JavascriptTranslation["motion_direction"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  return `sprite.direction`;
-};
-
-JavascriptTranslation["motion_gotoxy"] = function (jsonblock, utils, options) {
-  var X = utils.getInput(jsonblock, "X", options, "undefined");
-  var Y = utils.getInput(jsonblock, "Y", options, "undefined");
-
-  return `sprite.x = +(${X}) || 0; sprite.y = +(${Y}) || 0;`;
-};
-
-JavascriptTranslation["motion_changexby"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var DX = utils.getInput(jsonblock, "DX", options, "undefined");
-
-  return `sprite.x += +(${DX}) || 0;`;
-};
-
-JavascriptTranslation["motion_setx"] = function (jsonblock, utils, options) {
-  var X = utils.getInput(jsonblock, "X", options, "undefined");
-
-  return `sprite.x = +(${X}) || 0;`;
-};
-
-JavascriptTranslation["motion_changeyby"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var DY = utils.getInput(jsonblock, "DY", options, "undefined");
-
-  return `sprite.y += +(${DY}) || 0;`;
-};
-
-JavascriptTranslation["motion_sety"] = function (jsonblock, utils, options) {
-  var Y = utils.getInput(jsonblock, "Y", options, "undefined");
-
-  return `sprite.y = +(${Y}) || 0;`;
-};
-
-JavascriptTranslation["motion_pointindirection"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var DIRECTION = utils.getInput(jsonblock, "DIRECTION", options, "undefined");
-
-  return `sprite.direction = +(${DIRECTION}) || 0;`;
-};
-
-JavascriptTranslation["motion_turnleft"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var DEGREES = utils.getInput(jsonblock, "DEGREES", options, "undefined");
-
-  return `sprite.direction -= +(${DEGREES}) || 0;`;
-};
-
-JavascriptTranslation["motion_turnright"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var DEGREES = utils.getInput(jsonblock, "DEGREES", options, "undefined");
-
-  return `sprite.direction += +(${DEGREES}) || 0;`;
-};
-
-JavascriptTranslation["motion_movesteps"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var STEPS = utils.getInput(jsonblock, "STEPS", options, "undefined");
-
-  return `sprite.moveSteps(+(${STEPS}) || 0);`;
-};
-
-outputBlocks.push("motion_goto_menu");
-JavascriptTranslation["motion_goto_menu"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var TO = utils.getField(jsonblock, "TO", options, "null");
-
-  return JSON.stringify(TO);
-};
-JavascriptTranslation["motion_goto"] = function (jsonblock, utils, options) {
-  var TO = utils.getInput(jsonblock, "TO", options, "null");
-
-  return `sprite.goTo(${TO});`;
-};
-
-module.exports = JavascriptTranslation;
-
-
-/***/ }),
-
-/***/ 30:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var JavascriptTranslation = {};
-var utilFunctions = __webpack_require__(9547);
-var outputBlocks = __webpack_require__(7147);
-
-//Basic math:
-
-outputBlocks.push("operator_add");
-JavascriptTranslation["operator_add"] = function (jsonblock, utils, options) {
-  var NUM1 = utils.getInput(jsonblock, "NUM1", options, "undefined");
-  var NUM2 = utils.getInput(jsonblock, "NUM2", options, "undefined");
-  //Although this is GGM3, not Scratch, falling back to zero or converting to number automatically is more convient.
-  return `((+(${NUM1}) || 0) + (+(${NUM2}) || 0))`;
-};
-
-outputBlocks.push("operator_subtract");
-JavascriptTranslation["operator_subtract"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var NUM1 = utils.getInput(jsonblock, "NUM1", options, "undefined");
-  var NUM2 = utils.getInput(jsonblock, "NUM2", options, "undefined");
-  return `((+(${NUM1}) || 0) - (+(${NUM2}) || 0))`;
-};
-
-outputBlocks.push("operator_multiply");
-JavascriptTranslation["operator_multiply"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var NUM1 = utils.getInput(jsonblock, "NUM1", options, "undefined");
-  var NUM2 = utils.getInput(jsonblock, "NUM2", options, "undefined");
-  return `((+(${NUM1}) || 0) * (+(${NUM2}) || 0))`;
-};
-
-outputBlocks.push("operator_divide");
-JavascriptTranslation["operator_divide"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var NUM1 = utils.getInput(jsonblock, "NUM1", options, "undefined");
-  var NUM2 = utils.getInput(jsonblock, "NUM2", options, "undefined");
-  return `((+(${NUM1}) || 0) / (+(${NUM2}) || 0))`;
-};
-
-outputBlocks.push("operator_scratch_mod");
-JavascriptTranslation["operator_scratch_mod"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var NUM1 = utils.getInput(jsonblock, "NUM1", options, "undefined");
-  var NUM2 = utils.getInput(jsonblock, "NUM2", options, "undefined");
-  return `engine.sMath.mod(+(${NUM1}) || 0, +(${NUM2}) || 0)`;
-};
-
-outputBlocks.push("operator_js_mod");
-JavascriptTranslation["operator_js_mod"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var NUM1 = utils.getInput(jsonblock, "NUM1", options, "undefined");
-  var NUM2 = utils.getInput(jsonblock, "NUM2", options, "undefined");
-  return `(+(${NUM1}) || 0) % (+(${NUM2}) || 0)`;
-};
-
-outputBlocks.push("operator_sign");
-JavascriptTranslation["operator_sign"] = function (jsonblock, utils, options) {
-  var NUM = utils.getInput(jsonblock, "NUM", options, "undefined");
-  return `Math.sign(+(${NUM}) || 0)`;
-};
-
-outputBlocks.push("operator_fixed");
-JavascriptTranslation["operator_fixed"] = function (jsonblock, utils, options) {
-  var NUM = utils.getInput(jsonblock, "NUM", options, "undefined");
-  var DECIMALS = utils.getInput(jsonblock, "DECIMALS", options, "undefined");
-  return `(+(${NUM}) || 0).toFixed(+(${DECIMALS}) || 0)`;
-};
-
-outputBlocks.push("operator_mathop");
-JavascriptTranslation["operator_mathop"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var OPERATOR = utils.getField(jsonblock, "OPERATOR", options, "undefined");
-  var NUM = utils.getInput(jsonblock, "NUM", options, "undefined");
-  var numberCode = `(+(${NUM}) || 0)`;
-  switch (OPERATOR) {
-    case "abs":
-      return `Math.abs(${numberCode})`;
-    case "floor":
-      return `Math.floor(${numberCode})`;
-    case "ceiling":
-      return `Math.ceil(${numberCode})`;
-    case "sqrt":
-      return `Math.sqrt(${numberCode})`;
-    case "sin":
-      return `Math.round(Math.sin((Math.PI * ${numberCode}) / 180) * 1e10) / 1e10`;
-    case "cos":
-      return `Math.round(Math.cos((Math.PI * ${numberCode}) / 180) * 1e10) / 1e10`;
-    case "tan":
-      return `MathUtil.tan(${numberCode})`;
-    case "asin":
-      return `(Math.asin(${numberCode}) * 180) / Math.PI`;
-    case "acos":
-      return `(Math.acos(${numberCode}) * 180) / Math.PI`;
-    case "atan":
-      return `(Math.atan(${numberCode}) * 180) / Math.PI`;
-    case "ln":
-      return `Math.log(${numberCode})`;
-    case "log":
-      return `Math.log(${numberCode}) / Math.LN10`;
-    case "e ^":
-      return `Math.exp(${numberCode})`;
-    case "10 ^":
-      return `Math.pow(10, ${numberCode})`;
-    case "20 ^":
-      return `Math.pow(20, ${numberCode})`;
-  }
-  return `0`;
-};
-
-//Randomizing:
-
-outputBlocks.push("operator_random");
-JavascriptTranslation["operator_random"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var FROM = utils.getInput(jsonblock, "FROM", options, "undefined");
-  var TO = utils.getInput(jsonblock, "TO", options, "undefined");
-  return `thread.random(+(${FROM}) || 0, +(${TO}) || 0)`;
-};
-
-//Conditional:
-
-outputBlocks.push("operator_equals");
-JavascriptTranslation["operator_equals"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var OPERAND1 = utils.getInput(jsonblock, "OPERAND1", options, "undefined");
-  var OPERAND2 = utils.getInput(jsonblock, "OPERAND2", options, "undefined");
-  return `((${OPERAND1}) == (${OPERAND2}))`;
-};
-
-outputBlocks.push("operator_gt");
-JavascriptTranslation["operator_gt"] = function (jsonblock, utils, options) {
-  var OPERAND1 = utils.getInput(jsonblock, "OPERAND1", options, "undefined");
-  var OPERAND2 = utils.getInput(jsonblock, "OPERAND2", options, "undefined");
-  return `((+(${OPERAND1}) || 0) > (+(${OPERAND2}) || 0))`;
-};
-
-outputBlocks.push("operator_lt");
-JavascriptTranslation["operator_lt"] = function (jsonblock, utils, options) {
-  var OPERAND1 = utils.getInput(jsonblock, "OPERAND1", options, "undefined");
-  var OPERAND2 = utils.getInput(jsonblock, "OPERAND2", options, "undefined");
-  return `((+(${OPERAND1}) || 0) < (+(${OPERAND2}) || 0))`;
-};
-
-outputBlocks.push("operator_and");
-JavascriptTranslation["operator_and"] = function (jsonblock, utils, options) {
-  var OPERAND1 = utils.getInput(jsonblock, "OPERAND1", options, "false");
-  var OPERAND2 = utils.getInput(jsonblock, "OPERAND2", options, "false");
-  return `((${OPERAND1}) && (${OPERAND2}))`;
-};
-
-outputBlocks.push("operator_or");
-JavascriptTranslation["operator_or"] = function (jsonblock, utils, options) {
-  var OPERAND1 = utils.getInput(jsonblock, "OPERAND1", options, "false");
-  var OPERAND2 = utils.getInput(jsonblock, "OPERAND2", options, "false");
-  return `((${OPERAND1}) || (${OPERAND2}))`;
-};
-
-outputBlocks.push("operator_not");
-JavascriptTranslation["operator_not"] = function (jsonblock, utils, options) {
-  var OPERAND = utils.getInput(jsonblock, "OPERAND", options, "false");
-  return `(!(${OPERAND}))`;
-};
-
-outputBlocks.push("operator_outputif");
-JavascriptTranslation["operator_outputif"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var CONDITION = utils.getInput(jsonblock, "CONDITION", options, "false");
-
-  var PASS_OUTPUT = utils.getInput(jsonblock, "PASS_OUTPUT", options, null);
-  var FAIL_OUTPUT = utils.getInput(jsonblock, "FAIL_OUTPUT", options, null);
-  return `(${CONDITION}) ? (${PASS_OUTPUT}) : (${FAIL_OUTPUT})`;
-};
-
-//Constants:
-
-outputBlocks.push("operator_true");
-JavascriptTranslation["operator_true"] = function (jsonblock, utils, options) {
-  return "true";
-};
-
-outputBlocks.push("operator_false");
-JavascriptTranslation["operator_false"] = function (jsonblock, utils, options) {
-  return "false";
-};
-
-outputBlocks.push("operator_nan");
-JavascriptTranslation["operator_nan"] = function (jsonblock, utils, options) {
-  return "NaN";
-};
-
-outputBlocks.push("operator_null");
-JavascriptTranslation["operator_null"] = function (jsonblock, utils, options) {
-  return "null";
-};
-
-outputBlocks.push("operator_infinity");
-JavascriptTranslation["operator_infinity"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  return "Infinity";
-};
-
-outputBlocks.push("operator_empty_string");
-JavascriptTranslation["operator_empty_string"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  return JSON.stringify("");
-};
-
-outputBlocks.push("operator_newline");
-JavascriptTranslation["operator_newline"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  return JSON.stringify("\n");
-};
-
-//Rounding:
-
-outputBlocks.push("operator_round");
-JavascriptTranslation["operator_round"] = function (jsonblock, utils, options) {
-  var NUM = utils.getInput(jsonblock, "NUM", options, "undefined");
-  return `(Math.round(+(${NUM}) || 0))`;
-};
-
-//Converters:
-
-outputBlocks.push("operator_tostring");
-JavascriptTranslation["operator_tostring"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options, "undefined");
-  return `"" + (${VALUE})`;
-};
-
-outputBlocks.push("operator_tonumber");
-JavascriptTranslation["operator_tonumber"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options, "undefined");
-  return `+(${VALUE})`;
-};
-
-outputBlocks.push("operator_toboolean");
-JavascriptTranslation["operator_toboolean"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options, "undefined");
-  return `!!(${VALUE})`;
-};
-
-outputBlocks.push("operator_joinstring");
-JavascriptTranslation["operator_joinstring"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VALUE1 = utils.getInput(jsonblock, "VALUE1", options, "''");
-  var VALUE2 = utils.getInput(jsonblock, "VALUE2", options, "''");
-  return `(("" + (${VALUE1})) + ("" +(${VALUE2})))`;
-};
-
-outputBlocks.push("operator_stringlength");
-JavascriptTranslation["operator_stringlength"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options, "''");
-  return `(("" + (${VALUE})).length)`;
-};
-
-outputBlocks.push("operator_stringtrim");
-JavascriptTranslation["operator_stringtrim"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options, "''");
-  return `(("" + (${VALUE})).trim())`;
-};
-
-outputBlocks.push("operator_stringlowercase");
-JavascriptTranslation["operator_stringlowercase"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options, "''");
-  return `(("" + (${VALUE})).toLowerCase())`;
-};
-
-outputBlocks.push("operator_stringuppercase");
-JavascriptTranslation["operator_stringuppercase"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options, "''");
-  return `(("" + (${VALUE})).toUpperCase())`;
-};
-
-module.exports = JavascriptTranslation;
-
-
-/***/ }),
-
 /***/ 66:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -699,107 +218,6 @@ function setCurrentLibrary(lib) {
 module.exports = {
   setCurrentLibrary,
 };
-
-
-/***/ }),
-
-/***/ 73:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var SpriteMasterConsts = __webpack_require__(1065);
-
-var JavascriptTranslation = {};
-var utilFunctions = __webpack_require__(9547);
-var outputBlocks = __webpack_require__(7147);
-var MYSELF_INPUT = JSON.stringify("__myself__");
-
-outputBlocks.push("spritemaster_sprite");
-JavascriptTranslation["spritemaster_sprite"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var SPRITE = utils.getField(jsonblock, "SPRITE", options);
-  return JSON.stringify(SPRITE);
-};
-
-outputBlocks.push("spritemaster_spriteobjectof");
-JavascriptTranslation["spritemaster_spriteobjectof"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var SPRITE = utils.getInput(jsonblock, "SPRITE", options, "null");
-  if (SPRITE == MYSELF_INPUT) {
-    return `sprite`;
-  }
-  return `spriteMaster.findSpriteByName(${SPRITE})`;
-};
-
-outputBlocks.push("spritemaster_spriteproperty");
-JavascriptTranslation["spritemaster_spriteproperty"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var SPRITE = utils.getInput(jsonblock, "SPRITE", options, "null");
-  var PROPERTY_OPTION = utils.getField(
-    jsonblock,
-    "PROPERTY_OPTION",
-    options,
-    "",
-  );
-  var propertyCode = SpriteMasterConsts.SPRITE_MASTER_CODE[PROPERTY_OPTION];
-  if (propertyCode) {
-    if (SPRITE == MYSELF_INPUT) {
-      return `sprite.${propertyCode}`;
-    }
-    var output = `(spriteMaster.getSpriteSafe(${SPRITE})).${propertyCode}`;
-    return output;
-  } else {
-    return `(0)`;
-  }
-};
-
-outputBlocks.push("spritemaster_getclonesofsprite");
-JavascriptTranslation["spritemaster_getclonesofsprite"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var SPRITE = utils.getInput(jsonblock, "SPRITE", options, "null");
-  if (SPRITE == MYSELF_INPUT) {
-    return `Array.from(sprite.clones)`;
-  }
-  return `(spriteMaster.getClonesOf(${SPRITE}))`;
-};
-
-outputBlocks.push("spritemaster_getclonecountofsprite");
-JavascriptTranslation["spritemaster_getclonecountofsprite"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var SPRITE = utils.getInput(jsonblock, "SPRITE", options, "null");
-  if (SPRITE == MYSELF_INPUT) {
-    return `sprite.clones.length`;
-  }
-  return `spriteMaster.getCloneCountOf(${SPRITE})`;
-};
-
-outputBlocks.push("spritemaster_checktouchingsprite_equals_propertyvalue");
-JavascriptTranslation["spritemaster_checktouchingsprite_equals_propertyvalue"] =
-  function (jsonblock, utils, options) {
-    var SPRITE = utils.getInput(jsonblock, "SPRITE", options, "null");
-    var VARIABLE = utils.getField(jsonblock, "VARIABLE", options, "null");
-    var VALUE = utils.getInput(jsonblock, "VALUE", options, "null");
-    if (SPRITE == MYSELF_INPUT) {
-      return `true`;
-    }
-    return `spriteMaster.isTouchingSpriteWithPropertySet(${SPRITE}, ${JSON.stringify(VARIABLE)}, ${VALUE})`;
-  };
-
-module.exports = JavascriptTranslation;
 
 
 /***/ }),
@@ -1209,6 +627,16 @@ if (true) {
 
 /***/ }),
 
+/***/ 264:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+__webpack_require__(1287);
+
+module.exports = __webpack_require__(2391);
+
+/***/ }),
+
 /***/ 269:
 /***/ ((module) => {
 
@@ -1544,6 +972,163 @@ class LibrarySound {
 
 module.exports = LibrarySound;
 
+
+/***/ }),
+
+/***/ 421:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var CBlockType = __webpack_require__(7561);
+var {CBlockUtil} = __webpack_require__(9341);
+var CoreFunctions = __webpack_require__(5619);
+
+class BlockCompilerInstance {
+    constructor(compiler, options) {
+        this.compiler = compiler;
+
+        if (!options) {
+            throw new Error("No options provided");
+        }
+
+        this.exportCompile = options.useExportCompile || false;
+        this.useBlockNumberIDs = options.useBlockNumberIDs || false;
+
+        this.resetBlockIDCount();
+
+    }
+
+    resetBlockIDCount() {
+        this._idCount = 0;
+        this._ids = {};
+    }
+
+    getBlockID(block) {
+        if (this.useBlockNumberIDs) {
+            var numId = this._ids[block.id];
+            if (typeof numId !== "undefined") {
+                return numId;
+            } else {
+                this._idCount += 1;
+                this._ids[block.id] = this._idCount;
+                return this._idCount;
+            }
+        } else {
+            return block.id;
+        }
+    }
+
+    getBlockDefinition(name) {
+        return this.compiler.getBlockDefinition(name);
+    }
+
+    compileWorkspace(workspace) {
+        var blocks = workspace.getTopBlocks(true);
+        var output = [];
+        for (var block of blocks) {
+            var blockCode = this.compileHatBlock(block);
+
+            if (blockCode) { //This will return null if it isn't a hat block.
+                output.push({
+                    code: blockCode,
+                    id: block.id,
+                    block
+                });
+            }
+        }
+        return output;
+    }
+
+    applyCompiledToEditorSprite(sprite, workspaceCompileOutput) {
+        for (var compiledHat of workspaceCompileOutput) {
+            sprite.removeStackListener(compiledHat.id);
+            sprite.removeSpriteFunction(compiledHat.id);
+            sprite.addFunction(compiledHat.code, compiledHat.id);
+            sprite.runFunctionID(compiledHat.id);
+        }
+    }
+
+    compileHatBlock(block) {
+        //This is just a pass through except it compares to hat blocks
+        // and only would compile if it is an hat blocks.
+        var def = this.getBlockDefinition(block.type);
+
+        if (!def) {
+            return null;
+        }
+
+        if (def.type == CBlockType.STARTER_HAT) {
+            return this.compileBlock(block);
+        }
+
+        return null;
+    }
+
+    compileClickedBlock(parentBlock) { //Used to compile the contents of clicked block when its clicked in the editor.
+        var _this = this;
+        
+        function loop(block) {
+            var def = _this.getBlockDefinition(block.type);
+
+            if (!def) {
+                return null;
+            }
+
+            if (def.type !== CBlockType.STARTER_HAT) {
+                var code = _this.compileBlock(block);
+
+                if (def.type == CBlockType.OUTPUT) {
+                    //Output blocks are handled slightly differently compared to hats below.
+                    //They need to set an output value on the thread.
+                    return CoreFunctions.getClickedOutputBlockLogic(parentBlock, code);
+                } else {
+                    //These are mostly the same as normal hat block scripts.
+                    //Except that we have to also set a thread value to tell
+                    // the editor this block is was ran from being clicked.
+                    return CoreFunctions.getClickedBlockLogic(parentBlock, code);
+                }
+
+            }
+
+            if (block.getNextBlock) {
+                var nextBlock = block.getNextBlock();
+                if (nextBlock) {
+                    return loop(nextBlock);
+                }
+            }
+
+            return null;
+        }
+
+        return loop(parentBlock);
+    }
+
+    compileBlock(block, parentState) {
+        var def = this.getBlockDefinition(block.type);
+        var util = new CBlockUtil({
+            compiler: this.compiler,
+            instance: this,
+            block,
+            parentState,
+            def
+        });
+
+        var isHat = def.type == CBlockType.STARTER_HAT;
+
+        var code = def.callCompile(util);
+
+        if (block.getNextBlock && !isHat) {
+            var nextBlock = block.getNextBlock();
+            if (nextBlock) {
+                return code + this.compileBlock(nextBlock, util.parentState);
+            }
+        }
+
+        return code;
+    }
+}
+
+module.exports = {BlockCompilerInstance};
 
 /***/ }),
 
@@ -3300,146 +2885,6 @@ replaceTraps((oldTraps) => ({
 
 /***/ }),
 
-/***/ 640:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var { blockToJSON, workspaceToJSON } = __webpack_require__(1246);
-var JavascriptTranslation = __webpack_require__(4943);
-var StarterBlocks = __webpack_require__(8355);
-var outputBlocks = __webpack_require__(7147);
-var utilFunctions = __webpack_require__(9547);
-
-function getInput(blockJson, name, options, fallback) {
-  if (typeof fallback === "undefined") {
-    fallback = "null";
-  }
-
-  for (var input of blockJson.inputs) {
-    if (input.name == name) {
-      var compiled = compileBlockFromJSON(input.block, options);
-      return compiled && compiled.trim() !== "" ? compiled : fallback;
-    }
-  }
-
-  return fallback;
-}
-function getInputBlock(blockJson, name, options) {
-  for (var input of blockJson.inputs) {
-    if (input.name == name) {
-      return input.block;
-    }
-  }
-  return null;
-}
-function getField(blockJson, name, options, fallback) {
-  for (var field of blockJson.fields) {
-    if (field.name == name) {
-      return field.value;
-    }
-  }
-  return fallback || null;
-}
-function getFieldText(blockJson, name, options) {
-  for (var field of blockJson.fields) {
-    if (field.name == name) {
-      return field.text;
-    }
-  }
-  return null;
-}
-function getFieldVariableID(blockJson, name, options) {
-  for (var field of blockJson.fields) {
-    if (field.name == name) {
-      return field.variable.id;
-    }
-  }
-  return null;
-}
-
-function compileBlockFromJSON(json, options = {}) {
-  if (JavascriptTranslation[json.type]) {
-    var output = JavascriptTranslation[json.type](
-      json,
-      {
-        getInput,
-        getField,
-        getFieldVariableID,
-        getInputBlock,
-        getFieldText,
-      },
-      options,
-    );
-    if ("function" === typeof output) {
-      if (json.next) {
-        return output(compileBlockFromJSON(json.next, options));
-      } else {
-        return output("");
-      }
-    }
-  } else {
-    console.warn(
-      "Unable to compile block " +
-        json.type +
-        " because it doesn't exist in the translator.",
-    );
-    var output = "";
-  }
-  if (json.next) {
-    output += compileBlockFromJSON(json.next, options);
-  }
-  return output;
-}
-
-function compileBlock(block, options) {
-  if (isStarterBlock(block)) {
-    return compileBlockFromJSON(blockToJSON(block), options);
-  } else {
-    return "";
-  }
-}
-
-function compileBlockWithThreadForced(block, options) {
-  var blockjson = blockToJSON(block);
-  if (isOutputBlock(block)) {
-    return (
-      utilFunctions.startThreadStack(blockjson) +
-      "thread.isPreviewMode = true;" +
-      `thread.output = ${compileBlockFromJSON(blockjson)};` +
-      utilFunctions.endThreadStack(blockjson) +
-      "return thread;"
-    );
-  }
-  return (
-    utilFunctions.startThreadStack(blockjson) +
-    "thread.isPreviewMode = true;" +
-    compileBlockFromJSON(blockToJSON(block), {
-      ...options,
-      EXECUTE_BLOCKS: true,
-    }) +
-    utilFunctions.endThreadStack(blockjson)
-  );
-}
-
-function isStarterBlock(block) {
-  var json = blockToJSON(block);
-  return StarterBlocks.indexOf(json.type) !== -1;
-}
-
-function isOutputBlock(block) {
-  var json = blockToJSON(block);
-  return outputBlocks.indexOf(json.type) !== -1;
-}
-
-module.exports = {
-  compileBlock,
-  isStarterBlock,
-  isOutputBlock,
-  compileBlockWithThreadForced,
-};
-
-
-/***/ }),
-
 /***/ 692:
 /***/ ((module) => {
 
@@ -3459,141 +2904,30 @@ module.exports = LibraryCostume;
 
 /***/ }),
 
+/***/ 734:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("event_whengamestarts", {
+    type: CBlockType.STARTER_HAT,
+    func: function (utils) {
+        var insideCode = CoreFunctions.putThreadStack(utils.getHatContents(""));
+        var BLOCK_ID = JSON.stringify(utils.getID());
+        
+        return `sprite.addStackListener("started", ${BLOCK_ID}, async function () {${insideCode}});`;
+    }
+});
+
+/***/ }),
+
 /***/ 735:
 /***/ ((module) => {
 
 module.exports = ":root {\n  --game-viewport-width: 640px;\n  --game-viewport-height: 360px;\n  --game-viewport-scale: 1;\n\n  /*windowDialogContainer*/\n  --popup-dialog-font: \"arial\";\n  /*windowDialogBox*/\n  --popup-dialog-background: hsl(0deg, 0%, 100%);\n  --popup-dialog-border-radius: 10px;\n  --popup-dialog-text-color: hsl(0deg, 0%, 0%);\n  /*windowDialogButton*/\n  --popup-dialog-button-background: hsl(224, 100%, 67%);\n  --popup-dialog-button-hover-background: hsl(224, 100%, 63%);\n  --popup-dialog-button-text-color: hsl(0deg, 0%, 100%);\n  --popup-dialog-button-radius: 5px;\n  /*windowDialogInput*/\n  --popup-dialog-input-background: hsl(0deg, 0%, 100%);\n  --popup-dialog-input-border-width: 1.5px;\n  --popup-dialog-input-border-color: hsl(0deg, 0%, 73%);\n  --popup-dialog-input-text-color: hsl(0deg, 0%, 0%);\n  /*windowDialogHeader*/\n  --popup-dialog-message-size: 16px;\n\n  --loader2-time: 2.5s;\n}\n\n.windowDialogContainer {\n  font-family: var(--popup-dialog-font);\n}\n.windowDialogBackground {\n  background: hsl(0deg, 0%, 0%);\n  z-index: 999999999999;\n}\n.windowDialogBox {\n  background: var(--popup-dialog-background);\n  border-radius: var(--popup-dialog-border-radius);\n  color: var(--popup-dialog-text-color);\n  z-index: 999999999999;\n}\n.windowDialogButton {\n  background: var(--popup-dialog-button-background);\n  color: var(--popup-dialog-button-text-color);\n  border-radius: var(--popup-dialog-button-radius);\n}\n.windowDialogButton:hover {\n  background: var(--popup-dialog-button-hover-background);\n}\n.windowDialogInput {\n  background: var(--popup-dialog-input-background);\n  border-style: solid;\n  border-width: var(--popup-dialog-input-border-width);\n  border-color: var(--popup-dialog-input-border-color);\n  color: var(--popup-dialog-input-text-color);\n  outline: none;\n}\n.windowDialogHeader {\n  font-weight: bold;\n  font-size: var(--popup-dialog-message-size);\n}\n\nbody {\n  font-family: arial;\n}\n\n.appContainer {\n  background: #363636;\n  width: 100%;\n  height: 100svh;\n  position: fixed;\n  top: 0;\n  left: 0;\n  overflow: auto;\n}\n\n.blocklyDiv {\n  width: 100%;\n  height: 100%;\n}\n\n.menuBar {\n  display: flex;\n  width: 100%;\n  min-height: 50px;\n  background: #525252;\n  overflow: unset;\n  transition: 0.2s;\n  flex-direction: row;\n}\n\n.menuBarItemLogo {\n  all: unset;\n  width: fit-content;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  user-select: none;\n  padding: 0 10px;\n}\n\n.menuBarItemLogoImg {\n  height: 30px;\n}\n\n.menuBarItem {\n  all: unset;\n  color: #ffffff;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n}\n\n.unclickableMenuBarItem {\n  all: unset;\n  color: #ffffff;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n}\n\n.menuBarItem:hover {\n  background: #363636;\n  cursor: pointer;\n}\n\n/* Dropdown menu styles */\n.menuBarMenus {\n  display: flex;\n  align-items: center;\n  flex-direction: row;\n}\n.menuParentMain {\n}\n.menuParent {\n  position: relative;\n  display: flex;\n  align-items: center;\n  padding: 0 8px;\n  z-index: 9999;\n  cursor: unset;\n  width: fit-content;\n}\n.menuBarItemLabel {\n  color: #ffffff;\n  font-weight: bold;\n  user-select: none;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  gap: 3px;\n}\n.menuParent.open > .menuBarItemLabel {\n  color: #ffffff;\n}\n.menuDropdown {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  background: #444444;\n  min-width: 160px;\n  border-radius: 6px;\n  box-shadow: 0 6px 14px rgba(0,0,0,0.3);\n  z-index: 9999;\n  display: block; /* hidden attribute controls visibility */\n  cursor: unset;\n}\n.menuDropdownItem {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 6px 8px;\n  color: #ffffff;\n  border-radius: 4px;\n  user-select: none;\n}\n.menuDropdownItem:hover {\n  background: #5a5a5a;\n  cursor: pointer;\n  box-sizing: border-box;\n}\n.menuIcon {\n  width: 16px;\n  height: 16px;\n  object-fit: contain;\n}\n.menuDropdownItemLabel {\n  color: #ffffff;\n}\n\n.panelContainer {\n  display: flex;\n  flex-direction: row;\n  width: 100svw;\n  height: calc(100svh - 50px);\n  position: absolute;\n  top: 50px;\n  left: 0px;\n  min-height: 500px;\n}\n\n.leftPanel {\n  height: calc(100svh - 50px);\n  display: flex;\n  flex-direction: column;\n  flex-grow: 1;\n  min-width: 0;\n}\n\n.rightPanel {\n  width: fit-content;\n  height: calc(100svh - 50px);\n  overflow: auto;\n  box-sizing: border-box;\n  flex-grow: 0;\n  flex-shrink: 0;\n}\n\n.rightPanelContent {\n  width: fit-content;\n  max-width: 100%;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  min-height: 0;\n  box-sizing: border-box;\n  position: relative;\n}\n\n.projectControls {\n  width: 100%;\n  height: 200px;\n}\n\n.projectCanvas {\n  background: #ffffff;\n  border-radius: 4px;\n  flex-shrink: 0;\n  flex-grow: 0;\n  width: calc(var(--game-viewport-width) * var(--game-viewport-scale));\n  height: calc(var(--game-viewport-height) * var(--game-viewport-scale));\n}\n\n.tabArea {\n  display: flex;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow-x: auto;\n  overflow-y: hidden;\n}\n\n.tabIcon {\n  height: 20px;\n  width: 20px;\n  object-fit: contain;\n  margin-right: 5px;\n}\n\n.tabButton {\n  all: unset;\n  color: #c7c7c7;\n  width: fit-content;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n  flex-grow: 0;\n  transform: translateY(5px);\n  border-top-left-radius: 10px;\n  border-top-right-radius: 10px;\n}\n\n.tabButton:hover {\n  background: #8f8f8f;\n  cursor: pointer;\n  color: #ffffff;\n  transform: translateY(4px);\n}\n\n.tabButton[selected] {\n  background: #8f8f8f;\n  cursor: unset;\n  color: #ffffff;\n  transform: translateY(0px);\n}\n\n.tabWindow {\n  background: #8f8f8f;\n  flex-grow: 1;\n  width: 100%;\n  color: #000000;\n  display: flex;            /* <-- CHANGED */\n  flex-direction: column;   /* <-- ADDED */\n  min-height: 0;            /* <-- ADDED (crucial for containing flex) */\n}\n\n.selectedSpriteContainer {\n  min-width: 100%;\n  max-width: calc(var(--game-viewport-scale) * var(--game-viewport-width));\n  box-sizing: border-box;\n  border-width: 5px;\n  border-style: solid;\n  border-color: black;\n  border-radius: 4px;\n  min-height: 30px;\n  height: fit-content;\n  display: flex;\n  padding: 4px 4px;\n  flex-shrink: 0;\n  flex-grow: 0;\n  flex-wrap: wrap;\n  overflow: auto;\n}\n\n.spritesContainer {\n  width: 100%;\n  box-sizing: border-box;\n  border-width: 5px;\n  border-style: solid;\n  border-color: black;\n  border-radius: 4px;\n  display: flex;\n  flex-direction: column;\n  overflow-y: auto;\n  overflow-x: hidden;\n  flex: 1 1 auto;\n  max-height: 100%;\n}\n\n.spriteContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n}\n\n.spriteTextContainer {\n  width: 200px;\n  text-wrap: wrap;\n  line-break: anywhere;\n}\n\n.spriteContainer[selected] {\n  background: #525252;\n}\n\n.selectedSpriteLabel {\n  color: white;\n  font-weight: bold;\n}\n.selectedSpriteInput {\n  all: unset;\n  padding: 3px 3px;\n  box-sizing: border-box;\n  width: fit-content;\n  color: white;\n  width: 100px;\n  border-radius: 2px;\n  background: #595959;\n  border-color: rgba(0,0,0,0);\n  border-style: solid;\n  border-width: 2px;\n  transition: 0.1s;\n}\n.selectedSpriteInput:focus {\n  border-color: white;\n}\n\n.costumesContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: column;\n  color: white;\n}\n\n.soundsContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: column;\n  color: white;\n}\n\n.costumePivotContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: row;\n  color: white;\n}\n\n.costumesInPivotContainer {\n  width: fit-content;\n  height: 100%; /* <-- This is OK now */\n  flex-grow: 0;\n  flex-shrink: 0;\n  overflow: auto; /* <-- This will now activate */\n  overflow-anchor: none;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.pivotCostumeButton {\n  min-width: 100px;\n  min-height: 100px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  box-sizing: border-box;\n  padding: 4px 4px;\n  border-radius: 10px;\n  border-width: 2px;\n  border-style: solid;\n  border-color: #000000;\n  margin: 2px;\n  user-select: none;\n  font-weight: bold;\n}\n\n.pivotCostumeButton:hover {\n  border-color: rgb(121, 121, 121);\n  cursor: pointer;\n}\n.pivotCostumeButton[selected] {\n  border-color: #ffffff;\n  cursor: unset;\n}\n\n.pivotEditor {\n  flex-grow: 1;\n  background: #212121;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  flex-shrink: 1;  /* <-- 1. ALLOWS this element to shrink */\n  min-width: 0;      /* <-- 2. THE KEY: Allows it to shrink smaller than its content */\n  overflow: hidden;    /* <-- 3. Prevents children from spilling out */\n  position: relative;\n}\n\n.pivotEditorMenuBar {\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: 64px;\n  width: 100%;\n  display: flex;      /* <-- Puts all items in one horizontal row */\n  overflow-x: auto;   /* <-- Adds horizontal scroll */\n  overflow-y: hidden; /* <-- Prevents vertical scroll */\n  align-items: center;\n}\n\n.pivotEditorMenuBar > * {\n  flex-shrink: 0;\n}\n\n.pivotEditorContainer {\n  flex-grow: 1;\n  position: relative;\n  overflow: auto;\n}\n\n.pivotEditorImageContainer {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: fit-content;\n  height: fit-content;\n  display: flex;\n  background-image: url(editor/transparent.png);\n  background-size: 32px;\n  image-rendering: pixelated;\n  overflow: hidden;\n  flex-wrap: nowrap;\n}\n\n.pivotEditorImage {\n  pointer-events: none;\n  user-select: none;\n}\n\n.pivotEditorMenuInput {\n  all: unset;\n  color: #ffffff;\n  font-weight: bold;\n  height: 100%;\n  box-sizing: border-box;\n}\n\n.pivotEditorDot {\n  background: #000000;\n  border-style: solid;\n  border-color: #ffffff;\n  box-sizing: border-box;\n  border-width: 2px;\n  border-radius: 50%;\n  width: 10px;\n  height: 10px;\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  transform: translate(-50%, -50%);\n  opacity: 0.5;\n}\n\n.costumesHeaderContainer {\n  width: 100%;\n  display: block;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  box-sizing: border-box;\n  padding: 5px 5px;\n}\n\n.soundsHeaderContainer {\n  width: 100%;\n  display: block;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  box-sizing: border-box;\n  padding: 5px 5px;\n}\n\n.costumesSelectorContainer {\n  display: flex;\n  flex-direction: column;\n  overflow: auto;\n  overflow-anchor: none;\n  flex-grow: 1;\n}\n\n.soundsSelectorContainer {\n  display: flex;\n  flex-direction: column;\n  overflow: auto;\n  flex-grow: 1;\n}\n\n.costumeContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n}\n\n.soundContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n  flex-direction: column;\n}\n\n.greyButtonStyle {\n  all: unset;\n  background: #6e6e6e;\n  color: white;\n  border-radius: 10px;\n  padding: 7px 7px;\n  box-sizing: border-box;\n  width: fit-content;\n  height: fit-content;\n  font-weight: bold;\n}\n\n.greyButtonStyle:hover {\n  background: #b8b8b8;\n  cursor: pointer;\n}\n\n.selectedCostumeInput {\n  all: unset;\n  padding: 3px 3px;\n  box-sizing: border-box;\n  width: 140px;\n  color: white;\n}\n\n.scratchCategoryMenuItemLabel {\n  color: white;\n}\n\n.projectControls {\n  background: #8f8f8f;\n  border-radius: 5px;\n  width: 100%;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  display: flex;\n}\n\n.projectButton {\n  padding: 5px;\n  font-size: 20px;\n  user-select: none;\n  margin-right: 2px;\n  border-radius: 5px;\n  min-width: 20px;\n  box-sizing: border-box;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n\n.projectButtonImg {\n  height: 20px;\n  width: 20px;\n  object-fit: contain;\n}\n\n.projectButton:hover {\n  cursor: pointer;\n  color: white;\n  background-color: rgba(0,0,0,0.5);\n}\n\n.spriteInputContainer {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  padding: 4px;\n  box-sizing: border-box;\n  border-radius: 5px;\n  background: #8f8f8f;\n  margin: 3px;\n}\n\n.projectMouseCoordinates {\n  color: white;\n  font-size: 10px;\n  font-weight: bold;\n}\n\n.addSpriteButton {\n  position: absolute;\n  bottom: 10px;\n  right: 10px;\n}\n\n.spriteAddMenu {\n  position: absolute;\n  bottom: 65px;\n  right: 10px;\n  background: #8f8f8f;\n  border-radius: 5px;\n  display: flex;\n  flex-direction: column;\n  padding: 1px;\n  box-sizing: border-box;\n  gap: 2px;\n}\n\n.spriteAddMenuItem {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  padding: 5px;\n  border-radius: 5px;\n  color: white;\n  font-weight: bold;\n  user-select: none;\n  font-size: 17px;\n  cursor: default;\n}\n\n.spriteAddMenuItem:hover {\n  cursor: pointer;\n  background: rgba(0,0,0,0.5);\n}\n\n.spriteAddMenuItem > img {\n  width: 23px;\n  height: 23px;\n  object-fit: contain;\n}\n\n.customBlockDialogBG {\n  position: fixed;\n  width: 100svw;\n  height: 100svh;\n  top: 0;\n  left: 0;\n  background: rgba(0, 0, 0, 0.5);\n}\n.customBlockDialogBox {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  border-radius: 10px;\n  box-sizing: border-box;\n  background: #5c5c5c;\n  transform: translate(-50%, -50%);\n  padding: 10px 10px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  max-width: calc(100% - 100px);\n  max-height: calc(100% - 50px);\n  overflow: auto;\n  color: #ffffff;\n}\n.customBlockWorkspace {\n  flex-grow: 1;\n  display: block;\n  min-width: calc(100% - 1px);\n  min-height: 100%;\n  max-width: 100%;\n  max-height: 100%;\n}\n\n.customBlockButtons {\n  flex-grow: 0;\n  flex-shrink: 0;\n  display: flex;\n  width: 100%;\n  align-items: center;\n  justify-content: center;\n}\n\n.loadingDialogBG {\n  background: #363636;\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  z-index: 99999999;\n}\n\n.loadingDialogBox {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  align-items: center;\n  z-index: 99999999;\n  font-weight: bold;\n  justify-content: center;\n  display: flex;\n  flex-direction: column;\n  color: #ffffff;\n}\n\n.loader2Container {\n  width: 120px;\n  height: 120px;\n  position: relative;\n}\n\n.loaderBlock1 {\n  animation-name: loaderBlock1Anim;\n  animation-duration: var(--loader2-time);\n    background-image: url(\"loading/blocks1.svg\");\n}\n\n.loaderBlock3 {\n  animation-name: loaderBlock3Anim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/blocks3.svg\");\n}\n\n.loaderBlock2 {\n  animation-name: loaderBlock2Anim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/blocks2.svg\");\n}\n\n.loaderBlockIcon {\n  animation-name: loaderBlockIconAnim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/three.svg\");\n}\n\n.loaderBlock {\n  width: 120px;\n  height: 120px;\n  animation-iteration-count: infinite;\n\n  position: absolute;\n  top: 0;\n  left: 0;\n\n  background-repeat: no-repeat;\n  background-position: center center;\n  background-size: 100% 100%;\n  transform-origin: bottom;\n\n  filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.25));\n}\n\n@keyframes loaderBlock1Anim {\n  0% {\n    transform: translate(0, -50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  10% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  15% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  85% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  100% {\n    transform: translate(0, -50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n}\n\n@keyframes loaderBlock3Anim {\n  0% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  20% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  30% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  70% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  100% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n}\n\n@keyframes loaderBlock2Anim {\n  0% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n  40% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n  45% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n    transform-origin: center;\n  }\n  85% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n    transform-origin: center;\n  }\n  100% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n}\n\n@keyframes loaderBlockIconAnim {\n  0% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n  }\n  45% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    transform-origin: center;\n  }\n  60% {\n    transform-origin: center;\n    transform: translate(0, 0) scale(1.2, 1.2) rotate(360deg);\n    animation-timing-function: ease-in;\n    filter: drop-shadow(4px 4px 8px rgba(0, 255, 13, 1));\n  }\n  75% {\n    transform-origin: center;\n    transform: translate(0, 0) scale(1, 1) rotate(360deg);\n    animation-timing-function: ease-out;\n  }\n  100% {\n    transform: translate(0, 0) scale(1, 1) rotate(360deg);\n    animation-timing-function: ease-out;\n  }\n}\n\n.errorLogsContainer {\n  width: 100%;\n  height: 100%;\n  box-sizing: border-box;\n  padding: 10px 10px;\n  display: flex;\n  flex-direction: column;\n  color: #ffffff;\n  background-color: #000000;\n  overflow: auto;\n}\n\n.errorLogError {\n  color: #ff4c4c;\n  font-weight: bold;\n  margin-bottom: 2px;\n}\n\n/* Error glow is provided via the workspace SVG filter; keep a minimal\n   class so we can target blocks in case the filter can't be applied. */\n.blocklyBlockSvg.error-glow {\n  /* Prefer the workspace SVG filter for the glow; keep a harmless\n     property so linters don't complain about an empty ruleset. */\n  outline: none;\n}\n\n.fullscreenModeContainerMain {\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: column;\n  background: #363636;\n  z-index: 99999999;\n}\n\n.fullscreenModeContainer {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.blocklyFlyoutLabelText {\n  fill: #ffffff;\n}\n\n.blocklyFlyoutButton .blocklyText {\n  fill: #ffffff;\n}\n\n.blocklyFlyoutButton:hover {\n  cursor: pointer;\n  fill: rgba(0,0,0,0.5);\n}\n\n.blocklyFlyoutButton:hover > .blocklyText {\n  font-weight: bold;\n}\n\n.loadingProgressMain {\n  width: 200px;\n  height: 30px;\n  box-sizing: border-box;\n  background: rgba(255, 255, 255, 0.3);\n  border-style: solid;\n  border-radius: 3px;\n  border-width: 3px;\n  border-color: rgba(0, 0, 0, 0.7);\n}\n.loadingProgressInner {\n  height: 100%;\n  background: rgba(255, 255, 255, 0.5);\n}\n\n.dialogBackground {\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  background-color: rgba(0, 0, 0, 0.5); /* Optional: semi-transparent background */\n  backdrop-filter: blur(2px); /* The blur effect */\n  -webkit-backdrop-filter: blur(2px); /* For Safari */\n}\n\n.gameSettingsBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n}\n\n.gameSettingSelection {\n  display: flex;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow: auto;\n  gap: 2px;\n}\n\n.gameSelectionCategory {\n  display: block;\n  flex-direction: row;\n  flex-grow: 1;\n  width: 100%;\n  overflow: auto;\n}\n\n.centerMiddle {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.infoDiv {\n\twidth: 100%;\n\theight: fit-content;\n\tmin-height: 70px;\n\tbackground: rgba(0,0,0,0.5);\n\tmargin-bottom:2px;\n\tmargin-top:2px;\n\tborder-radius: 10px;\n  padding: 5px 10px;\n  box-sizing: border-box;\n  display: block;\n}\n\n.gameBackupBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n}\n\n.gameBackupSelection {\n  display: flex;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow: auto;\n  gap: 2px;\n}\n\n.gameBackupCategory {\n  display: block;\n  flex-direction: row;\n  flex-grow: 1;\n  width: 100%;\n  overflow: auto;\n}\n\n.backupThumbnail {\n  height: 150px;\n  object-fit: contain;\n  border-radius: 10px;\n  user-select: none;\n  pointer-events: none;\n}\n\n.backupEntry {\n  display: flex;\n  padding: 5px;\n  box-sizing: border-box;\n  border-radius: 5px;\n  background: #8f8f8f;\n  margin: 3px;\n  color: white;\n  font-weight: bold;\n  flex-direction: row;\n  align-items: center;\n  gap: 8px;\n}\n\n.backupTimestamp {\n  font-size: 20px;\n  color: #c7c7c7;\n}\n\n.backupNoticeMenuBarItem {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: row;\n  gap: 3px;\n  flex-wrap: none;\n  font-size: 9px;\n}\n\n.gameExportBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n  box-sizing: border-box;\n}\n\n.exportGameTypeSelectionContainer {\n  display: flex;\n  width: 100%;\n\theight: fit-content;\n\tflex-shrink: 0;\n\tflex-grow: 0;\n  flex-direction: row;\n  padding: 2px 2px;\n  box-sizing: border-box;\n  gap: 5px;\n  text-wrap: nowrap;\n  align-items: center;\n}\n\n.exportGameTypeSelection {\n  display: flex;\n\theight: fit-content;\n\tflex-grow: 1;\n\toverflow: auto;\n\tgap: 2px;\n}\n\n.exportGameType {\n\tdisplay: flex;\n\tbackground: rgba(0,0,0,0.3);\n\tpadding: 3px 3px;\n\ttext-wrap: nowrap;\n\tborder-radius: 2px;\n\tfont-weight: bold;\n\tfont-size: 18px;\n\tcolor: rgba(255,255,255,0.5);\n\tflex-grow: 0;\n\tflex-shrink: 0;\n\tbox-sizing: border-box;\n\twidth: fit-content;\n\theight: fit-content;\n\tgap: 3px;\n\talign-items: center;\n\tuser-select: none;\n  border-style: solid;\n  border-width: 3px;\n  border-color: rgba(0,0,0,0);\n}\n\n.exportGameType > img {\n\twidth: 30px;\n\theight: 30px;\n\tobject-fit: contain;\n  padding: 3px 3px;\n}\n\n.exportGameType:hover {\n  background: rgba(0,0,0,0.2);\n  text-decoration: underline;\n  cursor: pointer;\n}\n\n.exportGameType[selected] {\n  text-decoration: unset;\n  cursor: unset;\n  background: rgba(0,0,0,0);\n  border-bottom-color: rgba(255, 255, 255, 1);\n}\n\n.exportGameType[selected] > img {\n  width: 30px;\n\theight: 30px;\n\tobject-fit: contain;\n  border-radius: 5px;\n  background: rgba(0,0,0,0.4);\n}\n\n.exportOptionsContainer {\n  width: 100%;\n  flex-grow: 1;\n  overflow: auto;\n\n  display: flex;\n  flex-direction: column;\n\n  gap: 4px;\n}\n\n.exportOptionsDescription {\n  width: 100%;\n  height: fit-content;\n  padding: 10px 10px;\n  border-radius: 5px;\n  color: rgba(255,255,255,0.8);\n  background: rgba(0,0,0,0.6);\n  overflow: auto;\n  display: block;\n  box-sizing: border-box;\n}\n\n.exportOptionsOptionContainer {\n  width: 100%;\n  height: fit-content;\n  padding: 10px 10px;\n  border-radius: 5px;\n  color: rgba(255,255,255,0.8);\n  background: rgba(0,0,0,0.6);\n  overflow: auto;\n  display: block;\n  box-sizing: border-box;\n}\n\n.exportOptionsOptionTitle {\n  font-weight: bold;\n  font-size: 25px;\n  margin-bottom: 3px;\n}\n\n.exportOptionsOptionDescription {\n\twhite-space: pre-wrap;\n  overflow-wrap: break-word;\n  word-break: normal;\n}\n\n.textInput {\n\tall: unset;\n\tpadding: 2px 2px;\n\twidth: fit-content;\n\theight: fit-content;\n\tbackground: rgba(255,255,255,1);\n\tcolor: rgba(0,0,0,1);\n\tborder-style: solid;\n\tborder-width: 1px;\n\tborder-color: rgba(50,50,50,1);\n\tfont-size: 13px;\n}\n\n.exportButtonsContainer {\n\tdisplay: flex;\n\tflex-direction: row;\n\tgap: 2px;\n\tpadding: 2px 2px;\n\toverflow: auto;\n}\n\n.exportButton {\n\tdisplay: flex;\n\tbackground: rgba(255,255,255,0.5);\n\tcolor: rgba(0,0,0,0.7);\n\tborder-radius: 5px;\n\tpadding: 5px 5px;\n\tfont-weight: bold;\n\talign-items: center;\n\tgap: 3px;\n\tuser-select: none;\n}\n\n.exportButton > img {\n\twidth: 30px;\n\theight: 30px;\n\tobject-fit: contain;\n\tbackground: rgba(0,0,0,0.3);\n\tpadding: 2px 2px;\n\tborder-radius: 3px;\n}\n\n.exportButton:hover {\n\tcursor: pointer;\n\tbackground: rgba(255,255,255,0.7);\n}\n\n.modeDivContainer {\n  display: flex;\n  width: 100%;\n  flex-direction: column;\n  flex: 1 1 auto;\n  min-height: 350px;\n  position: relative;\n}\n\n.modeTabs {\n  display: flex;\n  width: 100%;\n  min-height: 50px;\n  height: fit-content;\n  flex-direction: row;\n  overflow: auto;\n  gap: 0.5px;\n}\n\n.modeTabContainer {\n  width: fit-content;\n  height: 50px;\n  position: relative;\n  overflow: hidden;\n}\n\n.costumeLibraryImg {\n  padding: 5px 5px;\n  background: rgba(0,0,0,0.5);\n  border-radius: 4px;\n  width: 70px;\n  height: 70px;\n  object-fit: contain;\n}\n\n.linkLibraryDialogBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n}\n\n.libraryDialogList {\n  width: 100%;\n  flex-grow: 1;\n  flex-shrink: 1;\n  overflow: auto;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  gap: 2px;\n}\n\n.libraryOption {\n  min-width: 100px;\n  min-height: 100px;\n  width: fit-content;\n  height: fit-content;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  box-sizing: border-box;\n  padding: 4px 4px;\n  border-radius: 10px;\n  border-width: 4px;\n  border-style: solid;\n  border-color: #000000;\n  margin: 2px;\n  user-select: none;\n  font-weight: bold;\n}\n\n.libraryOption:hover {\n  border-color: rgb(121, 121, 121);\n  cursor: pointer;\n}\n.libraryOption[selected] {\n  border-color: #32d600;\n  cursor: unset;\n}\n\n.libraryDialogButtons {\n  flex-grow: 0;\n  flex-shrink: 0;\n  display: flex;\n  width: 100%;\n  align-items: center;\n  justify-content: center;\n}\n\n.libraryLinkIcon {\n  width: 20px;\n  height: 20px;\n  object-fit: contain;\n  padding: 4px 4px;\n}";
-
-/***/ }),
-
-/***/ 758:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var JavascriptTranslation = {};
-var utilFunctions = __webpack_require__(9547);
-var starterBlocks = __webpack_require__(8355);
-starterBlocks.push("event_whengamestarts"); //When game starts is a on-event block.
-JavascriptTranslation["event_whengamestarts"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  return function (insideCode) {
-    if (options.EXECUTE_BLOCKS) {
-      //Means ONLY execute blocks, don't add listeners to the sprite.
-      return `${insideCode}`;
-    } else {
-      return `sprite.addStackListener(
-        "started",
-        ${JSON.stringify(jsonblock.id)},
-        async function () {
-        ${utilFunctions.startThreadStack(jsonblock)}
-        ${insideCode}
-        ${utilFunctions.endThreadStack(jsonblock)}
-      });`;
-    }
-  };
-};
-starterBlocks.push("event_beforegamestarts"); //When game starts is a on-event block.
-JavascriptTranslation["event_beforegamestarts"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  return function (insideCode) {
-    if (options.EXECUTE_BLOCKS) {
-      //Means ONLY execute blocks, don't add listeners to the sprite.
-      return `${insideCode}`;
-    } else {
-      return `sprite.addStackListener(
-        "beforestart",
-        ${JSON.stringify(jsonblock.id)},
-        async function () {
-        ${utilFunctions.startThreadStack(jsonblock)}
-        ${insideCode}
-        ${utilFunctions.endThreadStack(jsonblock)}
-      });`;
-    }
-  };
-};
-
-starterBlocks.push("event_ggm3_whenbroadcasted");
-JavascriptTranslation["event_ggm3_whenbroadcasted"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var BROADCAST_NAME = utils.getField(jsonblock, "BROADCAST_NAME", options);
-  return function (insideCode) {
-    if (options.EXECUTE_BLOCKS) {
-      //Means ONLY execute blocks, don't add listeners to the sprite.
-      return `${insideCode}`;
-    } else {
-      return `sprite.addBroadcastListener(
-        ${JSON.stringify(BROADCAST_NAME)},
-        ${JSON.stringify(jsonblock.id)},
-        async function () {
-        ${utilFunctions.startThreadStack(jsonblock)}
-        ${insideCode}
-        ${utilFunctions.endThreadStack(jsonblock)}
-      });`;
-    }
-  };
-};
-
-JavascriptTranslation["event_ggm3_broadcast"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var BROADCAST_NAME = utils.getInput(
-    jsonblock,
-    "BROADCAST_NAME",
-    options,
-    "undefined",
-  );
-  return `engine.broadcast("" + (${BROADCAST_NAME}));`;
-};
-
-JavascriptTranslation["event_ggm3_broadcast_and_wait"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var BROADCAST_NAME = utils.getInput(
-    jsonblock,
-    "BROADCAST_NAME",
-    options,
-    "undefined",
-  );
-  return `${utilFunctions.aliveCheck()}await engine.broadcastAndWait("" + (${BROADCAST_NAME}));${utilFunctions.aliveCheck()}`;
-};
-
-JavascriptTranslation["event_ggm3_frame_broadcast"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var BROADCAST_NAME = utils.getInput(
-    jsonblock,
-    "BROADCAST_NAME",
-    options,
-    "undefined",
-  );
-  return `engine.broadcastOnNextFrame("" + (${BROADCAST_NAME}));`;
-};
-
-JavascriptTranslation["event_ggm3_broadcast_menu"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var BROADCAST_NAME = utils.getField(jsonblock, "BROADCAST_NAME", options);
-  return JSON.stringify(BROADCAST_NAME);
-};
-
-module.exports = JavascriptTranslation;
-
 
 /***/ }),
 
@@ -4609,115 +3943,15 @@ __webpack_require__(5334);
 
 /***/ }),
 
-/***/ 1246:
-/***/ ((module) => {
+/***/ 1287:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-function blockToJSON(block) {
-  var myjson = {};
-  //myjson.blockObject = block;
-  myjson.type = block.type;
-  myjson.id = block.id;
 
-  if (typeof block.warp_ !== "undefined") {
-    myjson.warp = block.warp_;
-  }
-  if (typeof block.procCode_ !== "undefined") {
-    myjson.procCode = block.procCode_;
-  }
-  if (typeof block.argumentIds_ !== "undefined") {
-    myjson.argumentIds = block.argumentIds_;
-  }
-  if (typeof block.displayNames_ !== "undefined") {
-    myjson.displayNames = block.displayNames_;
-  }
-  if (typeof block.argumentDefaults_ !== "undefined") {
-    myjson.argumentDefaults = block.argumentDefaults_;
-  }
+//Register the blocks here.
 
-  var jsonFields = [];
-  var jsonInputs = [];
-  if (block.inputList) {
-    for (var input of block.inputList) {
-      if (input.type == Blockly.DUMMY_INPUT) {
-        //Nothing!
-      } else {
-        var inputjson = {};
-        var childBlock = input.connection.targetBlock();
-        if (input.type == Blockly.INPUT_VALUE) {
-          inputjson.type = "value";
-        } else if (input.type == Blockly.NEXT_STATEMENT) {
-          inputjson.type = "statement";
-        }
-        //var shadow = input.connection.getShadowDom();
-        //if (shadow && (!childBlock || !childBlock.isShadow())) {
-        //
-        //}
-        if (childBlock) {
-          inputjson.name = input.name;
-
-          inputjson.block = blockToJSON(childBlock);
-          jsonInputs.push(inputjson);
-        }
-      }
-
-      for (var field of input.fieldRow) {
-        if (field.name && field.SERIALIZABLE) {
-          if (field.referencesVariables()) {
-            var id = field.getValue();
-            if (!id) {
-              field.initModel();
-              id = field.getValue();
-            }
-
-            var variable = field.getVariable();
-            if (variable) {
-              jsonFields.push({
-                variable: {
-                  name: variable.name,
-                  id: variable.getId(),
-                },
-                name: field.name,
-                text: field.getText(),
-              });
-            }
-          } else {
-            jsonFields.push({
-              value: field.getValue(),
-              name: field.name,
-              text: field.getText(),
-            });
-          }
-        }
-      }
-    }
-  }
-
-  myjson.fields = jsonFields;
-  myjson.inputs = jsonInputs;
-
-  if (block.getNextBlock) {
-    var nextBlock = block.getNextBlock();
-    if (nextBlock) {
-      myjson.next = blockToJSON(nextBlock);
-    }
-  }
-  return myjson;
-}
-
-function workspaceToJSON(workspace) {
-  var blocks = workspace.getTopBlocks(true);
-  var generated = [];
-  for (var block of blocks) {
-    generated.push(blockToJSON(block));
-  }
-  return generated;
-}
-
-module.exports = {
-  blockToJSON,
-  workspaceToJSON,
-};
-
+__webpack_require__(4534);
+__webpack_require__(6537);
+__webpack_require__(734);
 
 /***/ }),
 
@@ -5294,97 +4528,6 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
 /***/ }),
 
-/***/ 1718:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var JavascriptTranslation = {};
-var utilFunctions = __webpack_require__(9547);
-var outputBlocks = __webpack_require__(7147);
-
-outputBlocks.push("sensing_mousex");
-JavascriptTranslation["sensing_mousex"] = function (jsonblock, utils, options) {
-  return `engine.mouseX`;
-};
-
-outputBlocks.push("sensing_mousey");
-JavascriptTranslation["sensing_mousey"] = function (jsonblock, utils, options) {
-  return `engine.mouseY`;
-};
-
-outputBlocks.push("sensing_mousedown");
-JavascriptTranslation["sensing_mousedown"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  return `engine.mouseIsDown`;
-};
-
-outputBlocks.push("sensing_keyoptions");
-JavascriptTranslation["sensing_keyoptions"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var KEY_OPTION = utils.getField(
-    jsonblock,
-    "KEY_OPTION",
-    options,
-    "undefined",
-  );
-  return JSON.stringify(KEY_OPTION);
-};
-
-outputBlocks.push("sensing_keypressed");
-JavascriptTranslation["sensing_keypressed"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var KEY_OPTION = utils.getInput(
-    jsonblock,
-    "KEY_OPTION",
-    options,
-    "undefined",
-  );
-  return `!!engine.keysPressed[${KEY_OPTION}]`;
-};
-
-outputBlocks.push("sensing_touchingobjectmenu");
-JavascriptTranslation["sensing_touchingobjectmenu"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var TOUCHINGOBJECTMENU = utils.getField(
-    jsonblock,
-    "TOUCHINGOBJECTMENU",
-    options,
-    "undefined",
-  );
-  return JSON.stringify(TOUCHINGOBJECTMENU);
-};
-
-outputBlocks.push("sensing_touchingobject");
-JavascriptTranslation["sensing_touchingobject"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var TOUCHINGOBJECTMENU = utils.getInput(
-    jsonblock,
-    "TOUCHINGOBJECTMENU",
-    options,
-    "undefined",
-  );
-  return `sprite.isTouchingSprite(${TOUCHINGOBJECTMENU})`;
-};
-
-module.exports = JavascriptTranslation;
-
-
-/***/ }),
-
 /***/ 1764:
 /***/ ((module) => {
 
@@ -5405,119 +4548,6 @@ function valueReport(v) {
 }
 
 module.exports = { valueReport };
-
-
-/***/ }),
-
-/***/ 1868:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var JavascriptTranslation = {};
-var utilFunctions = __webpack_require__(9547);
-var outputBlocks = __webpack_require__(7147);
-
-outputBlocks.push("loader_costume");
-JavascriptTranslation["loader_costume"] = function (jsonblock, utils, options) {
-  var COSTUME = utils.getField(jsonblock, "COSTUME", options);
-  return JSON.stringify(COSTUME);
-};
-
-outputBlocks.push("loader_costume_scale");
-JavascriptTranslation["loader_costume_scale"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var COSTUME = utils.getInput(jsonblock, "COSTUME", options, "undefined");
-  return `(await sprite.blockGetCostumeScale(${COSTUME}))`;
-};
-
-outputBlocks.push("loader_costumeisloaded");
-JavascriptTranslation["loader_costumeisloaded"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var COSTUME = utils.getInput(jsonblock, "COSTUME", options, "undefined");
-  return `sprite.isCostumeLoaded(${COSTUME})`;
-};
-
-JavascriptTranslation["loader_loadcostume"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var COSTUME = utils.getInput(jsonblock, "COSTUME", options, "undefined");
-  return `await sprite.blockLoadCostume(${COSTUME});${utilFunctions.aliveCheck()}`;
-};
-
-JavascriptTranslation["loader_deloadcostume"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var COSTUME = utils.getInput(jsonblock, "COSTUME", options, "undefined");
-  return `await sprite.blockDeloadCostume(${COSTUME});${utilFunctions.aliveCheck()}`;
-};
-
-JavascriptTranslation["loader_rendercostumescale"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var COSTUME = utils.getInput(jsonblock, "COSTUME", options, "undefined");
-  var SCALE = utils.getInput(jsonblock, "SCALE", options, "undefined");
-  return `sprite.setCostumeRenderScale(${COSTUME},${SCALE});`;
-};
-
-JavascriptTranslation["loader_setrenderscale"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var COSTUME = utils.getInput(jsonblock, "COSTUME", options, "undefined");
-  return `sprite.blockRerenderCostume(${COSTUME});`;
-};
-
-outputBlocks.push("loader_sound_option");
-JavascriptTranslation["loader_sound_option"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var SOUND = utils.getField(jsonblock, "SOUND", options);
-  return JSON.stringify(SOUND);
-};
-
-outputBlocks.push("loader_soundisloaded");
-JavascriptTranslation["loader_soundisloaded"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var SOUND = utils.getInput(jsonblock, "SOUND", options, "null");
-  return `sprite.soundIsLoaded(${SOUND})`;
-};
-
-JavascriptTranslation["loader_loadsound"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var SOUND = utils.getInput(jsonblock, "SOUND", options, "null");
-  return `await sprite.blockLoadSound(${SOUND});`;
-};
-
-JavascriptTranslation["loader_deloadsound"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var SOUND = utils.getInput(jsonblock, "SOUND", options, "null");
-  return `await sprite.blockDeloadSound(${SOUND});`;
-};
-
-module.exports = JavascriptTranslation;
 
 
 /***/ }),
@@ -7812,6 +6842,72 @@ module.exports = Sprite;
 
 /***/ }),
 
+/***/ 2391:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var CBlockType = __webpack_require__(7561);
+var {BlockCompilerInstance} = __webpack_require__(421);
+var {CBlockDefinition} = __webpack_require__(9822);
+
+class BlockCompiler {
+    constructor () {
+        this.blocks = {};
+    }
+
+    newInstance(options) {
+        return new BlockCompilerInstance(this, options);
+    }
+
+    defineBlock (name, options) {
+        if (typeof name !== "string") {
+            throw new Error("First argument 'name' is not string");
+        }
+        if (typeof options !== "object") {
+            throw new Error("Second argument 'options' is not object.");
+        }
+
+        var block = new CBlockDefinition(name, options);
+        this.blocks[name] = block;
+    }
+
+    removeBlock (name) {
+        this.blocks[name] = "";
+        delete this.blocks[name];
+    }
+
+    getBlockDefinition (name) {
+        var def = this.blocks[name];
+        if (def) {
+            return def;
+        }
+        return null;
+    }
+
+    isStarterBlock(block) { //Provided is blockly block
+        var def = this.getBlockDefinition(block.type);
+        if (!def) {
+            return false;
+        }
+        return def.type == CBlockType.STARTER_HAT;
+    }
+
+    isOutputBlock(block) { //Provided is blockly block
+        var def = this.getBlockDefinition(block.type);
+        if (!def) {
+            return false;
+        }
+        return def.type == CBlockType.OUTPUT;
+    }
+
+    isHatBlock(block) {
+        return this.isStarterBlock(block);
+    }
+}
+
+module.exports = new BlockCompiler();
+
+/***/ }),
+
 /***/ 2456:
 /***/ ((module) => {
 
@@ -8592,7 +7688,7 @@ var engine = __webpack_require__(9940);
 var blocks = __webpack_require__(9436);
 var costumeViewer = __webpack_require__(5604);
 var soundViewer = __webpack_require__(9421);
-var compiler = __webpack_require__(640);
+var compiler = __webpack_require__(264);
 var blockMenu = __webpack_require__(905);
 var isProjectDirty = false;
 var { valueReport } = __webpack_require__(1764);
@@ -8612,6 +7708,10 @@ var deps = {
   soundViewer,
   compiler,
   blockMenu,
+  compilerInstance: compiler.newInstance({
+    useExportCompile: false,
+    useBlockNumberIDs: false,
+  }),
   valueReport,
   makeSortable,
   loadBlockMenus,
@@ -8821,40 +7921,6 @@ class SpriteMaster {
 }
 
 module.exports = SpriteMaster;
-
-
-/***/ }),
-
-/***/ 3131:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var JavascriptTranslation = {};
-var utilFunctions = __webpack_require__(9547);
-var outputBlocks = __webpack_require__(7147);
-
-outputBlocks.push("globaldata_get");
-JavascriptTranslation["globaldata_get"] = function (jsonblock, utils, options) {
-  var VARIABLE = utils.getField(jsonblock, "VARIABLE");
-  return `engine.globalVariables[${JSON.stringify(VARIABLE)}]`;
-};
-
-JavascriptTranslation["globaldata_set"] = function (jsonblock, utils, options) {
-  var VARIABLE = utils.getField(jsonblock, "VARIABLE");
-  var VALUE = utils.getInput(jsonblock, "VALUE", "undefined");
-  return `engine.globalVariables[${JSON.stringify(VARIABLE)}] = ${VALUE};`;
-};
-
-JavascriptTranslation["globaldata_changeby"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VARIABLE = utils.getField(jsonblock, "VARIABLE");
-  var VALUE = utils.getInput(jsonblock, "VALUE", "undefined");
-  return `engine.globalVariables[${JSON.stringify(VARIABLE)}] = (+(engine.globalVariables[${JSON.stringify(VARIABLE)}]) || 0) + (+(${VALUE}) || 0);`;
-};
-
-module.exports = JavascriptTranslation;
 
 
 /***/ }),
@@ -9466,236 +8532,6 @@ module.exports = {
   backupDeps,
   getBackupNotice,
 };
-
-
-/***/ }),
-
-/***/ 3505:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var JavascriptTranslation = {};
-var utilFunctions = __webpack_require__(9547);
-var outputBlocks = __webpack_require__(7147);
-
-outputBlocks.push("json_new");
-JavascriptTranslation["json_new"] = function (jsonblock, utils, options) {
-  var TYPE = utils.getField(jsonblock, "TYPE", options);
-  if (TYPE == "object") {
-    return "({})";
-  }
-  if (TYPE == "array") {
-    return "([])";
-  }
-};
-
-JavascriptTranslation["json_setto"] = function (jsonblock, utils, options) {
-  var NAME = utils.getInput(jsonblock, "NAME", options, "undefined");
-  var VALUE = utils.getInput(jsonblock, "VALUE", options, "undefined");
-  var OBJECT = utils.getInput(jsonblock, "OBJECT", options, "{}");
-
-  return `(${OBJECT})[${NAME}] = ${VALUE};`;
-};
-
-outputBlocks.push("json_geton");
-JavascriptTranslation["json_geton"] = function (jsonblock, utils, options) {
-  var NAME = utils.getInput(jsonblock, "NAME", options, "undefined");
-  var OBJECT = utils.getInput(jsonblock, "OBJECT", options, "{}");
-
-  return `(${OBJECT})[${NAME}]`;
-};
-
-outputBlocks.push("json_keys");
-JavascriptTranslation["json_keys"] = function (jsonblock, utils, options) {
-  var OBJECT = utils.getInput(jsonblock, "OBJECT", options, "{}");
-
-  return `(Object.keys(${OBJECT}))`;
-};
-
-outputBlocks.push("json_tostring");
-JavascriptTranslation["json_tostring"] = function (jsonblock, utils, options) {
-  var OBJECT = utils.getInput(jsonblock, "OBJECT", options, "{}");
-
-  return `(JSON.stringify(${OBJECT}))`;
-};
-
-outputBlocks.push("json_fromstring");
-JavascriptTranslation["json_fromstring"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var OBJECT = utils.getInput(jsonblock, "OBJECT", options, '"{}"');
-
-  return `(JSON.parse(${OBJECT}))`;
-};
-
-JavascriptTranslation["json_deleteon"] = function (jsonblock, utils, options) {
-  var NAME = utils.getInput(jsonblock, "NAME", options, "undefined");
-  var OBJECT = utils.getInput(jsonblock, "OBJECT", options, "{}");
-
-  return `delete (${OBJECT})[${NAME}];`;
-};
-
-JavascriptTranslation["json_array_push"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options, "undefined");
-  var OBJECT = utils.getInput(jsonblock, "OBJECT", options, "[]");
-
-  return `(${OBJECT}).push(${VALUE});`;
-};
-
-JavascriptTranslation["json_array_unshift"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options, "undefined");
-  var OBJECT = utils.getInput(jsonblock, "OBJECT", options, "[]");
-
-  return `(${OBJECT}).unshift(${VALUE});`;
-};
-
-outputBlocks.push("json_array_lengthof");
-JavascriptTranslation["json_array_lengthof"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var OBJECT = utils.getInput(jsonblock, "OBJECT", options, "[]");
-
-  return `(${OBJECT}).length`;
-};
-
-outputBlocks.push("json_array_indexof");
-JavascriptTranslation["json_array_indexof"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var OBJECT = utils.getInput(jsonblock, "OBJECT", options, "[]");
-  var VALUE = utils.getInput(jsonblock, "VALUE", options, "undefined");
-
-  return `(${OBJECT}).indexOf(${VALUE})`;
-};
-
-outputBlocks.push("json_has_key");
-JavascriptTranslation["json_has_key"] = function (jsonblock, utils, options) {
-  var NAME = utils.getInput(jsonblock, "NAME", options, "undefined");
-  var OBJECT = utils.getInput(jsonblock, "OBJECT", options, "{}");
-
-  return `Object.prototype.hasOwnProperty.call(${OBJECT}, ${NAME})`;
-};
-
-outputBlocks.push("json_get_path");
-JavascriptTranslation["json_get_path"] = function (jsonblock, utils, options) {
-  var PATH = utils.getInput(jsonblock, "PATH", options, "undefined");
-  var OBJECT = utils.getInput(jsonblock, "OBJECT", options, "[]");
-  var DEFAULT = utils.getInput(jsonblock, "DEFAULT", options, "undefined");
-
-  return `(function(o,p,d){var cur=o; if(cur==null) return d; if(Array.isArray(p)){ for(var i=0;i<p.length;i++){ cur=cur[p[i]]; if(cur==null) return d; } return cur; } p=(""+p).split('.'); for(var i=0;i<p.length;i++){ cur=cur[p[i]]; if(cur==null) return d; } return cur;})(${OBJECT},${PATH},${DEFAULT})`;
-};
-
-JavascriptTranslation["json_set_path"] = function (jsonblock, utils, options) {
-  var PATH = utils.getInput(jsonblock, "PATH", options, "undefined");
-  var VALUE = utils.getInput(jsonblock, "VALUE", options, "undefined");
-  var OBJECT = utils.getInput(jsonblock, "OBJECT", options, "[]");
-
-  return `(function(o,p,v){var cur=o; if(cur==null) return; if(!Array.isArray(p)) p=(""+p).split('.'); for(var i=0;i<p.length-1;i++){ var k=p[i]; if(cur[k]==null || typeof cur[k] !== 'object') cur[k]={}; cur=cur[k]; } cur[p[p.length-1]]=v;})(${OBJECT},${PATH},${VALUE});`;
-};
-
-JavascriptTranslation["json_delete_path"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var PATH = utils.getInput(jsonblock, "PATH", options, "undefined");
-  var OBJECT = utils.getInput(jsonblock, "OBJECT", options, "{}");
-
-  return `(function(o,p){var cur=o; if(cur==null) return; if(!Array.isArray(p)) p=(""+p).split('.'); for(var i=0;i<p.length-1;i++){ cur=cur[p[i]]; if(cur==null) return; } delete cur[p[p.length-1]];})(${OBJECT},${PATH});`;
-};
-
-outputBlocks.push("json_array_pop");
-JavascriptTranslation["json_array_pop"] = function (jsonblock, utils, options) {
-  var OBJECT = utils.getInput(jsonblock, "OBJECT", options, "[]");
-
-  return `(${OBJECT}).pop()`;
-};
-
-outputBlocks.push("json_array_contains");
-JavascriptTranslation["json_array_contains"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options, "undefined");
-  var OBJECT = utils.getInput(jsonblock, "OBJECT", options, "[]");
-
-  return `(${OBJECT}).includes(${VALUE})`;
-};
-
-outputBlocks.push("json_clone");
-JavascriptTranslation["json_clone"] = function (jsonblock, utils, options) {
-  var OBJECT = utils.getInput(jsonblock, "OBJECT", options, "{}");
-
-  return `(JSON.parse(JSON.stringify(${OBJECT})))`;
-};
-
-outputBlocks.push("json_parse_safe");
-JavascriptTranslation["json_parse_safe"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var STRING = utils.getInput(jsonblock, "STRING", options, "undefined");
-  var DEFAULT = utils.getInput(jsonblock, "DEFAULT", options, "undefined");
-
-  return `(function(s,d){try{return JSON.parse(s);}catch(e){return d;}})(${STRING},${DEFAULT})`;
-};
-
-outputBlocks.push("json_pretty_print");
-JavascriptTranslation["json_pretty_print"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var OBJECT = utils.getInput(jsonblock, "OBJECT", options, "{}");
-  var INDENT = utils.getInput(jsonblock, "INDENT", options, '""');
-
-  return `(JSON.stringify(${OBJECT}, null, (${INDENT}) || 2))`;
-};
-
-outputBlocks.push("json_typeof");
-JavascriptTranslation["json_typeof"] = function (jsonblock, utils, options) {
-  var OBJECT = utils.getInput(jsonblock, "OBJECT", options, "undefined");
-  return `(typeof ${OBJECT})`;
-};
-
-outputBlocks.push("json_array_split");
-JavascriptTranslation["json_array_split"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var STRING = utils.getInput(jsonblock, "STRING", options, "undefined");
-  var USING = utils.getInput(jsonblock, "USING", options, "undefined");
-  return `(""+${STRING}).split(${USING})`;
-};
-
-outputBlocks.push("json_array_join");
-JavascriptTranslation["json_array_join"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var ARRAY = utils.getInput(jsonblock, "ARRAY", options, "undefined");
-  var USING = utils.getInput(jsonblock, "USING", options, "undefined");
-  return `(${ARRAY}).join(${USING})`;
-};
-
-module.exports = JavascriptTranslation;
 
 
 /***/ }),
@@ -22333,6 +21169,43 @@ module.exports = CollisionSprite;
 
 /***/ }),
 
+/***/ 4534:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("math_number", {
+    type: CBlockType.OUTPUT,
+    func: function (utils) {
+        var NUM = utils.getField("NUM", 0);
+
+        return JSON.stringify(NUM);
+    }
+});
+
+BlockCompiler.defineBlock("math_angle", {
+    type: CBlockType.OUTPUT,
+    func: function (utils) {
+        var NUM = utils.getField("NUM", 0);
+
+        return JSON.stringify(NUM);
+    }
+});
+
+BlockCompiler.defineBlock("text", {
+    type: CBlockType.OUTPUT,
+    func: function (utils) {
+        var TEXT = utils.getField("TEXT", "");
+        
+        return JSON.stringify(TEXT);
+    }
+});
+
+/***/ }),
+
 /***/ 4619:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -22409,94 +21282,6 @@ createBlockContextMenu(
   },
   { blocks: true },
 );
-
-
-/***/ }),
-
-/***/ 4782:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var JavascriptTranslation = {};
-var utilFunctions = __webpack_require__(9547);
-var outputBlocks = __webpack_require__(7147);
-var MYSELF_OUTPUT = JSON.stringify("__myself__");
-
-outputBlocks.push("propertydata_sprite");
-JavascriptTranslation["propertydata_sprite"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var TARGET_SPRITE = utils.getField(
-    jsonblock,
-    "TARGET_SPRITE",
-    options,
-    "null",
-  );
-  return JSON.stringify(TARGET_SPRITE);
-};
-
-outputBlocks.push("propertydata_get");
-JavascriptTranslation["propertydata_get"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var TARGET_SPRITE = utils.getInput(
-    jsonblock,
-    "TARGET_SPRITE",
-    options,
-    "null",
-  );
-  var VARIABLE = utils.getField(jsonblock, "VARIABLE", options, "null");
-  if (TARGET_SPRITE == MYSELF_OUTPUT) {
-    return `sprite.spriteProperties[${JSON.stringify(VARIABLE)}]`;
-  } else {
-    return `sprite.getSProperty(${TARGET_SPRITE}, ${JSON.stringify(VARIABLE)})`;
-  }
-};
-
-JavascriptTranslation["propertydata_set"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var TARGET_SPRITE = utils.getInput(
-    jsonblock,
-    "TARGET_SPRITE",
-    options,
-    "null",
-  );
-  var VARIABLE = utils.getField(jsonblock, "VARIABLE", options, "null");
-  var VALUE = utils.getInput(jsonblock, "VALUE", options, "null");
-  if (TARGET_SPRITE == MYSELF_OUTPUT) {
-    return `sprite.spriteProperties[${JSON.stringify(VARIABLE)}] = ${VALUE};`;
-  } else {
-    return `sprite.setSProperty(${TARGET_SPRITE}, ${JSON.stringify(VARIABLE)}, ${VALUE});`;
-  }
-};
-
-JavascriptTranslation["propertydata_changeby"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var TARGET_SPRITE = utils.getInput(
-    jsonblock,
-    "TARGET_SPRITE",
-    options,
-    "null",
-  );
-  var VARIABLE = utils.getField(jsonblock, "VARIABLE", options, "null");
-  var VALUE = utils.getInput(jsonblock, "VALUE", options, "null");
-  if (TARGET_SPRITE == MYSELF_OUTPUT) {
-    return `sprite.spriteProperties[${JSON.stringify(VARIABLE)}] = (+(sprite.spriteProperties[${JSON.stringify(VARIABLE)}]) || 0) + (+(${VALUE}) || 0);`;
-  } else {
-    return `sprite.changeSProperty(${TARGET_SPRITE}, ${JSON.stringify(VARIABLE)}, ${VALUE});`;
-  }
-};
-
-module.exports = JavascriptTranslation;
 
 
 /***/ }),
@@ -22860,298 +21645,6 @@ document.addEventListener(
   },
   { capture: true },
 );
-
-
-/***/ }),
-
-/***/ 4943:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var JavascriptTranslation = {
-  ...__webpack_require__(8366),
-  ...__webpack_require__(758),
-  ...__webpack_require__(20),
-  ...__webpack_require__(5890),
-  ...__webpack_require__(1718),
-  ...__webpack_require__(8195),
-  ...__webpack_require__(30),
-  ...__webpack_require__(5067),
-  ...__webpack_require__(1868),
-  ...__webpack_require__(6156),
-  ...__webpack_require__(3505),
-  ...__webpack_require__(3131),
-  ...__webpack_require__(5975),
-  ...__webpack_require__(8337),
-  ...__webpack_require__(4782),
-  ...__webpack_require__(73),
-  ...__webpack_require__(5486),
-};
-
-module.exports = JavascriptTranslation;
-
-
-/***/ }),
-
-/***/ 5067:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var JavascriptTranslation = {};
-var utilFunctions = __webpack_require__(9547);
-var outputBlocks = __webpack_require__(7147);
-
-outputBlocks.push("looks_costume");
-JavascriptTranslation["looks_costume"] = function (jsonblock, utils, options) {
-  var COSTUME = utils.getField(jsonblock, "COSTUME", options);
-  return JSON.stringify(COSTUME);
-};
-
-JavascriptTranslation["looks_switchcostumeto"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var COSTUME = utils.getInput(jsonblock, "COSTUME", options);
-  return `sprite.costumeIndex = +(sprite.getCostumeIndex(${COSTUME})) || 0;`;
-};
-
-JavascriptTranslation["looks_nextcostume"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  return `sprite.costumeIndex += 1;if (sprite.costumeIndex+1 > sprite.costumes.length) {sprite.costumeIndex = 0;}`;
-};
-
-outputBlocks.push("looks_costumenumbername");
-JavascriptTranslation["looks_costumenumbername"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var NUMBER_NAME = utils.getField(jsonblock, "NUMBER_NAME", options);
-  return NUMBER_NAME == "number"
-    ? "sprite.costumeIndex"
-    : "sprite.costume.name";
-};
-
-outputBlocks.push("looks_hidden");
-JavascriptTranslation["looks_hidden"] = function (jsonblock, utils, options) {
-  return `(!!sprite.hidden)`;
-};
-
-outputBlocks.push("looks_visible");
-JavascriptTranslation["looks_visible"] = function (jsonblock, utils, options) {
-  return `(!sprite.hidden)`;
-};
-
-JavascriptTranslation["looks_show"] = function (jsonblock, utils, options) {
-  return `sprite.hidden = false;`;
-};
-
-JavascriptTranslation["looks_hide"] = function (jsonblock, utils, options) {
-  return `sprite.hidden = true;`;
-};
-
-JavascriptTranslation["looks_changesizeby"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var CHANGE = utils.getInput(jsonblock, "CHANGE", options);
-  return `sprite.size += +${CHANGE} || 0;`;
-};
-
-JavascriptTranslation["looks_setsizeto"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var SIZE = utils.getInput(jsonblock, "SIZE", options);
-  return `sprite.size = +${SIZE} || 0;`;
-};
-
-outputBlocks.push("looks_size");
-JavascriptTranslation["looks_size"] = function (jsonblock, utils, options) {
-  return `sprite.size`;
-};
-
-outputBlocks.push("looks_xstretch");
-JavascriptTranslation["looks_xstretch"] = function (jsonblock, utils, options) {
-  return `(sprite.scaleX * 100)`;
-};
-
-outputBlocks.push("looks_ystretch");
-JavascriptTranslation["looks_ystretch"] = function (jsonblock, utils, options) {
-  return `(sprite.scaleY * 100)`; //Lol this was stretch x value instead of y, so fixed here.
-};
-
-JavascriptTranslation["looks_stretch_to"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var XVALUE = utils.getInput(jsonblock, "XVALUE", options);
-  var YVALUE = utils.getInput(jsonblock, "YVALUE", options);
-  return `sprite.scaleX = (+(${XVALUE}) || 0) / 100;sprite.scaleY = (+(${YVALUE}) || 0) / 100;`;
-};
-
-JavascriptTranslation["looks_xstretch_to"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options);
-  return `sprite.scaleX = (+(${VALUE}) || 0) / 100;`;
-};
-
-JavascriptTranslation["looks_ystretch_to"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options);
-  return `sprite.scaleY = (+(${VALUE}) || 0) / 100;`;
-};
-
-JavascriptTranslation["looks_xstretch_by"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options);
-  return `sprite.scaleX += (+(${VALUE}) || 0) / 100;`;
-};
-
-JavascriptTranslation["looks_ystretch_by"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options);
-  return `sprite.scaleY += (+(${VALUE}) || 0) / 100;`;
-};
-
-JavascriptTranslation["looks_seteffectto"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var EFFECT = utils.getField(jsonblock, "EFFECT", options);
-  var VALUE = utils.getInput(jsonblock, "VALUE", options);
-  return `sprite.effects.${EFFECT} = +(${VALUE}) || 0;`;
-};
-
-JavascriptTranslation["looks_change_effect_by"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var EFFECT = utils.getField(jsonblock, "EFFECT", options);
-  var BY = utils.getInput(jsonblock, "BY", options);
-  return `sprite.effects.${EFFECT} += +(${BY}) || 0;`;
-};
-
-outputBlocks.push("looks_geteffect");
-JavascriptTranslation["looks_geteffect"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var EFFECT = utils.getField(jsonblock, "EFFECT", options);
-  var VALUE = utils.getInput(jsonblock, "VALUE", options);
-  return `sprite.effects.${EFFECT}`;
-};
-
-JavascriptTranslation["looks_zindex_to"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options);
-  return `sprite.zIndex = (+(${VALUE}) || 0);`;
-};
-JavascriptTranslation["looks_zindex_by"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options);
-  return `sprite.zIndex += (+(${VALUE}) || 0);`;
-};
-outputBlocks.push("looks_zindex");
-JavascriptTranslation["looks_zindex"] = function (jsonblock, utils, options) {
-  return `(sprite.zIndex)`;
-};
-
-JavascriptTranslation["looks_alpha_to"] = function (jsonblock, utils, options) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options);
-  return `sprite.alpha = (+(${VALUE}) || 0);`;
-};
-JavascriptTranslation["looks_alpha_by"] = function (jsonblock, utils, options) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options);
-  return `sprite.alpha += (+(${VALUE}) || 0);`;
-};
-outputBlocks.push("looks_alpha");
-JavascriptTranslation["looks_alpha"] = function (jsonblock, utils, options) {
-  return `(sprite.alpha)`;
-};
-
-JavascriptTranslation["looks_skew_to"] = function (jsonblock, utils, options) {
-  var XVALUE = utils.getInput(jsonblock, "XVALUE", options);
-  var YVALUE = utils.getInput(jsonblock, "YVALUE", options);
-  return `sprite.skewX = +(${XVALUE}) || 0;sprite.skewY = +(${YVALUE}) || 0;`;
-};
-
-JavascriptTranslation["looks_xskew_to"] = function (jsonblock, utils, options) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options);
-  return `sprite.skewX = +(${VALUE}) || 0;`;
-};
-
-JavascriptTranslation["looks_yskew_to"] = function (jsonblock, utils, options) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options);
-  return `sprite.skewY = +(${VALUE}) || 0;`;
-};
-
-JavascriptTranslation["looks_xskew_by"] = function (jsonblock, utils, options) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options);
-  return `sprite.skewX += +(${VALUE}) || 0;`;
-};
-
-JavascriptTranslation["looks_yskew_by"] = function (jsonblock, utils, options) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options);
-  return `sprite.skewY += +(${VALUE}) || 0;`;
-};
-
-outputBlocks.push("looks_xskew");
-JavascriptTranslation["looks_xskew"] = function (jsonblock, utils, options) {
-  return `sprite.skewX`;
-};
-
-outputBlocks.push("looks_yskew");
-JavascriptTranslation["looks_yskew"] = function (jsonblock, utils, options) {
-  return `sprite.skewY`;
-};
-
-outputBlocks.push("looks_costumenames");
-JavascriptTranslation["looks_costumenames"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  return `sprite.costumes.map((c) => c.name)`;
-};
-
-outputBlocks.push("looks_costumes");
-JavascriptTranslation["looks_costumes"] = function (jsonblock, utils, options) {
-  return `sprite.costumes.length`;
-};
-
-/* Throw error test thats used to check if error handling works, so that when something fails unexpectedly then the threads won't leak memory */
-/*JavascriptTranslation["error_test"] = function (jsonblock, utils, options) {
-  return `throw new Error("This is an error reported by the block");`;
-};*/
-
-module.exports = JavascriptTranslation;
 
 
 /***/ }),
@@ -24312,96 +22805,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 5486:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var JavascriptTranslation = {};
-var utilFunctions = __webpack_require__(9547);
-var outputBlocks = __webpack_require__(7147);
-
-JavascriptTranslation["tween_to_xy"] = function (jsonblock, utils, options) {
-  var X = utils.getInput(jsonblock, "X", options, "undefined");
-  var Y = utils.getInput(jsonblock, "Y", options, "undefined");
-  var SECONDS = utils.getInput(jsonblock, "SECONDS", options, "undefined");
-  var EASING = utils.getField(jsonblock, "EASING", options, "linear");
-
-  return `${utilFunctions.aliveCheck()}await thread.tweenToXY(${X}, ${Y}, ${SECONDS}, ${JSON.stringify(EASING)});${utilFunctions.aliveCheck()}`;
-};
-
-JavascriptTranslation["tween_to_stretch"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var X = utils.getInput(jsonblock, "X", options, "undefined");
-  var Y = utils.getInput(jsonblock, "Y", options, "undefined");
-  var SECONDS = utils.getInput(jsonblock, "SECONDS", options, "undefined");
-  var EASING = utils.getField(jsonblock, "EASING", options, "linear");
-
-  return `${utilFunctions.aliveCheck()}await thread.tweenToStretchXY(${X}, ${Y}, ${SECONDS}, ${JSON.stringify(EASING)});${utilFunctions.aliveCheck()}`;
-};
-
-JavascriptTranslation["tween_to_size"] = function (jsonblock, utils, options) {
-  var VALUE = utils.getInput(jsonblock, "VALUE", options, "undefined");
-  var SECONDS = utils.getInput(jsonblock, "SECONDS", options, "undefined");
-  var EASING = utils.getField(jsonblock, "EASING", options, "linear");
-
-  return `${utilFunctions.aliveCheck()}await thread.tweenToSize(${VALUE}, ${SECONDS}, ${JSON.stringify(EASING)});${utilFunctions.aliveCheck()}`;
-};
-
-JavascriptTranslation["tween_to_skew"] = function (jsonblock, utils, options) {
-  var X = utils.getInput(jsonblock, "X", options, "undefined");
-  var Y = utils.getInput(jsonblock, "Y", options, "undefined");
-  var SECONDS = utils.getInput(jsonblock, "SECONDS", options, "undefined");
-  var EASING = utils.getField(jsonblock, "EASING", options, "linear");
-
-  return `${utilFunctions.aliveCheck()}await thread.tweenToSkewXY(${X}, ${Y}, ${SECONDS}, ${JSON.stringify(EASING)});${utilFunctions.aliveCheck()}`;
-};
-
-JavascriptTranslation["tween_to_object"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var SOURCE = utils.getInput(jsonblock, "SOURCE", options, "{}");
-  var TARGET = utils.getInput(jsonblock, "TARGET", options, "{}");
-  var SECONDS = utils.getInput(jsonblock, "SECONDS", options, "undefined");
-  var EASING = utils.getField(jsonblock, "EASING", options, "linear");
-
-  return `${utilFunctions.aliveCheck()}await thread.tweenToSource(${SOURCE}, ${TARGET}, +(${SECONDS}) || 0, ${JSON.stringify(EASING)});${utilFunctions.aliveCheck()}`;
-};
-
-JavascriptTranslation["tween_to_property"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VARIABLE = utils.getField(jsonblock, "VARIABLE", options, "null");
-  var TARGET = utils.getInput(jsonblock, "TARGET", options, "{}");
-  var SECONDS = utils.getInput(jsonblock, "SECONDS", options, "undefined");
-  var EASING = utils.getField(jsonblock, "EASING", options, "linear");
-
-  return `${utilFunctions.aliveCheck()}await thread.tweenToProperty(${JSON.stringify(VARIABLE)}, ${TARGET}, +(${SECONDS}) || 0, ${JSON.stringify(EASING)});${utilFunctions.aliveCheck()}`;
-};
-
-JavascriptTranslation["tween_to_global_variable"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VARIABLE = utils.getField(jsonblock, "VARIABLE", options, "null");
-  var TARGET = utils.getInput(jsonblock, "TARGET", options, "{}");
-  var SECONDS = utils.getInput(jsonblock, "SECONDS", options, "undefined");
-  var EASING = utils.getField(jsonblock, "EASING", options, "linear");
-
-  return `${utilFunctions.aliveCheck()}await thread.tweenToGlobalVariable(${JSON.stringify(VARIABLE)}, ${TARGET}, +(${SECONDS}) || 0, ${JSON.stringify(EASING)});${utilFunctions.aliveCheck()}`;
-};
-
-module.exports = JavascriptTranslation;
-
-
-/***/ }),
-
 /***/ 5554:
 /***/ ((module) => {
 
@@ -25199,6 +23602,101 @@ module.exports = {
 
 /***/ }),
 
+/***/ 5619:
+/***/ ((module) => {
+
+
+function startThreadStack(block) {
+    var id = JSON.stringify(block.id);
+    return `var thread = sprite.createThread(${id});try {${aliveCheck(block)}`;
+}
+
+function endThreadStack(block) {
+    return `thread.stop();}catch(e){thread.hadError = true;thread.output = e;thread.stop();return thread;}`;
+}
+
+function stopThisThread(block) {
+    return `thread.stop();`;
+}
+
+function threadWaitFrame(block) {
+    return `await thread.waitForNextFrame();`;
+}
+
+function aliveCheck() {
+    return `try{if (!thread.running) {thread.stop();return thread;}}catch(e){}`;
+}
+
+function enableThreadPreview() {
+    return `thread.isPreviewMode = true;`;
+}
+
+function setThreadOutput(code) {
+    return `thread.output = ${code};`;
+}
+
+function returnThread() {
+    return `return thread;`;
+}
+
+function getClickedBlockLogic(block, code) {
+    var fullCode = "";
+    //Start the thread
+    fullCode += startThreadStack(block);
+
+    //This tells the editor that this thread is running because it was clicked.
+    fullCode += enableThreadPreview();
+
+    //We aren't trying to get an output here, so run it normally.
+    fullCode += code;
+
+    //End the thread
+    fullCode += endThreadStack(block);
+
+    return fullCode;
+}
+
+function getClickedOutputBlockLogic(block, code) {
+    var fullCode = "";
+    //Start the thread
+    fullCode += startThreadStack(block);
+
+    //This tells the editor that this thread is running because it was clicked.
+    fullCode += enableThreadPreview();
+
+    //This will return the output of the code.
+    fullCode += setThreadOutput(code);
+
+    //End the thread
+    fullCode += endThreadStack(block);
+
+    //Return the thread, not sure if this is required.
+    //Still good to have it if I ever use it later.
+    fullCode += returnThread();
+
+    return fullCode;
+}
+
+function putThreadStack(block, code) {
+    return startThreadStack(block) + code  + endThreadStack(block);
+}
+
+module.exports = {
+    startThreadStack,
+    endThreadStack,
+    stopThisThread,
+    threadWaitFrame,
+    aliveCheck,
+    enableThreadPreview,
+    setThreadOutput,
+    returnThread,
+    getClickedBlockLogic,
+    getClickedOutputBlockLogic,
+    putThreadStack
+};
+
+/***/ }),
+
 /***/ 5651:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -25886,186 +24384,6 @@ module.exports = SoundManager;
 
 /***/ }),
 
-/***/ 5890:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var JavascriptTranslation = {};
-var utilFunctions = __webpack_require__(9547);
-var starterBlocks = __webpack_require__(8355);
-var outputBlocks = __webpack_require__(7147);
-
-JavascriptTranslation["control_wait"] = function (jsonblock, utils, options) {
-  // Fallback to "0" to prevent "waitSeconds()" with no args or undefined
-  var DURATION = utils.getInput(jsonblock, "DURATION", options, "0");
-
-  return `${utilFunctions.aliveCheck(jsonblock)}await thread.waitSeconds(${DURATION});${utilFunctions.aliveCheck(jsonblock)}`;
-};
-
-JavascriptTranslation["control_forever"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  // Fallback to empty string "" so we don't write "undefined" inside the loop
-  var SUBSTACK = utils.getInput(jsonblock, "SUBSTACK", options, "");
-
-  return `${utilFunctions.aliveCheck(jsonblock)}while (true) {${utilFunctions.aliveCheck(jsonblock)}${SUBSTACK}if (thread.screenRefresh) {await thread.waitForNextFrame();};${utilFunctions.aliveCheck(jsonblock)}}${utilFunctions.aliveCheck(jsonblock)}`;
-};
-
-JavascriptTranslation["control_repeat"] = function (jsonblock, utils, options) {
-  var TIMES = utils.getInput(jsonblock, "TIMES", options, "0");
-  var SUBSTACK = utils.getInput(jsonblock, "SUBSTACK", options, "");
-
-  return `${utilFunctions.aliveCheck(jsonblock)}await thread.repeatTimes(${TIMES},async function (){${SUBSTACK}});${utilFunctions.aliveCheck(jsonblock)}`;
-};
-
-JavascriptTranslation["control_repeat_until"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  // Fallback to "false". "while(!(false))" is valid syntax (infinite loop).
-  // "while(!())" is a syntax crash.
-  var CONDITION = utils.getInput(jsonblock, "CONDITION", options, "false");
-  var SUBSTACK = utils.getInput(jsonblock, "SUBSTACK", options, "");
-
-  return `${utilFunctions.aliveCheck(jsonblock)}while (!(${CONDITION})) {${utilFunctions.aliveCheck(jsonblock)}${utilFunctions.aliveCheck(jsonblock)} ${SUBSTACK} if (thread.screenRefresh) {await thread.waitForNextFrame();}}${utilFunctions.aliveCheck(jsonblock)}`;
-};
-
-JavascriptTranslation["control_while"] = function (jsonblock, utils, options) {
-  var CONDITION = utils.getInput(jsonblock, "CONDITION", options, "false");
-  var SUBSTACK = utils.getInput(jsonblock, "SUBSTACK", options, "");
-
-  return `${utilFunctions.aliveCheck(jsonblock)}while (${CONDITION}) {${utilFunctions.aliveCheck(jsonblock)} ${utilFunctions.aliveCheck(jsonblock)} ${SUBSTACK} if (thread.screenRefresh) {await thread.waitForNextFrame();}}${utilFunctions.aliveCheck(jsonblock)}`;
-};
-
-JavascriptTranslation["control_if"] = function (jsonblock, utils, options) {
-  var CONDITION = utils.getInput(jsonblock, "CONDITION", options, "false");
-  var SUBSTACK = utils.getInput(jsonblock, "SUBSTACK", options, "");
-
-  return `if (${CONDITION}) {${SUBSTACK}}`;
-};
-
-JavascriptTranslation["control_if_else"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var CONDITION = utils.getInput(jsonblock, "CONDITION", options, "false");
-  var SUBSTACK = utils.getInput(jsonblock, "SUBSTACK", options, "");
-  var SUBSTACK2 = utils.getInput(jsonblock, "SUBSTACK2", options, "");
-
-  return `if (${CONDITION}) {${SUBSTACK}} else {${SUBSTACK2}}`;
-};
-
-JavascriptTranslation["control_wait_until"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var CONDITION = utils.getInput(jsonblock, "CONDITION", options, "false");
-
-  return `${utilFunctions.aliveCheck(jsonblock)}while (!(${CONDITION})) {${utilFunctions.aliveCheck(jsonblock)}await thread.waitForNextFrame();}${utilFunctions.aliveCheck(jsonblock)}`;
-};
-
-starterBlocks.push("control_start_as_clone");
-JavascriptTranslation["control_start_as_clone"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  return function (insideCode) {
-    if (options.EXECUTE_BLOCKS) {
-      return `${insideCode}`;
-    } else {
-      return `sprite.addStackListener(
-        "clonestart",
-        ${JSON.stringify(jsonblock.id)},
-        async function () {
-        ${utilFunctions.startThreadStack(jsonblock)}
-        ${insideCode}
-        ${utilFunctions.endThreadStack(jsonblock)}
-      });`;
-    }
-  };
-};
-
-starterBlocks.push("control_create_clone_of_menu");
-JavascriptTranslation["control_create_clone_of_menu"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var CLONE_OPTION = utils.getField(jsonblock, "CLONE_OPTION", options);
-  return JSON.stringify(CLONE_OPTION);
-};
-
-JavascriptTranslation["control_create_clone_of"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  // Fallback to null string. "findSpriteByName()" with empty args might be valid or fail gracefully,
-  // but "findSpriteByName( )" (empty space) is syntax error if generated poorly.
-  // We use '"_myself_"' or 'null' to be safe.
-  var CLONE_OPTION = utils.getInput(
-    jsonblock,
-    "CLONE_OPTION",
-    options,
-    '"_myself_"',
-  );
-
-  return `sprite.findSpriteByName(${CLONE_OPTION})?.createClone();`;
-  // Added optional chaining (?.) just in case sprite is not found, to prevent crash.
-};
-
-JavascriptTranslation["control_delete_this_clone"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  //Update: Moving this to a thread function and also adding an alive check to prevent potential crashes
-  // with spamming broadcasts that create clones and immediately delete themselves, which can cause
-  // the engine to try to do things with clones that have already been deleted.
-  return `thread.deleteClone();${utilFunctions.aliveCheck(jsonblock)}`;
-};
-
-outputBlocks.push("control_elapsed");
-JavascriptTranslation["control_elapsed"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  return `(engine.elapsedFrameTime / 1000)`;
-};
-
-outputBlocks.push("control_isclone");
-JavascriptTranslation["control_isclone"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  return `sprite.isClone`;
-};
-
-JavascriptTranslation["control_stop"] = function (jsonblock, utils, options) {
-  var STOP_OPTION = utils.getField(jsonblock, "STOP_OPTION", options);
-
-  if (STOP_OPTION == "this script") {
-    return `thread.stop();${utilFunctions.aliveCheck(jsonblock)}`;
-  }
-  if (STOP_OPTION == "other scripts in sprite") {
-    return `thread.stopEverythingButMe();${utilFunctions.aliveCheck(jsonblock)}`;
-  }
-  // Safe return if option is somehow missing
-  return "";
-};
-
-module.exports = JavascriptTranslation;
-
-
-/***/ }),
-
 /***/ 5939:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -26077,100 +24395,6 @@ addEventListener("beforeunload", (event) => {
     return false;
   }
 });
-
-
-/***/ }),
-
-/***/ 5975:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var JavascriptTranslation = {};
-var utilFunctions = __webpack_require__(9547);
-var outputBlocks = __webpack_require__(7147);
-
-outputBlocks.push("sound_sounds_menu");
-JavascriptTranslation["sound_sounds_menu"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var SOUND_MENU = utils.getField(jsonblock, "SOUND_MENU", options);
-  return JSON.stringify(SOUND_MENU);
-};
-
-JavascriptTranslation["sound_play"] = function (jsonblock, utils, options) {
-  var SOUND_MENU = utils.getInput(jsonblock, "SOUND_MENU", options, "0");
-  return `sprite.playSound(${SOUND_MENU});`;
-};
-
-JavascriptTranslation["sound_playuntildone"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var SOUND_MENU = utils.getInput(jsonblock, "SOUND_MENU", options, "0");
-  return `await sprite.playSoundUntilDone(${SOUND_MENU});${utilFunctions.aliveCheck(jsonblock)}`;
-};
-
-JavascriptTranslation["sound_stopsound"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var SOUND_MENU = utils.getInput(jsonblock, "SOUND_MENU", options, "0");
-  return `sprite.stopSound(${SOUND_MENU});`;
-};
-
-JavascriptTranslation["sound_stopallsounds"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  return `engine.stopAllSounds();`;
-};
-
-JavascriptTranslation["sound_stopallsoundsinsprite"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  return `sprite.stopAllSounds();`;
-};
-
-JavascriptTranslation["sound_ggm3effect_set"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var SOUND_MENU = utils.getInput(jsonblock, "SOUND_MENU", options, "0");
-  var EFFECT = utils.getField(jsonblock, "EFFECT", options);
-  var VALUE = utils.getInput(jsonblock, "VALUE", options, "0");
-  return `sprite.setSoundEffect(${SOUND_MENU}, ${JSON.stringify(EFFECT)}, ${VALUE});`;
-};
-
-JavascriptTranslation["sound_ggm3effect_change"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var SOUND_MENU = utils.getInput(jsonblock, "SOUND_MENU", options, "0");
-  var EFFECT = utils.getField(jsonblock, "EFFECT", options);
-  var BY = utils.getInput(jsonblock, "BY", options, "0");
-  return `sprite.changeSoundEffect(${SOUND_MENU}, ${JSON.stringify(EFFECT)}, ${BY});`;
-};
-
-outputBlocks.push("sound_ggm3effect_get");
-JavascriptTranslation["sound_ggm3effect_get"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var SOUND_MENU = utils.getInput(jsonblock, "SOUND_MENU", options, "0");
-  var EFFECT = utils.getField(jsonblock, "EFFECT", options);
-  return `sprite.getSoundEffect(${SOUND_MENU}, ${JSON.stringify(EFFECT)});`;
-};
-
-module.exports = JavascriptTranslation;
 
 
 /***/ }),
@@ -26282,99 +24506,6 @@ class BlockInstance {
 }
 
 module.exports = BlockInstance;
-
-
-/***/ }),
-
-/***/ 6156:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var JavascriptTranslation = {};
-var utilFunctions = __webpack_require__(9547);
-var starterBlocks = __webpack_require__(8355);
-var outputBlocks = __webpack_require__(7147);
-
-starterBlocks.push("procedures_definition");
-JavascriptTranslation["procedures_definition"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var definitionStuff = utils.getInputBlock(jsonblock, "custom_block", options);
-  if (!definitionStuff) {
-    return function (insideCode) {
-      return "";
-    };
-  }
-  var valueNameCode = "";
-  definitionStuff.argumentIds.forEach((argId, i) => {
-    var name = definitionStuff.displayNames[i];
-    valueNameCode += `thread.customBlockValues[${JSON.stringify(name)}] = customBlockArgs[${JSON.stringify(argId)}];`;
-  });
-
-  return function (insideCode) {
-    if (options.EXECUTE_BLOCKS) {
-      //Means ONLY execute blocks, don't add listeners to the sprite.
-      return `${insideCode}`;
-    } else {
-      return `sprite.addCustom(
-        ${JSON.stringify(jsonblock.id)},
-        ${JSON.stringify(definitionStuff.procCode)},
-        async function (customBlockArgs,parentThread) {
-        ${utilFunctions.startThreadStack(jsonblock)}
-        thread.customBlockInherit(parentThread);
-        ${definitionStuff.warp ? `thread.turnOnWithoutRefresh();` : ""}
-        ${valueNameCode}
-        ${insideCode}
-        ${utilFunctions.endThreadStack(jsonblock)}
-      });`;
-    }
-  };
-};
-
-JavascriptTranslation["procedures_call"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var valueCode = "{";
-  var i = 0;
-  for (var argId of jsonblock.argumentIds) {
-    var code = utils.getInput(jsonblock, argId, options, "undefined");
-    if (code) {
-      valueCode += JSON.stringify(argId);
-      valueCode += ":";
-      valueCode += `(${code})`;
-      valueCode += ",";
-    }
-    i += 1;
-  }
-  valueCode += "}";
-
-  return `await sprite.callCustom(${JSON.stringify(jsonblock.procCode)}, ${valueCode}, thread);`;
-};
-
-outputBlocks.push("argument_reporter_boolean");
-JavascriptTranslation["argument_reporter_boolean"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var field = utils.getField(jsonblock, "VALUE", options);
-  return `thread.customBlockValues[${JSON.stringify(field)}]`;
-};
-
-outputBlocks.push("argument_reporter_string_number");
-JavascriptTranslation["argument_reporter_string_number"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var field = utils.getField(jsonblock, "VALUE", options);
-  return `thread.customBlockValues[${JSON.stringify(field)}]`;
-};
-
-module.exports = JavascriptTranslation;
 
 
 /***/ }),
@@ -26532,32 +24663,9 @@ function init(state, deps) {
     var currentBlocks = {};
     var currentBlockParentIDs = {};
 
-    async function compileRoot(rootBlock) {
-      if (!rootBlock) return;
-      if (deps.compiler.isStarterBlock(rootBlock)) {
-        try {
-          var code = deps.compiler.compileBlock(rootBlock);
-          var allSprs = [spr].concat(spr.clones);
-          for (var cspr of allSprs) {
-            // Clear existing listeners/custom refs for this root before re-registering.
-            cspr.removeStackListener(rootBlock.id);
-            cspr.removeSpriteFunction(rootBlock.id);
-            cspr.addFunction(code, rootBlock.id);
-            cspr.runFunctionID(rootBlock.id);
-          }
-        } catch (e) {
-          workspace.reportValue(rootBlock.id, "Unable to compile: " + e);
-          console.error(`Unable to compile block `, e);
-          return;
-        }
-      }
-    }
-
     function compileAll() {
-      var blocks = workspace.getTopBlocks(true);
-      for (var block of blocks) {
-        compileRoot(block.getRootBlock());
-      }
+      var compiledBlocks = deps.compilerInstance.compileWorkspace(workspace);
+      deps.compilerInstance.applyCompiledToEditorSprite(spr, compiledBlocks);
     }
 
     function requestCompileAll() {
@@ -26575,7 +24683,7 @@ function init(state, deps) {
         )
           return;
         compileAll();
-      }, 0);
+      }, 2);
     }
 
     function unglowErrorOnBlock(blockId) {
@@ -26638,7 +24746,7 @@ function init(state, deps) {
         var root = clickedBlock.getRootBlock();
         if (!spr.runningStacks[root.id]) {
           (async function () {
-            var code = deps.compiler.compileBlockWithThreadForced(root);
+            var code = deps.compilerInstance.compileClickedBlock(root);
             var outputThread = await spr.runFunction(code);
             if (outputThread) {
               if (
@@ -26717,7 +24825,8 @@ function init(state, deps) {
         var root = clickedBlock.getRootBlock();
         if (!spr.runningStacks[root.id]) {
           (async function () {
-            var code = deps.compiler.compileBlockWithThreadForced(root);
+            
+            var code = deps.compilerInstance.compileClickedBlock(root);
             var outputThread = await spr.runFunction(code);
             if (outputThread) {
               if (
@@ -26898,6 +25007,134 @@ module.exports = [
   },
 ];
 
+
+/***/ }),
+
+/***/ 6537:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("motion_movesteps", {
+    type: CBlockType.COMMAND,
+    func: function (util) {
+        var STEPS = util.getInput("STEPS", '0');
+        return `sprite.moveSteps(+(${STEPS}) || 0);`;
+    }
+});
+
+BlockCompiler.defineBlock("motion_goto", {
+    type: CBlockType.OUTPUT,
+    func: function (util) {
+        var TO = util.getInput("TO", "null");
+        return `sprite.goTo(${TO});`;
+    }
+});
+
+BlockCompiler.defineBlock("motion_goto_menu", {
+    type: CBlockType.OUTPUT,
+    func: function (util) {
+        var TO = util.getField("TO", "");
+        return JSON.stringify(TO);
+    }
+});
+
+BlockCompiler.defineBlock("motion_xposition", {
+    type: CBlockType.OUTPUT,
+    func: function (util) {
+        return `sprite.x`;
+    }
+});
+
+BlockCompiler.defineBlock("motion_yposition", {
+    type: CBlockType.OUTPUT,
+    func: function (util) {
+        return `sprite.y`;
+    }
+});
+
+BlockCompiler.defineBlock("motion_direction", {
+    type: CBlockType.OUTPUT,
+    func: function (util) {
+        return `sprite.direction`;
+    }
+});
+
+BlockCompiler.defineBlock("motion_gotoxy", {
+    type: CBlockType.COMMAND,
+    func: function (util) {
+        var X = util.getInput("X", '0');
+        var Y = util.getInput("Y", '0');
+        
+        return `sprite.x = +(${X}) || 0; sprite.y = +(${Y}) || 0;`;
+    }
+});
+
+BlockCompiler.defineBlock("motion_changexby", {
+    type: CBlockType.COMMAND,
+    func: function (util) {
+        var DX = util.getInput("DX", '0');
+        
+        return `sprite.x += +(${DX}) || 0;`;
+    }
+});
+
+BlockCompiler.defineBlock("motion_setx", {
+    type: CBlockType.COMMAND,
+    func: function (util) {
+        var X = util.getInput("X", '0');
+        
+        return `sprite.x = +(${X}) || 0;`;
+    }
+});
+
+BlockCompiler.defineBlock("motion_changeyby", {
+    type: CBlockType.COMMAND,
+    func: function (util) {
+        var DY = util.getInput("DY", '0');
+        
+        return `sprite.y += +(${DY}) || 0;`;
+    }
+});
+
+BlockCompiler.defineBlock("motion_sety", {
+    type: CBlockType.COMMAND,
+    func: function (util) {
+        var Y = util.getInput("Y", '0');
+        
+        return `sprite.y = +(${Y}) || 0;`;
+    }
+});
+
+BlockCompiler.defineBlock("motion_pointindirection", {
+    type: CBlockType.COMMAND,
+    func: function (util) {
+        var DIRECTION = util.getInput("DIRECTION", '0');
+        
+        return `sprite.direction = +(${DIRECTION}) || 0;`;
+    }
+});
+
+BlockCompiler.defineBlock("motion_turnleft", {
+    type: CBlockType.COMMAND,
+    func: function (util) {
+        var DEGREES = util.getInput("DEGREES", '0');
+        
+        return `sprite.direction -= +(${DEGREES}) || 0;`;
+    }
+});
+
+BlockCompiler.defineBlock("motion_turnright", {
+    type: CBlockType.COMMAND,
+    func: function (util) {
+        var DEGREES = util.getInput("DEGREES", '0');
+        
+        return `sprite.direction += +(${DEGREES}) || 0;`;
+    }
+});
 
 /***/ }),
 
@@ -28244,14 +26481,6 @@ Blockly.WorkspaceSvg.prototype.registerToolboxCategoryCallback(
 
 /***/ }),
 
-/***/ 7147:
-/***/ ((module) => {
-
-module.exports = [];
-
-
-/***/ }),
-
 /***/ 7156:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -29240,6 +27469,22 @@ module.exports = {
   fromLibrarySoundJSON,
 };
 
+
+/***/ }),
+
+/***/ 7561:
+/***/ ((module) => {
+
+
+class CBlockType {
+    static COMMAND = "COMMAND";
+
+    static STARTER_HAT = "STARTER_HAT";
+
+    static OUTPUT = "OUTPUT";
+}
+
+module.exports = CBlockType;
 
 /***/ }),
 
@@ -31222,44 +29467,6 @@ module.exports = calculateMatrix;
 
 /***/ }),
 
-/***/ 8195:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var JavascriptTranslation = {};
-var utilFunctions = __webpack_require__(9547);
-var outputBlocks = __webpack_require__(7147);
-
-outputBlocks.push("data_variable");
-JavascriptTranslation["data_variable"] = function (jsonblock, utils, options) {
-  var VARIABLE = utils.getFieldVariableID(jsonblock, "VARIABLE");
-  return `sprite.variables[${JSON.stringify(VARIABLE)}]`;
-};
-
-JavascriptTranslation["data_changevariableby"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VARIABLE = utils.getFieldVariableID(jsonblock, "VARIABLE");
-  var VALUE = utils.getInput(jsonblock, "VALUE", options, "null");
-  return `sprite.variables[${JSON.stringify(VARIABLE)}] = (+(sprite.variables[${JSON.stringify(VARIABLE)}]) || 0) + (+(${VALUE}) || 0);`;
-};
-
-JavascriptTranslation["data_setvariableto"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var VARIABLE = utils.getFieldVariableID(jsonblock, "VARIABLE");
-  var VALUE = utils.getInput(jsonblock, "VALUE", options, "null");
-  return `sprite.variables[${JSON.stringify(VARIABLE)}] = ${VALUE};`;
-};
-
-module.exports = JavascriptTranslation;
-
-
-/***/ }),
-
 /***/ 8246:
 /***/ ((module) => {
 
@@ -31436,45 +29643,6 @@ module.exports = new GUIEventTypes();
 
 /***/ }),
 
-/***/ 8337:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var JavascriptTranslation = {};
-var utilFunctions = __webpack_require__(9547);
-var outputBlocks = __webpack_require__(7147);
-
-outputBlocks.push("engine_framerate");
-JavascriptTranslation["engine_framerate"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  return "(engine.frameRate)";
-};
-
-outputBlocks.push("engine_estimated_fps");
-JavascriptTranslation["engine_estimated_fps"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  return "(engine.estimatedFramerate)";
-};
-
-JavascriptTranslation["engine_framerate_to"] = function (
-  jsonblock,
-  utils,
-  options,
-) {
-  var FPS = utils.getInput(jsonblock, "FPS", options, "0");
-  return `engine.setFramerate(${FPS});`;
-};
-
-module.exports = JavascriptTranslation;
-
-
-/***/ }),
-
 /***/ 8343:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -31604,40 +29772,6 @@ function switchTab(id) {
 updateTabs();
 
 module.exports = { updateTabs, updateVisibility, hideEverything, switchTab };
-
-
-/***/ }),
-
-/***/ 8355:
-/***/ ((module) => {
-
-module.exports = [];
-
-
-/***/ }),
-
-/***/ 8366:
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-var JavascriptTranslation = {};
-var utilFunctions = __webpack_require__(9547);
-
-JavascriptTranslation["math_number"] = function (jsonblock, utils, options) {
-  var NUM = utils.getField(jsonblock, "NUM");
-  return JSON.stringify(+NUM || 0);
-};
-
-JavascriptTranslation["math_angle"] = function (jsonblock, utils, options) {
-  var NUM = utils.getField(jsonblock, "NUM");
-  return JSON.stringify(+NUM || 0);
-};
-
-JavascriptTranslation["text"] = function (jsonblock, utils, options) {
-  var TEXT = utils.getField(jsonblock, "TEXT");
-  return JSON.stringify(TEXT);
-};
-
-module.exports = JavascriptTranslation;
 
 
 /***/ }),
@@ -32671,6 +30805,161 @@ engine.on(engine.RESOLUTION_UPDATED, () => {
 
 /***/ }),
 
+/***/ 9341:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var CBlockType = __webpack_require__(7561);
+
+class CBlockUtil {
+    constructor ({ compiler, def, instance, block, parentState }) {
+        this.compiler = compiler;
+        this.instance = instance;
+        this.def = def;
+        this.block = block;
+        this.isBlockUtil = true;
+        this.parentState = parentState || {}; //this gets passed to the next block, and goes further also.
+    }
+
+    compileBlock(block) {
+        return this.instance.compileBlock(block, this.parentState);
+    }
+
+    getID () {
+        return this.instance.getBlockID(this.block);
+    }
+
+    get id() {
+        return this.getID();
+    }
+
+    getHatContents (fallback = "") {
+        if (this.def.type !== CBlockType.STARTER_HAT) {
+            //We aren't even a hat block!
+            //Warn here because it feels important to note.
+            console.warn("Compiler: Tried to getHatContents() on a non-hat block: ",this, "\nMake sure that this block has its correct compiler definition.");
+            return fallback;
+        }
+
+        var block = this.block;
+
+        if (!block.getNextBlock) {
+            return fallback;
+        }
+
+        var nextBlock = block.getNextBlock();
+        if (!nextBlock) {
+            return fallback;
+        }
+
+        return this.compileBlock(nextBlock);
+    }
+
+    getInput (name, fallback = "null") {
+        var block = this.getInputBlock(name);
+        if (!block) {
+            return fallback;
+        }
+
+        return this.compileBlock(block);
+    }
+
+    getBlocklyInput (name) {
+        var block = this.block;
+
+        if (!block.inputList) {
+            return null;
+        }
+
+        for (var input of block.inputList) {
+            if (input.name == name) {
+                return input;
+            }
+        }
+
+        return null;
+    }
+
+    getInputBlock (name) {
+        //This doesn't return an CBlockUtil, rather just the actual blockly block itself.
+        
+        var input = this.getBlocklyInput(name);
+        if (!input) {
+            return null;
+        }
+
+        var inputBlock = input.connection.targetBlock();
+        
+        return inputBlock || null;
+    }
+
+    getField (name, fallback = "") {
+        var field = this.getBlocklyField(name);
+        if (!field) {
+            return fallback;
+        }
+
+        if (field.referencesVariables()) {
+            return fallback;
+        }
+
+        return field.getValue();
+    }
+
+    getFieldText (name, fallback = "") {
+        var field = this.getBlocklyField(name);
+        if (!field) {
+            return fallback;
+        }
+
+        if (field.referencesVariables()) {
+            return fallback;
+        }
+
+        return field.getText();
+    }
+
+    getFieldVariable (name) {
+        var field = this.getBlocklyField(name);
+        if (!field) {
+            return null;
+        }
+
+        if (!field.referencesVariables()) {
+            return null;
+        }
+
+        var variable = field.getVariable();
+        if (!variable) {
+            return null;
+        }
+
+        return {
+            name: variable.name,
+            id: variable.getId()
+        };
+    }
+
+    getBlocklyField (name) {
+        var block = this.block;
+        
+        for (var input of block.inputList) {
+            for (var field of input.fieldRow) {
+                if (field.name && field.SERIALIZABLE) {
+                    if (field.name == name) {
+                        return field;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+}
+
+module.exports = {CBlockUtil};
+
+/***/ }),
+
 /***/ 9366:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -33122,6 +31411,8 @@ module.exports = {
 
 var elements = __webpack_require__(7255);
 var AElement = __webpack_require__(3759);
+var compiler = __webpack_require__(264);
+
 window.ScratchBlocks = window.Blockly;
 
 // Disable flyout checkboxes early so initial flyout blocks don't get checkboxes.
@@ -33419,31 +31710,6 @@ __webpack_require__(9335);
 __webpack_require__(2498);
 __webpack_require__(7156);
 __webpack_require__(5939);
-
-
-/***/ }),
-
-/***/ 9547:
-/***/ ((module) => {
-
-var utilFunctions = {
-  startThreadStack: function (blockjson) {
-    return `var thread = sprite.createThread(${JSON.stringify(blockjson.id)});try {${utilFunctions.aliveCheck(blockjson)}`;
-  },
-  endThreadStack: function (blockjson) {
-    return `thread.stop();}catch(e){thread.hadError = true;thread.output = e;thread.stop();return thread;}`;
-  },
-  stopThisThread: function (blockjson) {
-    return `thread.stop();`;
-  },
-  threadWaitFrame: function (blockjson) {
-    return `await thread.waitForNextFrame();`;
-  },
-  aliveCheck: function (blockjson) {
-    return `try{if (!thread.running) {thread.stop();return thread;}}catch(e){}`;
-  },
-};
-module.exports = utilFunctions;
 
 
 /***/ }),
@@ -34074,6 +32340,26 @@ Blockly.Blocks["looks_costumes"] = {
   },
 };
 
+
+/***/ }),
+
+/***/ 9822:
+/***/ ((module) => {
+
+
+class CBlockDefinition {
+    constructor (name, options) {
+        this.name = name;
+        this.func = options.func || (() => {});
+        this.type = options.type;
+    }
+
+    callCompile (blockUtil) {
+        return this.func(blockUtil);
+    }
+}
+
+module.exports = {CBlockDefinition};
 
 /***/ }),
 
