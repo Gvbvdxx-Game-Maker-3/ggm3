@@ -1,5 +1,7 @@
 var elements = require("../gp2/elements.js");
 var AElement = require("../gp2/aelement.js");
+var compiler = require("../compilerv2");
+
 window.ScratchBlocks = window.Blockly;
 
 // Disable flyout checkboxes early so initial flyout blocks don't get checkboxes.

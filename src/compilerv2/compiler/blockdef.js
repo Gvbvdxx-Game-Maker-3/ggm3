@@ -6,7 +6,9 @@ class CBlockDefinition {
         this.type = options.type;
     }
 
-
+    callCompile (blockUtil) {
+        return this.func(blockUtil);
+    }
 }
 
 module.exports = {CBlockDefinition};

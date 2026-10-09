@@ -1,3 +1,4 @@
-module.exports = {
-    ...require("./compiler/compiler.js")
-};
+
+require("./blocks/");
+
+module.exports = require("./compiler/compiler.js");

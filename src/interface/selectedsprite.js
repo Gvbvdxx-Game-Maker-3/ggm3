@@ -6,7 +6,7 @@ var engine = require("./curengine.js");
 var blocks = require("./blocks.js");
 var costumeViewer = require("./costumeviewer.js");
 var soundViewer = require("./soundviewer.js");
-var compiler = require("../compiler");
+var compiler = require("../compilerv2");
 var blockMenu = require("./blockmenuloader.js");
 var isProjectDirty = false;
 var { valueReport } = require("./value-report.js");
@@ -26,6 +26,10 @@ var deps = {
   soundViewer,
   compiler,
   blockMenu,
+  compilerInstance: compiler.newInstance({
+    useExportCompile: false,
+    useBlockNumberIDs: false,
+  }),
   valueReport,
   makeSortable,
   loadBlockMenus,

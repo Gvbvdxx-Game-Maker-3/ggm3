@@ -99,32 +99,9 @@ function init(state, deps) {
     var currentBlocks = {};
     var currentBlockParentIDs = {};
 
-    async function compileRoot(rootBlock) {
-      if (!rootBlock) return;
-      if (deps.compiler.isStarterBlock(rootBlock)) {
-        try {
-          var code = deps.compiler.compileBlock(rootBlock);
-          var allSprs = [spr].concat(spr.clones);
-          for (var cspr of allSprs) {
-            // Clear existing listeners/custom refs for this root before re-registering.
-            cspr.removeStackListener(rootBlock.id);
-            cspr.removeSpriteFunction(rootBlock.id);
-            cspr.addFunction(code, rootBlock.id);
-            cspr.runFunctionID(rootBlock.id);
-          }
-        } catch (e) {
-          workspace.reportValue(rootBlock.id, "Unable to compile: " + e);
-          console.error(`Unable to compile block `, e);
-          return;
-        }
-      }
-    }
-
     function compileAll() {
-      var blocks = workspace.getTopBlocks(true);
-      for (var block of blocks) {
-        compileRoot(block.getRootBlock());
-      }
+      var compiledBlocks = deps.compilerInstance.compileWorkspace(workspace);
+      deps.compilerInstance.applyCompiledToEditorSprite(spr, compiledBlocks);
     }
 
     function requestCompileAll() {
@@ -142,7 +119,7 @@ function init(state, deps) {
         )
           return;
         compileAll();
-      }, 0);
+      }, 2);
     }
 
     function unglowErrorOnBlock(blockId) {
@@ -205,7 +182,7 @@ function init(state, deps) {
         var root = clickedBlock.getRootBlock();
         if (!spr.runningStacks[root.id]) {
           (async function () {
-            var code = deps.compiler.compileBlockWithThreadForced(root);
+            var code = deps.compilerInstance.compileClickedBlock(root);
             var outputThread = await spr.runFunction(code);
             if (outputThread) {
               if (
@@ -284,7 +261,8 @@ function init(state, deps) {
         var root = clickedBlock.getRootBlock();
         if (!spr.runningStacks[root.id]) {
           (async function () {
-            var code = deps.compiler.compileBlockWithThreadForced(root);
+            
+            var code = deps.compilerInstance.compileClickedBlock(root);
             var outputThread = await spr.runFunction(code);
             if (outputThread) {
               if (
