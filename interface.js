@@ -1105,6 +1105,11 @@ class BlockCompilerInstance {
 
     compileBlock(block, parentState) {
         var def = this.getBlockDefinition(block.type);
+
+        if (!def) {
+            return null;
+        }
+
         var util = new CBlockUtil({
             compiler: this.compiler,
             instance: this,
@@ -2915,10 +2920,24 @@ var CoreFunctions = __webpack_require__(5619);
 BlockCompiler.defineBlock("event_whengamestarts", {
     type: CBlockType.STARTER_HAT,
     func: function (utils) {
-        var insideCode = CoreFunctions.putThreadStack(utils.getHatContents(""));
+        var insideCode = utils.getHatContents("");
+        var fullInsideCode = CoreFunctions.putThreadStack(utils.block, insideCode);
+        
         var BLOCK_ID = JSON.stringify(utils.getID());
         
-        return `sprite.addStackListener("started", ${BLOCK_ID}, async function () {${insideCode}});`;
+        return `sprite.addStackListener("started", ${BLOCK_ID}, async function () {${fullInsideCode}});`;
+    }
+});
+
+BlockCompiler.defineBlock("event_beforegamestarts", {
+    type: CBlockType.STARTER_HAT,
+    func: function (utils) {
+        var insideCode = utils.getHatContents("");
+        var fullInsideCode = CoreFunctions.putThreadStack(utils.block, insideCode);
+        
+        var BLOCK_ID = JSON.stringify(utils.getID());
+        
+        return `sprite.addStackListener("beforestart", ${BLOCK_ID}, async function () {${fullInsideCode}});`;
     }
 });
 
@@ -3952,6 +3971,8 @@ __webpack_require__(5334);
 __webpack_require__(4534);
 __webpack_require__(6537);
 __webpack_require__(734);
+__webpack_require__(4889);
+__webpack_require__(7315);
 
 /***/ }),
 
@@ -6913,22 +6934,6 @@ module.exports = new BlockCompiler();
 
 function init(state, deps) {
   function compileSpriteXML(spr) {
-    async function compileRoot(rootBlock) {
-      if (!rootBlock) return;
-      if (deps.compiler.isStarterBlock(rootBlock)) {
-        try {
-          var code = deps.compiler.compileBlock(rootBlock);
-          var allSprs = [spr].concat(spr.clones);
-          for (var cspr of allSprs) {
-            cspr.removeSpriteFunction(rootBlock.id);
-            cspr.addFunction(code, rootBlock.id);
-            cspr.runFunctionID(rootBlock.id);
-          }
-        } catch (e) {
-          return;
-        }
-      }
-    }
     var div = document.createElement("div");
     document.body.append(div);
     var tempWorkspace = Blockly.inject(div, {
@@ -6947,9 +6952,11 @@ function init(state, deps) {
       Blockly.Xml.domToWorkspace(spr.blocklyXML, tempWorkspace);
     }
 
-    var blocks = tempWorkspace.getTopBlocks(true);
-    for (var block of blocks) {
-      compileRoot(block.getRootBlock());
+    var compiledBlocks = deps.compilerInstance.compileWorkspace(tempWorkspace);
+    //console.log(compiledBlocks);
+    var allSprs = [spr].concat(spr.clones);
+    for (var cspr of allSprs) {
+      deps.compilerInstance.applyCompiledToEditorSprite(cspr, compiledBlocks);
     }
 
     tempWorkspace.dispose();
@@ -6958,17 +6965,6 @@ function init(state, deps) {
 
   function compileSpriteXMLToString(spr) {
     var functions = {};
-    async function compileRoot(rootBlock) {
-      if (!rootBlock) return;
-      if (deps.compiler.isStarterBlock(rootBlock)) {
-        try {
-          var code = deps.compiler.compileBlock(rootBlock);
-          functions[rootBlock.id] = code;
-        } catch (e) {
-          return;
-        }
-      }
-    }
     var div = document.createElement("div");
     document.body.append(div);
     var tempWorkspace = Blockly.inject(div, {
@@ -21401,6 +21397,38 @@ Blockly.WorkspaceSvg.prototype.registerToolboxCategoryCallback(
 
 /***/ }),
 
+/***/ 4889:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("engine_framerate", {
+    type: CBlockType.OUTPUT,
+    func: function (utils) {
+        return `(engine.frameRate)`;
+    }
+});
+
+BlockCompiler.defineBlock("engine_estimated_fps", {
+    type: CBlockType.OUTPUT,
+    func: function (utils) {
+        return `(engine.estimatedFramerate)`;
+    }
+});
+
+BlockCompiler.defineBlock("engine_framerate_to", {
+    type: CBlockType.COMMAND,
+    func: function (utils) {
+        var FPS = util.getInput("FPS", '0');
+        return `engine.setFramerate(${FPS});`;
+    }
+});
+
+/***/ }),
+
 /***/ 4912:
 /***/ ((module) => {
 
@@ -24665,7 +24693,11 @@ function init(state, deps) {
 
     function compileAll() {
       var compiledBlocks = deps.compilerInstance.compileWorkspace(workspace);
-      deps.compilerInstance.applyCompiledToEditorSprite(spr, compiledBlocks);
+      //console.log(compiledBlocks);
+      var allSprs = [spr].concat(spr.clones);
+      for (var cspr of allSprs) {
+        deps.compilerInstance.applyCompiledToEditorSprite(cspr, compiledBlocks);
+      }
     }
 
     function requestCompileAll() {
@@ -26826,6 +26858,18 @@ class BlockFlasher {
 const myFlash = { block: null, timerID: null };
 
 module.exports = BlockFlasher;
+
+
+/***/ }),
+
+/***/ 7315:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
 
 
 /***/ }),
@@ -30851,7 +30895,9 @@ class CBlockUtil {
             return fallback;
         }
 
-        return this.compileBlock(nextBlock);
+        var code = this.compileBlock(nextBlock);
+        
+        return code == null ? fallback : code;
     }
 
     getInput (name, fallback = "null") {
