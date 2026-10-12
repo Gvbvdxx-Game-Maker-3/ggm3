@@ -101,7 +101,11 @@ function init(state, deps) {
 
     function compileAll() {
       var compiledBlocks = deps.compilerInstance.compileWorkspace(workspace);
-      deps.compilerInstance.applyCompiledToEditorSprite(spr, compiledBlocks);
+      //console.log(compiledBlocks);
+      var allSprs = [spr].concat(spr.clones);
+      for (var cspr of allSprs) {
+        deps.compilerInstance.applyCompiledToEditorSprite(cspr, compiledBlocks);
+      }
     }
 
     function requestCompileAll() {

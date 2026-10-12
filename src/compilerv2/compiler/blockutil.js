@@ -41,7 +41,9 @@ class CBlockUtil {
             return fallback;
         }
 
-        return this.compileBlock(nextBlock);
+        var code = this.compileBlock(nextBlock);
+        
+        return code == null ? fallback : code;
     }
 
     getInput (name, fallback = "null") {

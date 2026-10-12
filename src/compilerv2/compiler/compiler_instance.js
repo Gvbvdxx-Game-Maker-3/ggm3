@@ -125,6 +125,11 @@ class BlockCompilerInstance {
 
     compileBlock(block, parentState) {
         var def = this.getBlockDefinition(block.type);
+
+        if (!def) {
+            return null;
+        }
+
         var util = new CBlockUtil({
             compiler: this.compiler,
             instance: this,
