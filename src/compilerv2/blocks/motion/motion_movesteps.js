@@ -1,7 +1,7 @@
 
-var BlockCompiler = require("../compiler/compiler.js");
-var CBlockType = require("../compiler/types.js");
-var CoreFunctions = require("../compiler/corefunc.js");
+var BlockCompiler = require("../../compiler/compiler.js");
+var CBlockType = require("../../compiler/types.js");
+var CoreFunctions = require("../../compiler/corefunc.js");
 
 BlockCompiler.defineBlock("motion_movesteps", {
   type: CBlockType.COMMAND,

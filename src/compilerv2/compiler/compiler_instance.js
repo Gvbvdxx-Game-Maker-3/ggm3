@@ -164,7 +164,7 @@ class BlockCompilerInstance {
       return null;
     }
 
-    if (block.getNextBlock && !isHat) {
+    if (util.doNext && block.getNextBlock && !isHat) {
       var nextBlock = block.getNextBlock();
       if (nextBlock) {
         var nextCode = this.compileBlock(nextBlock, {

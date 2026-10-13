@@ -405,6 +405,14 @@ class Sprite {
     sprite.emitStackListener("clonestart");
   }
 
+  createCloneOf(sprName) {
+    var targetSprite = this.findSpriteByName(sprName);
+    if (!targetSprite) {
+      return;
+    }
+    targetSprite.createClone();
+  }
+
   findSpriteByName(name) {
     if (name instanceof Sprite) {
       return name;

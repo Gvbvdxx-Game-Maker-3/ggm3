@@ -3,7 +3,7 @@ var BlockCompiler = require("../../compiler/compiler.js");
 var CBlockType = require("../../compiler/types.js");
 var CoreFunctions = require("../../compiler/corefunc.js");
 
-BlockCompiler.defineBlock("event_beforegamestarts", {
+BlockCompiler.defineBlock("event_whengamestarts", {
   type: CBlockType.STARTER_HAT,
   func: function (utils) {
     var insideCode = utils.getHatContents("");
@@ -11,6 +11,15 @@ BlockCompiler.defineBlock("event_beforegamestarts", {
 
     var BLOCK_ID = JSON.stringify(utils.getID());
 
-    return `sprite.addStackListener("beforestart", ${BLOCK_ID}, async function () {${fullInsideCode}});`;
+    var code = "";
+    code += `sprite.addStackListener(`
+    code += `"beforestart",`;
+    code += BLOCK_ID + ",";
+    code += `async function () {`;
+    code += fullInsideCode;
+    code += `});`;
+    
+
+    return code;
   },
 });

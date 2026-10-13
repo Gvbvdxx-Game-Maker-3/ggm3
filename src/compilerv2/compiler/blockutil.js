@@ -7,6 +7,7 @@ class CBlockUtil {
     this.def = def;
     this.block = block;
     this.useDummy = useDummy;
+    this.doNext = true;
     this.foundMissingBlock = false;
     this.isBlockUtil = true;
     this.options = options || {};

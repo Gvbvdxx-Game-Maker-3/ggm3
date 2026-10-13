@@ -1,0 +1,14 @@
+require("./motion_changexby.js");
+require("./motion_changeyby.js");
+require("./motion_direction.js");
+require("./motion_goto_menu.js");
+require("./motion_goto.js");
+require("./motion_gotoxy.js");
+require("./motion_movesteps.js");
+require("./motion_pointindirection.js");
+require("./motion_setx.js");
+require("./motion_sety.js");
+require("./motion_turnleft.js");
+require("./motion_turnright.js");
+require("./motion_xposition.js");
+require("./motion_yposition.js");

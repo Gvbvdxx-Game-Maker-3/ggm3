@@ -11,6 +11,15 @@ BlockCompiler.defineBlock("event_whengamestarts", {
 
     var BLOCK_ID = JSON.stringify(utils.getID());
 
-    return `sprite.addStackListener("started", ${BLOCK_ID}, async function () {${fullInsideCode}});`;
+    var code = "";
+    code += `sprite.addStackListener(`
+    code += `"started",`;
+    code += BLOCK_ID + ",";
+    code += `async function () {`;
+    code += fullInsideCode;
+    code += `});`;
+    
+
+    return code;
   },
 });
