@@ -1,10 +1,9 @@
-
 class CBlockType {
-    static COMMAND = "COMMAND";
+  static COMMAND = "COMMAND";
 
-    static STARTER_HAT = "STARTER_HAT";
+  static STARTER_HAT = "STARTER_HAT";
 
-    static OUTPUT = "OUTPUT";
+  static OUTPUT = "OUTPUT";
 }
 
 module.exports = CBlockType;

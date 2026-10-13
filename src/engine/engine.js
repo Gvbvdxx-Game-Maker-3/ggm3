@@ -14,7 +14,8 @@ var EventEmitter = require("eventemitter3");
 var CollisionSprite = require("./mask.js");
 var Library = require("./library.js");
 
-var {EngineRenderer} = require("./renderer.js");
+var { EngineRenderer } = require("./renderer.js");
+var GameTime = require("./gametime.js");
 
 var created = false;
 
@@ -106,7 +107,6 @@ class GGM3Engine extends EventEmitter {
     this.frameRate = this.DEFAULT_FRAMERATE;
     this._frameRate = this.frameRate;
     this.frameTimestamps = [];
-    this._iTime = 0;
     this.sMath = sMath;
     this.exportMode = false;
     this.activeTextures = 0;
@@ -121,7 +121,6 @@ class GGM3Engine extends EventEmitter {
     this.keysPressed = {};
     this.renderer = new EngineRenderer(this, this.canvas);
     this.generateMouseMask();
-    this.startRenderLoop();
     this.spriteMap = {};
     this.globalVariables = {};
     this.propertyVariables = {};
@@ -135,6 +134,10 @@ class GGM3Engine extends EventEmitter {
     this.renderer.updateCanvasSize();
     this.renderer.glCalculation();
     this.changeCursorStyle(this.DEFAULT_CURSOR_STYLE);
+
+    this.time = new GameTime(this);
+    this.stopGame();
+    this.time.startLoop();
   }
 
   /**
@@ -423,6 +426,7 @@ class GGM3Engine extends EventEmitter {
    * Stops the game by stopping all scripts, deleting all clones, and resetting all effects for every sprite in the game.
    */
   stopGame() {
+    this.time.stop();
     this.broadcastQueue = [];
     for (var sprite of this.sprites) {
       sprite.stopAllScripts();
@@ -436,6 +440,7 @@ class GGM3Engine extends EventEmitter {
    */
   startGame() {
     this.stopGame();
+    this.time.start();
     this.makeUniqueSpriteNames();
     for (var sprite of this.sprites) {
       sprite.emitStackListener("beforestart");
@@ -617,44 +622,7 @@ class GGM3Engine extends EventEmitter {
     return newSprite;
   }
 
-  /**
-   * Starts the render loop of the game, which updates and renders every sprite in the game every frame.
-   * The framerate can be changed by setting the `frameRate` property, but it defaults to 60 FPS.
-   * @returns {void}
-   */
-  startRenderLoop() {
-    const _this = this;
-    let previous = performance.now();
-    const frameTimestamps = this.frameTimestamps;
-
-    function loop() {
-      const now = performance.now();
-
-      const frameDuration = 1000 / _this.frameRate;
-      let delta = now - previous;
-
-      if (delta >= frameDuration) {
-        previous = now - (delta % frameDuration);
-
-        while (frameTimestamps.length > 0 && frameTimestamps[0] <= now - 1000) {
-          frameTimestamps.shift();
-        }
-
-        frameTimestamps.push(now);
-
-        _this.runRenderFunc(delta, frameTimestamps.length);
-      }
-
-      setTimeout(loop, 1);
-    }
-
-    setTimeout(loop, 1);
-  }
-
-  runRenderFunc(elapsed, estimatedFramerate) {
-    this._iTime += elapsed / 1000;
-    this.elapsedFrameTime = elapsed;
-    this.estimatedFramerate = estimatedFramerate;
+  runFrame() {
     if (this._frameRate !== this.frameRate) {
       this._frameRate = this.frameRate;
       this.emit(this.FRAMERATE_CHANGED, this._frameRate);
@@ -671,22 +639,32 @@ class GGM3Engine extends EventEmitter {
       this._editDragging = null;
     }
 
-    this.emit(this.BEFORE_FRAME_RENDER, elapsed, estimatedFramerate, this._iTime);
+    this.emit(
+      this.BEFORE_FRAME_RENDER,
+      this.time.elapsed,
+      this.time.totalFps,
+      this.time.totalTime,
+    );
 
-    var sprs = this.getAllTopSprites()
+    var sprs = this.getAllTopSprites();
     var sprsReversed = sprs.reverse();
     sprsReversed.forEach((spr) => {
       engine.tickSprite(spr);
     });
-    this.tween.update(engine._iTime * 1000);
+    this.tween.update(this.time.totalTime * 1000);
 
     this.renderer.drawGameFrame({
-      elapsed,
-      estimatedFramerate,
-      spritesArray: sprsReversed
+      elapsed: this.time.elapsed,
+      totalFps: this.time.totalFps,
+      spritesArray: sprsReversed,
     });
 
-    this.emit(this.FRAME_RENDERED, elapsed, estimatedFramerate, this._iTime);
+    this.emit(
+      this.FRAME_RENDERED,
+      this.time.elapsed,
+      this.time.totalFps,
+      this.time.totalTime,
+    );
   }
 
   /**

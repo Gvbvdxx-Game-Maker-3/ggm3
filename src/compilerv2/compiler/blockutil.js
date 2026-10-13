@@ -1,151 +1,164 @@
 var CBlockType = require("./types.js");
 
 class CBlockUtil {
-    constructor ({ compiler, def, instance, block, parentState }) {
-        this.compiler = compiler;
-        this.instance = instance;
-        this.def = def;
-        this.block = block;
-        this.isBlockUtil = true;
-        this.parentState = parentState || {}; //this gets passed to the next block, and goes further also.
+  constructor({ compiler, def, instance, block, parentState, useDummy, options }) {
+    this.compiler = compiler;
+    this.instance = instance;
+    this.def = def;
+    this.block = block;
+    this.useDummy = useDummy;
+    this.foundMissingBlock = false;
+    this.isBlockUtil = true;
+    this.options = options || {};
+    this.parentState = parentState || {}; //this gets passed to the next block, and goes further also.
+  }
+
+  compileBlock(block) {
+    var code = this.instance.compileBlock(block, this.parentState, this.useDummy);
+    if (code) {
+      return code;
     }
 
-    compileBlock(block) {
-        return this.instance.compileBlock(block, this.parentState);
+    this.foundMissingBlock = true;
+    return "";
+  }
+
+  getID() {
+    return this.instance.getBlockID(this.block);
+  }
+
+  get id() {
+    return this.getID();
+  }
+
+  getHatContents(fallback = "") {
+    if (this.def.type !== CBlockType.STARTER_HAT) {
+      //We aren't even a hat block!
+      //Warn here because it feels important to note.
+      console.warn(
+        "Compiler: Tried to getHatContents() on a non-hat block: ",
+        this,
+        "\nMake sure that this block has its correct compiler definition.",
+      );
+      return fallback;
     }
 
-    getID () {
-        return this.instance.getBlockID(this.block);
+    var block = this.block;
+
+    if (!block.getNextBlock) {
+      return fallback;
     }
 
-    get id() {
-        return this.getID();
+    var nextBlock = block.getNextBlock();
+    if (!nextBlock) {
+      return fallback;
     }
 
-    getHatContents (fallback = "") {
-        if (this.def.type !== CBlockType.STARTER_HAT) {
-            //We aren't even a hat block!
-            //Warn here because it feels important to note.
-            console.warn("Compiler: Tried to getHatContents() on a non-hat block: ",this, "\nMake sure that this block has its correct compiler definition.");
-            return fallback;
-        }
+    var code = this.compileBlock(nextBlock);
 
-        var block = this.block;
+    return code == null ? fallback : code;
+  }
 
-        if (!block.getNextBlock) {
-            return fallback;
-        }
-
-        var nextBlock = block.getNextBlock();
-        if (!nextBlock) {
-            return fallback;
-        }
-
-        var code = this.compileBlock(nextBlock);
-        
-        return code == null ? fallback : code;
+  getInput(name, fallback = "null") {
+    var block = this.getInputBlock(name);
+    if (!block) {
+      return fallback;
     }
 
-    getInput (name, fallback = "null") {
-        var block = this.getInputBlock(name);
-        if (!block) {
-            return fallback;
-        }
+    return this.compileBlock(block);
+  }
 
-        return this.compileBlock(block);
+  getBlocklyInput(name) {
+    var block = this.block;
+
+    if (!block.inputList) {
+      return null;
     }
 
-    getBlocklyInput (name) {
-        var block = this.block;
-
-        if (!block.inputList) {
-            return null;
-        }
-
-        for (var input of block.inputList) {
-            if (input.name == name) {
-                return input;
-            }
-        }
-
-        return null;
+    for (var input of block.inputList) {
+      if (input.name == name) {
+        return input;
+      }
     }
 
-    getInputBlock (name) {
-        //This doesn't return an CBlockUtil, rather just the actual blockly block itself.
-        
-        var input = this.getBlocklyInput(name);
-        if (!input) {
-            return null;
-        }
+    return null;
+  }
 
-        var inputBlock = input.connection.targetBlock();
-        
-        return inputBlock || null;
+  getInputBlock(name) {
+    //This doesn't return an CBlockUtil, rather just the actual blockly block itself.
+
+    var input = this.getBlocklyInput(name);
+    if (!input) {
+      return null;
     }
 
-    getField (name, fallback = "") {
-        var field = this.getBlocklyField(name);
-        if (!field) {
-            return fallback;
-        }
+    var inputBlock = input.connection.targetBlock();
 
-        if (field.referencesVariables()) {
-            return fallback;
-        }
+    return inputBlock || null;
+  }
 
-        return field.getValue();
+  getField(name, fallback = "") {
+    var field = this.getBlocklyField(name);
+    if (!field) {
+      return fallback;
     }
 
-    getFieldText (name, fallback = "") {
-        var field = this.getBlocklyField(name);
-        if (!field) {
-            return fallback;
-        }
-
-        if (field.referencesVariables()) {
-            return fallback;
-        }
-
-        return field.getText();
+    if (field.referencesVariables()) {
+      return fallback;
     }
 
-    getFieldVariable (name) {
-        var field = this.getBlocklyField(name);
-        if (!field) {
-            return null;
-        }
+    return field.getValue();
+  }
 
-        if (!field.referencesVariables()) {
-            return null;
-        }
-
-        var variable = field.getVariable();
-        if (!variable) {
-            return null;
-        }
-
-        return {
-            name: variable.name,
-            id: variable.getId()
-        };
+  getFieldText(name, fallback = "") {
+    var field = this.getBlocklyField(name);
+    if (!field) {
+      return fallback;
     }
 
-    getBlocklyField (name) {
-        var block = this.block;
-        
-        for (var input of block.inputList) {
-            for (var field of input.fieldRow) {
-                if (field.name && field.SERIALIZABLE) {
-                    if (field.name == name) {
-                        return field;
-                    }
-                }
-            }
-        }
-
-        return null;
+    if (field.referencesVariables()) {
+      return fallback;
     }
+
+    return field.getText();
+  }
+
+  getFieldVariable(name) {
+    var field = this.getBlocklyField(name);
+    if (!field) {
+      return null;
+    }
+
+    if (!field.referencesVariables()) {
+      return null;
+    }
+
+    var variable = field.getVariable();
+    if (!variable) {
+      return null;
+    }
+
+    return {
+      name: variable.name,
+      id: variable.getId(),
+    };
+  }
+
+  getBlocklyField(name) {
+    var block = this.block;
+
+    for (var input of block.inputList) {
+      for (var field of input.fieldRow) {
+        if (field.name && field.SERIALIZABLE) {
+          if (field.name == name) {
+            return field;
+          }
+        }
+      }
+    }
+
+    return null;
+  }
 }
 
-module.exports = {CBlockUtil};
+module.exports = { CBlockUtil };

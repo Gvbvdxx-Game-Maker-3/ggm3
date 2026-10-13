@@ -5,6 +5,7 @@ class Thread {
   constructor(firstBlockID, sprite) {
     this.id = firstBlockID;
     this.sprite = sprite;
+    this.engine = this.sprite.engine;
     this.running = true;
     this.screenRefresh = true;
     this._hasStopped = false;
@@ -87,26 +88,28 @@ class Thread {
     }
   }
 
-  waitSeconds(seconds) {
-    var _this = this;
-    return new Promise((resolve) => {
-      if (!_this.running) {
-        resolve();
+  getTime() {
+    return this.engine.time.totalTime;
+  }
+
+  async waitSeconds(seconds) {
+    if (!this.running) {
+      return;
+    }
+    var start = this.getTime();
+    while (this.getTime() < start + seconds) {
+      await this.waitForNextFrame();
+      if (!this.running) {
+        //Thread was stopped before it could finish the wait.
+        //This should automatically end the thread since the checkAlive was used.
+        return;
       }
-      var milliseconds = seconds * 1000;
-      var start = performance.now();
-      var interval = setInterval(() => {
-        var now = performance.now();
-        if (!_this.running) {
-          clearInterval(interval);
-          resolve();
-        }
-        if (now - start > milliseconds) {
-          clearInterval(interval);
-          resolve();
-        }
-      });
-    });
+      if (start > this.getTime()) {
+        //We somehow are going in reverse or the timer was reset.
+        //Just stop waiting to stop an infinite loop.
+        return;
+      }
+    }
   }
 
   tweenToXY(targetX, targetY, duration, easing) {

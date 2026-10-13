@@ -104,19 +104,14 @@ class EngineRenderer {
     this._gl_projectionMatrix = projectionMatrix;
   }
 
-  /**
-   * Renders the game scene, this shouldn't be called directly.
-   * @param {Number} elapsed The time elapsed since the last frame.
-   * @returns {void}
-   */
   drawGameFrame({
-        spritesArray, //Sorted sprites to draw.
-        isLoopFrame,
-    }) {
+    spritesArray, //Sorted sprites to draw.
+    isLoopFrame,
+  }) {
     this.updateCanvasSize(); //This should happen right before we actually draw anything, this stops the black screen glitch from happening when resizing.
 
     var { canvas, gl, engine } = this;
-    
+
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(1, 1, 1, 0); // Use 0,0,0,0 to respect canvas style background
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -127,8 +122,8 @@ class EngineRenderer {
   drawSprites(sprites) {
     var _this = this;
     sprites.forEach((spr) => {
-        _this.renderSprite(spr);
-      });
+      _this.renderSprite(spr);
+    });
   }
 
   /**
@@ -149,9 +144,9 @@ class EngineRenderer {
       _gl_projectionMatrix,
       _gl_quadBufferInfo,
       engine,
-      canvas
+      canvas,
     } = this;
-    var {gameWidth,gameHeight,screenScale} = engine;
+    var { gameWidth, gameHeight, screenScale } = engine;
     if (spr.costumes[spr.costumeIndex]) {
       var costume = spr.costumes[spr.costumeIndex];
       var drawable = costume.drawable;

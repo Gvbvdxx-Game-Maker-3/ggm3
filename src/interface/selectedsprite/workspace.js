@@ -265,7 +265,6 @@ function init(state, deps) {
         var root = clickedBlock.getRootBlock();
         if (!spr.runningStacks[root.id]) {
           (async function () {
-            
             var code = deps.compilerInstance.compileClickedBlock(root);
             var outputThread = await spr.runFunction(code);
             if (outputThread) {
