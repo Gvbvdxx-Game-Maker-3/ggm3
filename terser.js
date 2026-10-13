@@ -1617,7 +1617,7 @@ var SourceMapGenerator = class _SourceMapGenerator {
 
 /***/ }),
 
-/***/ 8630:
+/***/ 6249:
 /***/ (function(__unused_webpack_module, exports) {
 
 (function (global, factory) {
@@ -41528,7 +41528,7 @@ async function run_cli({ program, packageJson, fs, path }) {
             if (program.parse) {
                 if (program.parse.acorn) {
                     files = convert_ast(function(toplevel, name) {
-                        return (__webpack_require__(8630).parse)(files[name], {
+                        return (__webpack_require__(6249).parse)(files[name], {
                             ecmaVersion: 2024,
                             locations: true,
                             program: toplevel,

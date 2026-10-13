@@ -956,6 +956,23 @@ module.exports = dialog;
 
 /***/ }),
 
+/***/ 342:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("engine_framerate", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    return `(engine.frameRate)`;
+  },
+});
+
+/***/ }),
+
 /***/ 389:
 /***/ ((module) => {
 
@@ -972,6 +989,24 @@ class LibrarySound {
 
 module.exports = LibrarySound;
 
+
+/***/ }),
+
+/***/ 406:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("text", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var TEXT = utils.getField("TEXT", "");
+
+    return JSON.stringify(TEXT);
+  },
+});
 
 /***/ }),
 
@@ -1144,14 +1179,14 @@ class BlockCompilerInstance {
       return null;
     }
 
-    if (block.getNextBlock && !isHat) {
+    if (util.doNext && block.getNextBlock && !isHat) {
       var nextBlock = block.getNextBlock();
       if (nextBlock) {
         var nextCode = this.compileBlock(nextBlock, {
           ...opts,
           parentState: util.parentState
         });
-        if (!nextCode) {
+        if (nextCode == null) {
           return null;
         }
         return code + nextCode;
@@ -1186,6 +1221,27 @@ module.exports = {
   FRAGMENT_SHADER,
 };
 
+
+/***/ }),
+
+/***/ 441:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+__webpack_require__(1163);
+__webpack_require__(5993);
+__webpack_require__(3653);
+__webpack_require__(2607);
+__webpack_require__(9452);
+__webpack_require__(9810);
+__webpack_require__(2316);
+__webpack_require__(5374);
+__webpack_require__(5351);
+__webpack_require__(5636);
+__webpack_require__(8188);
+__webpack_require__(5735);
+__webpack_require__(4957);
+__webpack_require__(2874);
+__webpack_require__(2022);
 
 /***/ }),
 
@@ -2600,6 +2656,24 @@ exports.update = update;
 
 /***/ }),
 
+/***/ 563:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("math_number", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var NUM = utils.getField("NUM", 0);
+
+    return JSON.stringify(NUM);
+  },
+});
+
+/***/ }),
+
 /***/ 602:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
@@ -2935,40 +3009,6 @@ class LibraryCostume {
 }
 
 module.exports = LibraryCostume;
-
-
-/***/ }),
-
-/***/ 734:
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
-var BlockCompiler = __webpack_require__(2391);
-var CBlockType = __webpack_require__(7561);
-var CoreFunctions = __webpack_require__(5619);
-
-BlockCompiler.defineBlock("event_whengamestarts", {
-  type: CBlockType.STARTER_HAT,
-  func: function (utils) {
-    var insideCode = utils.getHatContents("");
-    var fullInsideCode = CoreFunctions.putThreadStack(utils.block, insideCode);
-
-    var BLOCK_ID = JSON.stringify(utils.getID());
-
-    return `sprite.addStackListener("started", ${BLOCK_ID}, async function () {${fullInsideCode}});`;
-  },
-});
-
-BlockCompiler.defineBlock("event_beforegamestarts", {
-  type: CBlockType.STARTER_HAT,
-  func: function (utils) {
-    var insideCode = utils.getHatContents("");
-    var fullInsideCode = CoreFunctions.putThreadStack(utils.block, insideCode);
-
-    var BLOCK_ID = JSON.stringify(utils.getID());
-
-    return `sprite.addStackListener("beforestart", ${BLOCK_ID}, async function () {${fullInsideCode}});`;
-  },
-});
 
 
 /***/ }),
@@ -3992,17 +4032,36 @@ __webpack_require__(5334);
 
 /***/ }),
 
+/***/ 1163:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("control_create_clone_of_menu", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var CLONE_OPTION = utils.getField("CLONE_OPTION", null);
+
+    return JSON.stringify(CLONE_OPTION);
+  },
+});
+
+/***/ }),
+
 /***/ 1287:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 //Register the blocks here.
 
-__webpack_require__(4534);
-__webpack_require__(6537);
-__webpack_require__(734);
-__webpack_require__(4889);
-__webpack_require__(7315);
-__webpack_require__(3562);
+__webpack_require__(5669);
+__webpack_require__(2914);
+__webpack_require__(8621);
+__webpack_require__(8594);
+__webpack_require__(8215);
+__webpack_require__(441);
 
 
 /***/ }),
@@ -4604,6 +4663,25 @@ module.exports = { valueReport };
 
 /***/ }),
 
+/***/ 1800:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("motion_changexby", {
+  type: CBlockType.COMMAND,
+  func: function (util) {
+    var DX = util.getInput("DX", "0");
+
+    return `sprite.x += +(${DX}) || 0;`;
+  },
+});
+
+/***/ }),
+
 /***/ 2001:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -5013,6 +5091,38 @@ if (Blockly.Xml && Blockly.Xml.domToBlock) {
   })();
 }
 
+
+/***/ }),
+
+/***/ 2022:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("control_while", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var SUBSTACK = utils.getInput("SUBSTACK", "");
+    var CONDITION = utils.getInput("CONDITION", "false");
+
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+
+    var code = "";
+    code += `while (${CONDITION}) {`;
+    code += ALIVE_CHECK;
+
+    code += SUBSTACK; //The inside code is the input.
+    code += `if (thread.screenRefresh) {${CoreFunctions.threadWaitFrame(utils.block)}};`;
+    
+    code += ALIVE_CHECK;
+    code += "}";
+
+    return code;
+  },
+});
 
 /***/ }),
 
@@ -6268,6 +6378,14 @@ class Sprite {
     sprite.emitStackListener("clonestart");
   }
 
+  createCloneOf(sprName) {
+    var targetSprite = this.findSpriteByName(sprName);
+    if (!targetSprite) {
+      return;
+    }
+    targetSprite.createClone();
+  }
+
   findSpriteByName(name) {
     if (name instanceof Sprite) {
       return name;
@@ -6894,6 +7012,33 @@ module.exports = Sprite;
 
 /***/ }),
 
+/***/ 2316:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("control_if", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var SUBSTACK = utils.getInput("SUBSTACK", "");
+    var CONDITION = utils.getInput("CONDITION", "false");
+
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+
+    var code = "";
+    code += `if (${CONDITION}) {`;
+    code += SUBSTACK; //The inside code is the input.
+    code += "}";
+
+    return code;
+  },
+});
+
+/***/ }),
+
 /***/ 2361:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -7150,6 +7295,23 @@ function init(state, deps) {
 
 module.exports = { init };
 
+
+/***/ }),
+
+/***/ 2468:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("motion_direction", {
+  type: CBlockType.OUTPUT,
+  func: function (util) {
+    return `sprite.direction`;
+  },
+});
 
 /***/ }),
 
@@ -7528,6 +7690,23 @@ module.exports = {
 
 /***/ }),
 
+/***/ 2607:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("control_elapsed", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    return `(engine.time.elapsed / 1000)`;
+  },
+});
+
+/***/ }),
+
 /***/ 2695:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -7741,6 +7920,65 @@ module.exports = {
   loadLibrarySound,
 };
 
+
+/***/ }),
+
+/***/ 2874:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("control_wait", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var DURATION = utils.getInput("DURATION", "0");
+    var DURATION_NUM = CoreFunctions.castToNumber(DURATION, true);
+
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+
+    return `${ALIVE_CHECK}await thread.waitSeconds(${DURATION_NUM});${ALIVE_CHECK}`;
+  },
+});
+
+/***/ }),
+
+/***/ 2914:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+__webpack_require__(1800);
+__webpack_require__(4403);
+__webpack_require__(2468);
+__webpack_require__(8630);
+__webpack_require__(8738);
+__webpack_require__(7129);
+__webpack_require__(3669);
+__webpack_require__(9891);
+__webpack_require__(9209);
+__webpack_require__(9722);
+__webpack_require__(6091);
+__webpack_require__(8770);
+__webpack_require__(9866);
+__webpack_require__(6601);
+
+/***/ }),
+
+/***/ 2939:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("engine_estimated_fps", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    return `(engine.time.totalFps)`;
+  },
+});
 
 /***/ }),
 
@@ -8870,25 +9108,6 @@ module.exports = {
 
 /***/ }),
 
-/***/ 3562:
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
-var BlockCompiler = __webpack_require__(2391);
-var CBlockType = __webpack_require__(7561);
-var CoreFunctions = __webpack_require__(5619);
-
-BlockCompiler.defineBlock("control_wait", {
-  type: CBlockType.COMMAND,
-  func: function (utils) {
-    var DURATION = CoreFunctions.castToNumber(utils.getInput("DURATION", "0"));
-
-    return `${CoreFunctions.aliveCheck(utils.block)}await thread.waitSeconds(${DURATION});${CoreFunctions.aliveCheck(utils.block)}`;
-  },
-});
-
-
-/***/ }),
-
 /***/ 3591:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -9231,6 +9450,44 @@ module.exports = Thread;
 
 module.exports = __webpack_require__(7809);
 
+
+/***/ }),
+
+/***/ 3653:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("control_delete_this_clone", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    utils.doNext = false; //Don't compile anything after this.
+
+    return `thread.deleteClone();${CoreFunctions.aliveCheck(utils.block)}`;
+  },
+});
+
+/***/ }),
+
+/***/ 3669:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("motion_movesteps", {
+  type: CBlockType.COMMAND,
+  func: function (util) {
+    var STEPS = util.getInput("STEPS", "0");
+    var STEPS_NUM = CoreFunctions.castToNumber(STEPS, false);
+    return `sprite.moveSteps(${STEPS_NUM});`;
+  },
+});
 
 /***/ }),
 
@@ -20751,6 +21008,25 @@ function resizeCanvasToDisplaySize(canvas, multiplier) {
 
 /***/ }),
 
+/***/ 4403:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("motion_changeyby", {
+  type: CBlockType.COMMAND,
+  func: function (util) {
+    var DY = util.getInput("DY", "0");
+
+    return `sprite.y += +(${DY}) || 0;`;
+  },
+});
+
+/***/ }),
+
 /***/ 4428:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -21253,40 +21529,46 @@ module.exports = CollisionSprite;
 
 /***/ }),
 
-/***/ 4534:
+/***/ 4551:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
 
-BlockCompiler.defineBlock("math_number", {
+BlockCompiler.defineBlock("globaldata_get", {
   type: CBlockType.OUTPUT,
   func: function (utils) {
-    var NUM = utils.getField("NUM", 0);
+    var VARIABLE = utils.getField("VARIABLE", "");
 
-    return JSON.stringify(NUM);
+    return `engine.globalVariables[${JSON.stringify(VARIABLE)}]`;
   },
 });
 
-BlockCompiler.defineBlock("math_angle", {
-  type: CBlockType.OUTPUT,
-  func: function (utils) {
-    var NUM = utils.getField("NUM", 0);
+/***/ }),
 
-    return JSON.stringify(NUM);
+/***/ 4570:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("globaldata_changeby", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var VARIABLE = utils.getField("VARIABLE", "");
+    var VARIABLE_CODE = `engine.globalVariables[${JSON.stringify(VARIABLE)}]`;
+    var VARIABLE_NUM = CoreFunctions.castToNumber(VARIABLE_CODE, true);
+    
+    var VALUE = utils.getInput("VALUE", "0");
+    var VALUE_NUM = CoreFunctions.castToNumber(VALUE, true);
+
+    return `${VARIABLE} = ${VARIABLE_NUM} + ${VALUE_NUM};`;
   },
 });
-
-BlockCompiler.defineBlock("text", {
-  type: CBlockType.OUTPUT,
-  func: function (utils) {
-    var TEXT = utils.getField("TEXT", "");
-
-    return JSON.stringify(TEXT);
-  },
-});
-
 
 /***/ }),
 
@@ -21481,38 +21763,6 @@ Blockly.WorkspaceSvg.prototype.registerToolboxCategoryCallback(
     return xmlList;
   },
 );
-
-
-/***/ }),
-
-/***/ 4889:
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
-var BlockCompiler = __webpack_require__(2391);
-var CBlockType = __webpack_require__(7561);
-var CoreFunctions = __webpack_require__(5619);
-
-BlockCompiler.defineBlock("engine_framerate", {
-  type: CBlockType.OUTPUT,
-  func: function (utils) {
-    return `(engine.frameRate)`;
-  },
-});
-
-BlockCompiler.defineBlock("engine_estimated_fps", {
-  type: CBlockType.OUTPUT,
-  func: function (utils) {
-    return `(engine.time.totalFps)`;
-  },
-});
-
-BlockCompiler.defineBlock("engine_framerate_to", {
-  type: CBlockType.COMMAND,
-  func: function (utils) {
-    var FPS = util.getInput("FPS", "0");
-    return `engine.setFramerate(${FPS});`;
-  },
-});
 
 
 /***/ }),
@@ -21765,9 +22015,69 @@ document.addEventListener(
 
 /***/ }),
 
+/***/ 4957:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("control_wait_until", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var CONDITION = utils.getInput("CONDITION", "false");
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+
+    var code = "";
+    code += `while (!(${CONDITION})) {`;
+    code += ALIVE_CHECK;
+    code += CoreFunctions.threadWaitFrame(utils.block);
+    code += "}";
+
+    return code;
+  },
+});
+
+
+/***/ }),
+
 /***/ 5334:
 /***/ (() => {
 
+
+
+/***/ }),
+
+/***/ 5351:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("control_repeat_until", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var SUBSTACK = utils.getInput("SUBSTACK", "");
+    var CONDITION = utils.getInput("CONDITION", "false");
+
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+
+    var code = "";
+    code += `while (!(${CONDITION})) {`;
+    code += ALIVE_CHECK;
+
+    code += SUBSTACK; //The inside code is the input.
+    code += `if (thread.screenRefresh) {${CoreFunctions.threadWaitFrame(utils.block)}};`;
+    
+    code += ALIVE_CHECK;
+    code += "}";
+
+    return code;
+  },
+});
 
 
 /***/ }),
@@ -22737,6 +23047,23 @@ module.exports = generateToolbox;
 
 /***/ }),
 
+/***/ 5374:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("control_isclone", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    return `sprite.isClone`;
+  },
+});
+
+/***/ }),
+
 /***/ 5392:
 /***/ ((module) => {
 
@@ -22934,6 +23261,26 @@ class ExportOptionsEvents {
 
 module.exports = ExportOptionsEvents;
 
+
+/***/ }),
+
+/***/ 5587:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("globaldata_set", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var VARIABLE = utils.getField("VARIABLE", "");
+    var VALUE = utils.getInput("VALUE", "null");
+
+    return `engine.globalVariables[${JSON.stringify(VARIABLE)}] = ${VALUE};`;
+  },
+});
 
 /***/ }),
 
@@ -23808,8 +24155,9 @@ function putThreadStack(block, code) {
 }
 
 //Cast a value to number
-function castToNumber(code) {
-  return `(+(${code}) || 0)`;
+function castToNumber(code, surround = false) {
+  var c = `+(${code}) || 0`;
+  return surround ? `(${c})` : c;
 }
 
 module.exports = {
@@ -23824,8 +24172,38 @@ module.exports = {
   getClickedBlockLogic,
   getClickedOutputBlockLogic,
   putThreadStack,
-  castToNumber,
+  castToNumber
 };
+
+
+/***/ }),
+
+/***/ 5636:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("control_repeat", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var SUBSTACK = utils.getInput("SUBSTACK", "");
+    var TIMES = utils.getInput("TIMES", "0");
+    
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+
+    var code = "";
+    code += ALIVE_CHECK;
+    code += `await thread.repeatTimes(${TIMES}, async function () {`;
+    code += SUBSTACK;
+    code += "});";
+    code += ALIVE_CHECK;
+
+    return code;
+  },
+});
 
 
 /***/ }),
@@ -24336,6 +24714,62 @@ module.exports = { init };
 
 /***/ }),
 
+/***/ 5669:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+__webpack_require__(8107);
+__webpack_require__(563);
+__webpack_require__(406);
+
+/***/ }),
+
+/***/ 5735:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("control_stop", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var STOP_OPTION = utils.getField("STOP_OPTION", "");
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+
+    if (STOP_OPTION == "this script") {
+      return `thread.stop();${ALIVE_CHECK}`;
+    }
+    if (STOP_OPTION == "other scripts in sprite") {
+      return `thread.stopEverythingButMe();${ALIVE_CHECK}`;
+    }
+
+    return "";
+  },
+});
+
+/***/ }),
+
+/***/ 5736:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("engine_framerate_to", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var FPS = utils.getInput("FPS", "0");
+    var FPS_NUM = CoreFunctions.castToNumber(FPS, true);
+    return `engine.setFramerate(${FPS_NUM});`;
+  },
+});
+
+
+/***/ }),
+
 /***/ 5808:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -24532,6 +24966,25 @@ addEventListener("beforeunload", (event) => {
 
 /***/ }),
 
+/***/ 5993:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("control_create_clone_of", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var CLONE_OPTION = utils.getInput("CLONE_OPTION", '"_myself_"');
+
+    return `sprite.createCloneOf(${CLONE_OPTION});`;
+  },
+});
+
+/***/ }),
+
 /***/ 6065:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -24628,6 +25081,25 @@ module.exports = Drawable;
 
 /***/ }),
 
+/***/ 6091:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("motion_turnleft", {
+  type: CBlockType.COMMAND,
+  func: function (util) {
+    var DEGREES = util.getInput("DEGREES", "0");
+
+    return `sprite.direction -= +(${DEGREES}) || 0;`;
+  },
+});
+
+/***/ }),
+
 /***/ 6129:
 /***/ ((module) => {
 
@@ -24689,6 +25161,37 @@ module.exports = {
   getSaveableVariablesGlobal,
 };
 
+
+/***/ }),
+
+/***/ 6232:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("event_whengamestarts", {
+  type: CBlockType.STARTER_HAT,
+  func: function (utils) {
+    var insideCode = utils.getHatContents("");
+    var fullInsideCode = CoreFunctions.putThreadStack(utils.block, insideCode);
+
+    var BLOCK_ID = JSON.stringify(utils.getID());
+
+    var code = "";
+    code += `sprite.addStackListener(`
+    code += `"beforestart",`;
+    code += BLOCK_ID + ",";
+    code += `async function () {`;
+    code += fullInsideCode;
+    code += `});`;
+    
+
+    return code;
+  },
+});
 
 /***/ }),
 
@@ -25090,6 +25593,37 @@ module.exports = { init };
 
 /***/ }),
 
+/***/ 6375:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("event_whengamestarts", {
+  type: CBlockType.STARTER_HAT,
+  func: function (utils) {
+    var insideCode = utils.getHatContents("");
+    var fullInsideCode = CoreFunctions.putThreadStack(utils.block, insideCode);
+
+    var BLOCK_ID = JSON.stringify(utils.getID());
+
+    var code = "";
+    code += `sprite.addStackListener(`
+    code += `"started",`;
+    code += BLOCK_ID + ",";
+    code += `async function () {`;
+    code += fullInsideCode;
+    code += `});`;
+    
+
+    return code;
+  },
+});
+
+/***/ }),
+
 /***/ 6415:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -25142,134 +25676,6 @@ module.exports = [
     ],
   },
 ];
-
-
-/***/ }),
-
-/***/ 6537:
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
-var BlockCompiler = __webpack_require__(2391);
-var CBlockType = __webpack_require__(7561);
-var CoreFunctions = __webpack_require__(5619);
-
-BlockCompiler.defineBlock("motion_movesteps", {
-  type: CBlockType.COMMAND,
-  func: function (util) {
-    var STEPS = util.getInput("STEPS", "0");
-    return `sprite.moveSteps(+(${STEPS}) || 0);`;
-  },
-});
-
-BlockCompiler.defineBlock("motion_goto", {
-  type: CBlockType.OUTPUT,
-  func: function (util) {
-    var TO = util.getInput("TO", "null");
-    return `sprite.goTo(${TO});`;
-  },
-});
-
-BlockCompiler.defineBlock("motion_goto_menu", {
-  type: CBlockType.OUTPUT,
-  func: function (util) {
-    var TO = util.getField("TO", "");
-    return JSON.stringify(TO);
-  },
-});
-
-BlockCompiler.defineBlock("motion_xposition", {
-  type: CBlockType.OUTPUT,
-  func: function (util) {
-    return `sprite.x`;
-  },
-});
-
-BlockCompiler.defineBlock("motion_yposition", {
-  type: CBlockType.OUTPUT,
-  func: function (util) {
-    return `sprite.y`;
-  },
-});
-
-BlockCompiler.defineBlock("motion_direction", {
-  type: CBlockType.OUTPUT,
-  func: function (util) {
-    return `sprite.direction`;
-  },
-});
-
-BlockCompiler.defineBlock("motion_gotoxy", {
-  type: CBlockType.COMMAND,
-  func: function (util) {
-    var X = util.getInput("X", "0");
-    var Y = util.getInput("Y", "0");
-
-    return `sprite.x = +(${X}) || 0; sprite.y = +(${Y}) || 0;`;
-  },
-});
-
-BlockCompiler.defineBlock("motion_changexby", {
-  type: CBlockType.COMMAND,
-  func: function (util) {
-    var DX = util.getInput("DX", "0");
-
-    return `sprite.x += +(${DX}) || 0;`;
-  },
-});
-
-BlockCompiler.defineBlock("motion_setx", {
-  type: CBlockType.COMMAND,
-  func: function (util) {
-    var X = util.getInput("X", "0");
-
-    return `sprite.x = +(${X}) || 0;`;
-  },
-});
-
-BlockCompiler.defineBlock("motion_changeyby", {
-  type: CBlockType.COMMAND,
-  func: function (util) {
-    var DY = util.getInput("DY", "0");
-
-    return `sprite.y += +(${DY}) || 0;`;
-  },
-});
-
-BlockCompiler.defineBlock("motion_sety", {
-  type: CBlockType.COMMAND,
-  func: function (util) {
-    var Y = util.getInput("Y", "0");
-
-    return `sprite.y = +(${Y}) || 0;`;
-  },
-});
-
-BlockCompiler.defineBlock("motion_pointindirection", {
-  type: CBlockType.COMMAND,
-  func: function (util) {
-    var DIRECTION = util.getInput("DIRECTION", "0");
-
-    return `sprite.direction = +(${DIRECTION}) || 0;`;
-  },
-});
-
-BlockCompiler.defineBlock("motion_turnleft", {
-  type: CBlockType.COMMAND,
-  func: function (util) {
-    var DEGREES = util.getInput("DEGREES", "0");
-
-    return `sprite.direction -= +(${DEGREES}) || 0;`;
-  },
-});
-
-BlockCompiler.defineBlock("motion_turnright", {
-  type: CBlockType.COMMAND,
-  func: function (util) {
-    var DEGREES = util.getInput("DEGREES", "0");
-
-    return `sprite.direction += +(${DEGREES}) || 0;`;
-  },
-});
 
 
 /***/ }),
@@ -25338,6 +25744,23 @@ class ProgressMonitor extends EventEmitter {
 
 module.exports = { ProgressMonitor };
 
+
+/***/ }),
+
+/***/ 6601:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("motion_yposition", {
+  type: CBlockType.OUTPUT,
+  func: function (util) {
+    return `sprite.y`;
+  },
+});
 
 /***/ }),
 
@@ -26501,6 +26924,26 @@ Blockly.Blocks["json_array_join"] = {
 
 /***/ }),
 
+/***/ 7129:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("motion_gotoxy", {
+  type: CBlockType.COMMAND,
+  func: function (util) {
+    var X = util.getInput("X", "0");
+    var Y = util.getInput("Y", "0");
+
+    return `sprite.x = +(${X}) || 0; sprite.y = +(${Y}) || 0;`;
+  },
+});
+
+/***/ }),
+
 /***/ 7135:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -26962,45 +27405,6 @@ class BlockFlasher {
 const myFlash = { block: null, timerID: null };
 
 module.exports = BlockFlasher;
-
-
-/***/ }),
-
-/***/ 7315:
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
-var BlockCompiler = __webpack_require__(2391);
-var CBlockType = __webpack_require__(7561);
-var CoreFunctions = __webpack_require__(5619);
-
-BlockCompiler.defineBlock("globaldata_get", {
-  type: CBlockType.OUTPUT,
-  func: function (utils) {
-    var VARIABLE = utils.getField("VARIABLE", "");
-
-    return `engine.globalVariables[${JSON.stringify(VARIABLE)}]`;
-  },
-});
-
-BlockCompiler.defineBlock("globaldata_set", {
-  type: CBlockType.COMMAND,
-  func: function (utils) {
-    var VARIABLE = utils.getField("VARIABLE", "");
-    var VALUE = utils.getInput("VALUE", "null");
-
-    return `engine.globalVariables[${JSON.stringify(VARIABLE)}] = ${VALUE};`;
-  },
-});
-
-BlockCompiler.defineBlock("globaldata_changeby", {
-  type: CBlockType.COMMAND,
-  func: function (utils) {
-    var VARIABLE = utils.getField("VARIABLE", "");
-    var VALUE = utils.getInput("VALUE", "0");
-
-    return `engine.globalVariables[${JSON.stringify(VARIABLE)}] = (+(engine.globalVariables[${JSON.stringify(VARIABLE)}]) || 0) + (+(${VALUE}) || 0);`;
-  },
-});
 
 
 /***/ }),
@@ -29569,6 +29973,24 @@ module.exports = GameTime;
 
 /***/ }),
 
+/***/ 8107:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("math_angle", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var NUM = utils.getField("NUM", 0);
+
+    return JSON.stringify(NUM);
+  },
+});
+
+/***/ }),
+
 /***/ 8123:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -29578,6 +30000,37 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("(function () {\n  ///////////////////////////////////////////////////////////\n\n  //Check that we have everything before running\n  if (!window.Game || !window.GGM3Engine) {\n    window.alert(\n      \"Couldn't find either GGM3Engine or the Game object,\" +\n        \"you may have to include the scripts.\",\n    );\n    return;\n  }\n\n  ///////////////////////////////////////////////////////////\n\n  const QuickStart = false;\n\n  ///////////////////////////////////////////////////////////\n\n  //Error handling in case the game is bad quality or something broken\n\n  window.addEventListener(\n    \"error\",\n    (event) => {\n      window.alert(event.message);\n    },\n    false,\n  );\n\n  window.addEventListener(\"unhandledrejection\", (event) => {\n    window.alert(event.reason);\n  });\n\n  ///////////////////////////////////////////////////////////\n\n  //Find elements\n\n  var Game = window.Game;\n  var GGM3Engine = window.GGM3Engine;\n\n  var loadingScreen = document.getElementById(\"loadingscreen\");\n  var loadingBarInner = document.getElementById(\"loadingbar-inner\");\n  var loadingBarInnerText = document.getElementById(\"loadingbar-innertext\");\n  var gameContent = document.getElementById(\"gameContent\");\n  var gameCanvas = document.getElementById(\"gameCanvas\");\n  var clickToStart = document.getElementById(\"clicktostart\");\n  var clickToStartButton = document.getElementById(\"clicktostart-button\");\n\n  ///////////////////////////////////////////////////////////\n\n  //Make sure the elements are proper.\n  loadingScreen.hidden = false;\n  gameContent.hidden = true;\n  clickToStart.hidden = true;\n\n  ///////////////////////////////////////////////////////////\n\n  var engine = new GGM3Engine(gameCanvas);\n  Game.attachEngine(engine);\n\n  ///////////////////////////////////////////////////////////\n\n  function setProgress(current, max) {\n    var percent = (current / max) * 100;\n\n    loadingBarInner.style.width = Math.round(percent).toFixed(5) + \"%\";\n    loadingBarInnerText.textContent = `Loading... ${percent.toFixed(2)}%`;\n  }\n\n  setProgress(0, 100);\n  Game.addEventListener(\"progress\", setProgress);\n\n  ///////////////////////////////////////////////////////////\n\n  Game.addEventListener(\"error\", (err) => {\n    loadingBarInnerText.setAttribute(\"error\", \"\");\n    loadingBarInnerText.textContent =\n      \"Error! Check browser developer tools for more info.\";\n  });\n\n  ///////////////////////////////////////////////////////////\n\n  Game.addEventListener(\"loaded\", () => {\n    if (QuickStart) {\n      startGame();\n    } else {\n      loadingScreen.hidden = true;\n      gameContent.hidden = true;\n\n      clickToStart.hidden = false;\n      var launched = false;\n      clickToStartButton.addEventListener(\"click\", () => {\n        if (launched) return;\n        startGame();\n        launched = true;\n      });\n    }\n  });\n\n  ///////////////////////////////////////////////////////////\n\n  //Resize handling so that when the window resizes the game fits the entire screen.\n  function handleResize() {\n    var scale = window.innerHeight / engine.gameHeight;\n    var scaleHorizontal = window.innerWidth / engine.gameWidth;\n    if (scale > scaleHorizontal) {\n      scale = scaleHorizontal;\n    }\n    gameCanvas.style.width = scale * engine.gameWidth + \"px\";\n    gameCanvas.style.height = scale * engine.gameHeight + \"px\";\n    engine.screenScale = scale;\n    engine.updateCanvasSize();\n  }\n\n  window.addEventListener(\"resize\", handleResize);\n\n  ///////////////////////////////////////////////////////////\n\n  //Function to retrieve mouse position based on element size and the target size.\n  function getMousePosition(event, onElement, size) {\n    var client = onElement.getBoundingClientRect();\n\n    var relativeX = event.x - client.x;\n    var relativeY = event.y - client.y;\n\n    var scaleX = client.width / size[0];\n    var realX = relativeX * scaleX;\n\n    var scaleY = client.height / size[1];\n    var realY = relativeY * scaleY;\n\n    if (realX < 0) {\n      realX = 0;\n    }\n    if (realY < 0) {\n      realY = 0;\n    }\n\n    if (realX > size[0]) {\n      realX = size[0];\n    }\n    if (realY > size[1]) {\n      realY = size[1];\n    }\n\n    var pos = {\n      x: realX,\n      y: realY,\n    };\n    return pos;\n  }\n\n  ///////////////////////////////////////////////////////////\n\n  //Feed the user input into the engine.\n\n  function startInputHandling() {\n    document.addEventListener(\"mousemove\", (event) => {\n      var pos = getMousePosition(event, gameCanvas, [\n        gameCanvas.width,\n        gameCanvas.height,\n      ]);\n      engine.changeMousePosition(pos.x, pos.y);\n    });\n\n    gameCanvas.addEventListener(\"mousedown\", (event) => {\n      engine.changeMouseDown(true);\n    });\n\n    document.addEventListener(\"mouseup\", (event) => {\n      engine.changeMouseDown(false);\n    });\n\n    document.addEventListener(\"keydown\", (event) => {\n      if (document.activeElement == document.body) {\n        engine.changeKeyPressed(event.key, true);\n        event.preventDefault();\n      }\n    });\n\n    document.addEventListener(\"keyup\", (event) => {\n      engine.changeKeyPressed(event.key, false);\n    });\n  }\n\n  ///////////////////////////////////////////////////////////\n\n  //Start game loop handler\n\n  function startGame() {\n    handleResize();\n    startInputHandling();\n    engine.startGame();\n\n    loadingScreen.hidden = true;\n    clickToStart.hidden = true;\n\n    engine.once(engine.FRAME_RENDERED, () => {\n      //This waits for the next frame so that\n      // it doesn't show the stopped frame of the game briefly.\n      gameContent.hidden = false;\n    });\n  }\n\n  ///////////////////////////////////////////////////////////\n\n  //Finally start preloading the game.\n  Game.loadGame();\n})();\n");
+
+/***/ }),
+
+/***/ 8188:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("control_start_as_clone", {
+  type: CBlockType.STARTER_HAT,
+  func: function (utils) {
+    var insideCode = utils.getHatContents("");
+    var fullInsideCode = CoreFunctions.putThreadStack(utils.block, insideCode);
+
+    var BLOCK_ID = JSON.stringify(utils.getID());
+
+    var code = "";
+    code += `sprite.addStackListener(`
+    code += `"clonestart",`;
+    code += BLOCK_ID + ",";
+    code += `async function () {`;
+    code += fullInsideCode;
+    code += `});`;
+    
+
+    return code;
+  },
+});
 
 /***/ }),
 
@@ -29676,6 +30129,15 @@ function calculateMatrix(sprite, dst) {
 
 module.exports = calculateMatrix;
 
+
+/***/ }),
+
+/***/ 8215:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+__webpack_require__(4551);
+__webpack_require__(5587);
+__webpack_require__(4570);
 
 /***/ }),
 
@@ -30082,6 +30544,79 @@ module.exports = {
   dataURLToArrayBuffer,
 };
 
+
+/***/ }),
+
+/***/ 8594:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+__webpack_require__(2939);
+__webpack_require__(5736);
+__webpack_require__(342);
+
+/***/ }),
+
+/***/ 8621:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+__webpack_require__(6232);
+__webpack_require__(6375);
+
+
+/***/ }),
+
+/***/ 8630:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("motion_goto_menu", {
+  type: CBlockType.OUTPUT,
+  func: function (util) {
+    var TO = util.getField("TO", "");
+    return JSON.stringify(TO);
+  },
+});
+
+/***/ }),
+
+/***/ 8738:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("motion_goto", {
+  type: CBlockType.COMMAND,
+  func: function (util) {
+    var TO = util.getInput("TO", "null");
+    return `sprite.goTo(${TO});`;
+  },
+});
+
+/***/ }),
+
+/***/ 8770:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("motion_turnright", {
+  type: CBlockType.COMMAND,
+  func: function (util) {
+    var DEGREES = util.getInput("DEGREES", "0");
+
+    return `sprite.direction += +(${DEGREES}) || 0;`;
+  },
+});
 
 /***/ }),
 
@@ -30687,6 +31222,25 @@ module.exports = {
 
 /***/ }),
 
+/***/ 9209:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("motion_setx", {
+  type: CBlockType.COMMAND,
+  func: function (util) {
+    var X = util.getInput("X", "0");
+
+    return `sprite.x = +(${X}) || 0;`;
+  },
+});
+
+/***/ }),
+
 /***/ 9291:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -31029,6 +31583,7 @@ class CBlockUtil {
     this.def = def;
     this.block = block;
     this.useDummy = useDummy;
+    this.doNext = true;
     this.foundMissingBlock = false;
     this.isBlockUtil = true;
     this.options = options || {};
@@ -31081,6 +31636,8 @@ class CBlockUtil {
     return code == null ? fallback : code;
   }
 
+  //Remember that input isn't always an output block.
+  //It could be also a statement, like the inside of an if block.
   getInput(name, fallback = "null") {
     var block = this.getInputBlock(name);
     if (!block) {
@@ -31925,6 +32482,41 @@ module.exports = HTML5ExportOption;
 
 /***/ }),
 
+/***/ 9452:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("control_forever", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var SUBSTACK = utils.getInput("SUBSTACK", "");
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+
+    var code = "";
+    code += "while (true) {"; //Loops infinitely.
+    code += ALIVE_CHECK;
+
+    code += SUBSTACK; //The inside code is the input.
+
+    //Though that it would hang here if screen refresh was turned off,
+    // some people may use this as an alternative while loop,
+    // and use it for some tasks.
+    // they exit the loop through a stopping block.
+    code += `if (thread.screenRefresh) {${CoreFunctions.threadWaitFrame(utils.block)}};`;
+    
+    code += ALIVE_CHECK;
+    code += "}";
+
+    return code;
+  },
+});
+
+/***/ }),
+
 /***/ 9483:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -31939,6 +32531,25 @@ __webpack_require__(2498);
 __webpack_require__(7156);
 __webpack_require__(5939);
 
+
+/***/ }),
+
+/***/ 9722:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("motion_sety", {
+  type: CBlockType.COMMAND,
+  func: function (util) {
+    var Y = util.getInput("Y", "0");
+
+    return `sprite.y = +(${Y}) || 0;`;
+  },
+});
 
 /***/ }),
 
@@ -32571,6 +33182,34 @@ Blockly.Blocks["looks_costumes"] = {
 
 /***/ }),
 
+/***/ 9810:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("control_if_else", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var SUBSTACK = utils.getInput("SUBSTACK", "");
+    var SUBSTACK2 = utils.getInput("SUBSTACK2", "");
+    var CONDITION = utils.getInput("CONDITION", "false");
+
+    var code = "";
+    code += `if (${CONDITION}) {`;
+    code += SUBSTACK; //The inside code is the input.
+    code += "} else {";
+    code += SUBSTACK2;
+    code += "}";
+
+    return code;
+  },
+});
+
+/***/ }),
+
 /***/ 9822:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -32611,6 +33250,23 @@ class CBlockDefinition {
 
 module.exports = { CBlockDefinition };
 
+
+/***/ }),
+
+/***/ 9866:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("motion_xposition", {
+  type: CBlockType.OUTPUT,
+  func: function (util) {
+    return `sprite.x`;
+  },
+});
 
 /***/ }),
 
@@ -32975,6 +33631,25 @@ Blockly.Blocks["control_stop"] = {
   },
 };
 
+
+/***/ }),
+
+/***/ 9891:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("motion_pointindirection", {
+  type: CBlockType.COMMAND,
+  func: function (util) {
+    var DIRECTION = util.getInput("DIRECTION", "0");
+
+    return `sprite.direction = +(${DIRECTION}) || 0;`;
+  },
+});
 
 /***/ }),
 
