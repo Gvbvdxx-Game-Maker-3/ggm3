@@ -85,8 +85,9 @@ function putThreadStack(block, code) {
 }
 
 //Cast a value to number
-function castToNumber(code) {
-  return `(+(${code}) || 0)`;
+function castToNumber(code, surround = false) {
+  var c = `+(${code}) || 0`;
+  return surround ? `(${c})` : c;
 }
 
 module.exports = {
@@ -101,5 +102,5 @@ module.exports = {
   getClickedBlockLogic,
   getClickedOutputBlockLogic,
   putThreadStack,
-  castToNumber,
+  castToNumber
 };

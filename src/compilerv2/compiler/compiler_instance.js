@@ -171,7 +171,7 @@ class BlockCompilerInstance {
           ...opts,
           parentState: util.parentState
         });
-        if (!nextCode) {
+        if (nextCode == null) {
           return null;
         }
         return code + nextCode;

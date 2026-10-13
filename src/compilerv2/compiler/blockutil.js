@@ -59,6 +59,8 @@ class CBlockUtil {
     return code == null ? fallback : code;
   }
 
+  //Remember that input isn't always an output block.
+  //It could be also a statement, like the inside of an if block.
   getInput(name, fallback = "null") {
     var block = this.getInputBlock(name);
     if (!block) {
