@@ -3324,6 +3324,7 @@ class Thread {
   constructor(firstBlockID, sprite) {
     this.id = firstBlockID;
     this.sprite = sprite;
+    this.engine = this.sprite.engine;
     this.running = true;
     this.screenRefresh = true;
     this._hasStopped = false;
@@ -3406,26 +3407,28 @@ class Thread {
     }
   }
 
-  waitSeconds(seconds) {
-    var _this = this;
-    return new Promise((resolve) => {
-      if (!_this.running) {
-        resolve();
+  getTime() {
+    return this.engine.time.totalTime;
+  }
+
+  async waitSeconds(seconds) {
+    if (!this.running) {
+      return;
+    }
+    var start = this.getTime();
+    while (this.getTime() < start + seconds) {
+      await this.waitForNextFrame();
+      if (!this.running) {
+        //Thread was stopped before it could finish the wait.
+        //This should automatically end the thread since the checkAlive was used.
+        return;
       }
-      var milliseconds = seconds * 1000;
-      var start = performance.now();
-      var interval = setInterval(() => {
-        var now = performance.now();
-        if (!_this.running) {
-          clearInterval(interval);
-          resolve();
-        }
-        if (now - start > milliseconds) {
-          clearInterval(interval);
-          resolve();
-        }
-      });
-    });
+      if (start > this.getTime()) {
+        //We somehow are going in reverse or the timer was reset.
+        //Just stop waiting to stop an infinite loop.
+        return;
+      }
+    }
   }
 
   tweenToXY(targetX, targetY, duration, easing) {
@@ -14529,19 +14532,14 @@ class EngineRenderer {
     this._gl_projectionMatrix = projectionMatrix;
   }
 
-  /**
-   * Renders the game scene, this shouldn't be called directly.
-   * @param {Number} elapsed The time elapsed since the last frame.
-   * @returns {void}
-   */
   drawGameFrame({
-        spritesArray, //Sorted sprites to draw.
-        isLoopFrame,
-    }) {
+    spritesArray, //Sorted sprites to draw.
+    isLoopFrame,
+  }) {
     this.updateCanvasSize(); //This should happen right before we actually draw anything, this stops the black screen glitch from happening when resizing.
 
     var { canvas, gl, engine } = this;
-    
+
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(1, 1, 1, 0); // Use 0,0,0,0 to respect canvas style background
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -14552,8 +14550,8 @@ class EngineRenderer {
   drawSprites(sprites) {
     var _this = this;
     sprites.forEach((spr) => {
-        _this.renderSprite(spr);
-      });
+      _this.renderSprite(spr);
+    });
   }
 
   /**
@@ -14574,9 +14572,9 @@ class EngineRenderer {
       _gl_projectionMatrix,
       _gl_quadBufferInfo,
       engine,
-      canvas
+      canvas,
     } = this;
-    var {gameWidth,gameHeight,screenScale} = engine;
+    var { gameWidth, gameHeight, screenScale } = engine;
     if (spr.costumes[spr.costumeIndex]) {
       var costume = spr.costumes[spr.costumeIndex];
       var drawable = costume.drawable;
@@ -15720,7 +15718,8 @@ var EventEmitter = __webpack_require__(228);
 var CollisionSprite = __webpack_require__(4447);
 var Library = __webpack_require__(3728);
 
-var {EngineRenderer} = __webpack_require__(4428);
+var { EngineRenderer } = __webpack_require__(4428);
+var GameTime = __webpack_require__(8024);
 
 var created = false;
 
@@ -15812,7 +15811,6 @@ class GGM3Engine extends EventEmitter {
     this.frameRate = this.DEFAULT_FRAMERATE;
     this._frameRate = this.frameRate;
     this.frameTimestamps = [];
-    this._iTime = 0;
     this.sMath = sMath;
     this.exportMode = false;
     this.activeTextures = 0;
@@ -15827,7 +15825,6 @@ class GGM3Engine extends EventEmitter {
     this.keysPressed = {};
     this.renderer = new EngineRenderer(this, this.canvas);
     this.generateMouseMask();
-    this.startRenderLoop();
     this.spriteMap = {};
     this.globalVariables = {};
     this.propertyVariables = {};
@@ -15841,6 +15838,10 @@ class GGM3Engine extends EventEmitter {
     this.renderer.updateCanvasSize();
     this.renderer.glCalculation();
     this.changeCursorStyle(this.DEFAULT_CURSOR_STYLE);
+
+    this.time = new GameTime(this);
+    this.stopGame();
+    this.time.startLoop();
   }
 
   /**
@@ -16129,6 +16130,7 @@ class GGM3Engine extends EventEmitter {
    * Stops the game by stopping all scripts, deleting all clones, and resetting all effects for every sprite in the game.
    */
   stopGame() {
+    this.time.stop();
     this.broadcastQueue = [];
     for (var sprite of this.sprites) {
       sprite.stopAllScripts();
@@ -16142,6 +16144,7 @@ class GGM3Engine extends EventEmitter {
    */
   startGame() {
     this.stopGame();
+    this.time.start();
     this.makeUniqueSpriteNames();
     for (var sprite of this.sprites) {
       sprite.emitStackListener("beforestart");
@@ -16323,44 +16326,7 @@ class GGM3Engine extends EventEmitter {
     return newSprite;
   }
 
-  /**
-   * Starts the render loop of the game, which updates and renders every sprite in the game every frame.
-   * The framerate can be changed by setting the `frameRate` property, but it defaults to 60 FPS.
-   * @returns {void}
-   */
-  startRenderLoop() {
-    const _this = this;
-    let previous = performance.now();
-    const frameTimestamps = this.frameTimestamps;
-
-    function loop() {
-      const now = performance.now();
-
-      const frameDuration = 1000 / _this.frameRate;
-      let delta = now - previous;
-
-      if (delta >= frameDuration) {
-        previous = now - (delta % frameDuration);
-
-        while (frameTimestamps.length > 0 && frameTimestamps[0] <= now - 1000) {
-          frameTimestamps.shift();
-        }
-
-        frameTimestamps.push(now);
-
-        _this.runRenderFunc(delta, frameTimestamps.length);
-      }
-
-      setTimeout(loop, 1);
-    }
-
-    setTimeout(loop, 1);
-  }
-
-  runRenderFunc(elapsed, estimatedFramerate) {
-    this._iTime += elapsed / 1000;
-    this.elapsedFrameTime = elapsed;
-    this.estimatedFramerate = estimatedFramerate;
+  runFrame() {
     if (this._frameRate !== this.frameRate) {
       this._frameRate = this.frameRate;
       this.emit(this.FRAMERATE_CHANGED, this._frameRate);
@@ -16377,22 +16343,32 @@ class GGM3Engine extends EventEmitter {
       this._editDragging = null;
     }
 
-    this.emit(this.BEFORE_FRAME_RENDER, elapsed, estimatedFramerate, this._iTime);
+    this.emit(
+      this.BEFORE_FRAME_RENDER,
+      this.time.elapsed,
+      this.time.totalFps,
+      this.time.totalTime,
+    );
 
-    var sprs = this.getAllTopSprites()
+    var sprs = this.getAllTopSprites();
     var sprsReversed = sprs.reverse();
     sprsReversed.forEach((spr) => {
       engine.tickSprite(spr);
     });
-    this.tween.update(engine._iTime * 1000);
+    this.tween.update(this.time.totalTime * 1000);
 
     this.renderer.drawGameFrame({
-      elapsed,
-      estimatedFramerate,
-      spritesArray: sprsReversed
+      elapsed: this.time.elapsed,
+      totalFps: this.time.totalFps,
+      spritesArray: sprsReversed,
     });
 
-    this.emit(this.FRAME_RENDERED, elapsed, estimatedFramerate, this._iTime);
+    this.emit(
+      this.FRAME_RENDERED,
+      this.time.elapsed,
+      this.time.totalFps,
+      this.time.totalTime,
+    );
   }
 
   /**
@@ -16635,6 +16611,65 @@ class GGM3Engine extends EventEmitter {
 module.exports = {
   GGM3Engine,
 };
+
+
+/***/ }),
+
+/***/ 8024:
+/***/ ((module) => {
+
+class GameTime {
+  constructor(engine) {
+    this.engine = engine;
+    this.frameTimestamps = [];
+    this.totalTime = 0;
+  }
+
+  stop() {
+    var frameTimestamps = this.frameTimestamps;
+    while (frameTimestamps.length > 0) {
+      frameTimestamps.shift();
+    }
+  }
+
+  start() {
+    this.totalTime = 0;
+  }
+
+  startLoop() {
+    var _this = this;
+    var previous = performance.now();
+    var frameTimestamps = this.frameTimestamps;
+    var engine = this.engine;
+
+    function loop() {
+      var now = performance.now();
+
+      var frameDuration = 1000 / engine.frameRate;
+      var delta = now - previous;
+
+      if (delta >= frameDuration) {
+        previous = now - (delta % frameDuration);
+
+        while (frameTimestamps.length > 0 && frameTimestamps[0] <= now - 1000) {
+          frameTimestamps.shift();
+        }
+        frameTimestamps.push(now);
+
+        _this.totalTime += delta / 1000;
+        _this.elapsed = delta;
+        _this.totalFps = frameTimestamps.length;
+        engine.runFrame();
+      }
+
+      _this.timeout = setTimeout(loop, 1);
+    }
+
+    _this.timeout = setTimeout(loop, 1);
+  }
+}
+
+module.exports = GameTime;
 
 
 /***/ }),

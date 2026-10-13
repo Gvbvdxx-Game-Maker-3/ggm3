@@ -630,10 +630,10 @@ if (true) {
 /***/ 264:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-
 __webpack_require__(1287);
 
 module.exports = __webpack_require__(2391);
+
 
 /***/ }),
 
@@ -978,162 +978,192 @@ module.exports = LibrarySound;
 /***/ 421:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var CBlockType = __webpack_require__(7561);
-var {CBlockUtil} = __webpack_require__(9341);
+var { CBlockUtil } = __webpack_require__(9341);
 var CoreFunctions = __webpack_require__(5619);
 
 class BlockCompilerInstance {
-    constructor(compiler, options) {
-        this.compiler = compiler;
+  constructor(compiler, options) {
+    this.compiler = compiler;
 
-        if (!options) {
-            throw new Error("No options provided");
-        }
-
-        this.exportCompile = options.useExportCompile || false;
-        this.useBlockNumberIDs = options.useBlockNumberIDs || false;
-
-        this.resetBlockIDCount();
-
+    if (!options) {
+      throw new Error("No options provided");
     }
 
-    resetBlockIDCount() {
-        this._idCount = 0;
-        this._ids = {};
+    this.exportCompile = options.useExportCompile || false;
+    this.useBlockNumIDs = options.useBlockNumIDs || false;
+    this.useDummyDef = options.useDummyDef || false;
+    this.useDummyDefClicked = options.useDummyDefClicked || true;
+
+    this.resetBlockIDCount();
+  }
+
+  resetBlockIDCount() {
+    this._idCount = 0;
+    this._ids = {};
+  }
+
+  getBlockID(block) {
+    if (this.useBlockNumberIDs) {
+      var numId = this._ids[block.id];
+      if (typeof numId !== "undefined") {
+        return numId;
+      } else {
+        this._idCount += 1;
+        this._ids[block.id] = this._idCount;
+        return this._idCount;
+      }
+    } else {
+      return block.id;
+    }
+  }
+
+  getBlockDefinition(name, useDummy) {
+    var def = this.compiler.getBlockDefinition(name);
+    if (useDummy && !def) {
+      return this.compiler.getDummyDefinition(name);
+    }
+    return def;
+  }
+
+  compileWorkspace(workspace) {
+    var blocks = workspace.getTopBlocks(true);
+    var output = [];
+    for (var block of blocks) {
+      var blockCode = this.compileHatBlock(block);
+
+      if (blockCode) {
+        //This will return null if it isn't a hat block.
+        output.push({
+          code: blockCode,
+          id: block.id,
+          block,
+        });
+      }
+    }
+    return output;
+  }
+
+  applyCompiledToEditorSprite(sprite, workspaceCompileOutput) {
+    for (var compiledHat of workspaceCompileOutput) {
+      sprite.removeStackListener(compiledHat.id);
+      sprite.removeSpriteFunction(compiledHat.id);
+      sprite.addFunction(compiledHat.code, compiledHat.id);
+      sprite.runFunctionID(compiledHat.id);
+    }
+  }
+
+  compileHatBlock(block) {
+    //This is just a pass through except it compares to hat blocks
+    // and only would compile if it is an hat blocks.
+    var def = this.getBlockDefinition(block.type, this.useDummyDef);
+
+    if (!def) {
+      return null;
     }
 
-    getBlockID(block) {
-        if (this.useBlockNumberIDs) {
-            var numId = this._ids[block.id];
-            if (typeof numId !== "undefined") {
-                return numId;
-            } else {
-                this._idCount += 1;
-                this._ids[block.id] = this._idCount;
-                return this._idCount;
-            }
-        } else {
-            return block.id;
-        }
+    if (def.type == CBlockType.STARTER_HAT) {
+      return this.compileBlock(block, {
+        useDummy: this.useDummyDef
+      });
     }
 
-    getBlockDefinition(name) {
-        return this.compiler.getBlockDefinition(name);
-    }
+    return null;
+  }
 
-    compileWorkspace(workspace) {
-        var blocks = workspace.getTopBlocks(true);
-        var output = [];
-        for (var block of blocks) {
-            var blockCode = this.compileHatBlock(block);
+  compileClickedBlock(parentBlock) {
+    //Used to compile the contents of clicked block when its clicked in the editor.
+    var _this = this;
 
-            if (blockCode) { //This will return null if it isn't a hat block.
-                output.push({
-                    code: blockCode,
-                    id: block.id,
-                    block
-                });
-            }
-        }
-        return output;
-    }
-
-    applyCompiledToEditorSprite(sprite, workspaceCompileOutput) {
-        for (var compiledHat of workspaceCompileOutput) {
-            sprite.removeStackListener(compiledHat.id);
-            sprite.removeSpriteFunction(compiledHat.id);
-            sprite.addFunction(compiledHat.code, compiledHat.id);
-            sprite.runFunctionID(compiledHat.id);
-        }
-    }
-
-    compileHatBlock(block) {
-        //This is just a pass through except it compares to hat blocks
-        // and only would compile if it is an hat blocks.
-        var def = this.getBlockDefinition(block.type);
-
-        if (!def) {
-            return null;
-        }
-
-        if (def.type == CBlockType.STARTER_HAT) {
-            return this.compileBlock(block);
-        }
-
+    //When hat blocks are clicked, they don't get ran, they are skipped to the main code below them.
+    //We have to keep going down blocks until we reach a non-hat type.
+    //Usually this is looped once but this works too.
+    function loop(block) {
+      var def = _this.getBlockDefinition(block.type, _this.useDummyDefClicked);
+      
+      if (!def) {
         return null;
-    }
+      }
 
-    compileClickedBlock(parentBlock) { //Used to compile the contents of clicked block when its clicked in the editor.
-        var _this = this;
-        
-        function loop(block) {
-            var def = _this.getBlockDefinition(block.type);
-
-            if (!def) {
-                return null;
-            }
-
-            if (def.type !== CBlockType.STARTER_HAT) {
-                var code = _this.compileBlock(block);
-
-                if (def.type == CBlockType.OUTPUT) {
-                    //Output blocks are handled slightly differently compared to hats below.
-                    //They need to set an output value on the thread.
-                    return CoreFunctions.getClickedOutputBlockLogic(parentBlock, code);
-                } else {
-                    //These are mostly the same as normal hat block scripts.
-                    //Except that we have to also set a thread value to tell
-                    // the editor this block is was ran from being clicked.
-                    return CoreFunctions.getClickedBlockLogic(parentBlock, code);
-                }
-
-            }
-
-            if (block.getNextBlock) {
-                var nextBlock = block.getNextBlock();
-                if (nextBlock) {
-                    return loop(nextBlock);
-                }
-            }
-
-            return null;
-        }
-
-        return loop(parentBlock);
-    }
-
-    compileBlock(block, parentState) {
-        var def = this.getBlockDefinition(block.type);
-
-        if (!def) {
-            return null;
-        }
-
-        var util = new CBlockUtil({
-            compiler: this.compiler,
-            instance: this,
-            block,
-            parentState,
-            def
+      if (def.type !== CBlockType.STARTER_HAT) {
+        var code = _this.compileBlock(block, {
+          useDummy: _this.useDummyDefClicked
         });
 
-        var isHat = def.type == CBlockType.STARTER_HAT;
-
-        var code = def.callCompile(util);
-
-        if (block.getNextBlock && !isHat) {
-            var nextBlock = block.getNextBlock();
-            if (nextBlock) {
-                return code + this.compileBlock(nextBlock, util.parentState);
-            }
+        if (code == null) {
+          return null;
         }
 
-        return code;
+        if (def.type == CBlockType.OUTPUT) {
+          //Output blocks are handled slightly differently compared to hats below.
+          //They need to set an output value on the thread.
+          return CoreFunctions.getClickedOutputBlockLogic(parentBlock, code);
+        } else {
+          //These are mostly the same as normal hat block scripts.
+          //Except that we have to also set a thread value to tell
+          // the editor this block is was ran from being clicked.
+          return CoreFunctions.getClickedBlockLogic(parentBlock, code);
+        }
+      }
+
+      if (block.getNextBlock) {
+        var nextBlock = block.getNextBlock();
+        if (nextBlock) {
+          return loop(nextBlock);
+        }
+      }
+
+      return null;
     }
+
+    return loop(parentBlock);
+  }
+
+  compileBlock(block, opts = {}) {
+    var def = this.getBlockDefinition(block.type, opts.useDummy);
+
+    if (!def) {
+      return null;
+    }
+
+    var util = new CBlockUtil({
+      compiler: this.compiler,
+      instance: this,
+      block,
+      parentState: opts.parentState,
+      def,
+      useDummy: opts.useDummy,
+      options: opts
+    });
+
+    var isHat = def.type == CBlockType.STARTER_HAT;
+
+    var code = def.callCompile(util);
+
+    if (def.foundMissingBlock) {
+      return null;
+    }
+
+    if (block.getNextBlock && !isHat) {
+      var nextBlock = block.getNextBlock();
+      if (nextBlock) {
+        var nextCode = this.compileBlock(nextBlock, {
+          ...opts,
+          parentState: util.parentState
+        });
+        if (!nextCode) {
+          return null;
+        }
+        return code + nextCode;
+      }
+    }
+
+    return code;
+  }
 }
 
-module.exports = {BlockCompilerInstance};
+module.exports = { BlockCompilerInstance };
+
 
 /***/ }),
 
@@ -2912,34 +2942,34 @@ module.exports = LibraryCostume;
 /***/ 734:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
 
 BlockCompiler.defineBlock("event_whengamestarts", {
-    type: CBlockType.STARTER_HAT,
-    func: function (utils) {
-        var insideCode = utils.getHatContents("");
-        var fullInsideCode = CoreFunctions.putThreadStack(utils.block, insideCode);
-        
-        var BLOCK_ID = JSON.stringify(utils.getID());
-        
-        return `sprite.addStackListener("started", ${BLOCK_ID}, async function () {${fullInsideCode}});`;
-    }
+  type: CBlockType.STARTER_HAT,
+  func: function (utils) {
+    var insideCode = utils.getHatContents("");
+    var fullInsideCode = CoreFunctions.putThreadStack(utils.block, insideCode);
+
+    var BLOCK_ID = JSON.stringify(utils.getID());
+
+    return `sprite.addStackListener("started", ${BLOCK_ID}, async function () {${fullInsideCode}});`;
+  },
 });
 
 BlockCompiler.defineBlock("event_beforegamestarts", {
-    type: CBlockType.STARTER_HAT,
-    func: function (utils) {
-        var insideCode = utils.getHatContents("");
-        var fullInsideCode = CoreFunctions.putThreadStack(utils.block, insideCode);
-        
-        var BLOCK_ID = JSON.stringify(utils.getID());
-        
-        return `sprite.addStackListener("beforestart", ${BLOCK_ID}, async function () {${fullInsideCode}});`;
-    }
+  type: CBlockType.STARTER_HAT,
+  func: function (utils) {
+    var insideCode = utils.getHatContents("");
+    var fullInsideCode = CoreFunctions.putThreadStack(utils.block, insideCode);
+
+    var BLOCK_ID = JSON.stringify(utils.getID());
+
+    return `sprite.addStackListener("beforestart", ${BLOCK_ID}, async function () {${fullInsideCode}});`;
+  },
 });
+
 
 /***/ }),
 
@@ -3965,7 +3995,6 @@ __webpack_require__(5334);
 /***/ 1287:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 //Register the blocks here.
 
 __webpack_require__(4534);
@@ -3973,6 +4002,8 @@ __webpack_require__(6537);
 __webpack_require__(734);
 __webpack_require__(4889);
 __webpack_require__(7315);
+__webpack_require__(3562);
+
 
 /***/ }),
 
@@ -6863,69 +6894,109 @@ module.exports = Sprite;
 
 /***/ }),
 
+/***/ 2361:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var CBlockType = __webpack_require__(7561);
+
+function dummyFunc(util) {
+  var TYPE = JSON.stringify(util.block.type);
+  return `throw new Error("Block type "+${TYPE}+" doesn't exist in compiler, make sure to add this first.");`;
+}
+
+class CBlockDummyDefinition {
+  constructor(name) {
+    this.name = name;
+    this.func = dummyFunc;
+    this.type = CBlockType.COMMAND;
+    this.isDummy = true;
+  }
+
+  callCompile(blockUtil) {
+    return this.func(blockUtil);
+  }
+}
+
+module.exports = CBlockDummyDefinition;
+
+
+/***/ }),
+
 /***/ 2391:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 var CBlockType = __webpack_require__(7561);
-var {BlockCompilerInstance} = __webpack_require__(421);
-var {CBlockDefinition} = __webpack_require__(9822);
+var { BlockCompilerInstance } = __webpack_require__(421);
+var { CBlockDefinition } = __webpack_require__(9822);
+var DummyBlockDef = __webpack_require__(2361);
 
 class BlockCompiler {
-    constructor () {
-        this.blocks = {};
+  constructor() {
+    this.blocks = {};
+  }
+
+  newInstance(options) {
+    return new BlockCompilerInstance(this, options);
+  }
+
+  defineBlock(name, options) {
+    if (typeof name !== "string") {
+      throw new Error("First argument 'name' is not string");
+    }
+    if (typeof options !== "object") {
+      throw new Error("Second argument 'options' is not object.");
     }
 
-    newInstance(options) {
-        return new BlockCompilerInstance(this, options);
-    }
+    var block = new CBlockDefinition(name, options);
+    this.blocks[name] = block;
+  }
 
-    defineBlock (name, options) {
-        if (typeof name !== "string") {
-            throw new Error("First argument 'name' is not string");
-        }
-        if (typeof options !== "object") {
-            throw new Error("Second argument 'options' is not object.");
-        }
+  removeBlock(name) {
+    this.blocks[name] = "";
+    delete this.blocks[name];
+  }
 
-        var block = new CBlockDefinition(name, options);
-        this.blocks[name] = block;
+  getBlockDefinition(name) {
+    var def = this.blocks[name];
+    if (def) {
+      return def;
     }
+    return null;
+  }
 
-    removeBlock (name) {
-        this.blocks[name] = "";
-        delete this.blocks[name];
-    }
+  getDummyDefinition(name) {
+    return new DummyBlockDef(name);
+  }
 
-    getBlockDefinition (name) {
-        var def = this.blocks[name];
-        if (def) {
-            return def;
-        }
-        return null;
+  checkBlockType(block, targetType) {
+    //Provided is blockly block
+    var def = this.getBlockDefinition(block.type);
+    if (!def) {
+      return false;
     }
+    return def.type == targetType;
+  }
 
-    isStarterBlock(block) { //Provided is blockly block
-        var def = this.getBlockDefinition(block.type);
-        if (!def) {
-            return false;
-        }
-        return def.type == CBlockType.STARTER_HAT;
-    }
+  isStarterBlock(block) {
+    return this.checkBlockType(block, CBlockType.STARTER_HAT);
+  }
 
-    isOutputBlock(block) { //Provided is blockly block
-        var def = this.getBlockDefinition(block.type);
-        if (!def) {
-            return false;
-        }
-        return def.type == CBlockType.OUTPUT;
-    }
+  isOutputBlock(block) {
+    return this.checkBlockType(block, CBlockType.OUTPUT);
+  }
 
-    isHatBlock(block) {
-        return this.isStarterBlock(block);
-    }
+  isCommandBlock(block) {
+    return this.checkBlockType(block, CBlockType.COMMAND);
+  }
+
+  isHatBlock(block) {
+    //Starter is actually called hat or STARTER_HAT sometimes.
+    return this.isStarterBlock(block);
+  }
 }
 
 module.exports = new BlockCompiler();
+
 
 /***/ }),
 
@@ -8799,6 +8870,25 @@ module.exports = {
 
 /***/ }),
 
+/***/ 3562:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("control_wait", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var DURATION = CoreFunctions.castToNumber(utils.getInput("DURATION", "0"));
+
+    return `${CoreFunctions.aliveCheck(utils.block)}await thread.waitSeconds(${DURATION});${CoreFunctions.aliveCheck(utils.block)}`;
+  },
+});
+
+
+/***/ }),
+
 /***/ 3591:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -8809,6 +8899,7 @@ class Thread {
   constructor(firstBlockID, sprite) {
     this.id = firstBlockID;
     this.sprite = sprite;
+    this.engine = this.sprite.engine;
     this.running = true;
     this.screenRefresh = true;
     this._hasStopped = false;
@@ -8891,26 +8982,28 @@ class Thread {
     }
   }
 
-  waitSeconds(seconds) {
-    var _this = this;
-    return new Promise((resolve) => {
-      if (!_this.running) {
-        resolve();
+  getTime() {
+    return this.engine.time.totalTime;
+  }
+
+  async waitSeconds(seconds) {
+    if (!this.running) {
+      return;
+    }
+    var start = this.getTime();
+    while (this.getTime() < start + seconds) {
+      await this.waitForNextFrame();
+      if (!this.running) {
+        //Thread was stopped before it could finish the wait.
+        //This should automatically end the thread since the checkAlive was used.
+        return;
       }
-      var milliseconds = seconds * 1000;
-      var start = performance.now();
-      var interval = setInterval(() => {
-        var now = performance.now();
-        if (!_this.running) {
-          clearInterval(interval);
-          resolve();
-        }
-        if (now - start > milliseconds) {
-          clearInterval(interval);
-          resolve();
-        }
-      });
-    });
+      if (start > this.getTime()) {
+        //We somehow are going in reverse or the timer was reset.
+        //Just stop waiting to stop an infinite loop.
+        return;
+      }
+    }
   }
 
   tweenToXY(targetX, targetY, duration, easing) {
@@ -20767,19 +20860,14 @@ class EngineRenderer {
     this._gl_projectionMatrix = projectionMatrix;
   }
 
-  /**
-   * Renders the game scene, this shouldn't be called directly.
-   * @param {Number} elapsed The time elapsed since the last frame.
-   * @returns {void}
-   */
   drawGameFrame({
-        spritesArray, //Sorted sprites to draw.
-        isLoopFrame,
-    }) {
+    spritesArray, //Sorted sprites to draw.
+    isLoopFrame,
+  }) {
     this.updateCanvasSize(); //This should happen right before we actually draw anything, this stops the black screen glitch from happening when resizing.
 
     var { canvas, gl, engine } = this;
-    
+
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(1, 1, 1, 0); // Use 0,0,0,0 to respect canvas style background
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -20790,8 +20878,8 @@ class EngineRenderer {
   drawSprites(sprites) {
     var _this = this;
     sprites.forEach((spr) => {
-        _this.renderSprite(spr);
-      });
+      _this.renderSprite(spr);
+    });
   }
 
   /**
@@ -20812,9 +20900,9 @@ class EngineRenderer {
       _gl_projectionMatrix,
       _gl_quadBufferInfo,
       engine,
-      canvas
+      canvas,
     } = this;
-    var {gameWidth,gameHeight,screenScale} = engine;
+    var { gameWidth, gameHeight, screenScale } = engine;
     if (spr.costumes[spr.costumeIndex]) {
       var costume = spr.costumes[spr.costumeIndex];
       var drawable = costume.drawable;
@@ -21168,37 +21256,37 @@ module.exports = CollisionSprite;
 /***/ 4534:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
 
 BlockCompiler.defineBlock("math_number", {
-    type: CBlockType.OUTPUT,
-    func: function (utils) {
-        var NUM = utils.getField("NUM", 0);
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var NUM = utils.getField("NUM", 0);
 
-        return JSON.stringify(NUM);
-    }
+    return JSON.stringify(NUM);
+  },
 });
 
 BlockCompiler.defineBlock("math_angle", {
-    type: CBlockType.OUTPUT,
-    func: function (utils) {
-        var NUM = utils.getField("NUM", 0);
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var NUM = utils.getField("NUM", 0);
 
-        return JSON.stringify(NUM);
-    }
+    return JSON.stringify(NUM);
+  },
 });
 
 BlockCompiler.defineBlock("text", {
-    type: CBlockType.OUTPUT,
-    func: function (utils) {
-        var TEXT = utils.getField("TEXT", "");
-        
-        return JSON.stringify(TEXT);
-    }
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var TEXT = utils.getField("TEXT", "");
+
+    return JSON.stringify(TEXT);
+  },
 });
+
 
 /***/ }),
 
@@ -21400,32 +21488,32 @@ Blockly.WorkspaceSvg.prototype.registerToolboxCategoryCallback(
 /***/ 4889:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
 
 BlockCompiler.defineBlock("engine_framerate", {
-    type: CBlockType.OUTPUT,
-    func: function (utils) {
-        return `(engine.frameRate)`;
-    }
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    return `(engine.frameRate)`;
+  },
 });
 
 BlockCompiler.defineBlock("engine_estimated_fps", {
-    type: CBlockType.OUTPUT,
-    func: function (utils) {
-        return `(engine.estimatedFramerate)`;
-    }
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    return `(engine.time.totalFps)`;
+  },
 });
 
 BlockCompiler.defineBlock("engine_framerate_to", {
-    type: CBlockType.COMMAND,
-    func: function (utils) {
-        var FPS = util.getInput("FPS", '0');
-        return `engine.setFramerate(${FPS});`;
-    }
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var FPS = util.getInput("FPS", "0");
+    return `engine.setFramerate(${FPS});`;
+  },
 });
+
 
 /***/ }),
 
@@ -23633,95 +23721,112 @@ module.exports = {
 /***/ 5619:
 /***/ ((module) => {
 
-
+//Function for starting a threads code, this should only be used internally, for blocks use putThreadStack instead.
 function startThreadStack(block) {
-    var id = JSON.stringify(block.id);
-    return `var thread = sprite.createThread(${id});try {${aliveCheck(block)}`;
+  var id = JSON.stringify(block.id);
+  return `var thread = sprite.createThread(${id});try {${aliveCheck(block)}`;
 }
 
+//Function for ending a threads code, this should only be used internally, for blocks use putThreadStack instead.
 function endThreadStack(block) {
-    return `thread.stop();}catch(e){thread.hadError = true;thread.output = e;thread.stop();return thread;}`;
+  return `thread.stop();}catch(e){thread.hadError = true;thread.output = e;thread.stop();return thread;}`;
 }
 
+//Stops the thread, use aliveCheck right after for best results in blocks.
 function stopThisThread(block) {
-    return `thread.stop();`;
+  return `thread.stop();`;
 }
 
+//Tells the thread to wait for the next frame
 function threadWaitFrame(block) {
-    return `await thread.waitForNextFrame();`;
+  return `await thread.waitForNextFrame();`;
 }
 
+//Tells the code to exit if the thread stops.
 function aliveCheck() {
-    return `try{if (!thread.running) {thread.stop();return thread;}}catch(e){}`;
+  return `try{if (!thread.running) {thread.stop();return thread;}}catch(e){}`;
 }
 
+//Turns on a feature used by the editor to tell if its been clicked.
 function enableThreadPreview() {
-    return `thread.isPreviewMode = true;`;
+  return `thread.isPreviewMode = true;`;
 }
 
+//Value used by the editor and error checking to set the output.
 function setThreadOutput(code) {
-    return `thread.output = ${code};`;
+  return `thread.output = ${code};`;
 }
 
+//Return the thread, this is probably not used but whatever.
 function returnThread() {
-    return `return thread;`;
+  return `return thread;`;
 }
 
+//Used by the compiler to get the normal clicked block logic for the editor.
 function getClickedBlockLogic(block, code) {
-    var fullCode = "";
-    //Start the thread
-    fullCode += startThreadStack(block);
+  var fullCode = "";
+  //Start the thread
+  fullCode += startThreadStack(block);
 
-    //This tells the editor that this thread is running because it was clicked.
-    fullCode += enableThreadPreview();
+  //This tells the editor that this thread is running because it was clicked.
+  fullCode += enableThreadPreview();
 
-    //We aren't trying to get an output here, so run it normally.
-    fullCode += code;
+  //We aren't trying to get an output here, so run it normally.
+  fullCode += code;
 
-    //End the thread
-    fullCode += endThreadStack(block);
+  //End the thread
+  fullCode += endThreadStack(block);
 
-    return fullCode;
+  return fullCode;
 }
 
+//Used by the compiler to get the output block clicked logic for the editor.
 function getClickedOutputBlockLogic(block, code) {
-    var fullCode = "";
-    //Start the thread
-    fullCode += startThreadStack(block);
+  var fullCode = "";
+  //Start the thread
+  fullCode += startThreadStack(block);
 
-    //This tells the editor that this thread is running because it was clicked.
-    fullCode += enableThreadPreview();
+  //This tells the editor that this thread is running because it was clicked.
+  fullCode += enableThreadPreview();
 
-    //This will return the output of the code.
-    fullCode += setThreadOutput(code);
+  //This will return the output of the code.
+  fullCode += setThreadOutput(code);
 
-    //End the thread
-    fullCode += endThreadStack(block);
+  //End the thread
+  fullCode += endThreadStack(block);
 
-    //Return the thread, not sure if this is required.
-    //Still good to have it if I ever use it later.
-    fullCode += returnThread();
+  //Return the thread, not sure if this is required.
+  //Still good to have it if I ever use it later.
+  fullCode += returnThread();
 
-    return fullCode;
+  return fullCode;
 }
 
+//Used by hat blocks to add the thread identifier to the code.
 function putThreadStack(block, code) {
-    return startThreadStack(block) + code  + endThreadStack(block);
+  return startThreadStack(block) + code + endThreadStack(block);
+}
+
+//Cast a value to number
+function castToNumber(code) {
+  return `(+(${code}) || 0)`;
 }
 
 module.exports = {
-    startThreadStack,
-    endThreadStack,
-    stopThisThread,
-    threadWaitFrame,
-    aliveCheck,
-    enableThreadPreview,
-    setThreadOutput,
-    returnThread,
-    getClickedBlockLogic,
-    getClickedOutputBlockLogic,
-    putThreadStack
+  startThreadStack,
+  endThreadStack,
+  stopThisThread,
+  threadWaitFrame,
+  aliveCheck,
+  enableThreadPreview,
+  setThreadOutput,
+  returnThread,
+  getClickedBlockLogic,
+  getClickedOutputBlockLogic,
+  putThreadStack,
+  castToNumber,
 };
+
 
 /***/ }),
 
@@ -24857,7 +24962,6 @@ function init(state, deps) {
         var root = clickedBlock.getRootBlock();
         if (!spr.runningStacks[root.id]) {
           (async function () {
-            
             var code = deps.compilerInstance.compileClickedBlock(root);
             var outputThread = await spr.runFunction(code);
             if (outputThread) {
@@ -25045,128 +25149,128 @@ module.exports = [
 /***/ 6537:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
 
 BlockCompiler.defineBlock("motion_movesteps", {
-    type: CBlockType.COMMAND,
-    func: function (util) {
-        var STEPS = util.getInput("STEPS", '0');
-        return `sprite.moveSteps(+(${STEPS}) || 0);`;
-    }
+  type: CBlockType.COMMAND,
+  func: function (util) {
+    var STEPS = util.getInput("STEPS", "0");
+    return `sprite.moveSteps(+(${STEPS}) || 0);`;
+  },
 });
 
 BlockCompiler.defineBlock("motion_goto", {
-    type: CBlockType.OUTPUT,
-    func: function (util) {
-        var TO = util.getInput("TO", "null");
-        return `sprite.goTo(${TO});`;
-    }
+  type: CBlockType.OUTPUT,
+  func: function (util) {
+    var TO = util.getInput("TO", "null");
+    return `sprite.goTo(${TO});`;
+  },
 });
 
 BlockCompiler.defineBlock("motion_goto_menu", {
-    type: CBlockType.OUTPUT,
-    func: function (util) {
-        var TO = util.getField("TO", "");
-        return JSON.stringify(TO);
-    }
+  type: CBlockType.OUTPUT,
+  func: function (util) {
+    var TO = util.getField("TO", "");
+    return JSON.stringify(TO);
+  },
 });
 
 BlockCompiler.defineBlock("motion_xposition", {
-    type: CBlockType.OUTPUT,
-    func: function (util) {
-        return `sprite.x`;
-    }
+  type: CBlockType.OUTPUT,
+  func: function (util) {
+    return `sprite.x`;
+  },
 });
 
 BlockCompiler.defineBlock("motion_yposition", {
-    type: CBlockType.OUTPUT,
-    func: function (util) {
-        return `sprite.y`;
-    }
+  type: CBlockType.OUTPUT,
+  func: function (util) {
+    return `sprite.y`;
+  },
 });
 
 BlockCompiler.defineBlock("motion_direction", {
-    type: CBlockType.OUTPUT,
-    func: function (util) {
-        return `sprite.direction`;
-    }
+  type: CBlockType.OUTPUT,
+  func: function (util) {
+    return `sprite.direction`;
+  },
 });
 
 BlockCompiler.defineBlock("motion_gotoxy", {
-    type: CBlockType.COMMAND,
-    func: function (util) {
-        var X = util.getInput("X", '0');
-        var Y = util.getInput("Y", '0');
-        
-        return `sprite.x = +(${X}) || 0; sprite.y = +(${Y}) || 0;`;
-    }
+  type: CBlockType.COMMAND,
+  func: function (util) {
+    var X = util.getInput("X", "0");
+    var Y = util.getInput("Y", "0");
+
+    return `sprite.x = +(${X}) || 0; sprite.y = +(${Y}) || 0;`;
+  },
 });
 
 BlockCompiler.defineBlock("motion_changexby", {
-    type: CBlockType.COMMAND,
-    func: function (util) {
-        var DX = util.getInput("DX", '0');
-        
-        return `sprite.x += +(${DX}) || 0;`;
-    }
+  type: CBlockType.COMMAND,
+  func: function (util) {
+    var DX = util.getInput("DX", "0");
+
+    return `sprite.x += +(${DX}) || 0;`;
+  },
 });
 
 BlockCompiler.defineBlock("motion_setx", {
-    type: CBlockType.COMMAND,
-    func: function (util) {
-        var X = util.getInput("X", '0');
-        
-        return `sprite.x = +(${X}) || 0;`;
-    }
+  type: CBlockType.COMMAND,
+  func: function (util) {
+    var X = util.getInput("X", "0");
+
+    return `sprite.x = +(${X}) || 0;`;
+  },
 });
 
 BlockCompiler.defineBlock("motion_changeyby", {
-    type: CBlockType.COMMAND,
-    func: function (util) {
-        var DY = util.getInput("DY", '0');
-        
-        return `sprite.y += +(${DY}) || 0;`;
-    }
+  type: CBlockType.COMMAND,
+  func: function (util) {
+    var DY = util.getInput("DY", "0");
+
+    return `sprite.y += +(${DY}) || 0;`;
+  },
 });
 
 BlockCompiler.defineBlock("motion_sety", {
-    type: CBlockType.COMMAND,
-    func: function (util) {
-        var Y = util.getInput("Y", '0');
-        
-        return `sprite.y = +(${Y}) || 0;`;
-    }
+  type: CBlockType.COMMAND,
+  func: function (util) {
+    var Y = util.getInput("Y", "0");
+
+    return `sprite.y = +(${Y}) || 0;`;
+  },
 });
 
 BlockCompiler.defineBlock("motion_pointindirection", {
-    type: CBlockType.COMMAND,
-    func: function (util) {
-        var DIRECTION = util.getInput("DIRECTION", '0');
-        
-        return `sprite.direction = +(${DIRECTION}) || 0;`;
-    }
+  type: CBlockType.COMMAND,
+  func: function (util) {
+    var DIRECTION = util.getInput("DIRECTION", "0");
+
+    return `sprite.direction = +(${DIRECTION}) || 0;`;
+  },
 });
 
 BlockCompiler.defineBlock("motion_turnleft", {
-    type: CBlockType.COMMAND,
-    func: function (util) {
-        var DEGREES = util.getInput("DEGREES", '0');
-        
-        return `sprite.direction -= +(${DEGREES}) || 0;`;
-    }
+  type: CBlockType.COMMAND,
+  func: function (util) {
+    var DEGREES = util.getInput("DEGREES", "0");
+
+    return `sprite.direction -= +(${DEGREES}) || 0;`;
+  },
 });
 
 BlockCompiler.defineBlock("motion_turnright", {
-    type: CBlockType.COMMAND,
-    func: function (util) {
-        var DEGREES = util.getInput("DEGREES", '0');
-        
-        return `sprite.direction += +(${DEGREES}) || 0;`;
-    }
+  type: CBlockType.COMMAND,
+  func: function (util) {
+    var DEGREES = util.getInput("DEGREES", "0");
+
+    return `sprite.direction += +(${DEGREES}) || 0;`;
+  },
 });
+
 
 /***/ }),
 
@@ -26865,11 +26969,38 @@ module.exports = BlockFlasher;
 /***/ 7315:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
 
+BlockCompiler.defineBlock("globaldata_get", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var VARIABLE = utils.getField("VARIABLE", "");
+
+    return `engine.globalVariables[${JSON.stringify(VARIABLE)}]`;
+  },
+});
+
+BlockCompiler.defineBlock("globaldata_set", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var VARIABLE = utils.getField("VARIABLE", "");
+    var VALUE = utils.getInput("VALUE", "null");
+
+    return `engine.globalVariables[${JSON.stringify(VARIABLE)}] = ${VALUE};`;
+  },
+});
+
+BlockCompiler.defineBlock("globaldata_changeby", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var VARIABLE = utils.getField("VARIABLE", "");
+    var VALUE = utils.getInput("VALUE", "0");
+
+    return `engine.globalVariables[${JSON.stringify(VARIABLE)}] = (+(engine.globalVariables[${JSON.stringify(VARIABLE)}]) || 0) + (+(${VALUE}) || 0);`;
+  },
+});
 
 
 /***/ }),
@@ -27519,16 +27650,16 @@ module.exports = {
 /***/ 7561:
 /***/ ((module) => {
 
-
 class CBlockType {
-    static COMMAND = "COMMAND";
+  static COMMAND = "COMMAND";
 
-    static STARTER_HAT = "STARTER_HAT";
+  static STARTER_HAT = "STARTER_HAT";
 
-    static OUTPUT = "OUTPUT";
+  static OUTPUT = "OUTPUT";
 }
 
 module.exports = CBlockType;
+
 
 /***/ }),
 
@@ -27580,7 +27711,8 @@ var EventEmitter = __webpack_require__(228);
 var CollisionSprite = __webpack_require__(4447);
 var Library = __webpack_require__(3728);
 
-var {EngineRenderer} = __webpack_require__(4428);
+var { EngineRenderer } = __webpack_require__(4428);
+var GameTime = __webpack_require__(8024);
 
 var created = false;
 
@@ -27672,7 +27804,6 @@ class GGM3Engine extends EventEmitter {
     this.frameRate = this.DEFAULT_FRAMERATE;
     this._frameRate = this.frameRate;
     this.frameTimestamps = [];
-    this._iTime = 0;
     this.sMath = sMath;
     this.exportMode = false;
     this.activeTextures = 0;
@@ -27687,7 +27818,6 @@ class GGM3Engine extends EventEmitter {
     this.keysPressed = {};
     this.renderer = new EngineRenderer(this, this.canvas);
     this.generateMouseMask();
-    this.startRenderLoop();
     this.spriteMap = {};
     this.globalVariables = {};
     this.propertyVariables = {};
@@ -27701,6 +27831,10 @@ class GGM3Engine extends EventEmitter {
     this.renderer.updateCanvasSize();
     this.renderer.glCalculation();
     this.changeCursorStyle(this.DEFAULT_CURSOR_STYLE);
+
+    this.time = new GameTime(this);
+    this.stopGame();
+    this.time.startLoop();
   }
 
   /**
@@ -27989,6 +28123,7 @@ class GGM3Engine extends EventEmitter {
    * Stops the game by stopping all scripts, deleting all clones, and resetting all effects for every sprite in the game.
    */
   stopGame() {
+    this.time.stop();
     this.broadcastQueue = [];
     for (var sprite of this.sprites) {
       sprite.stopAllScripts();
@@ -28002,6 +28137,7 @@ class GGM3Engine extends EventEmitter {
    */
   startGame() {
     this.stopGame();
+    this.time.start();
     this.makeUniqueSpriteNames();
     for (var sprite of this.sprites) {
       sprite.emitStackListener("beforestart");
@@ -28183,44 +28319,7 @@ class GGM3Engine extends EventEmitter {
     return newSprite;
   }
 
-  /**
-   * Starts the render loop of the game, which updates and renders every sprite in the game every frame.
-   * The framerate can be changed by setting the `frameRate` property, but it defaults to 60 FPS.
-   * @returns {void}
-   */
-  startRenderLoop() {
-    const _this = this;
-    let previous = performance.now();
-    const frameTimestamps = this.frameTimestamps;
-
-    function loop() {
-      const now = performance.now();
-
-      const frameDuration = 1000 / _this.frameRate;
-      let delta = now - previous;
-
-      if (delta >= frameDuration) {
-        previous = now - (delta % frameDuration);
-
-        while (frameTimestamps.length > 0 && frameTimestamps[0] <= now - 1000) {
-          frameTimestamps.shift();
-        }
-
-        frameTimestamps.push(now);
-
-        _this.runRenderFunc(delta, frameTimestamps.length);
-      }
-
-      setTimeout(loop, 1);
-    }
-
-    setTimeout(loop, 1);
-  }
-
-  runRenderFunc(elapsed, estimatedFramerate) {
-    this._iTime += elapsed / 1000;
-    this.elapsedFrameTime = elapsed;
-    this.estimatedFramerate = estimatedFramerate;
+  runFrame() {
     if (this._frameRate !== this.frameRate) {
       this._frameRate = this.frameRate;
       this.emit(this.FRAMERATE_CHANGED, this._frameRate);
@@ -28237,22 +28336,32 @@ class GGM3Engine extends EventEmitter {
       this._editDragging = null;
     }
 
-    this.emit(this.BEFORE_FRAME_RENDER, elapsed, estimatedFramerate, this._iTime);
+    this.emit(
+      this.BEFORE_FRAME_RENDER,
+      this.time.elapsed,
+      this.time.totalFps,
+      this.time.totalTime,
+    );
 
-    var sprs = this.getAllTopSprites()
+    var sprs = this.getAllTopSprites();
     var sprsReversed = sprs.reverse();
     sprsReversed.forEach((spr) => {
       engine.tickSprite(spr);
     });
-    this.tween.update(engine._iTime * 1000);
+    this.tween.update(this.time.totalTime * 1000);
 
     this.renderer.drawGameFrame({
-      elapsed,
-      estimatedFramerate,
-      spritesArray: sprsReversed
+      elapsed: this.time.elapsed,
+      totalFps: this.time.totalFps,
+      spritesArray: sprsReversed,
     });
 
-    this.emit(this.FRAME_RENDERED, elapsed, estimatedFramerate, this._iTime);
+    this.emit(
+      this.FRAME_RENDERED,
+      this.time.elapsed,
+      this.time.totalFps,
+      this.time.totalTime,
+    );
   }
 
   /**
@@ -29397,6 +29506,65 @@ Blockly.Blocks["operator_scratch_mod"] = {
     });
   },
 };
+
+
+/***/ }),
+
+/***/ 8024:
+/***/ ((module) => {
+
+class GameTime {
+  constructor(engine) {
+    this.engine = engine;
+    this.frameTimestamps = [];
+    this.totalTime = 0;
+  }
+
+  stop() {
+    var frameTimestamps = this.frameTimestamps;
+    while (frameTimestamps.length > 0) {
+      frameTimestamps.shift();
+    }
+  }
+
+  start() {
+    this.totalTime = 0;
+  }
+
+  startLoop() {
+    var _this = this;
+    var previous = performance.now();
+    var frameTimestamps = this.frameTimestamps;
+    var engine = this.engine;
+
+    function loop() {
+      var now = performance.now();
+
+      var frameDuration = 1000 / engine.frameRate;
+      var delta = now - previous;
+
+      if (delta >= frameDuration) {
+        previous = now - (delta % frameDuration);
+
+        while (frameTimestamps.length > 0 && frameTimestamps[0] <= now - 1000) {
+          frameTimestamps.shift();
+        }
+        frameTimestamps.push(now);
+
+        _this.totalTime += delta / 1000;
+        _this.elapsed = delta;
+        _this.totalFps = frameTimestamps.length;
+        engine.runFrame();
+      }
+
+      _this.timeout = setTimeout(loop, 1);
+    }
+
+    _this.timeout = setTimeout(loop, 1);
+  }
+}
+
+module.exports = GameTime;
 
 
 /***/ }),
@@ -30855,154 +31023,168 @@ engine.on(engine.RESOLUTION_UPDATED, () => {
 var CBlockType = __webpack_require__(7561);
 
 class CBlockUtil {
-    constructor ({ compiler, def, instance, block, parentState }) {
-        this.compiler = compiler;
-        this.instance = instance;
-        this.def = def;
-        this.block = block;
-        this.isBlockUtil = true;
-        this.parentState = parentState || {}; //this gets passed to the next block, and goes further also.
+  constructor({ compiler, def, instance, block, parentState, useDummy, options }) {
+    this.compiler = compiler;
+    this.instance = instance;
+    this.def = def;
+    this.block = block;
+    this.useDummy = useDummy;
+    this.foundMissingBlock = false;
+    this.isBlockUtil = true;
+    this.options = options || {};
+    this.parentState = parentState || {}; //this gets passed to the next block, and goes further also.
+  }
+
+  compileBlock(block) {
+    var code = this.instance.compileBlock(block, this.parentState, this.useDummy);
+    if (code) {
+      return code;
     }
 
-    compileBlock(block) {
-        return this.instance.compileBlock(block, this.parentState);
+    this.foundMissingBlock = true;
+    return "";
+  }
+
+  getID() {
+    return this.instance.getBlockID(this.block);
+  }
+
+  get id() {
+    return this.getID();
+  }
+
+  getHatContents(fallback = "") {
+    if (this.def.type !== CBlockType.STARTER_HAT) {
+      //We aren't even a hat block!
+      //Warn here because it feels important to note.
+      console.warn(
+        "Compiler: Tried to getHatContents() on a non-hat block: ",
+        this,
+        "\nMake sure that this block has its correct compiler definition.",
+      );
+      return fallback;
     }
 
-    getID () {
-        return this.instance.getBlockID(this.block);
+    var block = this.block;
+
+    if (!block.getNextBlock) {
+      return fallback;
     }
 
-    get id() {
-        return this.getID();
+    var nextBlock = block.getNextBlock();
+    if (!nextBlock) {
+      return fallback;
     }
 
-    getHatContents (fallback = "") {
-        if (this.def.type !== CBlockType.STARTER_HAT) {
-            //We aren't even a hat block!
-            //Warn here because it feels important to note.
-            console.warn("Compiler: Tried to getHatContents() on a non-hat block: ",this, "\nMake sure that this block has its correct compiler definition.");
-            return fallback;
-        }
+    var code = this.compileBlock(nextBlock);
 
-        var block = this.block;
+    return code == null ? fallback : code;
+  }
 
-        if (!block.getNextBlock) {
-            return fallback;
-        }
-
-        var nextBlock = block.getNextBlock();
-        if (!nextBlock) {
-            return fallback;
-        }
-
-        var code = this.compileBlock(nextBlock);
-        
-        return code == null ? fallback : code;
+  getInput(name, fallback = "null") {
+    var block = this.getInputBlock(name);
+    if (!block) {
+      return fallback;
     }
 
-    getInput (name, fallback = "null") {
-        var block = this.getInputBlock(name);
-        if (!block) {
-            return fallback;
-        }
+    return this.compileBlock(block);
+  }
 
-        return this.compileBlock(block);
+  getBlocklyInput(name) {
+    var block = this.block;
+
+    if (!block.inputList) {
+      return null;
     }
 
-    getBlocklyInput (name) {
-        var block = this.block;
-
-        if (!block.inputList) {
-            return null;
-        }
-
-        for (var input of block.inputList) {
-            if (input.name == name) {
-                return input;
-            }
-        }
-
-        return null;
+    for (var input of block.inputList) {
+      if (input.name == name) {
+        return input;
+      }
     }
 
-    getInputBlock (name) {
-        //This doesn't return an CBlockUtil, rather just the actual blockly block itself.
-        
-        var input = this.getBlocklyInput(name);
-        if (!input) {
-            return null;
-        }
+    return null;
+  }
 
-        var inputBlock = input.connection.targetBlock();
-        
-        return inputBlock || null;
+  getInputBlock(name) {
+    //This doesn't return an CBlockUtil, rather just the actual blockly block itself.
+
+    var input = this.getBlocklyInput(name);
+    if (!input) {
+      return null;
     }
 
-    getField (name, fallback = "") {
-        var field = this.getBlocklyField(name);
-        if (!field) {
-            return fallback;
-        }
+    var inputBlock = input.connection.targetBlock();
 
-        if (field.referencesVariables()) {
-            return fallback;
-        }
+    return inputBlock || null;
+  }
 
-        return field.getValue();
+  getField(name, fallback = "") {
+    var field = this.getBlocklyField(name);
+    if (!field) {
+      return fallback;
     }
 
-    getFieldText (name, fallback = "") {
-        var field = this.getBlocklyField(name);
-        if (!field) {
-            return fallback;
-        }
-
-        if (field.referencesVariables()) {
-            return fallback;
-        }
-
-        return field.getText();
+    if (field.referencesVariables()) {
+      return fallback;
     }
 
-    getFieldVariable (name) {
-        var field = this.getBlocklyField(name);
-        if (!field) {
-            return null;
-        }
+    return field.getValue();
+  }
 
-        if (!field.referencesVariables()) {
-            return null;
-        }
-
-        var variable = field.getVariable();
-        if (!variable) {
-            return null;
-        }
-
-        return {
-            name: variable.name,
-            id: variable.getId()
-        };
+  getFieldText(name, fallback = "") {
+    var field = this.getBlocklyField(name);
+    if (!field) {
+      return fallback;
     }
 
-    getBlocklyField (name) {
-        var block = this.block;
-        
-        for (var input of block.inputList) {
-            for (var field of input.fieldRow) {
-                if (field.name && field.SERIALIZABLE) {
-                    if (field.name == name) {
-                        return field;
-                    }
-                }
-            }
-        }
-
-        return null;
+    if (field.referencesVariables()) {
+      return fallback;
     }
+
+    return field.getText();
+  }
+
+  getFieldVariable(name) {
+    var field = this.getBlocklyField(name);
+    if (!field) {
+      return null;
+    }
+
+    if (!field.referencesVariables()) {
+      return null;
+    }
+
+    var variable = field.getVariable();
+    if (!variable) {
+      return null;
+    }
+
+    return {
+      name: variable.name,
+      id: variable.getId(),
+    };
+  }
+
+  getBlocklyField(name) {
+    var block = this.block;
+
+    for (var input of block.inputList) {
+      for (var field of input.fieldRow) {
+        if (field.name && field.SERIALIZABLE) {
+          if (field.name == name) {
+            return field;
+          }
+        }
+      }
+    }
+
+    return null;
+  }
 }
 
-module.exports = {CBlockUtil};
+module.exports = { CBlockUtil };
+
 
 /***/ }),
 
@@ -32390,22 +32572,45 @@ Blockly.Blocks["looks_costumes"] = {
 /***/ }),
 
 /***/ 9822:
-/***/ ((module) => {
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+var CBlockType = __webpack_require__(7561);
 
 class CBlockDefinition {
-    constructor (name, options) {
-        this.name = name;
-        this.func = options.func || (() => {});
-        this.type = options.type;
-    }
+  constructor(name, options) {
+    this.name = name;
+    this.func = options.func || (() => {});
+    this.type = options.type;
+    this.isDummy = false;
 
-    callCompile (blockUtil) {
-        return this.func(blockUtil);
+    this.checkType();
+  }
+
+  checkType() {
+    var type = this.type;
+    if (type !== CBlockType.COMMAND) {
+      return;
     }
+    if (type !== CBlockType.OUTPUT) {
+      return;
+    }
+    if (type !== CBlockType.STARTER_HAT) {
+      return;
+    }
+    throw new Error(
+      `Compiler block definition got type ${type} instead of one of the CBlockType types, please use only the CBlockType types.`,
+    );
+    // removed by dead control flow
+
+  }
+
+  callCompile(blockUtil) {
+    return this.func(blockUtil);
+  }
 }
 
-module.exports = {CBlockDefinition};
+module.exports = { CBlockDefinition };
+
 
 /***/ }),
 
