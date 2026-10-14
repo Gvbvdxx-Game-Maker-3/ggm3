@@ -6,34 +6,42 @@ var CoreFunctions = require("../../compiler/corefunc.js");
 BlockCompiler.defineBlock("procedures_definition", {
   type: CBlockType.STARTER_HAT,
   func: function (utils) {
-    var customBlockInput = utils.getBlocklyInput("custom_block");
-    if (!customBlockInput) {
+    
+    var customBlock = utils.getInputBlock("custom_block");
+    if (!customBlock) {
         //Broken custom block definition so this does nothing.
         return "";
     }
 
-    var argumentIds = customBlockInput.argumentIds_;
+    var argumentIds = customBlock.argumentIds_;
+    var procCode = customBlock.procCode_;
+    var insideCode = utils.getHatContents("");
+    var BLOCK_ID = JSON.stringify(utils.getID());
+
     var valueNameCode = "";
     argumentIds.forEach((argId, i) => {
-        var name = customBlockInput.displayNames_[i];
-        valueNameCode += `thread.customBlockValues[${JSON.stringify(name)}] = customBlockArgs[${JSON.stringify(argId)}];`;
+        var name = customBlock.displayNames_[i];
+        valueNameCode += `thread.customBlockValues[${JSON.stringify(name)}] = customArgs[${JSON.stringify(argId)}];`;
     });
 
-    var insideCode = utils.getHatContents("");
-    var fullInsideCode = CoreFunctions.putThreadStack(utils.block, insideCode);
+    var threadModifierCode = ""; //Custom blocks provide some additional stuff for thread
+    
+    if (customBlock.warp_) {
+      //Run without refresh enabled.
+      threadModifierCode += `thread.turnOnWithoutRefresh();`;
+    }
 
-    var procCode = utils.block.procCode_;
+    threadModifierCode += valueNameCode; //Add the values over from the customArgs to a thread value.
 
-    var BLOCK_ID = JSON.stringify(utils.getID());
+    var fullInsideCode = CoreFunctions.putThreadStack(utils.block, threadModifierCode + insideCode);
 
     var code = "";
     code += `sprite.addCustom(`
     code += `${JSON.stringify(BLOCK_ID)}, `;
-    code += BLOCK_ID + ",";
-    code += `async function () {`;
+    code += `${JSON.stringify(procCode)}, `;
+    code += `async function (customArgs,parentThread) {`;
     code += fullInsideCode;
     code += `});`;
-    
 
     return code;
   },
