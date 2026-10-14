@@ -8,6 +8,25 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 1:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("loader_setrenderscale", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var COSTUME = utils.getInput("COSTUME", "null");
+            
+    return `sprite.blockRerenderCostume(${COSTUME});`;
+  },
+});
+
+/***/ }),
+
 /***/ 66:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -2656,6 +2675,25 @@ exports.update = update;
 
 /***/ }),
 
+/***/ 525:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("loader_costume", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var COSTUME = utils.getField("COSTUME", "");
+    
+    return JSON.stringify(COSTUME);
+  },
+});
+
+/***/ }),
+
 /***/ 563:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -4289,8 +4327,8 @@ __webpack_require__(685);
 __webpack_require__(852);
 __webpack_require__(8133);
 __webpack_require__(6828);
-
-
+__webpack_require__(4523);
+__webpack_require__(9851);
 
 __webpack_require__(8215);
 
@@ -5635,6 +5673,25 @@ function makeSortable(container, selector, onChange) {
 
 module.exports = { makeSortable };
 
+
+/***/ }),
+
+/***/ 2097:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("loader_soundisloaded", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var SOUND = utils.getInput("SOUND", "");
+            
+    return `sprite.soundIsLoaded(${SOUND})`;
+  },
+});
 
 /***/ }),
 
@@ -8029,6 +8086,25 @@ BlockCompiler.defineBlock("operator_and", {
     var OPERAND2 = utils.getInput("OPERAND2", "false");
     
     return `((${OPERAND1}) && (${OPERAND2}))`;
+  },
+});
+
+/***/ }),
+
+/***/ 2548:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("loader_costume_scale", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var COSTUME = utils.getInput("COSTUME", "null");
+    
+    return `(await sprite.blockGetCostumeScale(${COSTUME}))`;
   },
 });
 
@@ -22181,6 +22257,23 @@ module.exports = CollisionSprite;
 
 /***/ }),
 
+/***/ 4523:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+__webpack_require__(525);
+__webpack_require__(2548);
+__webpack_require__(8100);
+__webpack_require__(5601);
+__webpack_require__(6672);
+__webpack_require__(7671);
+__webpack_require__(1);
+__webpack_require__(7230);
+__webpack_require__(2097);
+__webpack_require__(9572);
+__webpack_require__(8409);
+
+/***/ }),
+
 /***/ 4551:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -24141,6 +24234,27 @@ BlockCompiler.defineBlock("globaldata_set", {
     var VALUE = utils.getInput("VALUE", "null");
 
     return `engine.globalVariables[${JSON.stringify(VARIABLE)}] = ${VALUE};`;
+  },
+});
+
+/***/ }),
+
+/***/ 5601:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("loader_loadcostume", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var COSTUME = utils.getInput("COSTUME", "null");
+
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    
+    return `${ALIVE_CHECK}await sprite.blockLoadCostume(${COSTUME});${ALIVE_CHECK}`;
   },
 });
 
@@ -26877,6 +26991,27 @@ BlockCompiler.defineBlock("motion_yposition", {
 
 /***/ }),
 
+/***/ 6672:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("loader_deloadcostume", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var COSTUME = utils.getInput("COSTUME", "null");
+
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    
+    return `${ALIVE_CHECK}await sprite.blockDeloadCostume(${COSTUME});${ALIVE_CHECK}`;
+  },
+});
+
+/***/ }),
+
 /***/ 6733:
 /***/ ((module) => {
 
@@ -28402,6 +28537,25 @@ BlockCompiler.defineBlock("operator_random", {
 
 /***/ }),
 
+/***/ 7230:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("loader_sound_option", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var SOUND = utils.getField("SOUND", "");
+            
+    return JSON.stringify(SOUND);
+  },
+});
+
+/***/ }),
+
 /***/ 7255:
 /***/ ((module) => {
 
@@ -29378,6 +29532,26 @@ module.exports = {
   ],
 };
 
+
+/***/ }),
+
+/***/ 7671:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("loader_rendercostumescale", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var COSTUME = utils.getInput("COSTUME", "null");
+    var SCALE = utils.getInput("SCALE", "0");
+        
+    return `sprite.setCostumeRenderScale(${COSTUME},${SCALE});`;
+  },
+});
 
 /***/ }),
 
@@ -31258,6 +31432,25 @@ module.exports = GameTime;
 
 /***/ }),
 
+/***/ 8100:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("loader_costumeisloaded", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var COSTUME = utils.getInput("COSTUME", "null");
+    
+    return `sprite.isCostumeLoaded(${COSTUME})`;
+  },
+});
+
+/***/ }),
+
 /***/ 8107:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -31789,6 +31982,26 @@ updateTabs();
 
 module.exports = { updateTabs, updateVisibility, hideEverything, switchTab };
 
+
+/***/ }),
+
+/***/ 8409:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("loader_deloadsound", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var SOUND = utils.getInput("SOUND", "");
+    
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    return `${ALIVE_CHECK}await sprite.blockDeloadSound(${SOUND});${ALIVE_CHECK}`;
+  },
+});
 
 /***/ }),
 
@@ -34149,6 +34362,26 @@ BlockCompiler.defineBlock("looks_ystretch_to", {
 
 /***/ }),
 
+/***/ 9572:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("loader_loadsound", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var SOUND = utils.getInput("SOUND", "");
+    
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    return `${ALIVE_CHECK}await sprite.blockLoadSound(${SOUND});${ALIVE_CHECK}`;
+  },
+});
+
+/***/ }),
+
 /***/ 9624:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -34907,6 +35140,13 @@ class CBlockDefinition {
 }
 
 module.exports = { CBlockDefinition };
+
+
+/***/ }),
+
+/***/ 9851:
+/***/ (() => {
+
 
 
 /***/ }),
