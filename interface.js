@@ -2729,6 +2729,50 @@ BlockCompiler.defineBlock("sensing_touchingobject", {
 
 /***/ }),
 
+/***/ 596:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+const { values } = __webpack_require__(8355);
+
+BlockCompiler.defineBlock("procedures_call", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var block = utils.block;
+    var argumentIds = block.argumentIds_;
+
+    //We call the custom block with it's values.
+    //This is a json object just because it might be easier to deal with.
+    var valuesCodeContent = "";
+    argumentIds.forEach((argId) => {
+        var argumentCode = utils.getInput(argId, null);
+
+        if (!argumentCode) {
+            return;
+        }
+
+        valuesCodeContent += `${JSON.stringify(argId)}: (${code}),`;
+    });
+
+    var code = "";
+    var valuesCode = "{" + valuesCodeContent + "}";
+    var procCode = block.procCode_;
+
+    code += `await sprite.callCustom(`
+    code += `${JSON.stringify(procCode)}, `
+    code += `${valuesCode}, `
+    code += `thread`;
+    code += `);`;
+
+    return code;
+  },
+});
+
+/***/ }),
+
 /***/ 602:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
@@ -4292,6 +4336,26 @@ BlockCompiler.defineBlock("looks_ystretch_by", {
     var VALUE_NUMBER = CoreFunctions.castToNumber(VALUE, true);
 
     return `sprite.scaleY += ${VALUE_NUMBER} / 100;`;
+  },
+});
+
+/***/ }),
+
+/***/ 1218:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+const { values } = __webpack_require__(8355);
+
+BlockCompiler.defineBlock("argument_reporter_string_number", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var field = utils.getField("VALUE", "");
+    
+    return `thread.customBlockValues[${JSON.stringify(field)}]`;
   },
 });
 
@@ -6312,6 +6376,26 @@ module.exports = {
   ],
 };
 
+
+/***/ }),
+
+/***/ 2209:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+const { values } = __webpack_require__(8355);
+
+BlockCompiler.defineBlock("argument_reporter_boolean", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var field = utils.getField("VALUE", "");
+    
+    return `thread.customBlockValues[${JSON.stringify(field)}]`;
+  },
+});
 
 /***/ }),
 
@@ -26870,6 +26954,60 @@ BlockCompiler.defineBlock("looks_skew_to", {
 
 /***/ }),
 
+/***/ 6453:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("procedures_definition", {
+  type: CBlockType.STARTER_HAT,
+  func: function (utils) {
+    
+    var customBlock = utils.getInputBlock("custom_block");
+    if (!customBlock) {
+        //Broken custom block definition so this does nothing.
+        return "";
+    }
+
+    var argumentIds = customBlock.argumentIds_;
+    var procCode = customBlock.procCode_;
+    var insideCode = utils.getHatContents("");
+    var BLOCK_ID = JSON.stringify(utils.getID());
+
+    var valueNameCode = "";
+    argumentIds.forEach((argId, i) => {
+        var name = customBlock.displayNames_[i];
+        valueNameCode += `thread.customBlockValues[${JSON.stringify(name)}] = customArgs[${JSON.stringify(argId)}];`;
+    });
+
+    var threadModifierCode = ""; //Custom blocks provide some additional stuff for thread
+    
+    if (customBlock.warp_) {
+      //Run without refresh enabled.
+      threadModifierCode += `thread.turnOnWithoutRefresh();`;
+    }
+
+    threadModifierCode += valueNameCode; //Add the values over from the customArgs to a thread value.
+
+    var fullInsideCode = CoreFunctions.putThreadStack(utils.block, threadModifierCode + insideCode);
+
+    var code = "";
+    code += `sprite.addCustom(`
+    code += `${JSON.stringify(BLOCK_ID)}, `;
+    code += `${JSON.stringify(procCode)}, `;
+    code += `async function (customArgs,parentThread) {`;
+    code += fullInsideCode;
+    code += `});`;
+
+    return code;
+  },
+});
+
+/***/ }),
+
 /***/ 6533:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -31985,6 +32123,14 @@ module.exports = { updateTabs, updateVisibility, hideEverything, switchTab };
 
 /***/ }),
 
+/***/ 8355:
+/***/ ((module) => {
+
+module.exports = [];
+
+
+/***/ }),
+
 /***/ 8409:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -35145,9 +35291,12 @@ module.exports = { CBlockDefinition };
 /***/ }),
 
 /***/ 9851:
-/***/ (() => {
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
+__webpack_require__(6453);
+__webpack_require__(596);
+__webpack_require__(2209);
+__webpack_require__(1218);
 
 /***/ }),
 
