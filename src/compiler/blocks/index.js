@@ -6,8 +6,8 @@ var JavascriptTranslation = {
   ...require("./sensing.js"), //done
   ...require("./data.js"), //done
   ...require("./operators.js"), //done
-  ...require("./looks.js"),
-  ...require("./loader.js"),
+  ...require("./looks.js"), //done
+  ...require("./loader.js"), //done
   ...require("./custom.js"),
   ...require("./json.js"),
   ...require("./global_data.js"), //done

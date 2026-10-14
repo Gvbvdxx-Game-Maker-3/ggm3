@@ -8,8 +8,8 @@ require("./sensing/");
 require("./data/");
 require("./operators/");
 require("./looks/");
-
-
+require("./loader/");
+require("./custom/");
 
 require("./globaldata/");
 

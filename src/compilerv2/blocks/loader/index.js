@@ -1,0 +1,11 @@
+require("./loader_costume.js");
+require("./loader_costume_scale.js");
+require("./loader_costumeisloaded.js");
+require("./loader_loadcostume.js");
+require("./loader_deloadcostume.js");
+require("./loader_rendercostumescale.js");
+require("./loader_setrenderscale.js");
+require("./loader_sound_option.js");
+require("./loader_soundisloaded.js");
+require("./loader_loadsound.js");
+require("./loader_deloadsound.js");
