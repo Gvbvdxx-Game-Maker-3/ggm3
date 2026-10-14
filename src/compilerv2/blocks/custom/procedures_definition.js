@@ -1,4 +1,3 @@
-
 var BlockCompiler = require("../../compiler/compiler.js");
 var CBlockType = require("../../compiler/types.js");
 var CoreFunctions = require("../../compiler/corefunc.js");
@@ -6,37 +5,39 @@ var CoreFunctions = require("../../compiler/corefunc.js");
 BlockCompiler.defineBlock("procedures_definition", {
   type: CBlockType.STARTER_HAT,
   func: function (utils) {
-    
     var customBlock = utils.getInputBlock("custom_block");
     if (!customBlock) {
-        //Broken custom block definition so this does nothing.
-        return "";
+      //Broken custom block definition so this does nothing.
+      return "";
     }
 
     var argumentIds = customBlock.argumentIds_;
+    var displayNames = customBlock.displayNames_;
     var procCode = customBlock.procCode_;
     var insideCode = utils.getHatContents("");
     var BLOCK_ID = JSON.stringify(utils.getID());
 
-    var valueNameCode = "";
-    argumentIds.forEach((argId, i) => {
-        var name = customBlock.displayNames_[i];
-        valueNameCode += `thread.customBlockValues[${JSON.stringify(name)}] = customArgs[${JSON.stringify(argId)}];`;
-    });
+    var threadModifierCode = ""; //Custom blocks provide some additional stuff for the thread
 
-    var threadModifierCode = ""; //Custom blocks provide some additional stuff for thread
-    
+    threadModifierCode += `thread.customBlockInherit(parentThread);`;
+
     if (customBlock.warp_) {
       //Run without refresh enabled.
       threadModifierCode += `thread.turnOnWithoutRefresh();`;
     }
 
-    threadModifierCode += valueNameCode; //Add the values over from the customArgs to a thread value.
+    argumentIds.forEach((argId, i) => {
+      var name = displayNames[i];
+      threadModifierCode += `thread.customBlockValues[${JSON.stringify(name)}] = customArgs[${JSON.stringify(argId)}];`;
+    });
 
-    var fullInsideCode = CoreFunctions.putThreadStack(utils.block, threadModifierCode + insideCode);
+    var fullInsideCode = CoreFunctions.putThreadStack(
+      utils.block,
+      threadModifierCode + insideCode,
+    );
 
     var code = "";
-    code += `sprite.addCustom(`
+    code += `sprite.addCustom(`;
     code += `${JSON.stringify(BLOCK_ID)}, `;
     code += `${JSON.stringify(procCode)}, `;
     code += `async function (customArgs,parentThread) {`;

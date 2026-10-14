@@ -8,8 +8,8 @@ var JavascriptTranslation = {
   ...require("./operators.js"), //done
   ...require("./looks.js"), //done
   ...require("./loader.js"), //done
-  ...require("./custom.js"),
-  ...require("./json.js"),
+  ...require("./custom.js"), //done
+  ...require("./json.js"), //done
   ...require("./global_data.js"), //done
   ...require("./sounds.js"),
   ...require("./engine.js"), //done

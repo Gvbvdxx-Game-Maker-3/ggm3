@@ -1,4 +1,3 @@
-
 var BlockCompiler = require("../../compiler/compiler.js");
 var CBlockType = require("../../compiler/types.js");
 var CoreFunctions = require("../../compiler/corefunc.js");
@@ -8,8 +7,8 @@ BlockCompiler.defineBlock("data_changevariableby", {
   func: function (utils) {
     var variable = utils.getFieldVariable("VARIABLE");
     if (!variable) {
-        //We don't have that variable.
-        return "";
+      //We don't have that variable.
+      return "";
     }
 
     var VALUE = utils.getInput("VALUE", "0");

@@ -10,7 +10,7 @@ BlockCompiler.defineBlock("operator_fixed", {
 
     var DECIMALS = utils.getInput("DECIMALS", "0");
     var DECIMALS_NUMBER = CoreFunctions.castToNumber(DECIMALS, true);
-    
+
     return `${NUM_NUMBER}.toFixed(${DECIMALS_NUMBER})`;
   },
 });

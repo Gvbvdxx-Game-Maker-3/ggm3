@@ -84,7 +84,7 @@ class BlockCompilerInstance {
 
     if (def.type == CBlockType.STARTER_HAT) {
       return this.compileBlock(block, {
-        useDummy: this.useDummyDef
+        useDummy: this.useDummyDef,
       });
     }
 
@@ -100,14 +100,14 @@ class BlockCompilerInstance {
     //Usually this is looped once but this works too.
     function loop(block) {
       var def = _this.getBlockDefinition(block.type, _this.useDummyDefClicked);
-      
+
       if (!def) {
         return null;
       }
 
       if (def.type !== CBlockType.STARTER_HAT) {
         var code = _this.compileBlock(block, {
-          useDummy: _this.useDummyDefClicked
+          useDummy: _this.useDummyDefClicked,
         });
 
         if (code == null) {
@@ -153,7 +153,7 @@ class BlockCompilerInstance {
       parentState: opts.parentState,
       def,
       useDummy: opts.useDummy,
-      options: opts
+      options: opts,
     });
 
     var isHat = def.type == CBlockType.STARTER_HAT;
@@ -169,7 +169,7 @@ class BlockCompilerInstance {
       if (nextBlock) {
         var nextCode = this.compileBlock(nextBlock, {
           ...opts,
-          parentState: util.parentState
+          parentState: util.parentState,
         });
         if (nextCode == null) {
           return null;

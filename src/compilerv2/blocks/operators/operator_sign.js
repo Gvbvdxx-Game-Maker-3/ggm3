@@ -7,7 +7,7 @@ BlockCompiler.defineBlock("operator_sign", {
   func: function (utils) {
     var NUM = utils.getInput("NUM", "0");
     var NUM_NUMBER = CoreFunctions.castToNumber(NUM, false);
-    
+
     return `Math.sign(${NUM_NUMBER})`;
   },
 });

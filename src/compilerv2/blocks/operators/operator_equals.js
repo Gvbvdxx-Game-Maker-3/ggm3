@@ -7,7 +7,7 @@ BlockCompiler.defineBlock("operator_equals", {
   func: function (utils) {
     var OPERAND1 = utils.getInput("OPERAND1", "0");
     var OPERAND2 = utils.getInput("OPERAND2", "0");
-    
+
     return `((${OPERAND1}) == (${OPERAND2}))`;
   },
 });

@@ -9,7 +9,7 @@ BlockCompiler.defineBlock("operator_outputif", {
 
     var PASS_OUTPUT = utils.getInput("PASS_OUTPUT", "null");
     var FAIL_OUTPUT = utils.getInput("FAIL_OUTPUT", "null");
-    
+
     return `(${CONDITION}) ? (${PASS_OUTPUT}) : (${FAIL_OUTPUT})`;
   },
 });

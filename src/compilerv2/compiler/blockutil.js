@@ -1,7 +1,15 @@
 var CBlockType = require("./types.js");
 
 class CBlockUtil {
-  constructor({ compiler, def, instance, block, parentState, useDummy, options }) {
+  constructor({
+    compiler,
+    def,
+    instance,
+    block,
+    parentState,
+    useDummy,
+    options,
+  }) {
     this.compiler = compiler;
     this.instance = instance;
     this.def = def;
@@ -15,7 +23,11 @@ class CBlockUtil {
   }
 
   compileBlock(block) {
-    var code = this.instance.compileBlock(block, this.parentState, this.useDummy);
+    var code = this.instance.compileBlock(
+      block,
+      this.parentState,
+      this.useDummy,
+    );
     if (code) {
       return code;
     }

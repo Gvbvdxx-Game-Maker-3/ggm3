@@ -6,7 +6,7 @@ BlockCompiler.defineBlock("operator_not", {
   type: CBlockType.OUTPUT,
   func: function (utils) {
     var OPERAND = utils.getInput("OPERAND", "false");
-    
+
     return `(!(${OPERAND}))`;
   },
 });

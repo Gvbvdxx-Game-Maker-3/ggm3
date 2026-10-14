@@ -427,14 +427,16 @@ class Sprite {
     this.customBlockRef[ref] = id;
     this.customBlockListeners[id] = func;
   }
+
   /* @todo find a faster way to call and manage custom blocks. */
   async callCustom(id, values = {}, thisThread) {
-    if (this.customBlockRef[id]) {
-      await this.customBlockListeners[this.customBlockRef[id]](
-        values,
-        thisThread,
-      );
+    var ref = this.customBlockRef[id];
+    if (!ref) {
+      return;
     }
+    var listener = this.customBlockListeners[ref];
+
+    await listener(values, thisThread);
   }
 
   getCostumeIndex(v) {

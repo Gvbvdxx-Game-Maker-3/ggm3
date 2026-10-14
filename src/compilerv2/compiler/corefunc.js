@@ -116,5 +116,5 @@ module.exports = {
   putThreadStack,
   castToNumber,
   castToString,
-  castToBoolean
+  castToBoolean,
 };

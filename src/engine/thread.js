@@ -16,6 +16,71 @@ class Thread {
     this.isPreviewMode = false;
   }
 
+  jsonGetPath(object, path, fallback) {
+    var current = object;
+    if (current == null) {
+      return fallback;
+    }
+
+    if (Array.isArray(path)) {
+      for (var i = 0; i < path.length; i++) {
+        current = current[path[i]];
+        if (current == null) {
+          return fallback;
+        }
+      }
+      return current;
+    }
+
+    return this.jsonGetPath(object, ("" + path).split("."), fallback);
+  }
+
+  jsonSetPath(object, path, value) {
+    var current = object;
+    if (current == null) {
+      return;
+    }
+
+    if (!Array.isArray(path)) {
+      path = ("" + path).split(".");
+    }
+
+    for (var i = 0; i < path.length - 1; i++) {
+      var key = path[i];
+      if (current[key] == null || typeof current[key] !== "object") {
+        current[key] = {};
+      }
+      current = current[key];
+    }
+
+    current[path[path.length - 1]] = v;
+  }
+
+  jsonDeletePath(object, path) {
+    var current = object;
+    if (current == null) {
+      return;
+    }
+    if (!Array.isArray(path)) {
+      path = ("" + path).split(".");
+    }
+    for (var i = 0; i < p.length - 1; i++) {
+      current = current[path[i]];
+      if (current == null) {
+        return;
+      }
+    }
+    delete current[path[path.length - 1]];
+  }
+
+  jsonParseSafe(string, fallback){
+    try{
+      return JSON.parse(string);
+    }catch(e){
+      return fallback;
+    }
+  }
+
   stopEverythingButMe() {
     if (this.inherited) {
       var allThreads = Object.keys(this.parent.subThreads); //Stop the subthreads.

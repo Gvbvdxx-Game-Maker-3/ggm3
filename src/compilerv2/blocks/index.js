@@ -10,7 +10,7 @@ require("./operators/");
 require("./looks/");
 require("./loader/");
 require("./custom/");
-
+require("./json/");
 require("./globaldata/");
 
 require("./engine/");

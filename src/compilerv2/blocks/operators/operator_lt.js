@@ -9,7 +9,7 @@ BlockCompiler.defineBlock("operator_lt", {
     var OPERAND1_NUM = CoreFunctions.castToNumber(OPERAND1, true);
     var OPERAND2 = utils.getInput("OPERAND2", "0");
     var OPERAND2_NUM = CoreFunctions.castToNumber(OPERAND2, true);
-    
+
     return `(${OPERAND1_NUM} < ${OPERAND2_NUM})`;
   },
 });

@@ -7,7 +7,7 @@ BlockCompiler.defineBlock("operator_or", {
   func: function (utils) {
     var OPERAND1 = utils.getInput("OPERAND1", "false");
     var OPERAND2 = utils.getInput("OPERAND2", "false");
-    
+
     return `((${OPERAND1}) || (${OPERAND2}))`;
   },
 });

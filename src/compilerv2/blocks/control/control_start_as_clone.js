@@ -1,4 +1,3 @@
-
 var BlockCompiler = require("../../compiler/compiler.js");
 var CBlockType = require("../../compiler/types.js");
 var CoreFunctions = require("../../compiler/corefunc.js");
@@ -12,13 +11,12 @@ BlockCompiler.defineBlock("control_start_as_clone", {
     var BLOCK_ID = JSON.stringify(utils.getID());
 
     var code = "";
-    code += `sprite.addStackListener(`
+    code += `sprite.addStackListener(`;
     code += `"clonestart",`;
     code += BLOCK_ID + ",";
     code += `async function () {`;
     code += fullInsideCode;
     code += `});`;
-    
 
     return code;
   },
