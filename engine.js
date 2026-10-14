@@ -16818,6 +16818,8 @@ class SpriteEffects {
   }
 
   reset() {
+    this._noeffect = 0; //This is just here so that there is something to fall back on to.
+
     this.waveTime = 0;
     this.waveXTime = 0;
     this.waveYTime = 0;

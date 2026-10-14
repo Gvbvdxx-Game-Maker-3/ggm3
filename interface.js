@@ -2674,6 +2674,23 @@ BlockCompiler.defineBlock("math_number", {
 
 /***/ }),
 
+/***/ 569:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("sensing_touchingobject", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var TOUCHINGOBJECTMENU = utils.getInput("TOUCHINGOBJECTMENU", "");
+    return `sprite.isTouchingSprite(${TOUCHINGOBJECTMENU})`;
+  },
+});
+
+/***/ }),
+
 /***/ 602:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
@@ -2994,6 +3011,23 @@ replaceTraps((oldTraps) => ({
 
 /***/ }),
 
+/***/ 610:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("looks_xstretch", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    return `(sprite.scaleX * 100)`;
+  },
+});
+
+/***/ }),
+
 /***/ 649:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -3010,6 +3044,19 @@ BlockCompiler.defineBlock("operator_stringtrim", {
     return `(${VALUE_STRING}.trim())`;
   },
 });
+
+/***/ }),
+
+/***/ 685:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+__webpack_require__(3330);
+__webpack_require__(961);
+__webpack_require__(3180);
+__webpack_require__(1176);
+__webpack_require__(9015);
+__webpack_require__(9194);
+__webpack_require__(569);
 
 /***/ }),
 
@@ -3058,6 +3105,15 @@ BlockCompiler.defineBlock("operator_scratch_mod", {
 /***/ ((module) => {
 
 module.exports = ":root {\n  --game-viewport-width: 640px;\n  --game-viewport-height: 360px;\n  --game-viewport-scale: 1;\n\n  /*windowDialogContainer*/\n  --popup-dialog-font: \"arial\";\n  /*windowDialogBox*/\n  --popup-dialog-background: hsl(0deg, 0%, 100%);\n  --popup-dialog-border-radius: 10px;\n  --popup-dialog-text-color: hsl(0deg, 0%, 0%);\n  /*windowDialogButton*/\n  --popup-dialog-button-background: hsl(224, 100%, 67%);\n  --popup-dialog-button-hover-background: hsl(224, 100%, 63%);\n  --popup-dialog-button-text-color: hsl(0deg, 0%, 100%);\n  --popup-dialog-button-radius: 5px;\n  /*windowDialogInput*/\n  --popup-dialog-input-background: hsl(0deg, 0%, 100%);\n  --popup-dialog-input-border-width: 1.5px;\n  --popup-dialog-input-border-color: hsl(0deg, 0%, 73%);\n  --popup-dialog-input-text-color: hsl(0deg, 0%, 0%);\n  /*windowDialogHeader*/\n  --popup-dialog-message-size: 16px;\n\n  --loader2-time: 2.5s;\n}\n\n.windowDialogContainer {\n  font-family: var(--popup-dialog-font);\n}\n.windowDialogBackground {\n  background: hsl(0deg, 0%, 0%);\n  z-index: 999999999999;\n}\n.windowDialogBox {\n  background: var(--popup-dialog-background);\n  border-radius: var(--popup-dialog-border-radius);\n  color: var(--popup-dialog-text-color);\n  z-index: 999999999999;\n}\n.windowDialogButton {\n  background: var(--popup-dialog-button-background);\n  color: var(--popup-dialog-button-text-color);\n  border-radius: var(--popup-dialog-button-radius);\n}\n.windowDialogButton:hover {\n  background: var(--popup-dialog-button-hover-background);\n}\n.windowDialogInput {\n  background: var(--popup-dialog-input-background);\n  border-style: solid;\n  border-width: var(--popup-dialog-input-border-width);\n  border-color: var(--popup-dialog-input-border-color);\n  color: var(--popup-dialog-input-text-color);\n  outline: none;\n}\n.windowDialogHeader {\n  font-weight: bold;\n  font-size: var(--popup-dialog-message-size);\n}\n\nbody {\n  font-family: arial;\n}\n\n.appContainer {\n  background: #363636;\n  width: 100%;\n  height: 100svh;\n  position: fixed;\n  top: 0;\n  left: 0;\n  overflow: auto;\n}\n\n.blocklyDiv {\n  width: 100%;\n  height: 100%;\n}\n\n.menuBar {\n  display: flex;\n  width: 100%;\n  min-height: 50px;\n  background: #525252;\n  overflow: unset;\n  transition: 0.2s;\n  flex-direction: row;\n}\n\n.menuBarItemLogo {\n  all: unset;\n  width: fit-content;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  user-select: none;\n  padding: 0 10px;\n}\n\n.menuBarItemLogoImg {\n  height: 30px;\n}\n\n.menuBarItem {\n  all: unset;\n  color: #ffffff;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n}\n\n.unclickableMenuBarItem {\n  all: unset;\n  color: #ffffff;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n}\n\n.menuBarItem:hover {\n  background: #363636;\n  cursor: pointer;\n}\n\n/* Dropdown menu styles */\n.menuBarMenus {\n  display: flex;\n  align-items: center;\n  flex-direction: row;\n}\n.menuParentMain {\n}\n.menuParent {\n  position: relative;\n  display: flex;\n  align-items: center;\n  padding: 0 8px;\n  z-index: 9999;\n  cursor: unset;\n  width: fit-content;\n}\n.menuBarItemLabel {\n  color: #ffffff;\n  font-weight: bold;\n  user-select: none;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  gap: 3px;\n}\n.menuParent.open > .menuBarItemLabel {\n  color: #ffffff;\n}\n.menuDropdown {\n  position: absolute;\n  top: 100%;\n  left: 0;\n  background: #444444;\n  min-width: 160px;\n  border-radius: 6px;\n  box-shadow: 0 6px 14px rgba(0,0,0,0.3);\n  z-index: 9999;\n  display: block; /* hidden attribute controls visibility */\n  cursor: unset;\n}\n.menuDropdownItem {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 6px 8px;\n  color: #ffffff;\n  border-radius: 4px;\n  user-select: none;\n}\n.menuDropdownItem:hover {\n  background: #5a5a5a;\n  cursor: pointer;\n  box-sizing: border-box;\n}\n.menuIcon {\n  width: 16px;\n  height: 16px;\n  object-fit: contain;\n}\n.menuDropdownItemLabel {\n  color: #ffffff;\n}\n\n.panelContainer {\n  display: flex;\n  flex-direction: row;\n  width: 100svw;\n  height: calc(100svh - 50px);\n  position: absolute;\n  top: 50px;\n  left: 0px;\n  min-height: 500px;\n}\n\n.leftPanel {\n  height: calc(100svh - 50px);\n  display: flex;\n  flex-direction: column;\n  flex-grow: 1;\n  min-width: 0;\n}\n\n.rightPanel {\n  width: fit-content;\n  height: calc(100svh - 50px);\n  overflow: auto;\n  box-sizing: border-box;\n  flex-grow: 0;\n  flex-shrink: 0;\n}\n\n.rightPanelContent {\n  width: fit-content;\n  max-width: 100%;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  min-height: 0;\n  box-sizing: border-box;\n  position: relative;\n}\n\n.projectControls {\n  width: 100%;\n  height: 200px;\n}\n\n.projectCanvas {\n  background: #ffffff;\n  border-radius: 4px;\n  flex-shrink: 0;\n  flex-grow: 0;\n  width: calc(var(--game-viewport-width) * var(--game-viewport-scale));\n  height: calc(var(--game-viewport-height) * var(--game-viewport-scale));\n}\n\n.tabArea {\n  display: flex;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow-x: auto;\n  overflow-y: hidden;\n}\n\n.tabIcon {\n  height: 20px;\n  width: 20px;\n  object-fit: contain;\n  margin-right: 5px;\n}\n\n.tabButton {\n  all: unset;\n  color: #c7c7c7;\n  width: fit-content;\n  height: 50px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n  user-select: none;\n  padding: 0 8px;\n  font-weight: bold;\n  flex-grow: 0;\n  transform: translateY(5px);\n  border-top-left-radius: 10px;\n  border-top-right-radius: 10px;\n}\n\n.tabButton:hover {\n  background: #8f8f8f;\n  cursor: pointer;\n  color: #ffffff;\n  transform: translateY(4px);\n}\n\n.tabButton[selected] {\n  background: #8f8f8f;\n  cursor: unset;\n  color: #ffffff;\n  transform: translateY(0px);\n}\n\n.tabWindow {\n  background: #8f8f8f;\n  flex-grow: 1;\n  width: 100%;\n  color: #000000;\n  display: flex;            /* <-- CHANGED */\n  flex-direction: column;   /* <-- ADDED */\n  min-height: 0;            /* <-- ADDED (crucial for containing flex) */\n}\n\n.selectedSpriteContainer {\n  min-width: 100%;\n  max-width: calc(var(--game-viewport-scale) * var(--game-viewport-width));\n  box-sizing: border-box;\n  border-width: 5px;\n  border-style: solid;\n  border-color: black;\n  border-radius: 4px;\n  min-height: 30px;\n  height: fit-content;\n  display: flex;\n  padding: 4px 4px;\n  flex-shrink: 0;\n  flex-grow: 0;\n  flex-wrap: wrap;\n  overflow: auto;\n}\n\n.spritesContainer {\n  width: 100%;\n  box-sizing: border-box;\n  border-width: 5px;\n  border-style: solid;\n  border-color: black;\n  border-radius: 4px;\n  display: flex;\n  flex-direction: column;\n  overflow-y: auto;\n  overflow-x: hidden;\n  flex: 1 1 auto;\n  max-height: 100%;\n}\n\n.spriteContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n}\n\n.spriteTextContainer {\n  width: 200px;\n  text-wrap: wrap;\n  line-break: anywhere;\n}\n\n.spriteContainer[selected] {\n  background: #525252;\n}\n\n.selectedSpriteLabel {\n  color: white;\n  font-weight: bold;\n}\n.selectedSpriteInput {\n  all: unset;\n  padding: 3px 3px;\n  box-sizing: border-box;\n  width: fit-content;\n  color: white;\n  width: 100px;\n  border-radius: 2px;\n  background: #595959;\n  border-color: rgba(0,0,0,0);\n  border-style: solid;\n  border-width: 2px;\n  transition: 0.1s;\n}\n.selectedSpriteInput:focus {\n  border-color: white;\n}\n\n.costumesContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: column;\n  color: white;\n}\n\n.soundsContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: column;\n  color: white;\n}\n\n.costumePivotContainer {\n  width: 100%;\n  /* height: 100%; */  /* <-- REMOVE THIS */\n  flex-grow: 1;         /* <-- ADD THIS */\n  min-height: 0;        /* <-- ADD THIS */\n  display: flex;\n  flex-direction: row;\n  color: white;\n}\n\n.costumesInPivotContainer {\n  width: fit-content;\n  height: 100%; /* <-- This is OK now */\n  flex-grow: 0;\n  flex-shrink: 0;\n  overflow: auto; /* <-- This will now activate */\n  overflow-anchor: none;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.pivotCostumeButton {\n  min-width: 100px;\n  min-height: 100px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  box-sizing: border-box;\n  padding: 4px 4px;\n  border-radius: 10px;\n  border-width: 2px;\n  border-style: solid;\n  border-color: #000000;\n  margin: 2px;\n  user-select: none;\n  font-weight: bold;\n}\n\n.pivotCostumeButton:hover {\n  border-color: rgb(121, 121, 121);\n  cursor: pointer;\n}\n.pivotCostumeButton[selected] {\n  border-color: #ffffff;\n  cursor: unset;\n}\n\n.pivotEditor {\n  flex-grow: 1;\n  background: #212121;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  flex-shrink: 1;  /* <-- 1. ALLOWS this element to shrink */\n  min-width: 0;      /* <-- 2. THE KEY: Allows it to shrink smaller than its content */\n  overflow: hidden;    /* <-- 3. Prevents children from spilling out */\n  position: relative;\n}\n\n.pivotEditorMenuBar {\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: 64px;\n  width: 100%;\n  display: flex;      /* <-- Puts all items in one horizontal row */\n  overflow-x: auto;   /* <-- Adds horizontal scroll */\n  overflow-y: hidden; /* <-- Prevents vertical scroll */\n  align-items: center;\n}\n\n.pivotEditorMenuBar > * {\n  flex-shrink: 0;\n}\n\n.pivotEditorContainer {\n  flex-grow: 1;\n  position: relative;\n  overflow: auto;\n}\n\n.pivotEditorImageContainer {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: fit-content;\n  height: fit-content;\n  display: flex;\n  background-image: url(editor/transparent.png);\n  background-size: 32px;\n  image-rendering: pixelated;\n  overflow: hidden;\n  flex-wrap: nowrap;\n}\n\n.pivotEditorImage {\n  pointer-events: none;\n  user-select: none;\n}\n\n.pivotEditorMenuInput {\n  all: unset;\n  color: #ffffff;\n  font-weight: bold;\n  height: 100%;\n  box-sizing: border-box;\n}\n\n.pivotEditorDot {\n  background: #000000;\n  border-style: solid;\n  border-color: #ffffff;\n  box-sizing: border-box;\n  border-width: 2px;\n  border-radius: 50%;\n  width: 10px;\n  height: 10px;\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  transform: translate(-50%, -50%);\n  opacity: 0.5;\n}\n\n.costumesHeaderContainer {\n  width: 100%;\n  display: block;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  box-sizing: border-box;\n  padding: 5px 5px;\n}\n\n.soundsHeaderContainer {\n  width: 100%;\n  display: block;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  box-sizing: border-box;\n  padding: 5px 5px;\n}\n\n.costumesSelectorContainer {\n  display: flex;\n  flex-direction: column;\n  overflow: auto;\n  overflow-anchor: none;\n  flex-grow: 1;\n}\n\n.soundsSelectorContainer {\n  display: flex;\n  flex-direction: column;\n  overflow: auto;\n  flex-grow: 1;\n}\n\n.costumeContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n}\n\n.soundContainer {\n  width: 100%;\n  height: fit-content;\n  box-sizing: border-box;\n  border-radius: 5px;\n  display: flex;\n  padding: 7px 7px;\n  flex-grow: 0;\n  flex-shrink: 0;\n  color: white;\n  font-weight: bold;\n  font-size: 20px;\n  user-select: none;\n  align-items: center;\n  flex-direction: column;\n}\n\n.greyButtonStyle {\n  all: unset;\n  background: #6e6e6e;\n  color: white;\n  border-radius: 10px;\n  padding: 7px 7px;\n  box-sizing: border-box;\n  width: fit-content;\n  height: fit-content;\n  font-weight: bold;\n}\n\n.greyButtonStyle:hover {\n  background: #b8b8b8;\n  cursor: pointer;\n}\n\n.selectedCostumeInput {\n  all: unset;\n  padding: 3px 3px;\n  box-sizing: border-box;\n  width: 140px;\n  color: white;\n}\n\n.scratchCategoryMenuItemLabel {\n  color: white;\n}\n\n.projectControls {\n  background: #8f8f8f;\n  border-radius: 5px;\n  width: 100%;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  display: flex;\n}\n\n.projectButton {\n  padding: 5px;\n  font-size: 20px;\n  user-select: none;\n  margin-right: 2px;\n  border-radius: 5px;\n  min-width: 20px;\n  box-sizing: border-box;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n\n.projectButtonImg {\n  height: 20px;\n  width: 20px;\n  object-fit: contain;\n}\n\n.projectButton:hover {\n  cursor: pointer;\n  color: white;\n  background-color: rgba(0,0,0,0.5);\n}\n\n.spriteInputContainer {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  padding: 4px;\n  box-sizing: border-box;\n  border-radius: 5px;\n  background: #8f8f8f;\n  margin: 3px;\n}\n\n.projectMouseCoordinates {\n  color: white;\n  font-size: 10px;\n  font-weight: bold;\n}\n\n.addSpriteButton {\n  position: absolute;\n  bottom: 10px;\n  right: 10px;\n}\n\n.spriteAddMenu {\n  position: absolute;\n  bottom: 65px;\n  right: 10px;\n  background: #8f8f8f;\n  border-radius: 5px;\n  display: flex;\n  flex-direction: column;\n  padding: 1px;\n  box-sizing: border-box;\n  gap: 2px;\n}\n\n.spriteAddMenuItem {\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  padding: 5px;\n  border-radius: 5px;\n  color: white;\n  font-weight: bold;\n  user-select: none;\n  font-size: 17px;\n  cursor: default;\n}\n\n.spriteAddMenuItem:hover {\n  cursor: pointer;\n  background: rgba(0,0,0,0.5);\n}\n\n.spriteAddMenuItem > img {\n  width: 23px;\n  height: 23px;\n  object-fit: contain;\n}\n\n.customBlockDialogBG {\n  position: fixed;\n  width: 100svw;\n  height: 100svh;\n  top: 0;\n  left: 0;\n  background: rgba(0, 0, 0, 0.5);\n}\n.customBlockDialogBox {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  border-radius: 10px;\n  box-sizing: border-box;\n  background: #5c5c5c;\n  transform: translate(-50%, -50%);\n  padding: 10px 10px;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  max-width: calc(100% - 100px);\n  max-height: calc(100% - 50px);\n  overflow: auto;\n  color: #ffffff;\n}\n.customBlockWorkspace {\n  flex-grow: 1;\n  display: block;\n  min-width: calc(100% - 1px);\n  min-height: 100%;\n  max-width: 100%;\n  max-height: 100%;\n}\n\n.customBlockButtons {\n  flex-grow: 0;\n  flex-shrink: 0;\n  display: flex;\n  width: 100%;\n  align-items: center;\n  justify-content: center;\n}\n\n.loadingDialogBG {\n  background: #363636;\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  z-index: 99999999;\n}\n\n.loadingDialogBox {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  align-items: center;\n  z-index: 99999999;\n  font-weight: bold;\n  justify-content: center;\n  display: flex;\n  flex-direction: column;\n  color: #ffffff;\n}\n\n.loader2Container {\n  width: 120px;\n  height: 120px;\n  position: relative;\n}\n\n.loaderBlock1 {\n  animation-name: loaderBlock1Anim;\n  animation-duration: var(--loader2-time);\n    background-image: url(\"loading/blocks1.svg\");\n}\n\n.loaderBlock3 {\n  animation-name: loaderBlock3Anim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/blocks3.svg\");\n}\n\n.loaderBlock2 {\n  animation-name: loaderBlock2Anim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/blocks2.svg\");\n}\n\n.loaderBlockIcon {\n  animation-name: loaderBlockIconAnim;\n  animation-duration: var(--loader2-time);\n  background-image: url(\"loading/three.svg\");\n}\n\n.loaderBlock {\n  width: 120px;\n  height: 120px;\n  animation-iteration-count: infinite;\n\n  position: absolute;\n  top: 0;\n  left: 0;\n\n  background-repeat: no-repeat;\n  background-position: center center;\n  background-size: 100% 100%;\n  transform-origin: bottom;\n\n  filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.25));\n}\n\n@keyframes loaderBlock1Anim {\n  0% {\n    transform: translate(0, -50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  10% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  15% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  85% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  100% {\n    transform: translate(0, -50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n}\n\n@keyframes loaderBlock3Anim {\n  0% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  20% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n  30% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  70% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n  }\n  100% {\n    transform: translate(0, 50%) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 0;\n  }\n}\n\n@keyframes loaderBlock2Anim {\n  0% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n  40% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n  45% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n    transform-origin: center;\n  }\n  85% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    opacity: 1;\n    transform-origin: center;\n  }\n  100% {\n    transform: translate(0, 0) scale(2, 2);\n    animation-timing-function: ease-out;\n    opacity: 0;\n    transform-origin: center;\n  }\n}\n\n@keyframes loaderBlockIconAnim {\n  0% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n  }\n  45% {\n    transform: translate(0, 0) scale(1, 1);\n    animation-timing-function: ease-out;\n    transform-origin: center;\n  }\n  60% {\n    transform-origin: center;\n    transform: translate(0, 0) scale(1.2, 1.2) rotate(360deg);\n    animation-timing-function: ease-in;\n    filter: drop-shadow(4px 4px 8px rgba(0, 255, 13, 1));\n  }\n  75% {\n    transform-origin: center;\n    transform: translate(0, 0) scale(1, 1) rotate(360deg);\n    animation-timing-function: ease-out;\n  }\n  100% {\n    transform: translate(0, 0) scale(1, 1) rotate(360deg);\n    animation-timing-function: ease-out;\n  }\n}\n\n.errorLogsContainer {\n  width: 100%;\n  height: 100%;\n  box-sizing: border-box;\n  padding: 10px 10px;\n  display: flex;\n  flex-direction: column;\n  color: #ffffff;\n  background-color: #000000;\n  overflow: auto;\n}\n\n.errorLogError {\n  color: #ff4c4c;\n  font-weight: bold;\n  margin-bottom: 2px;\n}\n\n/* Error glow is provided via the workspace SVG filter; keep a minimal\n   class so we can target blocks in case the filter can't be applied. */\n.blocklyBlockSvg.error-glow {\n  /* Prefer the workspace SVG filter for the glow; keep a harmless\n     property so linters don't complain about an empty ruleset. */\n  outline: none;\n}\n\n.fullscreenModeContainerMain {\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: column;\n  background: #363636;\n  z-index: 99999999;\n}\n\n.fullscreenModeContainer {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.blocklyFlyoutLabelText {\n  fill: #ffffff;\n}\n\n.blocklyFlyoutButton .blocklyText {\n  fill: #ffffff;\n}\n\n.blocklyFlyoutButton:hover {\n  cursor: pointer;\n  fill: rgba(0,0,0,0.5);\n}\n\n.blocklyFlyoutButton:hover > .blocklyText {\n  font-weight: bold;\n}\n\n.loadingProgressMain {\n  width: 200px;\n  height: 30px;\n  box-sizing: border-box;\n  background: rgba(255, 255, 255, 0.3);\n  border-style: solid;\n  border-radius: 3px;\n  border-width: 3px;\n  border-color: rgba(0, 0, 0, 0.7);\n}\n.loadingProgressInner {\n  height: 100%;\n  background: rgba(255, 255, 255, 0.5);\n}\n\n.dialogBackground {\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100svw;\n  height: 100svh;\n  background-color: rgba(0, 0, 0, 0.5); /* Optional: semi-transparent background */\n  backdrop-filter: blur(2px); /* The blur effect */\n  -webkit-backdrop-filter: blur(2px); /* For Safari */\n}\n\n.gameSettingsBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n}\n\n.gameSettingSelection {\n  display: flex;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow: auto;\n  gap: 2px;\n}\n\n.gameSelectionCategory {\n  display: block;\n  flex-direction: row;\n  flex-grow: 1;\n  width: 100%;\n  overflow: auto;\n}\n\n.centerMiddle {\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n\n.infoDiv {\n\twidth: 100%;\n\theight: fit-content;\n\tmin-height: 70px;\n\tbackground: rgba(0,0,0,0.5);\n\tmargin-bottom:2px;\n\tmargin-top:2px;\n\tborder-radius: 10px;\n  padding: 5px 10px;\n  box-sizing: border-box;\n  display: block;\n}\n\n.gameBackupBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n}\n\n.gameBackupSelection {\n  display: flex;\n  flex-direction: row;\n  flex-grow: 0;\n  flex-shrink: 0;\n  height: fit-content;\n  width: 100%;\n  overflow: auto;\n  gap: 2px;\n}\n\n.gameBackupCategory {\n  display: block;\n  flex-direction: row;\n  flex-grow: 1;\n  width: 100%;\n  overflow: auto;\n}\n\n.backupThumbnail {\n  height: 150px;\n  object-fit: contain;\n  border-radius: 10px;\n  user-select: none;\n  pointer-events: none;\n}\n\n.backupEntry {\n  display: flex;\n  padding: 5px;\n  box-sizing: border-box;\n  border-radius: 5px;\n  background: #8f8f8f;\n  margin: 3px;\n  color: white;\n  font-weight: bold;\n  flex-direction: row;\n  align-items: center;\n  gap: 8px;\n}\n\n.backupTimestamp {\n  font-size: 20px;\n  color: #c7c7c7;\n}\n\n.backupNoticeMenuBarItem {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: row;\n  gap: 3px;\n  flex-wrap: none;\n  font-size: 9px;\n}\n\n.gameExportBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n  box-sizing: border-box;\n}\n\n.exportGameTypeSelectionContainer {\n  display: flex;\n  width: 100%;\n\theight: fit-content;\n\tflex-shrink: 0;\n\tflex-grow: 0;\n  flex-direction: row;\n  padding: 2px 2px;\n  box-sizing: border-box;\n  gap: 5px;\n  text-wrap: nowrap;\n  align-items: center;\n}\n\n.exportGameTypeSelection {\n  display: flex;\n\theight: fit-content;\n\tflex-grow: 1;\n\toverflow: auto;\n\tgap: 2px;\n}\n\n.exportGameType {\n\tdisplay: flex;\n\tbackground: rgba(0,0,0,0.3);\n\tpadding: 3px 3px;\n\ttext-wrap: nowrap;\n\tborder-radius: 2px;\n\tfont-weight: bold;\n\tfont-size: 18px;\n\tcolor: rgba(255,255,255,0.5);\n\tflex-grow: 0;\n\tflex-shrink: 0;\n\tbox-sizing: border-box;\n\twidth: fit-content;\n\theight: fit-content;\n\tgap: 3px;\n\talign-items: center;\n\tuser-select: none;\n  border-style: solid;\n  border-width: 3px;\n  border-color: rgba(0,0,0,0);\n}\n\n.exportGameType > img {\n\twidth: 30px;\n\theight: 30px;\n\tobject-fit: contain;\n  padding: 3px 3px;\n}\n\n.exportGameType:hover {\n  background: rgba(0,0,0,0.2);\n  text-decoration: underline;\n  cursor: pointer;\n}\n\n.exportGameType[selected] {\n  text-decoration: unset;\n  cursor: unset;\n  background: rgba(0,0,0,0);\n  border-bottom-color: rgba(255, 255, 255, 1);\n}\n\n.exportGameType[selected] > img {\n  width: 30px;\n\theight: 30px;\n\tobject-fit: contain;\n  border-radius: 5px;\n  background: rgba(0,0,0,0.4);\n}\n\n.exportOptionsContainer {\n  width: 100%;\n  flex-grow: 1;\n  overflow: auto;\n\n  display: flex;\n  flex-direction: column;\n\n  gap: 4px;\n}\n\n.exportOptionsDescription {\n  width: 100%;\n  height: fit-content;\n  padding: 10px 10px;\n  border-radius: 5px;\n  color: rgba(255,255,255,0.8);\n  background: rgba(0,0,0,0.6);\n  overflow: auto;\n  display: block;\n  box-sizing: border-box;\n}\n\n.exportOptionsOptionContainer {\n  width: 100%;\n  height: fit-content;\n  padding: 10px 10px;\n  border-radius: 5px;\n  color: rgba(255,255,255,0.8);\n  background: rgba(0,0,0,0.6);\n  overflow: auto;\n  display: block;\n  box-sizing: border-box;\n}\n\n.exportOptionsOptionTitle {\n  font-weight: bold;\n  font-size: 25px;\n  margin-bottom: 3px;\n}\n\n.exportOptionsOptionDescription {\n\twhite-space: pre-wrap;\n  overflow-wrap: break-word;\n  word-break: normal;\n}\n\n.textInput {\n\tall: unset;\n\tpadding: 2px 2px;\n\twidth: fit-content;\n\theight: fit-content;\n\tbackground: rgba(255,255,255,1);\n\tcolor: rgba(0,0,0,1);\n\tborder-style: solid;\n\tborder-width: 1px;\n\tborder-color: rgba(50,50,50,1);\n\tfont-size: 13px;\n}\n\n.exportButtonsContainer {\n\tdisplay: flex;\n\tflex-direction: row;\n\tgap: 2px;\n\tpadding: 2px 2px;\n\toverflow: auto;\n}\n\n.exportButton {\n\tdisplay: flex;\n\tbackground: rgba(255,255,255,0.5);\n\tcolor: rgba(0,0,0,0.7);\n\tborder-radius: 5px;\n\tpadding: 5px 5px;\n\tfont-weight: bold;\n\talign-items: center;\n\tgap: 3px;\n\tuser-select: none;\n}\n\n.exportButton > img {\n\twidth: 30px;\n\theight: 30px;\n\tobject-fit: contain;\n\tbackground: rgba(0,0,0,0.3);\n\tpadding: 2px 2px;\n\tborder-radius: 3px;\n}\n\n.exportButton:hover {\n\tcursor: pointer;\n\tbackground: rgba(255,255,255,0.7);\n}\n\n.modeDivContainer {\n  display: flex;\n  width: 100%;\n  flex-direction: column;\n  flex: 1 1 auto;\n  min-height: 350px;\n  position: relative;\n}\n\n.modeTabs {\n  display: flex;\n  width: 100%;\n  min-height: 50px;\n  height: fit-content;\n  flex-direction: row;\n  overflow: auto;\n  gap: 0.5px;\n}\n\n.modeTabContainer {\n  width: fit-content;\n  height: 50px;\n  position: relative;\n  overflow: hidden;\n}\n\n.costumeLibraryImg {\n  padding: 5px 5px;\n  background: rgba(0,0,0,0.5);\n  border-radius: 4px;\n  width: 70px;\n  height: 70px;\n  object-fit: contain;\n}\n\n.linkLibraryDialogBox {\n  background: rgb(49, 49, 49);\n  color: rgb(255, 255, 255);\n  padding: 3px 3px;\n  box-shadow: 0 0px 30px rgb(0, 0, 0);\n  border-radius: 5px;\n  box-sizing: border-box;\n\n  overflow-y: auto;\n  width: calc(100svw - 100px);\n  height: calc(100svh - 100px);\n\n  display: flex;\n  flex-direction: column;\n}\n\n.libraryDialogList {\n  width: 100%;\n  flex-grow: 1;\n  flex-shrink: 1;\n  overflow: auto;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  gap: 2px;\n}\n\n.libraryOption {\n  min-width: 100px;\n  min-height: 100px;\n  width: fit-content;\n  height: fit-content;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  box-sizing: border-box;\n  padding: 4px 4px;\n  border-radius: 10px;\n  border-width: 4px;\n  border-style: solid;\n  border-color: #000000;\n  margin: 2px;\n  user-select: none;\n  font-weight: bold;\n}\n\n.libraryOption:hover {\n  border-color: rgb(121, 121, 121);\n  cursor: pointer;\n}\n.libraryOption[selected] {\n  border-color: #32d600;\n  cursor: unset;\n}\n\n.libraryDialogButtons {\n  flex-grow: 0;\n  flex-shrink: 0;\n  display: flex;\n  width: 100%;\n  align-items: center;\n  justify-content: center;\n}\n\n.libraryLinkIcon {\n  width: 20px;\n  height: 20px;\n  object-fit: contain;\n  padding: 4px 4px;\n}";
+
+/***/ }),
+
+/***/ 852:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+__webpack_require__(9937);
+__webpack_require__(9384);
+__webpack_require__(9352);
 
 /***/ }),
 
@@ -3706,6 +3762,22 @@ module.exports = { loadBlockMenus, helpers };
 
 /***/ }),
 
+/***/ 961:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("sensing_mousey", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    return `engine.mouseY`;
+  },
+});
+
+/***/ }),
+
 /***/ 1020:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -4092,6 +4164,61 @@ BlockCompiler.defineBlock("control_create_clone_of_menu", {
 
 /***/ }),
 
+/***/ 1176:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("sensing_keyoptions", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var KEY_OPTION = utils.getField("KEY_OPTION", "");
+
+    return JSON.stringify(KEY_OPTION);
+  },
+});
+
+/***/ }),
+
+/***/ 1191:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("looks_ystretch_by", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var VALUE = utils.getInput("VALUE", "0");
+    var VALUE_NUMBER = CoreFunctions.castToNumber(VALUE, true);
+
+    return `sprite.scaleY += ${VALUE_NUMBER} / 100;`;
+  },
+});
+
+/***/ }),
+
+/***/ 1281:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("looks_visible", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    return `(!sprite.hidden)`;
+  },
+});
+
+/***/ }),
+
 /***/ 1287:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -4101,10 +4228,10 @@ __webpack_require__(5669);
 __webpack_require__(8621);
 __webpack_require__(2914);
 __webpack_require__(441);
-
-
+__webpack_require__(685);
+__webpack_require__(852);
 __webpack_require__(8133);
-
+__webpack_require__(6828);
 
 
 
@@ -4667,6 +4794,23 @@ Blockly.Blocks["sound_playuntildone_advanced"] = {
 
 /***/ }),
 
+/***/ 1658:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("looks_nextcostume", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    return `sprite.costumeIndex += 1;if (sprite.costumeIndex+1 > sprite.costumes.length) {sprite.costumeIndex = 0;}`;
+  },
+});
+
+/***/ }),
+
 /***/ 1710:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -4726,6 +4870,26 @@ BlockCompiler.defineBlock("motion_changexby", {
     var DX = util.getInput("DX", "0");
 
     return `sprite.x += +(${DX}) || 0;`;
+  },
+});
+
+/***/ }),
+
+/***/ 1939:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("looks_changesizeby", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var CHANGE = utils.getInput("CHANGE", "0");
+    var CHANGE_NUMBER = CoreFunctions.castToNumber(CHANGE, true);
+
+    return `sprite.size += ${CHANGE_NUMBER};`;
   },
 });
 
@@ -7793,6 +7957,23 @@ BlockCompiler.defineBlock("control_elapsed", {
 
 /***/ }),
 
+/***/ 2691:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("looks_ystretch", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    return `(sprite.scaleY * 100)`;
+  },
+});
+
+/***/ }),
+
 /***/ 2695:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -8334,6 +8515,22 @@ module.exports = SpriteMaster;
 
 /***/ }),
 
+/***/ 3180:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("sensing_mousedown", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    return `engine.mouseIsDown`;
+  },
+});
+
+/***/ }),
+
 /***/ 3201:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -8635,6 +8832,22 @@ module.exports = {
   setCurrentLibrary,
 };
 
+
+/***/ }),
+
+/***/ 3330:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("sensing_mousex", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    return `engine.mouseX`;
+  },
+});
 
 /***/ }),
 
@@ -9826,6 +10039,28 @@ BlockCompiler.defineBlock("operator_round", {
     var NUM_NUMBER = CoreFunctions.castToNumber(NUM, true);
 
     return `Math.round(${NUM_NUMBER})`;
+  },
+});
+
+/***/ }),
+
+/***/ 3931:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("looks_seteffectto", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var EFFECT = utils.getField("EFFECT", "_noeffect");
+
+    var VALUE = utils.getInput("VALUE", "0");
+    var VALUE_NUMBER = CoreFunctions.castToNumber(VALUE, true);
+
+    return `sprite.effects[${JSON.stringify(EFFECT)}] = ${VALUE_NUMBER};`;
   },
 });
 
@@ -21879,6 +22114,45 @@ createBlockContextMenu(
 
 /***/ }),
 
+/***/ 4656:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("looks_switchcostumeto", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var COSTUME = utils.getInput("COSTUME", "");
+
+    return `sprite.costumeIndex = +(sprite.getCostumeIndex(${COSTUME})) || 0;`;
+  },
+});
+
+/***/ }),
+
+/***/ 4692:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("looks_xstretch_to", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var VALUE = utils.getInput("VALUE", "0");
+    var VALUE_NUMBER = CoreFunctions.castToNumber(VALUE, true);
+
+    return `sprite.scaleX = ${VALUE_NUMBER} / 100;`;
+  },
+});
+
+/***/ }),
+
 /***/ 4797:
 /***/ (() => {
 
@@ -22287,6 +22561,23 @@ BlockCompiler.defineBlock("control_wait_until", {
   },
 });
 
+
+/***/ }),
+
+/***/ 5270:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("looks_size", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    return `sprite.size`;
+  },
+});
 
 /***/ }),
 
@@ -23425,6 +23716,26 @@ module.exports = [
 /* harmony export */   A: () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("precision highp float;\n\n#ifdef DRAW_MODE_silhouette\nuniform vec4 u_silhouetteColor;\n#else // DRAW_MODE_silhouette\n# ifdef ENABLE_color\nuniform float u_color;\n# endif // ENABLE_color\n# ifdef ENABLE_brightness\nuniform float u_brightness;\n# endif // ENABLE_brightness\n#endif // DRAW_MODE_silhouette\n\n#ifdef DRAW_MODE_colorMask\nuniform vec3 u_colorMask;\nuniform float u_colorMaskTolerance;\n#endif // DRAW_MODE_colorMask\n\n#ifdef ENABLE_fisheye\nuniform float u_fisheye;\n#endif // ENABLE_fisheye\n#ifdef ENABLE_whirl\nuniform float u_whirl;\n#endif // ENABLE_whirl\n#ifdef ENABLE_pixelate\nuniform float u_pixelate;\nuniform vec2 u_skinSize;\n#endif // ENABLE_pixelate\n#ifdef ENABLE_mosaic\nuniform float u_mosaic;\n#endif // ENABLE_mosaic\n#ifdef ENABLE_ghost\nuniform float u_ghost;\n#endif // ENABLE_ghost\n\n// --- ADDED FOR WAVY EFFECT ---\n#ifdef ENABLE_wavy\nuniform float iTime;\nuniform float u_wave_xwave; // Renamed from xwave\nuniform float u_wave_ywave; // Renamed from ywave\nuniform float u_wave_xtime; // Renamed from xtime\nuniform float u_wave_ytime; // Renamed from ytime\n#endif // ENABLE_wavy\n// -----------------------------\n\n// --- ADDED FOR RIBBON EFFECT ---\n#ifdef ENABLE_ribbon\nuniform float u_ribbonShiftX;\nuniform float u_ribbonShiftY;\n#endif // ENABLE_ribbon\n// ---------------------------------\n\n#ifdef DRAW_MODE_line\nvarying vec4 v_lineColor;\nvarying float v_lineThickness;\nvarying float v_lineLength;\n#endif // DRAW_MODE_line\n\n#ifdef DRAW_MODE_background\nuniform vec4 u_backgroundColor;\n#endif // DRAW_MODE_background\n\nuniform sampler2D u_skin;\n\n#ifndef DRAW_MODE_background\nvarying vec2 v_texCoord;\n#endif\n\n// Add this to divisors to prevent division by 0, which results in NaNs propagating through calculations.\n// Smaller values can cause problems on some mobile devices.\nconst float epsilon = 1e-3;\n\n#if !defined(DRAW_MODE_silhouette) && (defined(ENABLE_color))\n// Branchless color conversions based on code from:\n// http://www.chilliant.com/rgb2hsv.html by Ian Taylor\n// Based in part on work by Sam Hocevar and Emil Persson\n// See also: https://en.wikipedia.org/wiki/HSL_and_HSV#Formal_derivation\n\n\n// Convert an RGB color to Hue, Saturation, and Value.\n// All components of input and output are expected to be in the [0,1] range.\nvec3 convertRGB2HSV(vec3 rgb)\n{\n\t// Hue calculation has 3 cases, depending on which RGB component is largest, and one of those cases involves a \"mod\"\n\t// operation. In order to avoid that \"mod\" we split the M==R case in two: one for G<B and one for B>G. The B>G case\n\t// will be calculated in the negative and fed through abs() in the hue calculation at the end.\n\t// See also: https://en.wikipedia.org/wiki/HSL_and_HSV#Hue_and_chroma\n\tconst vec4 hueOffsets = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);\n\n\t// temp1.xy = sort B & G (largest first)\n\t// temp1.z = the hue offset we'll use if it turns out that R is the largest component (M==R)\n\t// temp1.w = the hue offset we'll use if it turns out that R is not the largest component (M==G or M==B)\n\tvec4 temp1 = rgb.b > rgb.g ? vec4(rgb.bg, hueOffsets.wz) : vec4(rgb.gb, hueOffsets.xy);\n\n\t// temp2.x = the largest component of RGB (\"M\" / \"Max\")\n\t// temp2.yw = the smaller components of RGB, ordered for the hue calculation (not necessarily sorted by magnitude!)\n\t// temp2.z = the hue offset we'll use in the hue calculation\n\tvec4 temp2 = rgb.r > temp1.x ? vec4(rgb.r, temp1.yzx) : vec4(temp1.xyw, rgb.r);\n\n\t// m = the smallest component of RGB (\"min\")\n\tfloat m = min(temp2.y, temp2.w);\n\n\t// Chroma = M - m\n\tfloat C = temp2.x - m;\n\n\t// Value = M\n\tfloat V = temp2.x;\n\n\treturn vec3(\n\t\tabs(temp2.z + (temp2.w - temp2.y) / (6.0 * C + epsilon)), // Hue\n\t\tC / (temp2.x + epsilon), // Saturation\n\t\tV); // Value\n}\n\nvec3 convertHue2RGB(float hue)\n{\n\tfloat r = abs(hue * 6.0 - 3.0) - 1.0;\n\tfloat g = 2.0 - abs(hue * 6.0 - 2.0);\n\tfloat b = 2.0 - abs(hue * 6.0 - 4.0);\n\treturn clamp(vec3(r, g, b), 0.0, 1.0);\n}\n\nvec3 convertHSV2RGB(vec3 hsv)\n{\n\tvec3 rgb = convertHue2RGB(hsv.x);\n\tfloat c = hsv.z * hsv.y;\n\treturn rgb * c + hsv.z - c;\n}\n#endif // !defined(DRAW_MODE_silhouette) && (defined(ENABLE_color))\n\nconst vec2 kCenter = vec2(0.5, 0.5);\n\nvoid main()\n{\n\t#if !(defined(DRAW_MODE_line) || defined(DRAW_MODE_background))\n\tvec2 texcoord0 = v_texCoord;\n\n\t#ifdef ENABLE_mosaic\n\ttexcoord0 = fract(u_mosaic * texcoord0);\n\t#endif // ENABLE_mosaic\n\n\t// --- APPLIED RIBBON EFFECT EARLY ---\n\t// Apply ribbon effect before pixelate to avoid pixelation artifacts\n\t#ifdef ENABLE_ribbon\n\t{\n\t\ttexcoord0.x = fract(texcoord0.x + u_ribbonShiftX);\n\t\ttexcoord0.y = fract(texcoord0.y + u_ribbonShiftY);\n\t}\n\t#endif // ENABLE_ribbon\n\t// --------------------------------\n\n\t#ifdef ENABLE_pixelate\n\t{\n\t\t// TODO: clean up \"pixel\" edges\n\t\tvec2 pixelTexelSize = u_skinSize / u_pixelate;\n\t\ttexcoord0 = (floor(texcoord0 * pixelTexelSize) + kCenter) / pixelTexelSize;\n\t}\n\t#endif // ENABLE_pixelate\n\n\t#ifdef ENABLE_whirl\n\t{\n\t\tconst float kRadius = 0.5;\n\t\tvec2 offset = texcoord0 - kCenter;\n\t\tfloat offsetMagnitude = length(offset);\n\t\tfloat whirlFactor = max(1.0 - (offsetMagnitude / kRadius), 0.0);\n\t\tfloat whirlActual = u_whirl * whirlFactor * whirlFactor;\n\t\tfloat sinWhirl = sin(whirlActual);\n\t\tfloat cosWhirl = cos(whirlActual);\n\t\tmat2 rotationMatrix = mat2(\n\t\t\tcosWhirl, -sinWhirl,\n\t\t\tsinWhirl, cosWhirl\n\t\t);\n\n\t\ttexcoord0 = rotationMatrix * offset + kCenter;\n\t}\n\t#endif // ENABLE_whirl\n\n\t#ifdef ENABLE_fisheye\n\t{\n\t\tvec2 vec = (texcoord0 - kCenter) / kCenter;\n\t\tfloat vecLength = length(vec);\n\t\tfloat r = pow(min(vecLength, 1.0), u_fisheye) * max(1.0, vecLength);\n\t\tvec2 unit = vec / vecLength;\n\n\t\ttexcoord0 = kCenter + r * unit * kCenter;\n\t}\n\t#endif // ENABLE_fisheye\n\n\t// --- ADDED FOR WAVY EFFECT ---\n\t// This modifies the texture coordinates just before sampling.\n\t#ifdef ENABLE_wavy\n\t{\n\t\t// Use epsilon to prevent division by zero if time uniforms are 0\n\t\ttexcoord0.x += sin(texcoord0.y * u_wave_xwave + iTime) / (u_wave_xtime + epsilon);\n\t\ttexcoord0.y += sin(texcoord0.x * u_wave_ywave + iTime) / (u_wave_ytime + epsilon);\n\t}\n\t#endif // ENABLE_wavy\n\t// -----------------------------\n\n\tgl_FragColor = texture2D(u_skin, texcoord0);\n\n\t#if defined(ENABLE_color) || defined(ENABLE_brightness)\n\t// Divide premultiplied alpha values for proper color processing\n\t// Add epsilon to avoid dividing by 0 for fully transparent pixels\n\tgl_FragColor.rgb = clamp(gl_FragColor.rgb / (gl_FragColor.a + epsilon), 0.0, 1.0);\n\n\t#ifdef ENABLE_color\n\t{\n\t\tvec3 hsv = convertRGB2HSV(gl_FragColor.xyz);\n\n\t\t// this code forces grayscale values to be slightly saturated\n\t\t// so that some slight change of hue will be visible\n\t\tconst float minLightness = 0.11 / 2.0;\n\t\tconst float minSaturation = 0.09;\n\t\tif (hsv.z < minLightness) hsv = vec3(0.0, 1.0, minLightness);\n\t\telse if (hsv.y < minSaturation) hsv = vec3(0.0, minSaturation, hsv.z);\n\n\t\thsv.x = mod(hsv.x + u_color, 1.0);\n\t\tif (hsv.x < 0.0) hsv.x += 1.0;\n\n\t\tgl_FragColor.rgb = convertHSV2RGB(hsv);\n\t}\n\t#endif // ENABLE_color\n\n\t#ifdef ENABLE_brightness\n\tgl_FragColor.rgb = clamp(gl_FragColor.rgb + vec3(u_brightness), vec3(0), vec3(1));\n\t#endif // ENABLE_brightness\n\n\t// Re-multiply color values\n\tgl_FragColor.rgb *= gl_FragColor.a + epsilon;\n\n\t#endif // defined(ENABLE_color) || defined(ENABLE_brightness)\n\n\t#ifdef ENABLE_ghost\n\tgl_FragColor *= u_ghost;\n\t#endif // ENABLE_ghost\n\n\t#ifdef DRAW_MODE_silhouette\n\t// Discard fully transparent pixels for stencil test\n\tif (gl_FragColor.a == 0.0) {\n\t\tdiscard;\n\t}\n\t// switch to u_silhouetteColor only AFTER the alpha test\n\tgl_FragColor = u_silhouetteColor;\n\t#else // DRAW_MODE_silhouette\n\n\t#ifdef DRAW_MODE_colorMask\n\tvec3 maskDistance = abs(gl_FragColor.rgb - u_colorMask);\n\tvec3 colorMaskTolerance = vec3(u_colorMaskTolerance, u_colorMaskTolerance, u_colorMaskTolerance);\n\tif (any(greaterThan(maskDistance, colorMaskTolerance)))\n\t{\n\t\tdiscard;\n\t}\n\t#endif // DRAW_MODE_colorMask\n\t#endif // DRAW_MODE_silhouette\n\n\t#ifdef DRAW_MODE_straightAlpha\n\t// Un-premultiply alpha.\n\tgl_FragColor.rgb /= gl_FragColor.a + epsilon;\n\t#endif\n\n\t#endif // !(defined(DRAW_MODE_line) || defined(DRAW_MODE_background))\n\n\t#ifdef DRAW_MODE_line\n\t// Maaaaagic antialiased-line-with-round-caps shader.\n\n\t// \"along-the-lineness\". This increases parallel to the line.\n\t// It goes from negative before the start point, to 0.5 through the start to the end, then ramps up again\n\t// past the end point.\n\tfloat d = ((v_texCoord.x - clamp(v_texCoord.x, 0.0, v_lineLength)) * 0.5) + 0.5;\n\n\t// Distance from (0.5, 0.5) to (d, the perpendicular coordinate). When we're in the middle of the line,\n\t// d will be 0.5, so the distance will be 0 at points close to the line and will grow at points further from it.\n\t// For the \"caps\", d will ramp down/up, giving us rounding.\n\t// See https://www.youtube.com/watch?v=PMltMdi1Wzg for a rough outline of the technique used to round the lines.\n\tfloat line = distance(vec2(0.5), vec2(d, v_texCoord.y)) * 2.0;\n\t// Expand out the line by its thickness.\n\tline -= ((v_lineThickness - 1.0) * 0.5);\n\t// Because \"distance to the center of the line\" decreases the closer we get to the line, but we want more opacity\n\t// the closer we are to the line, invert it.\n\tgl_FragColor = v_lineColor * clamp(1.0 - line, 0.0, 1.0);\n\t#endif // DRAW_MODE_line\n\n\t#ifdef DRAW_MODE_background\n\tgl_FragColor = u_backgroundColor;\n\t#endif\n}");
+
+/***/ }),
+
+/***/ 5451:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("looks_setsizeto", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var SIZE = utils.getInput("SIZE", "0");
+    var SIZE_NUMBER = CoreFunctions.castToNumber(SIZE, true);
+
+    return `sprite.size = ${SIZE_NUMBER};`;
+  },
+});
 
 /***/ }),
 
@@ -25106,6 +25417,28 @@ BlockCompiler.defineBlock("engine_framerate_to", {
 
 /***/ }),
 
+/***/ 5740:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("looks_stretch_to", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var XVALUE = utils.getInput("XVALUE", "0");
+    var XVALUE_NUMBER = CoreFunctions.castToNumber(XVALUE, true);
+    var YVALUE = utils.getInput("YVALUE", "0");
+    var YVALUE_NUMBER = CoreFunctions.castToNumber(YVALUE, true);
+
+    return `sprite.scaleX = ${XVALUE_NUMBER} / 100;sprite.scaleY = ${YVALUE_NUMBER} / 100;`;
+  },
+});
+
+/***/ }),
+
 /***/ 5753:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -25606,7 +25939,7 @@ var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
 
-BlockCompiler.defineBlock("event_whengamestarts", {
+BlockCompiler.defineBlock("event_beforegamestarts", {
   type: CBlockType.STARTER_HAT,
   func: function (utils) {
     var insideCode = utils.getHatContents("");
@@ -26024,6 +26357,23 @@ function init(state, deps) {
 
 module.exports = { init };
 
+
+/***/ }),
+
+/***/ 6327:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("looks_hidden", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    return `(!!sprite.hidden)`;
+  },
+});
 
 /***/ }),
 
@@ -26557,6 +26907,31 @@ BlockCompiler.defineBlock("operator_newline", {
 
 /***/ }),
 
+/***/ 6828:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+__webpack_require__(8493);
+__webpack_require__(4656);
+__webpack_require__(1658);
+__webpack_require__(8931);
+__webpack_require__(6327);
+__webpack_require__(1281);
+__webpack_require__(7166);
+__webpack_require__(8795);
+__webpack_require__(1939);
+__webpack_require__(5451);
+__webpack_require__(5270);
+__webpack_require__(610);
+__webpack_require__(2691);
+__webpack_require__(5740);
+__webpack_require__(4692);
+__webpack_require__(9511);
+__webpack_require__(6960);
+__webpack_require__(1191);
+__webpack_require__(3931);
+
+/***/ }),
+
 /***/ 6836:
 /***/ ((module) => {
 
@@ -26935,6 +27310,26 @@ Blockly.Blocks["spritemaster_checktouchingsprite_equals_propertyvalue"] = {
   },
 };
 
+
+/***/ }),
+
+/***/ 6960:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("looks_xstretch_by", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var VALUE = utils.getInput("VALUE", "0");
+    var VALUE_NUMBER = CoreFunctions.castToNumber(VALUE, true);
+
+    return `sprite.scaleX += ${VALUE_NUMBER} / 100;`;
+  },
+});
 
 /***/ }),
 
@@ -27655,6 +28050,23 @@ addAppMenu(
 
 gameSettingOptions.start();
 
+
+/***/ }),
+
+/***/ 7166:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("looks_show", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    return `sprite.hidden = false;`;
+  },
+});
 
 /***/ }),
 
@@ -31133,6 +31545,25 @@ module.exports = PlaceholderExportOption;
 
 /***/ }),
 
+/***/ 8493:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("looks_costume", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var COSTUME = utils.getField("COSTUME", "");
+
+    return JSON.stringify(COSTUME);
+  },
+});
+
+/***/ }),
+
 /***/ 8570:
 /***/ ((module) => {
 
@@ -31260,6 +31691,50 @@ BlockCompiler.defineBlock("motion_turnright", {
 
 /***/ }),
 
+/***/ 8795:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("looks_hide", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    return `sprite.hidden = true;`;
+  },
+});
+
+/***/ }),
+
+/***/ 8931:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("looks_costumenumbername", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var NUMBER_NAME = utils.getField(jsonblock, "NUMBER_NAME", options);
+
+    if (NUMBER_NAME == "number") {
+        return `sprite.costumeIndex`;
+    }
+
+    if (NUMBER_NAME == "name") {
+        return `(sprite.costume?.name)`;
+    }
+
+    return `(sprite.costume?.name)`;
+  },
+});
+
+/***/ }),
+
 /***/ 8988:
 /***/ ((module) => {
 
@@ -31298,6 +31773,8 @@ class SpriteEffects {
   }
 
   reset() {
+    this._noeffect = 0; //This is just here so that there is something to fall back on to.
+
     this.waveTime = 0;
     this.waveXTime = 0;
     this.waveYTime = 0;
@@ -31415,6 +31892,24 @@ class SpriteEffects {
 }
 module.exports = SpriteEffects;
 
+
+/***/ }),
+
+/***/ 9015:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("sensing_keypressed", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var KEY_OPTION = utils.getInput("KEY_OPTION", "");
+
+    return `!!engine.keysPressed[${KEY_OPTION}]`;
+  },
+});
 
 /***/ }),
 
@@ -31859,6 +32354,23 @@ module.exports = {
   updateTabs,
 };
 
+
+/***/ }),
+
+/***/ 9194:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("sensing_touchingobjectmenu", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var TOUCHINGOBJECTMENU = utils.getField("TOUCHINGOBJECTMENU", "");
+    return JSON.stringify(TOUCHINGOBJECTMENU);
+  },
+});
 
 /***/ }),
 
@@ -32407,6 +32919,33 @@ module.exports = { CBlockUtil };
 
 /***/ }),
 
+/***/ 9352:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("data_setvariableto", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var variable = utils.getFieldVariable("VARIABLE");
+    if (!variable) {
+        //We don't have that variable.
+        return "";
+    }
+
+    var VALUE = utils.getInput("VALUE", "0");
+    var variableCode = `sprite.variables[${JSON.stringify(variable.id)}]`;
+
+    return `${variableCode} = ${VALUE};`;
+  },
+});
+
+
+/***/ }),
+
 /***/ 9366:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -32511,6 +33050,36 @@ module.exports = {
     return { id: menuId, dropdownId: dropdownId };
   },
 };
+
+
+/***/ }),
+
+/***/ 9384:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("data_changevariableby", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var variable = utils.getFieldVariable("VARIABLE");
+    if (!variable) {
+        //We don't have that variable.
+        return "";
+    }
+
+    var VALUE = utils.getInput("VALUE", "0");
+    var VALUE_NUM = CoreFunctions.castToNumber(VALUE, true);
+
+    var variableCode = `sprite.variables[${JSON.stringify(variable.id)}]`;
+    var variableNumberCode = CoreFunctions.castToNumber(variableCode, true);
+
+    return `${variableCode} = ${variableNumberCode} + ${VALUE_NUM};`;
+  },
+});
 
 
 /***/ }),
@@ -33214,6 +33783,26 @@ __webpack_require__(2498);
 __webpack_require__(7156);
 __webpack_require__(5939);
 
+
+/***/ }),
+
+/***/ 9511:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("looks_ystretch_to", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var VALUE = utils.getInput("VALUE", "0");
+    var VALUE_NUMBER = CoreFunctions.castToNumber(VALUE, true);
+
+    return `sprite.scaleY = ${VALUE_NUMBER} / 100;`;
+  },
+});
 
 /***/ }),
 
@@ -34397,6 +34986,33 @@ BlockCompiler.defineBlock("motion_pointindirection", {
     return `sprite.direction = +(${DIRECTION}) || 0;`;
   },
 });
+
+/***/ }),
+
+/***/ 9937:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("data_variable", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var variable = utils.getFieldVariable("VARIABLE");
+    if (!variable) {
+        //We don't have that variable.
+        //Just return 0.
+        return "0";
+    }
+
+    var variableCode = `sprite.variables[${JSON.stringify(variable.id)}]`;
+
+    return variableCode;
+  },
+});
+
 
 /***/ }),
 
