@@ -11,7 +11,6 @@
 /***/ 1:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -20,10 +19,11 @@ BlockCompiler.defineBlock("loader_setrenderscale", {
   type: CBlockType.COMMAND,
   func: function (utils) {
     var COSTUME = utils.getInput("COSTUME", "null");
-            
+
     return `sprite.blockRerenderCostume(${COSTUME});`;
   },
 });
+
 
 /***/ }),
 
@@ -978,7 +978,6 @@ module.exports = dialog;
 /***/ 342:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -989,6 +988,7 @@ BlockCompiler.defineBlock("engine_framerate", {
     return `(engine.frameRate)`;
   },
 });
+
 
 /***/ }),
 
@@ -1026,6 +1026,7 @@ BlockCompiler.defineBlock("text", {
     return JSON.stringify(TEXT);
   },
 });
+
 
 /***/ }),
 
@@ -1118,7 +1119,7 @@ class BlockCompilerInstance {
 
     if (def.type == CBlockType.STARTER_HAT) {
       return this.compileBlock(block, {
-        useDummy: this.useDummyDef
+        useDummy: this.useDummyDef,
       });
     }
 
@@ -1134,14 +1135,14 @@ class BlockCompilerInstance {
     //Usually this is looped once but this works too.
     function loop(block) {
       var def = _this.getBlockDefinition(block.type, _this.useDummyDefClicked);
-      
+
       if (!def) {
         return null;
       }
 
       if (def.type !== CBlockType.STARTER_HAT) {
         var code = _this.compileBlock(block, {
-          useDummy: _this.useDummyDefClicked
+          useDummy: _this.useDummyDefClicked,
         });
 
         if (code == null) {
@@ -1187,7 +1188,7 @@ class BlockCompilerInstance {
       parentState: opts.parentState,
       def,
       useDummy: opts.useDummy,
-      options: opts
+      options: opts,
     });
 
     var isHat = def.type == CBlockType.STARTER_HAT;
@@ -1203,7 +1204,7 @@ class BlockCompilerInstance {
       if (nextBlock) {
         var nextCode = this.compileBlock(nextBlock, {
           ...opts,
-          parentState: util.parentState
+          parentState: util.parentState,
         });
         if (nextCode == null) {
           return null;
@@ -1261,6 +1262,7 @@ __webpack_require__(5735);
 __webpack_require__(4957);
 __webpack_require__(2874);
 __webpack_require__(2022);
+
 
 /***/ }),
 
@@ -2678,7 +2680,6 @@ exports.update = update;
 /***/ 525:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -2687,10 +2688,11 @@ BlockCompiler.defineBlock("loader_costume", {
   type: CBlockType.OUTPUT,
   func: function (utils) {
     var COSTUME = utils.getField("COSTUME", "");
-    
+
     return JSON.stringify(COSTUME);
   },
 });
+
 
 /***/ }),
 
@@ -2710,6 +2712,7 @@ BlockCompiler.defineBlock("math_number", {
   },
 });
 
+
 /***/ }),
 
 /***/ 569:
@@ -2727,49 +2730,49 @@ BlockCompiler.defineBlock("sensing_touchingobject", {
   },
 });
 
+
 /***/ }),
 
 /***/ 596:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
-const { values } = __webpack_require__(8355);
 
 BlockCompiler.defineBlock("procedures_call", {
   type: CBlockType.COMMAND,
   func: function (utils) {
     var block = utils.block;
     var argumentIds = block.argumentIds_;
+    var procCode = block.procCode_;
 
     //We call the custom block with it's values.
     //This is a json object just because it might be easier to deal with.
     var valuesCodeContent = "";
     argumentIds.forEach((argId) => {
-        var argumentCode = utils.getInput(argId, null);
+      var argumentCode = utils.getInput(argId, null);
 
-        if (!argumentCode) {
-            return;
-        }
+      if (!argumentCode) {
+        return;
+      }
 
-        valuesCodeContent += `${JSON.stringify(argId)}: (${code}),`;
+      valuesCodeContent += `${JSON.stringify(argId)}: (${argumentCode}),`;
     });
 
     var code = "";
     var valuesCode = "{" + valuesCodeContent + "}";
-    var procCode = block.procCode_;
 
-    code += `await sprite.callCustom(`
-    code += `${JSON.stringify(procCode)}, `
-    code += `${valuesCode}, `
+    code += `await sprite.callCustom(`;
+    code += `${JSON.stringify(procCode)}, `;
+    code += `${valuesCode}, `;
     code += `thread`;
     code += `);`;
 
     return code;
   },
 });
+
 
 /***/ }),
 
@@ -3096,7 +3099,6 @@ replaceTraps((oldTraps) => ({
 /***/ 610:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -3107,6 +3109,7 @@ BlockCompiler.defineBlock("looks_xstretch", {
     return `(sprite.scaleX * 100)`;
   },
 });
+
 
 /***/ }),
 
@@ -3127,11 +3130,11 @@ BlockCompiler.defineBlock("operator_stringtrim", {
   },
 });
 
+
 /***/ }),
 
 /***/ 657:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -3143,6 +3146,28 @@ BlockCompiler.defineBlock("looks_costumenames", {
     return `sprite.costumes.map((c) => c.name)`;
   },
 });
+
+
+/***/ }),
+
+/***/ 683:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_get_path", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var OBJECT = utils.getInput("OBJECT", "{}");
+    var PATH = utils.getInput("PATH", "null");
+    var DEFAULT = utils.getInput("DEFAULT", "null");
+
+    return `thread.jsonGetPath(${OBJECT},${PATH},${DEFAULT})`;
+  },
+});
+
 
 /***/ }),
 
@@ -3157,11 +3182,11 @@ __webpack_require__(9015);
 __webpack_require__(9194);
 __webpack_require__(569);
 
+
 /***/ }),
 
 /***/ 689:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -3176,6 +3201,7 @@ BlockCompiler.defineBlock("looks_zindex_by", {
     return `sprite.zIndex += ${VALUE_NUMBER};`;
   },
 });
+
 
 /***/ }),
 
@@ -3218,6 +3244,7 @@ BlockCompiler.defineBlock("operator_scratch_mod", {
   },
 });
 
+
 /***/ }),
 
 /***/ 735:
@@ -3227,9 +3254,28 @@ module.exports = ":root {\n  --game-viewport-width: 640px;\n  --game-viewport-he
 
 /***/ }),
 
-/***/ 769:
+/***/ 753:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_has_key", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var OBJECT = utils.getInput("OBJECT", "{}");
+    var NAME = utils.getInput("NAME", "null");
+
+    return `Object.prototype.hasOwnProperty.call(${OBJECT}, ${NAME})`;
+  },
+});
+
+
+/***/ }),
+
+/***/ 769:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -3245,6 +3291,7 @@ BlockCompiler.defineBlock("looks_xskew_by", {
   },
 });
 
+
 /***/ }),
 
 /***/ 852:
@@ -3253,6 +3300,7 @@ BlockCompiler.defineBlock("looks_xskew_by", {
 __webpack_require__(9937);
 __webpack_require__(9384);
 __webpack_require__(9352);
+
 
 /***/ }),
 
@@ -3915,6 +3963,7 @@ BlockCompiler.defineBlock("sensing_mousey", {
   },
 });
 
+
 /***/ }),
 
 /***/ 1020:
@@ -4287,7 +4336,6 @@ __webpack_require__(5334);
 /***/ 1163:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -4300,6 +4348,7 @@ BlockCompiler.defineBlock("control_create_clone_of_menu", {
     return JSON.stringify(CLONE_OPTION);
   },
 });
+
 
 /***/ }),
 
@@ -4319,11 +4368,11 @@ BlockCompiler.defineBlock("sensing_keyoptions", {
   },
 });
 
+
 /***/ }),
 
 /***/ 1191:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -4339,31 +4388,30 @@ BlockCompiler.defineBlock("looks_ystretch_by", {
   },
 });
 
+
 /***/ }),
 
 /***/ 1218:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
-const { values } = __webpack_require__(8355);
 
 BlockCompiler.defineBlock("argument_reporter_string_number", {
   type: CBlockType.OUTPUT,
   func: function (utils) {
     var field = utils.getField("VALUE", "");
-    
+
     return `thread.customBlockValues[${JSON.stringify(field)}]`;
   },
 });
+
 
 /***/ }),
 
 /***/ 1281:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -4375,6 +4423,7 @@ BlockCompiler.defineBlock("looks_visible", {
     return `(!sprite.hidden)`;
   },
 });
+
 
 /***/ }),
 
@@ -4393,7 +4442,7 @@ __webpack_require__(8133);
 __webpack_require__(6828);
 __webpack_require__(4523);
 __webpack_require__(9851);
-
+__webpack_require__(4402);
 __webpack_require__(8215);
 
 __webpack_require__(8594);
@@ -4763,6 +4812,26 @@ module.exports = {
 
 /***/ }),
 
+/***/ 1500:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_geton", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var NAME = utils.getInput("NAME", "null");
+    var OBJECT = utils.getInput("OBJECT", "{}");
+
+    return `(${OBJECT})[${NAME}]`;
+  },
+});
+
+
+/***/ }),
+
 /***/ 1537:
 /***/ (() => {
 
@@ -4956,7 +5025,6 @@ Blockly.Blocks["sound_playuntildone_advanced"] = {
 /***/ 1658:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -4967,6 +5035,7 @@ BlockCompiler.defineBlock("looks_nextcostume", {
     return `sprite.costumeIndex += 1;if (sprite.costumeIndex+1 > sprite.costumes.length) {sprite.costumeIndex = 0;}`;
   },
 });
+
 
 /***/ }),
 
@@ -5018,7 +5087,6 @@ module.exports = { valueReport };
 /***/ 1800:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -5032,11 +5100,31 @@ BlockCompiler.defineBlock("motion_changexby", {
   },
 });
 
+
+/***/ }),
+
+/***/ 1847:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_array_push", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var VALUE = utils.getInput("VALUE", "null");
+    var OBJECT = utils.getInput("OBJECT", "{}");
+
+    return `(${OBJECT}).push(${VALUE});`;
+  },
+});
+
+
 /***/ }),
 
 /***/ 1939:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -5051,6 +5139,7 @@ BlockCompiler.defineBlock("looks_changesizeby", {
     return `sprite.size += ${CHANGE_NUMBER};`;
   },
 });
+
 
 /***/ }),
 
@@ -5469,7 +5558,6 @@ if (Blockly.Xml && Blockly.Xml.domToBlock) {
 /***/ 2022:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -5488,13 +5576,14 @@ BlockCompiler.defineBlock("control_while", {
 
     code += SUBSTACK; //The inside code is the input.
     code += `if (thread.screenRefresh) {${CoreFunctions.threadWaitFrame(utils.block)}};`;
-    
+
     code += ALIVE_CHECK;
     code += "}";
 
     return code;
   },
 });
+
 
 /***/ }),
 
@@ -5743,7 +5832,6 @@ module.exports = { makeSortable };
 /***/ 2097:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -5752,10 +5840,11 @@ BlockCompiler.defineBlock("loader_soundisloaded", {
   type: CBlockType.OUTPUT,
   func: function (utils) {
     var SOUND = utils.getInput("SOUND", "");
-            
+
     return `sprite.soundIsLoaded(${SOUND})`;
   },
 });
+
 
 /***/ }),
 
@@ -6178,7 +6267,6 @@ module.exports = {
 /***/ 2171:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -6192,6 +6280,7 @@ BlockCompiler.defineBlock("looks_alpha_by", {
     return `sprite.alpha += ${VALUE_NUMBER};`;
   },
 });
+
 
 /***/ }),
 
@@ -6382,20 +6471,19 @@ module.exports = {
 /***/ 2209:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
-const { values } = __webpack_require__(8355);
 
 BlockCompiler.defineBlock("argument_reporter_boolean", {
   type: CBlockType.OUTPUT,
   func: function (utils) {
     var field = utils.getField("VALUE", "");
-    
+
     return `thread.customBlockValues[${JSON.stringify(field)}]`;
   },
 });
+
 
 /***/ }),
 
@@ -6831,14 +6919,16 @@ class Sprite {
     this.customBlockRef[ref] = id;
     this.customBlockListeners[id] = func;
   }
+
   /* @todo find a faster way to call and manage custom blocks. */
   async callCustom(id, values = {}, thisThread) {
-    if (this.customBlockRef[id]) {
-      await this.customBlockListeners[this.customBlockRef[id]](
-        values,
-        thisThread,
-      );
+    var ref = this.customBlockRef[id];
+    if (!ref) {
+      return;
     }
+    var listener = this.customBlockListeners[ref];
+
+    await listener(values, thisThread);
   }
 
   getCostumeIndex(v) {
@@ -7446,7 +7536,6 @@ module.exports = Sprite;
 /***/ 2316:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -7468,11 +7557,11 @@ BlockCompiler.defineBlock("control_if", {
   },
 });
 
+
 /***/ }),
 
 /***/ 2321:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -7484,6 +7573,7 @@ BlockCompiler.defineBlock("looks_xskew", {
     return `sprite.skewX`;
   },
 });
+
 
 /***/ }),
 
@@ -7762,11 +7852,11 @@ BlockCompiler.defineBlock("operator_toboolean", {
   },
 });
 
+
 /***/ }),
 
 /***/ 2468:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -7778,6 +7868,7 @@ BlockCompiler.defineBlock("motion_direction", {
     return `sprite.direction`;
   },
 });
+
 
 /***/ }),
 
@@ -8168,16 +8259,16 @@ BlockCompiler.defineBlock("operator_and", {
   func: function (utils) {
     var OPERAND1 = utils.getInput("OPERAND1", "false");
     var OPERAND2 = utils.getInput("OPERAND2", "false");
-    
+
     return `((${OPERAND1}) && (${OPERAND2}))`;
   },
 });
+
 
 /***/ }),
 
 /***/ 2548:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -8187,16 +8278,16 @@ BlockCompiler.defineBlock("loader_costume_scale", {
   type: CBlockType.OUTPUT,
   func: function (utils) {
     var COSTUME = utils.getInput("COSTUME", "null");
-    
+
     return `(await sprite.blockGetCostumeScale(${COSTUME}))`;
   },
 });
+
 
 /***/ }),
 
 /***/ 2594:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -8211,11 +8302,11 @@ BlockCompiler.defineBlock("looks_geteffect", {
   },
 });
 
+
 /***/ }),
 
 /***/ 2607:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -8228,11 +8319,31 @@ BlockCompiler.defineBlock("control_elapsed", {
   },
 });
 
+
+/***/ }),
+
+/***/ 2638:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_delete_path", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var OBJECT = utils.getInput("OBJECT", "{}");
+    var PATH = utils.getInput("PATH", "null");
+    
+    return `thread.jsonDeletePath(${OBJECT},${PATH});`;
+  },
+});
+
+
 /***/ }),
 
 /***/ 2691:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -8244,6 +8355,7 @@ BlockCompiler.defineBlock("looks_ystretch", {
     return `(sprite.scaleY * 100)`;
   },
 });
+
 
 /***/ }),
 
@@ -8463,9 +8575,29 @@ module.exports = {
 
 /***/ }),
 
-/***/ 2874:
+/***/ 2823:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_set_path", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var OBJECT = utils.getInput("OBJECT", "{}");
+    var PATH = utils.getInput("PATH", "null");
+    var VALUE = utils.getInput("VALUE", "null");
+
+    return `thread.jsonSetPath(${OBJECT},${PATH},${VALUE});`;
+  },
+});
+
+
+/***/ }),
+
+/***/ 2874:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -8482,6 +8614,7 @@ BlockCompiler.defineBlock("control_wait", {
     return `${ALIVE_CHECK}await thread.waitSeconds(${DURATION_NUM});${ALIVE_CHECK}`;
   },
 });
+
 
 /***/ }),
 
@@ -8500,6 +8633,7 @@ BlockCompiler.defineBlock("operator_tonumber", {
     return CoreFunctions.castToNumber(VALUE, true);
   },
 });
+
 
 /***/ }),
 
@@ -8521,11 +8655,11 @@ __webpack_require__(8770);
 __webpack_require__(9866);
 __webpack_require__(6601);
 
+
 /***/ }),
 
 /***/ 2939:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -8538,11 +8672,11 @@ BlockCompiler.defineBlock("engine_estimated_fps", {
   },
 });
 
+
 /***/ }),
 
 /***/ 2987:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -8557,6 +8691,7 @@ BlockCompiler.defineBlock("looks_alpha_to", {
     return `sprite.alpha = ${VALUE_NUMBER};`;
   },
 });
+
 
 /***/ }),
 
@@ -8822,6 +8957,7 @@ BlockCompiler.defineBlock("sensing_mousedown", {
   },
 });
 
+
 /***/ }),
 
 /***/ 3201:
@@ -8836,10 +8972,11 @@ BlockCompiler.defineBlock("operator_equals", {
   func: function (utils) {
     var OPERAND1 = utils.getInput("OPERAND1", "0");
     var OPERAND2 = utils.getInput("OPERAND2", "0");
-    
+
     return `((${OPERAND1}) == (${OPERAND2}))`;
   },
 });
+
 
 /***/ }),
 
@@ -9142,11 +9279,11 @@ BlockCompiler.defineBlock("sensing_mousex", {
   },
 });
 
+
 /***/ }),
 
 /***/ 3377:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -9161,6 +9298,7 @@ BlockCompiler.defineBlock("looks_xskew_to", {
     return `sprite.skewX = ${VALUE_NUMBER};`;
   },
 });
+
 
 /***/ }),
 
@@ -9761,6 +9899,7 @@ BlockCompiler.defineBlock("operator_stringuppercase", {
   },
 });
 
+
 /***/ }),
 
 /***/ 3539:
@@ -9795,6 +9934,71 @@ class Thread {
     this.subThreads = {};
     this.inherited = false;
     this.isPreviewMode = false;
+  }
+
+  jsonGetPath(object, path, fallback) {
+    var current = object;
+    if (current == null) {
+      return fallback;
+    }
+
+    if (Array.isArray(path)) {
+      for (var i = 0; i < path.length; i++) {
+        current = current[path[i]];
+        if (current == null) {
+          return fallback;
+        }
+      }
+      return current;
+    }
+
+    return this.jsonGetPath(object, ("" + path).split("."), fallback);
+  }
+
+  jsonSetPath(object, path, value) {
+    var current = object;
+    if (current == null) {
+      return;
+    }
+
+    if (!Array.isArray(path)) {
+      path = ("" + path).split(".");
+    }
+
+    for (var i = 0; i < path.length - 1; i++) {
+      var key = path[i];
+      if (current[key] == null || typeof current[key] !== "object") {
+        current[key] = {};
+      }
+      current = current[key];
+    }
+
+    current[path[path.length - 1]] = v;
+  }
+
+  jsonDeletePath(object, path) {
+    var current = object;
+    if (current == null) {
+      return;
+    }
+    if (!Array.isArray(path)) {
+      path = ("" + path).split(".");
+    }
+    for (var i = 0; i < p.length - 1; i++) {
+      current = current[path[i]];
+      if (current == null) {
+        return;
+      }
+    }
+    delete current[path[path.length - 1]];
+  }
+
+  jsonParseSafe(string, fallback){
+    try{
+      return JSON.parse(string);
+    }catch(e){
+      return fallback;
+    }
   }
 
   stopEverythingButMe() {
@@ -10127,6 +10331,7 @@ BlockCompiler.defineBlock("operator_infinity", {
   },
 });
 
+
 /***/ }),
 
 /***/ 3618:
@@ -10139,7 +10344,6 @@ module.exports = __webpack_require__(7809);
 
 /***/ 3653:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -10154,11 +10358,11 @@ BlockCompiler.defineBlock("control_delete_this_clone", {
   },
 });
 
+
 /***/ }),
 
 /***/ 3669:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -10172,6 +10376,27 @@ BlockCompiler.defineBlock("motion_movesteps", {
     return `sprite.moveSteps(${STEPS_NUM});`;
   },
 });
+
+
+/***/ }),
+
+/***/ 3679:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_deleteon", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var NAME = utils.getInput("NAME", "null");
+    var OBJECT = utils.getInput("OBJECT", "{}");
+
+    return `delete (${OBJECT})[${NAME}];`;
+  },
+});
+
 
 /***/ }),
 
@@ -10336,6 +10561,27 @@ BlockCompiler.defineBlock("operator_nan", {
   },
 });
 
+
+/***/ }),
+
+/***/ 3851:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_parse_safe", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var STRING = utils.getInput("STRING", JSON.stringify("{}"));
+    var DEFAULT = utils.getInput("DEFAULT", "{}");
+    
+    return `thread.jsonParseSafe(${STRING}, ${DEFAULT})`;
+  },
+});
+
+
 /***/ }),
 
 /***/ 3882:
@@ -10355,11 +10601,11 @@ BlockCompiler.defineBlock("operator_round", {
   },
 });
 
+
 /***/ }),
 
 /***/ 3931:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -10377,12 +10623,33 @@ BlockCompiler.defineBlock("looks_seteffectto", {
   },
 });
 
+
 /***/ }),
 
 /***/ 3960:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 module.exports = [__webpack_require__(9965), __webpack_require__(196)];
+
+
+/***/ }),
+
+/***/ 3962:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_array_indexof", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var OBJECT = utils.getInput("OBJECT", "{}");
+    var VALUE = utils.getInput("VALUE", "null");
+
+    return `(${OBJECT}).indexOf(${VALUE})`;
+  },
+});
 
 
 /***/ }),
@@ -10432,7 +10699,6 @@ module.exports = {
 /***/ 4028:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -10446,6 +10712,7 @@ BlockCompiler.defineBlock("looks_yskew_by", {
     return `sprite.skewY += ${VALUE_NUMBER};`;
   },
 });
+
 
 /***/ }),
 
@@ -10703,7 +10970,6 @@ module.exports = {
 /***/ 4129:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -10714,6 +10980,7 @@ BlockCompiler.defineBlock("looks_zindex", {
     return `(sprite.zIndex)`;
   },
 });
+
 
 /***/ }),
 
@@ -11153,6 +11420,7 @@ BlockCompiler.defineBlock("operator_tostring", {
     return CoreFunctions.castToString(VALUE, true);
   },
 });
+
 
 /***/ }),
 
@@ -21804,9 +22072,37 @@ function resizeCanvasToDisplaySize(canvas, multiplier) {
 
 /***/ }),
 
-/***/ 4403:
+/***/ 4402:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
+__webpack_require__(5835);
+__webpack_require__(8004);
+__webpack_require__(1500);
+__webpack_require__(5145);
+__webpack_require__(7445);
+__webpack_require__(4604);
+__webpack_require__(3679);
+__webpack_require__(1847);
+__webpack_require__(6166);
+__webpack_require__(6506);
+__webpack_require__(3962);
+__webpack_require__(753);
+__webpack_require__(683);
+__webpack_require__(2823);
+__webpack_require__(2638);
+__webpack_require__(5232);
+__webpack_require__(6030);
+__webpack_require__(6692);
+__webpack_require__(3851);
+__webpack_require__(6629);
+__webpack_require__(7360);
+__webpack_require__(4635);
+__webpack_require__(8747);
+
+/***/ }),
+
+/***/ 4403:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -21820,6 +22116,7 @@ BlockCompiler.defineBlock("motion_changeyby", {
     return `sprite.y += +(${DY}) || 0;`;
   },
 });
+
 
 /***/ }),
 
@@ -22044,6 +22341,7 @@ BlockCompiler.defineBlock("operator_null", {
     return `null`;
   },
 });
+
 
 /***/ }),
 
@@ -22356,11 +22654,11 @@ __webpack_require__(2097);
 __webpack_require__(9572);
 __webpack_require__(8409);
 
+
 /***/ }),
 
 /***/ 4551:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -22375,11 +22673,11 @@ BlockCompiler.defineBlock("globaldata_get", {
   },
 });
 
+
 /***/ }),
 
 /***/ 4570:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -22391,13 +22689,33 @@ BlockCompiler.defineBlock("globaldata_changeby", {
     var VARIABLE = utils.getField("VARIABLE", "");
     var VARIABLE_CODE = `engine.globalVariables[${JSON.stringify(VARIABLE)}]`;
     var VARIABLE_NUM = CoreFunctions.castToNumber(VARIABLE_CODE, true);
-    
+
     var VALUE = utils.getInput("VALUE", "0");
     var VALUE_NUM = CoreFunctions.castToNumber(VALUE, true);
 
     return `${VARIABLE} = ${VARIABLE_NUM} + ${VALUE_NUM};`;
   },
 });
+
+
+/***/ }),
+
+/***/ 4604:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_fromstring", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var OBJECT = utils.getInput("OBJECT", "{}");
+
+    return `JSON.parse(${OBJECT})`;
+  },
+});
+
 
 /***/ }),
 
@@ -22481,9 +22799,30 @@ createBlockContextMenu(
 
 /***/ }),
 
-/***/ 4656:
+/***/ 4635:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_array_split", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var STRING = utils.getInput("STRING", '""');
+    var STRING_STR = CoreFunctions.castToString(STRING, true);
+    var USING = utils.getInput("USING", '""');
+    var USING_STR = CoreFunctions.castToString(USING, false);
+    
+    return `${STRING_STR}.split(${USING_STR})`;
+  },
+});
+
+
+/***/ }),
+
+/***/ 4656:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -22498,11 +22837,11 @@ BlockCompiler.defineBlock("looks_switchcostumeto", {
   },
 });
 
+
 /***/ }),
 
 /***/ 4692:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -22517,6 +22856,7 @@ BlockCompiler.defineBlock("looks_xstretch_to", {
     return `sprite.scaleX = ${VALUE_NUMBER} / 100;`;
   },
 });
+
 
 /***/ }),
 
@@ -22897,16 +23237,16 @@ BlockCompiler.defineBlock("operator_lt", {
     var OPERAND1_NUM = CoreFunctions.castToNumber(OPERAND1, true);
     var OPERAND2 = utils.getInput("OPERAND2", "0");
     var OPERAND2_NUM = CoreFunctions.castToNumber(OPERAND2, true);
-    
+
     return `(${OPERAND1_NUM} < ${OPERAND2_NUM})`;
   },
 });
+
 
 /***/ }),
 
 /***/ 4957:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -22934,7 +23274,6 @@ BlockCompiler.defineBlock("control_wait_until", {
 /***/ 5102:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -22946,11 +23285,49 @@ BlockCompiler.defineBlock("looks_yskew", {
   },
 });
 
+
+/***/ }),
+
+/***/ 5145:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_keys", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var OBJECT = utils.getInput("OBJECT", "{}");
+
+    return `Object.keys(${OBJECT})`;
+  },
+});
+
+
+/***/ }),
+
+/***/ 5232:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_array_pop", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var OBJECT = utils.getInput("OBJECT", "{}");
+    
+    return `(${OBJECT}).pop()`;
+  },
+});
+
+
 /***/ }),
 
 /***/ 5270:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -22963,11 +23340,11 @@ BlockCompiler.defineBlock("looks_size", {
   },
 });
 
+
 /***/ }),
 
 /***/ 5275:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -22985,6 +23362,7 @@ BlockCompiler.defineBlock("looks_change_effect_by", {
   },
 });
 
+
 /***/ }),
 
 /***/ 5334:
@@ -22996,7 +23374,6 @@ BlockCompiler.defineBlock("looks_change_effect_by", {
 
 /***/ 5351:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -23016,7 +23393,7 @@ BlockCompiler.defineBlock("control_repeat_until", {
 
     code += SUBSTACK; //The inside code is the input.
     code += `if (thread.screenRefresh) {${CoreFunctions.threadWaitFrame(utils.block)}};`;
-    
+
     code += ALIVE_CHECK;
     code += "}";
 
@@ -23995,7 +24372,6 @@ module.exports = generateToolbox;
 /***/ 5374:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -24006,6 +24382,7 @@ BlockCompiler.defineBlock("control_isclone", {
     return `sprite.isClone`;
   },
 });
+
 
 /***/ }),
 
@@ -24023,42 +24400,43 @@ BlockCompiler.defineBlock("operator_mathop", {
 
     var NUM = utils.getInput("NUM", "0");
     var NUM_NUMBER = CoreFunctions.castToNumber(NUM, false);
-    
+
     switch (OPERATOR) {
-        case "abs":
-            return `Math.abs(${NUM_NUMBER})`;
-        case "floor":
-            return `Math.floor(${NUM_NUMBER})`;
-        case "ceiling":
-            return `Math.ceil(${NUM_NUMBER})`;
-        case "sqrt":
-            return `Math.sqrt(${NUM_NUMBER})`;
-        case "sin":
-            return `Math.round(Math.sin((Math.PI * (${NUM_NUMBER})) / 180) * 1e10) / 1e10`;
-        case "cos":
-            return `Math.round(Math.cos((Math.PI * (${NUM_NUMBER})) / 180) * 1e10) / 1e10`;
-        case "tan":
-            return `Math.tan(${NUM_NUMBER})`;
-        case "asin":
-            return `(Math.asin(${NUM_NUMBER}) * 180) / Math.PI`;
-        case "acos":
-            return `(Math.acos(${NUM_NUMBER}) * 180) / Math.PI`;
-        case "atan":
-            return `(Math.atan(${NUM_NUMBER}) * 180) / Math.PI`;
-        case "ln":
-            return `Math.log(${NUM_NUMBER})`;
-        case "log":
-            return `Math.log(${NUM_NUMBER}) / Math.LN10`;
-        case "e ^":
-            return `Math.exp(${NUM_NUMBER})`;
-        case "10 ^":
-            return `Math.pow(10, ${NUM_NUMBER})`;
-        case "20 ^":
-            return `Math.pow(20, ${NUM_NUMBER})`;
+      case "abs":
+        return `Math.abs(${NUM_NUMBER})`;
+      case "floor":
+        return `Math.floor(${NUM_NUMBER})`;
+      case "ceiling":
+        return `Math.ceil(${NUM_NUMBER})`;
+      case "sqrt":
+        return `Math.sqrt(${NUM_NUMBER})`;
+      case "sin":
+        return `Math.round(Math.sin((Math.PI * (${NUM_NUMBER})) / 180) * 1e10) / 1e10`;
+      case "cos":
+        return `Math.round(Math.cos((Math.PI * (${NUM_NUMBER})) / 180) * 1e10) / 1e10`;
+      case "tan":
+        return `Math.tan(${NUM_NUMBER})`;
+      case "asin":
+        return `(Math.asin(${NUM_NUMBER}) * 180) / Math.PI`;
+      case "acos":
+        return `(Math.acos(${NUM_NUMBER}) * 180) / Math.PI`;
+      case "atan":
+        return `(Math.atan(${NUM_NUMBER}) * 180) / Math.PI`;
+      case "ln":
+        return `Math.log(${NUM_NUMBER})`;
+      case "log":
+        return `Math.log(${NUM_NUMBER}) / Math.LN10`;
+      case "e ^":
+        return `Math.exp(${NUM_NUMBER})`;
+      case "10 ^":
+        return `Math.pow(10, ${NUM_NUMBER})`;
+      case "20 ^":
+        return `Math.pow(20, ${NUM_NUMBER})`;
     }
     return `0`;
   },
 });
+
 
 /***/ }),
 
@@ -24076,10 +24454,11 @@ BlockCompiler.defineBlock("operator_gt", {
     var OPERAND1_NUM = CoreFunctions.castToNumber(OPERAND1, true);
     var OPERAND2 = utils.getInput("OPERAND2", "0");
     var OPERAND2_NUM = CoreFunctions.castToNumber(OPERAND2, true);
-    
+
     return `(${OPERAND1_NUM} > ${OPERAND2_NUM})`;
   },
 });
+
 
 /***/ }),
 
@@ -24128,7 +24507,6 @@ module.exports = [
 /***/ 5451:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -24142,6 +24520,7 @@ BlockCompiler.defineBlock("looks_setsizeto", {
     return `sprite.size = ${SIZE_NUMBER};`;
   },
 });
+
 
 /***/ }),
 
@@ -24306,7 +24685,6 @@ module.exports = ExportOptionsEvents;
 /***/ 5587:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -24321,11 +24699,11 @@ BlockCompiler.defineBlock("globaldata_set", {
   },
 });
 
+
 /***/ }),
 
 /***/ 5601:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -24337,10 +24715,11 @@ BlockCompiler.defineBlock("loader_loadcostume", {
     var COSTUME = utils.getInput("COSTUME", "null");
 
     var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
-    
+
     return `${ALIVE_CHECK}await sprite.blockLoadCostume(${COSTUME});${ALIVE_CHECK}`;
   },
 });
+
 
 /***/ }),
 
@@ -25246,7 +25625,7 @@ module.exports = {
   putThreadStack,
   castToNumber,
   castToString,
-  castToBoolean
+  castToBoolean,
 };
 
 
@@ -25254,7 +25633,6 @@ module.exports = {
 
 /***/ 5636:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -25265,7 +25643,7 @@ BlockCompiler.defineBlock("control_repeat", {
   func: function (utils) {
     var SUBSTACK = utils.getInput("SUBSTACK", "");
     var TIMES = utils.getInput("TIMES", "0");
-    
+
     var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
 
     var code = "";
@@ -25795,11 +26173,11 @@ __webpack_require__(8107);
 __webpack_require__(563);
 __webpack_require__(406);
 
+
 /***/ }),
 
 /***/ 5696:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -25815,11 +26193,11 @@ BlockCompiler.defineBlock("looks_yskew_to", {
   },
 });
 
+
 /***/ }),
 
 /***/ 5735:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -25842,11 +26220,11 @@ BlockCompiler.defineBlock("control_stop", {
   },
 });
 
+
 /***/ }),
 
 /***/ 5736:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -25867,7 +26245,6 @@ BlockCompiler.defineBlock("engine_framerate_to", {
 /***/ 5740:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -25883,6 +26260,7 @@ BlockCompiler.defineBlock("looks_stretch_to", {
     return `sprite.scaleX = ${XVALUE_NUMBER} / 100;sprite.scaleY = ${YVALUE_NUMBER} / 100;`;
   },
 });
+
 
 /***/ }),
 
@@ -25905,6 +26283,7 @@ BlockCompiler.defineBlock("operator_add", {
     return `(${NUM1_NUM} + ${NUM2_NUM})`;
   },
 });
+
 
 /***/ }),
 
@@ -25937,6 +26316,30 @@ module.exports = {
 var { GGM3Engine } = __webpack_require__(7677);
 
 module.exports = GGM3Engine;
+
+
+/***/ }),
+
+/***/ 5835:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_new", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var TYPE = utils.getField("TYPE", "");
+    if (TYPE == "object") {
+      return "({})";
+    }
+    if (TYPE == "array") {
+      return "([])";
+    }
+    return "null";
+  },
+});
 
 
 /***/ }),
@@ -26107,7 +26510,6 @@ addEventListener("beforeunload", (event) => {
 /***/ 5993:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -26121,11 +26523,30 @@ BlockCompiler.defineBlock("control_create_clone_of", {
   },
 });
 
+
+/***/ }),
+
+/***/ 6030:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_array_contains", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var OBJECT = utils.getInput("OBJECT", "{}");
+    
+    return `(${OBJECT}).includes(${VALUE})`;
+  },
+});
+
+
 /***/ }),
 
 /***/ 6049:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -26140,6 +26561,7 @@ BlockCompiler.defineBlock("looks_zindex_to", {
     return `sprite.zIndex = ${VALUE_NUMBER};`;
   },
 });
+
 
 /***/ }),
 
@@ -26162,6 +26584,7 @@ BlockCompiler.defineBlock("operator_multiply", {
     return `(${NUM1_NUM} * ${NUM2_NUM})`;
   },
 });
+
 
 /***/ }),
 
@@ -26264,7 +26687,6 @@ module.exports = Drawable;
 /***/ 6091:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -26277,6 +26699,7 @@ BlockCompiler.defineBlock("motion_turnleft", {
     return `sprite.direction -= +(${DEGREES}) || 0;`;
   },
 });
+
 
 /***/ }),
 
@@ -26294,6 +26717,7 @@ BlockCompiler.defineBlock("operator_true", {
   },
 });
 
+
 /***/ }),
 
 /***/ 6121:
@@ -26308,10 +26732,11 @@ BlockCompiler.defineBlock("operator_sign", {
   func: function (utils) {
     var NUM = utils.getInput("NUM", "0");
     var NUM_NUMBER = CoreFunctions.castToNumber(NUM, false);
-    
+
     return `Math.sign(${NUM_NUMBER})`;
   },
 });
+
 
 /***/ }),
 
@@ -26342,10 +26767,31 @@ BlockCompiler.defineBlock("operator_or", {
   func: function (utils) {
     var OPERAND1 = utils.getInput("OPERAND1", "false");
     var OPERAND2 = utils.getInput("OPERAND2", "false");
-    
+
     return `((${OPERAND1}) || (${OPERAND2}))`;
   },
 });
+
+
+/***/ }),
+
+/***/ 6166:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_array_unshift", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var VALUE = utils.getInput("VALUE", "null");
+    var OBJECT = utils.getInput("OBJECT", "{}");
+
+    return `(${OBJECT}).unshift(${VALUE});`;
+  },
+});
+
 
 /***/ }),
 
@@ -26401,7 +26847,6 @@ module.exports = {
 /***/ 6232:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -26415,17 +26860,17 @@ BlockCompiler.defineBlock("event_beforegamestarts", {
     var BLOCK_ID = JSON.stringify(utils.getID());
 
     var code = "";
-    code += `sprite.addStackListener(`
+    code += `sprite.addStackListener(`;
     code += `"beforestart",`;
     code += BLOCK_ID + ",";
     code += `async function () {`;
     code += fullInsideCode;
     code += `});`;
-    
 
     return code;
   },
 });
+
 
 /***/ }),
 
@@ -26830,7 +27275,6 @@ module.exports = { init };
 /***/ 6327:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -26842,11 +27286,11 @@ BlockCompiler.defineBlock("looks_hidden", {
   },
 });
 
+
 /***/ }),
 
 /***/ 6375:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -26861,17 +27305,17 @@ BlockCompiler.defineBlock("event_whengamestarts", {
     var BLOCK_ID = JSON.stringify(utils.getID());
 
     var code = "";
-    code += `sprite.addStackListener(`
+    code += `sprite.addStackListener(`;
     code += `"started",`;
     code += BLOCK_ID + ",";
     code += `async function () {`;
     code += fullInsideCode;
     code += `});`;
-    
 
     return code;
   },
 });
+
 
 /***/ }),
 
@@ -26934,7 +27378,6 @@ module.exports = [
 /***/ 6441:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -26952,11 +27395,11 @@ BlockCompiler.defineBlock("looks_skew_to", {
   },
 });
 
+
 /***/ }),
 
 /***/ 6453:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -26965,37 +27408,39 @@ var CoreFunctions = __webpack_require__(5619);
 BlockCompiler.defineBlock("procedures_definition", {
   type: CBlockType.STARTER_HAT,
   func: function (utils) {
-    
     var customBlock = utils.getInputBlock("custom_block");
     if (!customBlock) {
-        //Broken custom block definition so this does nothing.
-        return "";
+      //Broken custom block definition so this does nothing.
+      return "";
     }
 
     var argumentIds = customBlock.argumentIds_;
+    var displayNames = customBlock.displayNames_;
     var procCode = customBlock.procCode_;
     var insideCode = utils.getHatContents("");
     var BLOCK_ID = JSON.stringify(utils.getID());
 
-    var valueNameCode = "";
-    argumentIds.forEach((argId, i) => {
-        var name = customBlock.displayNames_[i];
-        valueNameCode += `thread.customBlockValues[${JSON.stringify(name)}] = customArgs[${JSON.stringify(argId)}];`;
-    });
+    var threadModifierCode = ""; //Custom blocks provide some additional stuff for the thread
 
-    var threadModifierCode = ""; //Custom blocks provide some additional stuff for thread
-    
+    threadModifierCode += `thread.customBlockInherit(parentThread);`;
+
     if (customBlock.warp_) {
       //Run without refresh enabled.
       threadModifierCode += `thread.turnOnWithoutRefresh();`;
     }
 
-    threadModifierCode += valueNameCode; //Add the values over from the customArgs to a thread value.
+    argumentIds.forEach((argId, i) => {
+      var name = displayNames[i];
+      threadModifierCode += `thread.customBlockValues[${JSON.stringify(name)}] = customArgs[${JSON.stringify(argId)}];`;
+    });
 
-    var fullInsideCode = CoreFunctions.putThreadStack(utils.block, threadModifierCode + insideCode);
+    var fullInsideCode = CoreFunctions.putThreadStack(
+      utils.block,
+      threadModifierCode + insideCode,
+    );
 
     var code = "";
-    code += `sprite.addCustom(`
+    code += `sprite.addCustom(`;
     code += `${JSON.stringify(BLOCK_ID)}, `;
     code += `${JSON.stringify(procCode)}, `;
     code += `async function (customArgs,parentThread) {`;
@@ -27005,6 +27450,26 @@ BlockCompiler.defineBlock("procedures_definition", {
     return code;
   },
 });
+
+
+/***/ }),
+
+/***/ 6506:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_array_lengthof", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var OBJECT = utils.getInput("OBJECT", "{}");
+
+    return `(${OBJECT}).length`;
+  },
+});
+
 
 /***/ }),
 
@@ -27024,6 +27489,7 @@ BlockCompiler.defineBlock("operator_stringlength", {
     return `(${VALUE_STRING}.length)`;
   },
 });
+
 
 /***/ }),
 
@@ -27105,16 +27571,16 @@ BlockCompiler.defineBlock("operator_not", {
   type: CBlockType.OUTPUT,
   func: function (utils) {
     var OPERAND = utils.getInput("OPERAND", "false");
-    
+
     return `(!(${OPERAND}))`;
   },
 });
+
 
 /***/ }),
 
 /***/ 6601:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -27127,11 +27593,31 @@ BlockCompiler.defineBlock("motion_yposition", {
   },
 });
 
+
+/***/ }),
+
+/***/ 6629:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_pretty_print", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var OBJECT = utils.getInput("OBJECT", "{}");
+    var INDENT = utils.getInput("INDENT", '""');
+    
+    return `JSON.stringify(${OBJECT}, null, (${INDENT}) || 2)`;
+  },
+});
+
+
 /***/ }),
 
 /***/ 6672:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -27143,10 +27629,30 @@ BlockCompiler.defineBlock("loader_deloadcostume", {
     var COSTUME = utils.getInput("COSTUME", "null");
 
     var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
-    
+
     return `${ALIVE_CHECK}await sprite.blockDeloadCostume(${COSTUME});${ALIVE_CHECK}`;
   },
 });
+
+
+/***/ }),
+
+/***/ 6692:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_clone", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var OBJECT = utils.getInput("OBJECT", "{}");
+    
+    return `JSON.parse(JSON.stringify(${OBJECT}))`;
+  },
+});
+
 
 /***/ }),
 
@@ -27470,6 +27976,7 @@ BlockCompiler.defineBlock("operator_newline", {
   },
 });
 
+
 /***/ }),
 
 /***/ 6828:
@@ -27511,6 +28018,7 @@ __webpack_require__(2321);
 __webpack_require__(5102);
 __webpack_require__(657);
 __webpack_require__(8984);
+
 
 /***/ }),
 
@@ -27898,7 +28406,6 @@ Blockly.Blocks["spritemaster_checktouchingsprite_equals_propertyvalue"] = {
 /***/ 6960:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -27912,6 +28419,7 @@ BlockCompiler.defineBlock("looks_xstretch_by", {
     return `sprite.scaleX += ${VALUE_NUMBER} / 100;`;
   },
 });
+
 
 /***/ }),
 
@@ -27928,6 +28436,7 @@ BlockCompiler.defineBlock("operator_false", {
     return `false`;
   },
 });
+
 
 /***/ }),
 
@@ -28407,7 +28916,6 @@ Blockly.Blocks["json_array_join"] = {
 /***/ 7129:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -28421,6 +28929,7 @@ BlockCompiler.defineBlock("motion_gotoxy", {
     return `sprite.x = +(${X}) || 0; sprite.y = +(${Y}) || 0;`;
   },
 });
+
 
 /***/ }),
 
@@ -28638,7 +29147,6 @@ gameSettingOptions.start();
 /***/ 7166:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -28649,6 +29157,7 @@ BlockCompiler.defineBlock("looks_show", {
     return `sprite.hidden = false;`;
   },
 });
+
 
 /***/ }),
 
@@ -28662,22 +29171,21 @@ var CoreFunctions = __webpack_require__(5619);
 BlockCompiler.defineBlock("operator_random", {
   type: CBlockType.OUTPUT,
   func: function (utils) {
-
     var FROM = utils.getInput("FROM", "0");
     var FROM_NUMBER = CoreFunctions.castToNumber(FROM, false);
 
     var TO = utils.getInput("TO", "0");
     var TO_NUMBER = CoreFunctions.castToNumber(TO, false);
-    
+
     return `thread.random(${FROM_NUMBER}, ${TO_NUMBER})`;
   },
 });
+
 
 /***/ }),
 
 /***/ 7230:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -28687,10 +29195,11 @@ BlockCompiler.defineBlock("loader_sound_option", {
   type: CBlockType.OUTPUT,
   func: function (utils) {
     var SOUND = utils.getField("SOUND", "");
-            
+
     return JSON.stringify(SOUND);
   },
 });
+
 
 /***/ }),
 
@@ -28904,10 +29413,11 @@ BlockCompiler.defineBlock("operator_fixed", {
 
     var DECIMALS = utils.getInput("DECIMALS", "0");
     var DECIMALS_NUMBER = CoreFunctions.castToNumber(DECIMALS, true);
-    
+
     return `${NUM_NUMBER}.toFixed(${DECIMALS_NUMBER})`;
   },
 });
+
 
 /***/ }),
 
@@ -29005,6 +29515,25 @@ function createTabElementJSON(label, src, whenClick, isSelected) {
 module.exports = {
   createTabElementJSON,
 };
+
+
+/***/ }),
+
+/***/ 7360:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_typeof", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var OBJECT = utils.getInput("OBJECT", "undefined");
+    
+    return `(typeof (${OBJECT}))`;
+  },
+});
 
 
 /***/ }),
@@ -29612,6 +30141,25 @@ module.exports = {
 
 /***/ }),
 
+/***/ 7445:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_tostring", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var OBJECT = utils.getInput("OBJECT", "{}");
+
+    return `JSON.stringify(${OBJECT})`;
+  },
+});
+
+
+/***/ }),
+
 /***/ 7559:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -29625,6 +30173,7 @@ BlockCompiler.defineBlock("operator_empty_string", {
     return JSON.stringify("");
   },
 });
+
 
 /***/ }),
 
@@ -29676,7 +30225,6 @@ module.exports = {
 /***/ 7671:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -29686,10 +30234,11 @@ BlockCompiler.defineBlock("loader_rendercostumescale", {
   func: function (utils) {
     var COSTUME = utils.getInput("COSTUME", "null");
     var SCALE = utils.getInput("SCALE", "0");
-        
+
     return `sprite.setCostumeRenderScale(${COSTUME},${SCALE});`;
   },
 });
+
 
 /***/ }),
 
@@ -31511,6 +32060,27 @@ Blockly.Blocks["operator_scratch_mod"] = {
 
 /***/ }),
 
+/***/ 8004:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_setto", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var NAME = utils.getInput("NAME", "null");
+    var VALUE = utils.getInput("VALUE", "null");
+    var OBJECT = utils.getInput("OBJECT", "{}");
+
+    return `(${OBJECT})[${NAME}] = ${VALUE};`;
+  },
+});
+
+
+/***/ }),
+
 /***/ 8024:
 /***/ ((module) => {
 
@@ -31573,7 +32143,6 @@ module.exports = GameTime;
 /***/ 8100:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -31582,10 +32151,11 @@ BlockCompiler.defineBlock("loader_costumeisloaded", {
   type: CBlockType.OUTPUT,
   func: function (utils) {
     var COSTUME = utils.getInput("COSTUME", "null");
-    
+
     return `sprite.isCostumeLoaded(${COSTUME})`;
   },
 });
+
 
 /***/ }),
 
@@ -31605,6 +32175,7 @@ BlockCompiler.defineBlock("math_angle", {
   },
 });
 
+
 /***/ }),
 
 /***/ 8123:
@@ -31621,7 +32192,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ 8133:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 //Basic math:
 
@@ -31674,11 +32244,11 @@ __webpack_require__(649);
 __webpack_require__(8588);
 __webpack_require__(3529);
 
+
 /***/ }),
 
 /***/ 8188:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -31693,17 +32263,17 @@ BlockCompiler.defineBlock("control_start_as_clone", {
     var BLOCK_ID = JSON.stringify(utils.getID());
 
     var code = "";
-    code += `sprite.addStackListener(`
+    code += `sprite.addStackListener(`;
     code += `"clonestart",`;
     code += BLOCK_ID + ",";
     code += `async function () {`;
     code += fullInsideCode;
     code += `});`;
-    
 
     return code;
   },
 });
+
 
 /***/ }),
 
@@ -31811,6 +32381,7 @@ module.exports = calculateMatrix;
 __webpack_require__(4551);
 __webpack_require__(5587);
 __webpack_require__(4570);
+
 
 /***/ }),
 
@@ -32123,17 +32694,8 @@ module.exports = { updateTabs, updateVisibility, hideEverything, switchTab };
 
 /***/ }),
 
-/***/ 8355:
-/***/ ((module) => {
-
-module.exports = [];
-
-
-/***/ }),
-
 /***/ 8409:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -32143,11 +32705,12 @@ BlockCompiler.defineBlock("loader_deloadsound", {
   type: CBlockType.COMMAND,
   func: function (utils) {
     var SOUND = utils.getInput("SOUND", "");
-    
+
     var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
     return `${ALIVE_CHECK}await sprite.blockDeloadSound(${SOUND});${ALIVE_CHECK}`;
   },
 });
+
 
 /***/ }),
 
@@ -32216,7 +32779,6 @@ module.exports = PlaceholderExportOption;
 /***/ 8493:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -32229,6 +32791,7 @@ BlockCompiler.defineBlock("looks_costume", {
     return JSON.stringify(COSTUME);
   },
 });
+
 
 /***/ }),
 
@@ -32284,6 +32847,7 @@ BlockCompiler.defineBlock("operator_stringlowercase", {
   },
 });
 
+
 /***/ }),
 
 /***/ 8594:
@@ -32292,6 +32856,7 @@ BlockCompiler.defineBlock("operator_stringlowercase", {
 __webpack_require__(2939);
 __webpack_require__(5736);
 __webpack_require__(342);
+
 
 /***/ }),
 
@@ -32307,7 +32872,6 @@ __webpack_require__(6375);
 /***/ 8630:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -32320,11 +32884,11 @@ BlockCompiler.defineBlock("motion_goto_menu", {
   },
 });
 
+
 /***/ }),
 
 /***/ 8738:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -32338,11 +32902,33 @@ BlockCompiler.defineBlock("motion_goto", {
   },
 });
 
+
+/***/ }),
+
+/***/ 8747:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("json_array_join", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var STRING = utils.getInput("STRING", '""');
+    var STRING_STR = CoreFunctions.castToString(STRING, true);
+    var USING = utils.getInput("USING", '""');
+    var USING_STR = CoreFunctions.castToString(USING, false);
+    
+    return `${STRING_STR}.join(${USING_STR})`;
+  },
+});
+
+
 /***/ }),
 
 /***/ 8770:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -32357,11 +32943,11 @@ BlockCompiler.defineBlock("motion_turnright", {
   },
 });
 
+
 /***/ }),
 
 /***/ 8795:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -32374,11 +32960,11 @@ BlockCompiler.defineBlock("looks_hide", {
   },
 });
 
+
 /***/ }),
 
 /***/ 8931:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -32390,22 +32976,22 @@ BlockCompiler.defineBlock("looks_costumenumbername", {
     var NUMBER_NAME = utils.getField("NUMBER_NAME", null);
 
     if (NUMBER_NAME == "number") {
-        return `sprite.costumeIndex`;
+      return `sprite.costumeIndex`;
     }
 
     if (NUMBER_NAME == "name") {
-        return `(sprite.costume?.name)`;
+      return `(sprite.costume?.name)`;
     }
 
     return `(sprite.costume?.name)`;
   },
 });
 
+
 /***/ }),
 
 /***/ 8951:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -32418,11 +33004,11 @@ BlockCompiler.defineBlock("looks_alpha", {
   },
 });
 
+
 /***/ }),
 
 /***/ 8984:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -32434,6 +33020,7 @@ BlockCompiler.defineBlock("looks_costumes", {
     return `sprite.costumes.length`;
   },
 });
+
 
 /***/ }),
 
@@ -32612,6 +33199,7 @@ BlockCompiler.defineBlock("sensing_keypressed", {
     return `!!engine.keysPressed[${KEY_OPTION}]`;
   },
 });
+
 
 /***/ }),
 
@@ -33074,11 +33662,11 @@ BlockCompiler.defineBlock("sensing_touchingobjectmenu", {
   },
 });
 
+
 /***/ }),
 
 /***/ 9209:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -33092,6 +33680,7 @@ BlockCompiler.defineBlock("motion_setx", {
     return `sprite.x = +(${X}) || 0;`;
   },
 });
+
 
 /***/ }),
 
@@ -33445,6 +34034,7 @@ BlockCompiler.defineBlock("operator_subtract", {
   },
 });
 
+
 /***/ }),
 
 /***/ 9341:
@@ -33453,7 +34043,15 @@ BlockCompiler.defineBlock("operator_subtract", {
 var CBlockType = __webpack_require__(7561);
 
 class CBlockUtil {
-  constructor({ compiler, def, instance, block, parentState, useDummy, options }) {
+  constructor({
+    compiler,
+    def,
+    instance,
+    block,
+    parentState,
+    useDummy,
+    options,
+  }) {
     this.compiler = compiler;
     this.instance = instance;
     this.def = def;
@@ -33467,7 +34065,11 @@ class CBlockUtil {
   }
 
   compileBlock(block) {
-    var code = this.instance.compileBlock(block, this.parentState, this.useDummy);
+    var code = this.instance.compileBlock(
+      block,
+      this.parentState,
+      this.useDummy,
+    );
     if (code) {
       return code;
     }
@@ -33624,7 +34226,6 @@ module.exports = { CBlockUtil };
 /***/ 9352:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -33634,8 +34235,8 @@ BlockCompiler.defineBlock("data_setvariableto", {
   func: function (utils) {
     var variable = utils.getFieldVariable("VARIABLE");
     if (!variable) {
-        //We don't have that variable.
-        return "";
+      //We don't have that variable.
+      return "";
     }
 
     var VALUE = utils.getInput("VALUE", "0");
@@ -33759,7 +34360,6 @@ module.exports = {
 /***/ 9384:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -33769,8 +34369,8 @@ BlockCompiler.defineBlock("data_changevariableby", {
   func: function (utils) {
     var variable = utils.getFieldVariable("VARIABLE");
     if (!variable) {
-        //We don't have that variable.
-        return "";
+      //We don't have that variable.
+      return "";
     }
 
     var VALUE = utils.getInput("VALUE", "0");
@@ -34327,6 +34927,7 @@ BlockCompiler.defineBlock("operator_divide", {
   },
 });
 
+
 /***/ }),
 
 /***/ 9450:
@@ -34439,7 +35040,6 @@ module.exports = HTML5ExportOption;
 /***/ 9452:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -34461,13 +35061,14 @@ BlockCompiler.defineBlock("control_forever", {
     // and use it for some tasks.
     // they exit the loop through a stopping block.
     code += `if (thread.screenRefresh) {${CoreFunctions.threadWaitFrame(utils.block)}};`;
-    
+
     code += ALIVE_CHECK;
     code += "}";
 
     return code;
   },
 });
+
 
 /***/ }),
 
@@ -34491,7 +35092,6 @@ __webpack_require__(5939);
 /***/ 9511:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -34506,11 +35106,11 @@ BlockCompiler.defineBlock("looks_ystretch_to", {
   },
 });
 
+
 /***/ }),
 
 /***/ 9572:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -34520,11 +35120,12 @@ BlockCompiler.defineBlock("loader_loadsound", {
   type: CBlockType.COMMAND,
   func: function (utils) {
     var SOUND = utils.getInput("SOUND", "");
-    
+
     var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
     return `${ALIVE_CHECK}await sprite.blockLoadSound(${SOUND});${ALIVE_CHECK}`;
   },
 });
+
 
 /***/ }),
 
@@ -34548,6 +35149,7 @@ BlockCompiler.defineBlock("operator_js_mod", {
   },
 });
 
+
 /***/ }),
 
 /***/ 9673:
@@ -34569,11 +35171,11 @@ BlockCompiler.defineBlock("operator_joinstring", {
   },
 });
 
+
 /***/ }),
 
 /***/ 9722:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -34587,6 +35189,7 @@ BlockCompiler.defineBlock("motion_sety", {
     return `sprite.y = +(${Y}) || 0;`;
   },
 });
+
 
 /***/ }),
 
@@ -35222,7 +35825,6 @@ Blockly.Blocks["looks_costumes"] = {
 /***/ 9810:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -35244,6 +35846,7 @@ BlockCompiler.defineBlock("control_if_else", {
     return code;
   },
 });
+
 
 /***/ }),
 
@@ -35298,11 +35901,11 @@ __webpack_require__(596);
 __webpack_require__(2209);
 __webpack_require__(1218);
 
+
 /***/ }),
 
 /***/ 9866:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -35314,6 +35917,7 @@ BlockCompiler.defineBlock("motion_xposition", {
     return `sprite.x`;
   },
 });
+
 
 /***/ }),
 
@@ -35561,10 +36165,11 @@ BlockCompiler.defineBlock("operator_outputif", {
 
     var PASS_OUTPUT = utils.getInput("PASS_OUTPUT", "null");
     var FAIL_OUTPUT = utils.getInput("FAIL_OUTPUT", "null");
-    
+
     return `(${CONDITION}) ? (${PASS_OUTPUT}) : (${FAIL_OUTPUT})`;
   },
 });
+
 
 /***/ }),
 
@@ -35705,7 +36310,6 @@ Blockly.Blocks["control_stop"] = {
 /***/ 9891:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
@@ -35719,11 +36323,11 @@ BlockCompiler.defineBlock("motion_pointindirection", {
   },
 });
 
+
 /***/ }),
 
 /***/ 9937:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
@@ -35734,9 +36338,9 @@ BlockCompiler.defineBlock("data_variable", {
   func: function (utils) {
     var variable = utils.getFieldVariable("VARIABLE");
     if (!variable) {
-        //We don't have that variable.
-        //Just return 0.
-        return "0";
+      //We don't have that variable.
+      //Just return 0.
+      return "0";
     }
 
     var variableCode = `sprite.variables[${JSON.stringify(variable.id)}]`;
