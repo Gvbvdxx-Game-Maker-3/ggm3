@@ -2994,6 +2994,25 @@ replaceTraps((oldTraps) => ({
 
 /***/ }),
 
+/***/ 649:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_stringtrim", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var VALUE = utils.getInput("VALUE", JSON.stringify(""));
+    var VALUE_STRING = CoreFunctions.castToString(VALUE, true);
+
+    return `(${VALUE_STRING}.trim())`;
+  },
+});
+
+/***/ }),
+
 /***/ 692:
 /***/ ((module) => {
 
@@ -3010,6 +3029,28 @@ class LibraryCostume {
 
 module.exports = LibraryCostume;
 
+
+/***/ }),
+
+/***/ 715:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_scratch_mod", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var NUM1 = utils.getInput("NUM1", "0");
+    var NUM1_NUM = CoreFunctions.castToNumber(NUM1, true);
+
+    var NUM2 = utils.getInput("NUM2", "0");
+    var NUM2_NUM = CoreFunctions.castToNumber(NUM2, true);
+
+    return `engine.sMath.mod(${NUM1_NUM} * ${NUM2_NUM})`;
+  },
+});
 
 /***/ }),
 
@@ -4057,11 +4098,19 @@ BlockCompiler.defineBlock("control_create_clone_of_menu", {
 //Register the blocks here.
 
 __webpack_require__(5669);
-__webpack_require__(2914);
 __webpack_require__(8621);
-__webpack_require__(8594);
-__webpack_require__(8215);
+__webpack_require__(2914);
 __webpack_require__(441);
+
+
+__webpack_require__(8133);
+
+
+
+
+__webpack_require__(8215);
+
+__webpack_require__(8594);
 
 
 /***/ }),
@@ -7298,6 +7347,24 @@ module.exports = { init };
 
 /***/ }),
 
+/***/ 2465:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_toboolean", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var VALUE = utils.getInput("VALUE", "0");
+
+    return CoreFunctions.castToBoolean(VALUE, true);
+  },
+});
+
+/***/ }),
+
 /***/ 2468:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -7690,6 +7757,25 @@ module.exports = {
 
 /***/ }),
 
+/***/ 2515:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_and", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var OPERAND1 = utils.getInput("OPERAND1", "false");
+    var OPERAND2 = utils.getInput("OPERAND2", "false");
+    
+    return `((${OPERAND1}) && (${OPERAND2}))`;
+  },
+});
+
+/***/ }),
+
 /***/ 2607:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -7940,6 +8026,24 @@ BlockCompiler.defineBlock("control_wait", {
     var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
 
     return `${ALIVE_CHECK}await thread.waitSeconds(${DURATION_NUM});${ALIVE_CHECK}`;
+  },
+});
+
+/***/ }),
+
+/***/ 2912:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_tonumber", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var VALUE = utils.getInput("VALUE", "0");
+
+    return CoreFunctions.castToNumber(VALUE, true);
   },
 });
 
@@ -8227,6 +8331,25 @@ class SpriteMaster {
 
 module.exports = SpriteMaster;
 
+
+/***/ }),
+
+/***/ 3201:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_equals", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var OPERAND1 = utils.getInput("OPERAND1", "0");
+    var OPERAND2 = utils.getInput("OPERAND2", "0");
+    
+    return `((${OPERAND1}) == (${OPERAND2}))`;
+  },
+});
 
 /***/ }),
 
@@ -9095,6 +9218,25 @@ class Col {
 
 /***/ }),
 
+/***/ 3529:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_stringuppercase", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var VALUE = utils.getInput("VALUE", JSON.stringify(""));
+    var VALUE_STRING = CoreFunctions.castToString(VALUE, true);
+
+    return `(${VALUE_STRING}.toUpperCase())`;
+  },
+});
+
+/***/ }),
+
 /***/ 3539:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -9445,6 +9587,22 @@ module.exports = Thread;
 
 /***/ }),
 
+/***/ 3608:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_infinity", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    return `Infinity`;
+  },
+});
+
+/***/ }),
+
 /***/ 3618:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -9635,6 +9793,41 @@ var AElement = {
 };
 module.exports = AElement;
 
+
+/***/ }),
+
+/***/ 3827:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_nan", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    return `NaN`;
+  },
+});
+
+/***/ }),
+
+/***/ 3882:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_round", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var NUM = utils.getInput("NUM", "0");
+    var NUM_NUMBER = CoreFunctions.castToNumber(NUM, true);
+
+    return `Math.round(${NUM_NUMBER})`;
+  },
+});
 
 /***/ }),
 
@@ -10357,6 +10550,24 @@ module.exports = {
   ExportMainGenerator,
 };
 
+
+/***/ }),
+
+/***/ 4324:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_tostring", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var VALUE = utils.getInput("VALUE", JSON.stringify(""));
+
+    return CoreFunctions.castToString(VALUE, true);
+  },
+});
 
 /***/ }),
 
@@ -21235,6 +21446,22 @@ module.exports = { EngineRenderer };
 
 /***/ }),
 
+/***/ 4433:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_null", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    return `null`;
+  },
+});
+
+/***/ }),
+
 /***/ 4447:
 /***/ ((module) => {
 
@@ -22012,6 +22239,27 @@ document.addEventListener(
   { capture: true },
 );
 
+
+/***/ }),
+
+/***/ 4928:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_lt", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var OPERAND1 = utils.getInput("OPERAND1", "0");
+    var OPERAND1_NUM = CoreFunctions.castToNumber(OPERAND1, true);
+    var OPERAND2 = utils.getInput("OPERAND2", "0");
+    var OPERAND2_NUM = CoreFunctions.castToNumber(OPERAND2, true);
+    
+    return `(${OPERAND1_NUM} < ${OPERAND2_NUM})`;
+  },
+});
 
 /***/ }),
 
@@ -23059,6 +23307,80 @@ BlockCompiler.defineBlock("control_isclone", {
   type: CBlockType.OUTPUT,
   func: function (utils) {
     return `sprite.isClone`;
+  },
+});
+
+/***/ }),
+
+/***/ 5381:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_mathop", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var OPERATOR = utils.getField("OPERATOR", "none");
+
+    var NUM = utils.getInput("NUM", "0");
+    var NUM_NUMBER = CoreFunctions.castToNumber(NUM, false);
+    
+    switch (OPERATOR) {
+        case "abs":
+            return `Math.abs(${NUM_NUMBER})`;
+        case "floor":
+            return `Math.floor(${NUM_NUMBER})`;
+        case "ceiling":
+            return `Math.ceil(${NUM_NUMBER})`;
+        case "sqrt":
+            return `Math.sqrt(${NUM_NUMBER})`;
+        case "sin":
+            return `Math.round(Math.sin((Math.PI * (${NUM_NUMBER})) / 180) * 1e10) / 1e10`;
+        case "cos":
+            return `Math.round(Math.cos((Math.PI * (${NUM_NUMBER})) / 180) * 1e10) / 1e10`;
+        case "tan":
+            return `Math.tan(${NUM_NUMBER})`;
+        case "asin":
+            return `(Math.asin(${NUM_NUMBER}) * 180) / Math.PI`;
+        case "acos":
+            return `(Math.acos(${NUM_NUMBER}) * 180) / Math.PI`;
+        case "atan":
+            return `(Math.atan(${NUM_NUMBER}) * 180) / Math.PI`;
+        case "ln":
+            return `Math.log(${NUM_NUMBER})`;
+        case "log":
+            return `Math.log(${NUM_NUMBER}) / Math.LN10`;
+        case "e ^":
+            return `Math.exp(${NUM_NUMBER})`;
+        case "10 ^":
+            return `Math.pow(10, ${NUM_NUMBER})`;
+        case "20 ^":
+            return `Math.pow(20, ${NUM_NUMBER})`;
+    }
+    return `0`;
+  },
+});
+
+/***/ }),
+
+/***/ 5383:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_gt", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var OPERAND1 = utils.getInput("OPERAND1", "0");
+    var OPERAND1_NUM = CoreFunctions.castToNumber(OPERAND1, true);
+    var OPERAND2 = utils.getInput("OPERAND2", "0");
+    var OPERAND2_NUM = CoreFunctions.castToNumber(OPERAND2, true);
+    
+    return `(${OPERAND1_NUM} > ${OPERAND2_NUM})`;
   },
 });
 
@@ -24160,6 +24482,18 @@ function castToNumber(code, surround = false) {
   return surround ? `(${c})` : c;
 }
 
+//Cast a value to string
+function castToString(code, surround = false) {
+  var c = `""+(${code})`;
+  return surround ? `(${c})` : c;
+}
+
+//Cast a value to boolean
+function castToBoolean(code, surround = false) {
+  var c = `!!(${code})`;
+  return surround ? `(${c})` : c;
+}
+
 module.exports = {
   startThreadStack,
   endThreadStack,
@@ -24172,7 +24506,9 @@ module.exports = {
   getClickedBlockLogic,
   getClickedOutputBlockLogic,
   putThreadStack,
-  castToNumber
+  castToNumber,
+  castToString,
+  castToBoolean
 };
 
 
@@ -24770,6 +25106,28 @@ BlockCompiler.defineBlock("engine_framerate_to", {
 
 /***/ }),
 
+/***/ 5753:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_add", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var NUM1 = utils.getInput("NUM1", "0");
+    var NUM1_NUM = CoreFunctions.castToNumber(NUM1, true);
+
+    var NUM2 = utils.getInput("NUM2", "0");
+    var NUM2_NUM = CoreFunctions.castToNumber(NUM2, true);
+
+    return `(${NUM1_NUM} + ${NUM2_NUM})`;
+  },
+});
+
+/***/ }),
+
 /***/ 5808:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -24985,6 +25343,28 @@ BlockCompiler.defineBlock("control_create_clone_of", {
 
 /***/ }),
 
+/***/ 6056:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_multiply", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var NUM1 = utils.getInput("NUM1", "0");
+    var NUM1_NUM = CoreFunctions.castToNumber(NUM1, true);
+
+    var NUM2 = utils.getInput("NUM2", "0");
+    var NUM2_NUM = CoreFunctions.castToNumber(NUM2, true);
+
+    return `(${NUM1_NUM} * ${NUM2_NUM})`;
+  },
+});
+
+/***/ }),
+
 /***/ 6065:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -25100,6 +25480,41 @@ BlockCompiler.defineBlock("motion_turnleft", {
 
 /***/ }),
 
+/***/ 6100:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_true", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    return `true`;
+  },
+});
+
+/***/ }),
+
+/***/ 6121:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_sign", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var NUM = utils.getInput("NUM", "0");
+    var NUM_NUMBER = CoreFunctions.castToNumber(NUM, false);
+    
+    return `Math.sign(${NUM_NUMBER})`;
+  },
+});
+
+/***/ }),
+
 /***/ 6129:
 /***/ ((module) => {
 
@@ -25112,6 +25527,25 @@ class BlockInstance {
 
 module.exports = BlockInstance;
 
+
+/***/ }),
+
+/***/ 6157:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_or", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var OPERAND1 = utils.getInput("OPERAND1", "false");
+    var OPERAND2 = utils.getInput("OPERAND2", "false");
+    
+    return `((${OPERAND1}) || (${OPERAND2}))`;
+  },
+});
 
 /***/ }),
 
@@ -25680,6 +26114,25 @@ module.exports = [
 
 /***/ }),
 
+/***/ 6533:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_stringlength", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var VALUE = utils.getInput("VALUE", JSON.stringify(""));
+    var VALUE_STRING = CoreFunctions.castToString(VALUE, true);
+
+    return `(${VALUE_STRING}.length)`;
+  },
+});
+
+/***/ }),
+
 /***/ 6544:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -25744,6 +26197,24 @@ class ProgressMonitor extends EventEmitter {
 
 module.exports = { ProgressMonitor };
 
+
+/***/ }),
+
+/***/ 6555:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_not", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var OPERAND = utils.getInput("OPERAND", "false");
+    
+    return `(!(${OPERAND}))`;
+  },
+});
 
 /***/ }),
 
@@ -26067,6 +26538,22 @@ audioEngine.AudioBufferPlayer = AudioBufferPlayer;
 
 module.exports = audioEngine;
 
+
+/***/ }),
+
+/***/ 6762:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_newline", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    return JSON.stringify("\n");
+  },
+});
 
 /***/ }),
 
@@ -26448,6 +26935,22 @@ Blockly.Blocks["spritemaster_checktouchingsprite_equals_propertyvalue"] = {
   },
 };
 
+
+/***/ }),
+
+/***/ 7029:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_false", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    return `false`;
+  },
+});
 
 /***/ }),
 
@@ -27155,6 +27658,29 @@ gameSettingOptions.start();
 
 /***/ }),
 
+/***/ 7195:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_random", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+
+    var FROM = utils.getInput("FROM", "0");
+    var FROM_NUMBER = CoreFunctions.castToNumber(FROM, false);
+
+    var TO = utils.getInput("TO", "0");
+    var TO_NUMBER = CoreFunctions.castToNumber(TO, false);
+    
+    return `thread.random(${FROM_NUMBER}, ${TO_NUMBER})`;
+  },
+});
+
+/***/ }),
+
 /***/ 7255:
 /***/ ((module) => {
 
@@ -27347,6 +27873,28 @@ var elements = {
 };
 module.exports = elements;
 
+
+/***/ }),
+
+/***/ 7276:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_fixed", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var NUM = utils.getInput("NUM", "0");
+    var NUM_NUMBER = CoreFunctions.castToNumber(NUM, true);
+
+    var DECIMALS = utils.getInput("DECIMALS", "0");
+    var DECIMALS_NUMBER = CoreFunctions.castToNumber(DECIMALS, true);
+    
+    return `${NUM_NUMBER}.toFixed(${DECIMALS_NUMBER})`;
+  },
+});
 
 /***/ }),
 
@@ -28048,6 +28596,22 @@ module.exports = {
   fromLibrarySoundJSON,
 };
 
+
+/***/ }),
+
+/***/ 7559:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_empty_string", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    return JSON.stringify("");
+  },
+});
 
 /***/ }),
 
@@ -30003,6 +30567,63 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ 8133:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+
+//Basic math:
+
+__webpack_require__(5753);
+__webpack_require__(9340);
+__webpack_require__(6056);
+__webpack_require__(9437);
+__webpack_require__(715);
+__webpack_require__(9624);
+__webpack_require__(6121);
+__webpack_require__(7276);
+__webpack_require__(5381);
+
+//Randomizing:
+
+__webpack_require__(7195);
+
+//Conditional:
+
+__webpack_require__(3201);
+__webpack_require__(5383);
+__webpack_require__(4928);
+__webpack_require__(2515);
+__webpack_require__(6157);
+__webpack_require__(6555);
+__webpack_require__(9874);
+
+//Constants:
+
+__webpack_require__(6100);
+__webpack_require__(7029);
+__webpack_require__(3827);
+__webpack_require__(4433);
+__webpack_require__(3608);
+__webpack_require__(7559);
+__webpack_require__(6762);
+
+//Rounding:
+
+__webpack_require__(3882);
+
+//Converters/Casting:
+
+__webpack_require__(4324);
+__webpack_require__(2912);
+__webpack_require__(2465);
+__webpack_require__(9673);
+__webpack_require__(6533);
+__webpack_require__(649);
+__webpack_require__(8588);
+__webpack_require__(3529);
+
+/***/ }),
+
 /***/ 8188:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -30544,6 +31165,25 @@ module.exports = {
   dataURLToArrayBuffer,
 };
 
+
+/***/ }),
+
+/***/ 8588:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_stringlowercase", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var VALUE = utils.getInput("VALUE", JSON.stringify(""));
+    var VALUE_STRING = CoreFunctions.castToString(VALUE, true);
+
+    return `(${VALUE_STRING}.toLowerCase())`;
+  },
+});
 
 /***/ }),
 
@@ -31571,6 +32211,28 @@ engine.on(engine.RESOLUTION_UPDATED, () => {
 
 /***/ }),
 
+/***/ 9340:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_subtract", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var NUM1 = utils.getInput("NUM1", "0");
+    var NUM1_NUM = CoreFunctions.castToNumber(NUM1, true);
+
+    var NUM2 = utils.getInput("NUM2", "0");
+    var NUM2_NUM = CoreFunctions.castToNumber(NUM2, true);
+
+    return `(${NUM1_NUM} - ${NUM2_NUM})`;
+  },
+});
+
+/***/ }),
+
 /***/ 9341:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -32375,6 +33037,27 @@ module.exports = {
 
 /***/ }),
 
+/***/ 9437:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_divide", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var NUM1 = utils.getInput("NUM1", "0");
+    var NUM1_NUM = CoreFunctions.castToNumber(NUM1, true);
+
+    var NUM2 = utils.getInput("NUM2", "0");
+    var NUM2_NUM = CoreFunctions.castToNumber(NUM2, true);
+    return `(${NUM1_NUM} / ${NUM2_NUM})`;
+  },
+});
+
+/***/ }),
+
 /***/ 9450:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -32531,6 +33214,49 @@ __webpack_require__(2498);
 __webpack_require__(7156);
 __webpack_require__(5939);
 
+
+/***/ }),
+
+/***/ 9624:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_js_mod", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var NUM1 = utils.getInput("NUM1", "0");
+    var NUM1_NUM = CoreFunctions.castToNumber(NUM1, true);
+
+    var NUM2 = utils.getInput("NUM2", "0");
+    var NUM2_NUM = CoreFunctions.castToNumber(NUM2, true);
+
+    return `(${NUM1_NUM} % ${NUM2_NUM})`;
+  },
+});
+
+/***/ }),
+
+/***/ 9673:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_joinstring", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var VALUE1 = utils.getInput("VALUE1", JSON.stringify(""));
+    var VALUE1_STRING = CoreFunctions.castToString(VALUE1, true);
+    var VALUE2 = utils.getInput("VALUE2", JSON.stringify(""));
+    var VALUE2_STRING = CoreFunctions.castToString(VALUE2, true);
+
+    return `(${VALUE1_STRING} + ${VALUE2_STRING})`;
+  },
+});
 
 /***/ }),
 
@@ -33497,6 +34223,27 @@ module.exports = {
   scrollBlockIntoView,
 };
 
+
+/***/ }),
+
+/***/ 9874:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("operator_outputif", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var CONDITION = utils.getInput("CONDITION", "false");
+
+    var PASS_OUTPUT = utils.getInput("PASS_OUTPUT", "null");
+    var FAIL_OUTPUT = utils.getInput("FAIL_OUTPUT", "null");
+    
+    return `(${CONDITION}) ? (${PASS_OUTPUT}) : (${FAIL_OUTPUT})`;
+  },
+});
 
 /***/ }),
 
