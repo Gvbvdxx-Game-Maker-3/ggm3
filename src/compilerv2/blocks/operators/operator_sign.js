@@ -6,7 +6,7 @@ BlockCompiler.defineBlock("operator_sign", {
   type: CBlockType.OUTPUT,
   func: function (utils) {
     var NUM = utils.getInput("NUM", "0");
-    var NUM_NUMBER = CoreFunctions.castToNumber(NUM, true);
+    var NUM_NUMBER = CoreFunctions.castToNumber(NUM, false);
     
     return `Math.sign(${NUM_NUMBER})`;
   },

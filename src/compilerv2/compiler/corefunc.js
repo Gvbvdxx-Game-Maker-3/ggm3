@@ -90,6 +90,18 @@ function castToNumber(code, surround = false) {
   return surround ? `(${c})` : c;
 }
 
+//Cast a value to string
+function castToString(code, surround = false) {
+  var c = `""+(${code})`;
+  return surround ? `(${c})` : c;
+}
+
+//Cast a value to boolean
+function castToBoolean(code, surround = false) {
+  var c = `!!(${code})`;
+  return surround ? `(${c})` : c;
+}
+
 module.exports = {
   startThreadStack,
   endThreadStack,
@@ -102,5 +114,7 @@ module.exports = {
   getClickedBlockLogic,
   getClickedOutputBlockLogic,
   putThreadStack,
-  castToNumber
+  castToNumber,
+  castToString,
+  castToBoolean
 };

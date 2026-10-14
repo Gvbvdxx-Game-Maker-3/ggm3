@@ -24,7 +24,7 @@ BlockCompiler.defineBlock("operator_mathop", {
         case "cos":
             return `Math.round(Math.cos((Math.PI * (${NUM_NUMBER})) / 180) * 1e10) / 1e10`;
         case "tan":
-            return `MathUtil.tan(${NUM_NUMBER})`;
+            return `Math.tan(${NUM_NUMBER})`;
         case "asin":
             return `(Math.asin(${NUM_NUMBER}) * 180) / Math.PI`;
         case "acos":
