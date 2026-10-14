@@ -3,8 +3,8 @@ var JavascriptTranslation = {
   ...require("./events.js"), //done
   ...require("./position.js"), //done
   ...require("./control.js"), //done
-  ...require("./sensing.js"),
-  ...require("./data.js"),
+  ...require("./sensing.js"), //done
+  ...require("./data.js"), //done
   ...require("./operators.js"), //done
   ...require("./looks.js"),
   ...require("./loader.js"),
