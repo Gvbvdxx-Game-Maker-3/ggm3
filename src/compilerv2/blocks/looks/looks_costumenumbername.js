@@ -6,7 +6,7 @@ var CoreFunctions = require("../../compiler/corefunc.js");
 BlockCompiler.defineBlock("looks_costumenumbername", {
   type: CBlockType.OUTPUT,
   func: function (utils) {
-    var NUMBER_NAME = utils.getField(jsonblock, "NUMBER_NAME", options);
+    var NUMBER_NAME = utils.getField("NUMBER_NAME", null);
 
     if (NUMBER_NAME == "number") {
         return `sprite.costumeIndex`;

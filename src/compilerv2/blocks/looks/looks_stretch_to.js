@@ -4,7 +4,7 @@ var CBlockType = require("../../compiler/types.js");
 var CoreFunctions = require("../../compiler/corefunc.js");
 
 BlockCompiler.defineBlock("looks_stretch_to", {
-  type: CBlockType.OUTPUT,
+  type: CBlockType.COMMAND,
   func: function (utils) {
     var XVALUE = utils.getInput("XVALUE", "0");
     var XVALUE_NUMBER = CoreFunctions.castToNumber(XVALUE, true);
