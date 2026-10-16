@@ -24,6 +24,25 @@ function mutationToJSON(dom) {
     return json;
 }
 
+function JSONToMutation(json) {
+    var dom = document.createElement(json.tagName);
+    if (json.attributes) {
+        for (var name in json.attributes) {
+            dom.setAttribute(name, json.attributes[name]);
+        }
+    }
+    if (json.children) {
+        for (var childJSON of json.children) {
+            var childDom = JSONToMutation(childJSON);
+            dom.appendChild(childDom);
+        }
+    } else if (json.textContent) {
+        dom.textContent = json.textContent;
+    }
+    return dom;
+}
+
 module.exports = {
-    mutationToJSON
+    mutationToJSON,
+    JSONToMutation
 };

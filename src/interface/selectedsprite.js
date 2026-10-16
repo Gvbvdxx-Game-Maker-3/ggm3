@@ -2,6 +2,7 @@ var uiModule = require("./selectedsprite/ui.js");
 var compileModule = require("./selectedsprite/compile.js");
 var workspaceModule = require("./selectedsprite/workspace.js");
 
+var wjson = require("./wjson/index.js");
 var engine = require("./curengine.js");
 var blocks = require("./blocks.js");
 var costumeViewer = require("./costumeviewer.js");
@@ -61,6 +62,7 @@ function setCurrentSprite(index, forced, dontSave) {
       workspace.saveScroll();
       if (!dontSave) {
         try {
+          window.alert(JSON.stringify(wjson.workspaceToJSON(blocks.getCurrentWorkspace())));
           state.currentSelectedSprite.blocklyXML = Blockly.Xml.workspaceToDom(
             blocks.getCurrentWorkspace(),
           );
