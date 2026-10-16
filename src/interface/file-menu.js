@@ -77,6 +77,7 @@ function loadProjectFile(file) {
   elements.setInnerJSON(loadingScreenContent, []);
   var reader = new FileReader();
   reader.onload = async function () {
+    var err = null;
     try {
       var monitor = new projectSaver.ProgressMonitor();
 
@@ -96,10 +97,14 @@ function loadProjectFile(file) {
           e.message +
           "\nA default project has been loaded instead.",
       );
+      err = e;
     }
     selectedSprite.setCurrentSprite(0, true, true);
     library.projectLoadHandler();
     loadingScreenContainer.hidden = true;
+    if (err) {
+      throw err;
+    }
   };
   reader.readAsArrayBuffer(file);
 }

@@ -93,9 +93,9 @@ function init(state, deps) {
     Blockly.Events.disable();
     deps.blocks.createFreshWorkspace(spr);
     workspace = deps.blocks.getCurrentWorkspace();
-    if (spr.blocklyXML) {
-      Blockly.Xml.domToWorkspace(spr.blocklyXML, workspace);
-    }
+
+    deps.EditorData.loadSpriteEditorData(spr, workspace);
+    
     var currentBlocks = {};
     var currentBlockParentIDs = {};
 

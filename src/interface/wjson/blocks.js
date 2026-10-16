@@ -39,8 +39,18 @@ function blockToJSON(block) {
             } else if (input.type == Blockly.NEXT_STATEMENT) {
                 inputJSON.type = "statement";
             }
+            var shadow = input.connection.getShadowDom();
+            var shadowMutation = null;
+            if (shadow && (!childBlock || !childBlock.isShadow())) {
+                var shadowClone = Blockly.Xml.cloneShadow_(shadow);
+                
+                shadowMutation = mutationToJSON(shadowClone, true);
+            }
             if (childBlock) {
                 inputJSON.block = blockToJSON(childBlock);
+                if (shadowMutation) {
+                    inputJSON.shadowDom = shadowMutation;
+                }
             }
             json.inputs.push(inputJSON);
         }
@@ -55,6 +65,9 @@ function blockToJSON(block) {
     if (block.disabled) {
         json.disabled = true;
     }
+    json.deletable = true;
+    json.movable = true;
+    json.editable = true;
     if (!block.isDeletable() && !block.isShadow()) {
         json.deletable = false;
     }
@@ -103,20 +116,20 @@ function JSONToBlockHeadless(jsonBlock, workspace) {
         }
     }
 
-    if (json.comment) {
-        var commentId = json.comment.id;
-        var bubbleX = +json.comment.x;
-        var bubbleY = +json.comment.y;
-        var minimized = !!json.comment.minimized;
+    if (jsonBlock.comment) {
+        var commentId = jsonBlock.comment.id;
+        var bubbleX = +jsonBlock.comment.x;
+        var bubbleY = +jsonBlock.comment.y;
+        var minimized = !!jsonBlock.comment.minimized;
         block.setCommentText(
-            json.comment.text,
+            jsonBlock.comment.text,
             commentId,
             bubbleX,
             bubbleY,
             minimized
         );
 
-        var visible = json.comment.pinned;
+        var visible = jsonBlock.comment.pinned;
         if (visible && !block.isInFlyout) {
             setTimeout(function() {
                 if (block.comment && block.comment.setVisible) {
@@ -124,8 +137,8 @@ function JSONToBlockHeadless(jsonBlock, workspace) {
                 }
             }, 1);
         }
-        var bubbleW = +json.comment.width;
-        var bubbleH = +json.comment.height;
+        var bubbleW = +jsonBlock.comment.width;
+        var bubbleH = +jsonBlock.comment.height;
         if (
             !isNaN(bubbleW) &&
             !isNaN(bubbleH) &&
@@ -140,11 +153,15 @@ function JSONToBlockHeadless(jsonBlock, workspace) {
         }
     }
 
-    if (json.data) {
-        block.data = json.data;
+    if (jsonBlock.data) {
+        block.data = jsonBlock.data;
     }
 
-    
+    for (var fieldJson of jsonBlock.fields) {
+        JSONToField(block, fieldJson);
+    }
+
+    if (jsonInput)
 
     for (var jsonInput of jsonBlock.inputs) {
         var input = block.getInput(jsonInput.name);
@@ -158,10 +175,72 @@ function JSONToBlockHeadless(jsonBlock, workspace) {
             }
         }
     }
+
+    if (jsonBlock.next) {
+        var blockChild = JSONToBlockHeadless(jsonBlock.next, workspace);
+        block.nextConnection.connect(blockChild.previousConnection);
+    }
+
+    block.setInputsInline(!!jsonBlock.inline);
+    block.setDisabled(!!jsonBlock.disabled);
+    block.setDeletable(!!jsonBlock.deletable);
+    block.setMovable(!!jsonBlock.movable);
+    block.setEditable(!!jsonBlock.editable);
+    block.setCollapsed(!!jsonBlock.collapsed);
+    if (jsonBlock.shadow) {
+        block.setShadow(true);
+    }
+
+    return block;
 }
 
 function JSONToBlock(jsonBlock, workspace) {
+    Blockly.Events.disable();
+    var variablesBeforeCreation = workspace.getAllVariables();
 
+    var topBlock = JSONToBlockHeadless(jsonBlock, workspace);
+    
+    var blocks = topBlock.getDescendants(false);
+
+    if (workspace.rendered) {
+        topBlock.setConnectionsHidden(true);
+        for (var i = blocks.length - 1; i >= 0; i--) {
+            blocks[i].initSvg();
+        }
+        for (var i = blocks.length - 1; i >= 0; i--) {
+            blocks[i].render(false);
+        }
+
+        if (!workspace.isFlyout) {
+            setTimeout(function() {
+                if (topBlock.workspace) {  // Check that the block hasn't been deleted.
+                    topBlock.setConnectionsHidden(false);
+                }
+            }, 1);
+        }
+
+        topBlock.updateDisabled();
+
+        workspace.resizeContents();
+    } else {
+        for (var i = blocks.length - 1; i >= 0; i--) {
+            blocks[i].initModel();
+        }
+    }
+
+    Blockly.Events.enable();
+
+    var newVariables = Blockly.Variables.getAddedVariables(workspace,
+        variablesBeforeCreation);
+    
+    for (var i = 0; i < newVariables.length; i++) {
+        var thisVariable = newVariables[i];
+        Blockly.Events.fire(new Blockly.Events.VarCreate(thisVariable));
+    }
+
+    Blockly.Events.fire(new Blockly.Events.BlockCreate(topBlock));
+
+    return topBlock;
 }
 
 module.exports = {

@@ -2,6 +2,7 @@ var {
   getSaveableVariables,
   getSaveableVariablesGlobal,
 } = require("./saveable-vars.js");
+var EditorUtils = require("../wjson/editorutil.js");
 var engine = require("../curengine.js");
 
 //Engine property names
@@ -65,9 +66,6 @@ function fromSpriteJSON(sprite, spriteJson, isImport) {
     skewX: spriteJson.skewX || 0,
     skewY: spriteJson.skewY || 0,
     size: spriteJson.size,
-    blocklyXML: spriteJson.blocklyXML
-      ? Blockly.Xml.textToDom(spriteJson.blocklyXML)
-      : null,
     name: spriteJson.name,
     costumeIndex: spriteJson.costumeIndex,
     zIndex: spriteJson.zIndex,
@@ -75,6 +73,19 @@ function fromSpriteJSON(sprite, spriteJson, isImport) {
     hidden: spriteJson.hidden,
     spriteProperties: spriteJson.properties || {},
   });
+
+  
+  if (spriteJson.blocklyXML) {
+    //We're dealing with legacy block information, the editor will automatically convert this.
+    sprite.editorData = {
+      xml: spriteJson.blocklyXML
+    };
+  } else if (spriteJson.editorData) {
+    //Modern editor JSON format.
+    //This is automatically safe for JSON.stringify(),
+    // so we can just copy the values over.
+    sprite.editorData = spriteJson.editorData;
+  }
 
   if (!isImport) {
     return; //Stop here if not importing a sprite from a sprite file.
@@ -94,6 +105,19 @@ function fromSpriteJSON(sprite, spriteJson, isImport) {
   }
 }
 
+function _listSpriteUsedBroadcasts(sprite) {
+  if (!sprite.editorData) {
+    return engine.broadcastNames;
+  }
+  if (sprite.editorData.xml) {
+    return engine.broadcastNames;
+  }
+
+  var blocks = EditorUtils.findBlocks(sprite.editorData.blocks, [
+    "event_ggm3_broadcast_menu"
+  ]);
+}
+
 function toSpriteJSON(sprite, isExport) {
   var spriteJson = {
     x: sprite.x,
@@ -104,9 +128,7 @@ function toSpriteJSON(sprite, isExport) {
     skewX: sprite.skewX,
     skewY: sprite.skewY,
     size: sprite.size,
-    blocklyXML: sprite.blocklyXML
-      ? Blockly.Xml.domToText(sprite.blocklyXML)
-      : null,
+    editorData: sprite.editorData,
     name: sprite.name,
     zIndex: sprite.zIndex,
     costumeIndex: sprite.costumeIndex,
@@ -120,6 +142,9 @@ function toSpriteJSON(sprite, isExport) {
   }
 
   //Return additional properties for importing from sprites.
+  
+  //Broadcast names will now only be added if the sprite actually uses them.
+  
   spriteJson.broadcastNames = engine.broadcastNames;
 
   return spriteJson; //return with additional properties.

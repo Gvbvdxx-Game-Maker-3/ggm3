@@ -156,8 +156,7 @@ class CBlockUtil {
     return {
       variable,
       name: variable.name,
-      vID: variable.getId(),
-      id: this.instance.getVariableID(variable)
+      id: variable.getId(),
     };
   }
 

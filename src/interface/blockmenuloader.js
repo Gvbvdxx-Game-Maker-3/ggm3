@@ -1,4 +1,5 @@
 var engine = require("./curengine.js");
+var EditorData = require("./sprite-editordata.js");
 var helpers = {
   //overriden by selectedsprite.js
   loadWorkspaceFromSprite: function (func) {},
@@ -79,15 +80,9 @@ function loadGlobalVariableBlocks(spr) {
                     if (sprite.id !== spr.id) {
                       if (sprite) {
                         tempWorkspace.clear();
-                        if (sprite.blocklyXML) {
-                          Blockly.Xml.domToWorkspace(
-                            sprite.blocklyXML,
-                            tempWorkspace,
-                          );
-                        }
+                        EditorData.loadSpriteEditorData(sprite, tempWorkspace);
                         deleteBlocksInWorkspace(tempWorkspace);
-                        sprite.blocklyXML =
-                          Blockly.Xml.workspaceToDom(tempWorkspace);
+                        EditorData.saveSpriteEditorData(sprite, tempWorkspace);
                       }
                     }
                   }
@@ -274,15 +269,9 @@ function loadPropertyVariableBlocks(spr) {
                     if (sprite.id !== spr.id) {
                       if (sprite) {
                         tempWorkspace.clear();
-                        if (sprite.blocklyXML) {
-                          Blockly.Xml.domToWorkspace(
-                            sprite.blocklyXML,
-                            tempWorkspace,
-                          );
-                        }
+                        EditorData.loadSpriteEditorData(sprite, tempWorkspace);
                         deleteBlocksInWorkspace(tempWorkspace);
-                        sprite.blocklyXML =
-                          Blockly.Xml.workspaceToDom(tempWorkspace);
+                        EditorData.saveSpriteEditorData(sprite, tempWorkspace);
                       }
                     }
                   }

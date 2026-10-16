@@ -2,7 +2,7 @@ var uiModule = require("./selectedsprite/ui.js");
 var compileModule = require("./selectedsprite/compile.js");
 var workspaceModule = require("./selectedsprite/workspace.js");
 
-var wjson = require("./wjson/index.js");
+var EditorData = require("./sprite-editordata.js");
 var engine = require("./curengine.js");
 var blocks = require("./blocks.js");
 var costumeViewer = require("./costumeviewer.js");
@@ -31,6 +31,7 @@ var deps = {
     useExportCompile: false,
     useBlockNumberIDs: false,
   }),
+  EditorData,
   valueReport,
   makeSortable,
   loadBlockMenus,
@@ -61,12 +62,7 @@ function setCurrentSprite(index, forced, dontSave) {
     if (workspace) {
       workspace.saveScroll();
       if (!dontSave) {
-        try {
-          window.alert(JSON.stringify(wjson.workspaceToJSON(blocks.getCurrentWorkspace())));
-          state.currentSelectedSprite.blocklyXML = Blockly.Xml.workspaceToDom(
-            blocks.getCurrentWorkspace(),
-          );
-        } catch (e) {}
+        EditorData.saveSpriteEditorData(state.currentSelectedSprite, blocks.getCurrentWorkspace());
       }
     }
   }

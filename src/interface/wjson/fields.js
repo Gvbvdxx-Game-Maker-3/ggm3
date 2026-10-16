@@ -61,7 +61,30 @@ function JSONToField(block, fieldJson) {
 
     var workspace = block.workspace;
     var text = fieldJson.value;
+    if (field.referencesVariables()) {
+        if (!fieldJson.variable) {
+            return;
+        }
 
+        var variable = null;
+        var type = fieldJson.type;
+        var variableId = fieldJson.id;
+
+        if (!workspace.getPotentialVariableMap() && !workspace.isFlyout &&
+            workspace.getFlyout()) {
+            var flyoutWs = workspace.getFlyout().getWorkspace();
+            variable = Blockly.Variables.realizePotentialVar(text, type, flyoutWs, true);
+        }
+
+        if (!variable) {
+            variable = Blockly.Variables.getOrCreateVariablePackage(workspace, variableId, text, type);
+        }
+
+        field.setValue(variableId);
+
+    } else {
+        field.setValue(text);
+    }
 }
 
 module.exports = {

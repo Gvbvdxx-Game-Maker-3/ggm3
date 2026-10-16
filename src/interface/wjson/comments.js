@@ -54,9 +54,51 @@ function blockCommentToJSON(block) {
     }
 }
 
+function JSONToCommentSVG(jsonComment, workspace) {
+    Blockly.Events.disable();
+
+    var comment = new Blockly.WorkspaceCommentSvg(workspace,
+        jsonComment.text, jsonComment.height || 100, jsonComment.width || 100, !!jsonComment.minimized, jsonComment.id);
+
+    if (workspace.rendered) {
+        comment.initSvg();
+        comment.render(false);
+    }
+
+    if (!isNaN(jsonComment.x) && !isNaN(jsonComment.y)) {
+        if (workspace.RTL) {
+            var wsWidth = opt_wsWidth || workspace.getWidth();
+            comment.moveBy(wsWidth - jsonComment.x, jsonComment.y);
+        } else {
+            comment.moveBy(jsonComment.x, jsonComment.y);
+        }
+    }
+
+    Blockly.Events.enable();
+    Blockly.WorkspaceComment.fireCreateEvent(comment);
+    return comment;
+}
+
+function JSONToComment(jsonComment, workspace) {
+    if (workspace.rendered) {
+        return JSONToCommentSVG(jsonComment, workspace);
+    }
+
+    var comment = new Blockly.WorkspaceComment(
+      workspace, jsonComment.text, jsonComment.height || 100, jsonComment.width || 100, !!jsonComment.minimized, jsonComment.id);
+
+    if (!isNaN(jsonComment.x) && !isNaN(jsonComment.y)) {
+        comment.moveBy(jsonComment.x, jsonComment.y);
+    }
+
+    Blockly.WorkspaceComment.fireCreateEvent(comment);
+    return comment;
+}
+
 module.exports = {
     commentsToJSON,
     commentToJSON,
     commentToJSONWithPosition,
-    blockCommentToJSON
+    blockCommentToJSON,
+    JSONToComment
 }

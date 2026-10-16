@@ -199,9 +199,7 @@ function init(state, deps) {
                     sounds: false,
                   });
 
-                  if (spr.blocklyXML) {
-                    Blockly.Xml.domToWorkspace(spr.blocklyXML, tempWorkspace);
-                  }
+                  deps.EditorData.loadSpriteEditorData(spr, tempWorkspace);
 
                   var xmlBlock = Blockly.Xml.blockToDom(root);
                   Blockly.Xml.domToBlock(xmlBlock, tempWorkspace);
@@ -242,7 +240,7 @@ function init(state, deps) {
                     );
                   }
 
-                  spr.blocklyXML = Blockly.Xml.workspaceToDom(tempWorkspace);
+                  deps.EditorData.saveSpriteEditorData(spr, tempWorkspace);
 
                   tempWorkspace.dispose();
                   div.remove();
@@ -285,13 +283,13 @@ function init(state, deps) {
                 {
                   event: "click",
                   func: function (elm) {
-                    try {
+                    //try {
                       if (typeof deps.onSetCurrentSprite === "function") {
                         deps.onSetCurrentSprite(i);
                       }
-                    } catch (e) {
-                      window.alert("Error selecting sprite: " + e.message);
-                    }
+                    //} catch (e) {
+                    //  window.alert("Error selecting sprite: " + e.message);
+                    //}
                   },
                 },
               ],
@@ -343,13 +341,7 @@ function init(state, deps) {
                     deps.workspace.saveCurrentSpriteCode();
                     var newSprite = deps.engine.duplicateSprite(spr);
                     if (spr && spr.blocklyXML) {
-                      try {
-                        newSprite.blocklyXML = Blockly.Xml.textToDom(
-                          Blockly.Xml.domToText(spr.blocklyXML),
-                        );
-                      } catch (e) {
-                        console.warn("Failed to copy blockly XML:", e);
-                      }
+                      deps.EditorData.copySpriteEditorData(spr, newSprite);
                     }
                     deps.compile.compileSpriteXML(newSprite);
                     deps.engine.makeUniqueSpriteNames();

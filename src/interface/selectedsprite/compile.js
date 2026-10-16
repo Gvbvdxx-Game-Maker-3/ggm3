@@ -14,9 +14,7 @@ function init(state, deps) {
       sounds: false,
     });
 
-    if (spr.blocklyXML) {
-      Blockly.Xml.domToWorkspace(spr.blocklyXML, tempWorkspace);
-    }
+    deps.EditorData.loadSpriteEditorData(spr, tempWorkspace);
 
     var compiledBlocks = deps.compilerInstance.compileWorkspace(tempWorkspace);
     //console.log(compiledBlocks);
@@ -45,9 +43,7 @@ function init(state, deps) {
       sounds: false,
     });
 
-    if (spr.blocklyXML) {
-      Blockly.Xml.domToWorkspace(spr.blocklyXML, tempWorkspace);
-    }
+    deps.EditorData.loadSpriteEditorData(spr, tempWorkspace);
 
     var compiledBlocks = compilerInstance.compileWorkspace(tempWorkspace);
     for (var compiledBlock of compiledBlocks) {
@@ -80,9 +76,7 @@ function init(state, deps) {
     for (var spr of deps.engine.sprites) {
       tempWorkspace.clear();
 
-      if (spr.blocklyXML) {
-        Blockly.Xml.domToWorkspace(spr.blocklyXML, tempWorkspace);
-      }
+      deps.EditorData.loadSpriteEditorData(spr, tempWorkspace);
 
       var compiledBlocks = deps.compilerInstance.compileWorkspace(tempWorkspace);
       //console.log(compiledBlocks);
@@ -114,9 +108,7 @@ function init(state, deps) {
       sounds: false,
     });
 
-    if (spr.blocklyXML) {
-      Blockly.Xml.domToWorkspace(spr.blocklyXML, tempWorkspace);
-    }
+    deps.EditorData.loadSpriteEditorData(spr, tempWorkspace);
 
     return tempWorkspace;
   }
