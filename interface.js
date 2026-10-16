@@ -6594,7 +6594,9 @@ class Sprite {
     this.errorLogs = [];
 
     this.name = name || "Sprite";
-    this.blocklyXML = null; //Used to hold code for the editor.
+
+    this.blocklyXML = null; //This is used by the editor to save the blockly workspace for this sprite.
+    this.editorData = {}; //Used to hold information for the editor.
 
     this.scaleX = 1;
     this.scaleY = 1;
@@ -7670,6 +7672,60 @@ class CBlockDummyDefinition {
 
 module.exports = CBlockDummyDefinition;
 
+
+/***/ }),
+
+/***/ 2369:
+/***/ ((module) => {
+
+
+function mutationToJSON(dom) {
+    //Rather then us try to make manual implementations for each advanced block,
+    // we can just convert the dom into a json object.
+    var json = {};
+    var attributeNames = dom.getAttributeNames();
+    var children = Array.from(dom.children);
+
+    json.attributes = {};
+    for (var name of attributeNames) {
+        json.attributes[name] = dom.getAttribute(name);
+    }
+
+    json.tagName = dom.tagName;
+    if (children.length > 0) {
+        json.children = [];
+        for (var child of children) {
+            json.children.push(mutationToJSON(child));
+        }
+    } else {
+        json.textContent = dom.textContent;
+    }
+
+    return json;
+}
+
+function JSONToMutation(json) {
+    var dom = document.createElement(json.tagName);
+    if (json.attributes) {
+        for (var name in json.attributes) {
+            dom.setAttribute(name, json.attributes[name]);
+        }
+    }
+    if (json.children) {
+        for (var childJSON of json.children) {
+            var childDom = JSONToMutation(childJSON);
+            dom.appendChild(childDom);
+        }
+    } else if (json.textContent) {
+        dom.textContent = json.textContent;
+    }
+    return dom;
+}
+
+module.exports = {
+    mutationToJSON,
+    JSONToMutation
+};
 
 /***/ }),
 
@@ -8788,6 +8844,7 @@ var uiModule = __webpack_require__(5651);
 var compileModule = __webpack_require__(2456);
 var workspaceModule = __webpack_require__(6280);
 
+var wjson = __webpack_require__(8476);
 var engine = __webpack_require__(9940);
 var blocks = __webpack_require__(9436);
 var costumeViewer = __webpack_require__(5604);
@@ -8847,6 +8904,7 @@ function setCurrentSprite(index, forced, dontSave) {
       workspace.saveScroll();
       if (!dontSave) {
         try {
+          window.alert(JSON.stringify(wjson.workspaceToJSON(blocks.getCurrentWorkspace())));
           state.currentSelectedSprite.blocklyXML = Blockly.Xml.workspaceToDom(
             blocks.getCurrentWorkspace(),
           );
@@ -32403,6 +32461,74 @@ Blockly.Blocks["operator_scratch_mod"] = {
 
 /***/ }),
 
+/***/ 7888:
+/***/ ((module) => {
+
+
+function commentToJSON(comment) {
+    var json = {};
+    json.text = comment.getText();
+    json.id = comment.id;
+    if (comment.isMinimized_) {
+        json.minimized = true;
+    }
+    return json;
+}
+
+function commentToJSONWithPosition(comment) {
+    var json = commentToJSON(comment);
+    json.x = Math.round(comment.xy_.x);
+    json.y = Math.round(comment.xy_.y);
+    json.width = comment.width_;
+    json.height = comment.height_;
+    return json;
+}
+
+function commentsToJSON (workspace) {
+    var commentsArray = [];
+    var comments = workspace.getTopComments(true).filter(function(topComment) {
+        return topComment instanceof Blockly.WorkspaceComment;
+    });
+    for (var comment of comments) {
+        commentsArray.push(commentToJSONWithPosition(comment));
+    }
+    return commentsArray;
+}
+
+function blockCommentToJSON(block) {
+    var commentText = block.getCommentText();
+    if (commentText) {
+        var json = {};
+        json.text = commentText;
+        if (typeof block.comment == 'object') {
+            json.id = block.comment.id;
+            json.pinned = block.comment.isVisible();
+            var hw = null;
+            if (block.comment instanceof Blockly.ScratchBlockComment) {
+                hw = block.comment.getHeightWidth();
+            } else {
+                hw = block.comment.getBubbleSize();
+            }
+            json.width = hw.width;
+            json.height = hw.height;
+            var xy = block.comment.getXY();
+            json.x = Math.round(block.workspace.RTL ? block.workspace.getWidth() - xy.x - hw.width : xy.x);
+            json.y = Math.round(xy.y);
+            json.minimized = block.comment.isMinimized();
+        }
+        return json;
+    }
+}
+
+module.exports = {
+    commentsToJSON,
+    commentToJSON,
+    commentToJSONWithPosition,
+    blockCommentToJSON
+}
+
+/***/ }),
+
 /***/ 8004:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -33126,6 +33252,61 @@ module.exports = PlaceholderExportOption;
 
 /***/ }),
 
+/***/ 8476:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var {commentsToJSON} = __webpack_require__(7888);
+var {blocksToJSON, JSONToBlock} = __webpack_require__(9412);
+
+function workspaceToJSON(workspace) {
+    var commentsJSON = commentsToJSON(workspace);
+    var blocks = blocksToJSON(workspace);
+    return {
+        comments: commentsJSON,
+        blocks: blocks
+    };
+}
+
+function JSONToWorkspace(json, workspace) {
+    var width = 0; // Not used in LTR.
+    if (workspace.RTL) {
+        width = workspace.getWidth();
+    }
+    var newBlockIds = [];
+    var childCount = xml.childNodes.length;
+    var existingGroup = Blockly.Events.getGroup();
+    if (!existingGroup) {
+        Blockly.Events.setGroup(true);
+    }
+    if (workspace.setResizesEnabled) {
+        workspace.setResizesEnabled(false);
+    }
+    var variablesFirst = true;
+
+    for (var blockJSON of json.blocks) {
+        var block = JSONToBlock(blockJSON, workspace);
+        newBlockIds.push(block.id);
+        var blockX = +blockJSON.x;
+        var blockY = +blockJSON.y;
+    }
+
+    if (workspace.setResizesEnabled) {
+        workspace.setResizesEnabled(true);
+    }
+    return newBlockIds;
+}
+
+module.exports = {
+    workspaceToJSON,
+    commentsToJSON,
+    blocksToJSON,
+    JSONToWorkspace
+};
+
+
+/***/ }),
+
 /***/ 8493:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -33310,6 +33491,72 @@ BlockCompiler.defineBlock("looks_hide", {
   },
 });
 
+
+/***/ }),
+
+/***/ 8863:
+/***/ ((module) => {
+
+
+function variableFieldToJSON(field) {
+    var id = field.getValue();
+    if (id == null) {
+        field.initModel();
+        id = field.getValue();
+    }
+
+    var variable = field.getVariable();
+    if (!variable) {
+        throw Error('Tried to serialize a variable field with no variable.');
+    }
+
+    var json = {};
+
+    json.variable = true;
+    json.vname = variable.name;
+    json.name = field.name;
+    json.id = variable.getId();
+    json.type = variable.type;
+
+    return json;
+}
+
+function fieldToJSON(field) {
+    var canSerialize = field.name && field.SERIALIZABLE;
+    if (!canSerialize) {
+        return;
+    }
+
+    if (field.referencesVariables()) {
+        return variableFieldToJSON(field);
+    }
+
+    var json = {};
+
+    json.value = field.getValue();
+    json.name = field.name;
+
+    return json;
+}
+
+function fieldsToJSON(block) {
+    var array = [];
+    for (var input of block.inputList) {
+        for (var field of input.fieldRow) {
+            var f = fieldToJSON(field);
+            if (f) {
+                array.push(f);
+            }
+        }
+    }
+    return array;
+}
+
+module.exports = {
+    fieldsToJSON,
+    fieldToJSON,
+    variableFieldToJSON
+};
 
 /***/ }),
 
@@ -34736,6 +34983,108 @@ BlockCompiler.defineBlock("data_changevariableby", {
   },
 });
 
+
+/***/ }),
+
+/***/ 9412:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var { mutationToJSON } = __webpack_require__(2369);
+var { fieldsToJSON } = __webpack_require__(8863);
+var { blockCommentToJSON } = __webpack_require__(7888);
+
+function blockToJSON(block) {
+    var json = {};
+
+    if (block.isShadow()) {
+        json.shadow = true;
+    }
+
+    json.type = block.type;
+    json.id = block.id;
+
+    json.comment = blockCommentToJSON(block);
+
+    if (block.mutationToDom) {
+        var mutation = block.mutationToDom();
+        if (mutation) {
+            json.mutation = mutationToJSON(mutation);
+        }
+    }
+
+    if (block.data) {
+        json.data = block.data;
+    }
+
+    json.fields = fieldsToJSON(block);
+
+    json.inputs = [];
+    for (var input of block.inputList) {
+        var inputJSON = {};
+        if (input.type !== Blockly.DUMMY_INPUT) {
+            var childBlock = input.connection.targetBlock();
+            inputJSON.name = input.name;
+            if (input.type == Blockly.INPUT_VALUE) {
+                inputJSON.type = "value";
+            } else if (input.type == Blockly.NEXT_STATEMENT) {
+                inputJSON.type = "statement";
+            }
+            if (childBlock) {
+                inputJSON.block = blockToJSON(childBlock);
+            }
+            json.inputs.push(inputJSON);
+        }
+    }
+
+    if (block.inputsInlineDefault != block.inputsInline) {
+        json.inline = block.inputsInline;
+    }
+    if (block.isCollapsed()) {
+        json.collapsed = true;
+    }
+    if (block.disabled) {
+        json.disabled = true;
+    }
+    if (!block.isDeletable() && !block.isShadow()) {
+        json.deletable = false;
+    }
+    if (!block.isMovable() && !block.isShadow()) {
+        json.movable = false;
+    }
+    if (!block.isEditable()) {
+        json.editable = false;
+    }
+
+    var nextBlock = block.getNextBlock();
+    if (nextBlock) {
+        json.next = blockToJSON(nextBlock);
+    }
+    return json;
+}
+
+function blockToJSONWithPosition(block) {
+    var json = blockToJSON(block);
+    var xy = block.getRelativeToSurfaceXY();
+    json.x = Math.round(block.workspace.RTL ? block.workspace.getWidth() - xy.x - block.width : xy.x);
+    json.y = Math.round(xy.y);
+    return json;
+}
+
+function blocksToJSON(workspace) {
+    var blocks = workspace.getTopBlocks(true);
+    var json = [];
+    for (var block of blocks) {
+        json.push(blockToJSONWithPosition(block));
+    }
+    return json;
+}
+
+module.exports = {
+    blockToJSON,
+    blockToJSONWithPosition,
+    blocksToJSON
+};
 
 /***/ }),
 
