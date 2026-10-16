@@ -1058,18 +1058,42 @@ class BlockCompilerInstance {
     this._ids = {};
   }
 
+  getGGM3SafeID(id) {
+    //GGM3 expects strings to be used instead of numbers.
+    //GGM3 may not properly handle things if they aren't numbers.
+    return `script.${id}`;
+  }
+
   getBlockID(block) {
-    if (this.useBlockNumberIDs) {
-      var numId = this._ids[block.id];
-      if (typeof numId !== "undefined") {
-        return numId;
-      } else {
-        this._idCount += 1;
-        this._ids[block.id] = this._idCount;
-        return this._idCount;
-      }
+    var blockId = block.id;
+    if (!this.useBlockNumIDs) {
+      //No obfuscation, this is likely the editor so it needs the raw block IDs.
+      return blockId;
+    }
+
+    //Some level of obfuscation for exporting games.
+    //I'm avoiding adding local variables because of how the editor saves them in export.
+    //Though these variables use IDs and aren't names directly.
+    var numId = this._ids[blockId]; //Try to look up for this block's ID.
+
+    if (typeof numId !== "undefined") {
+      //We already have this ID registered.
+      //In that case, just return the same one.
+      //GGM3 needs this for identifying the difference between blocks.
+      return this.getGGM3SafeID(numId);
     } else {
-      return block.id;
+      //Note that we don't generate an new id for every getBlockID() call,
+      // this is because GGM3 needs this for identifiying the different blocks running.
+      
+      //Generate a new ID for blocks that we don't know about yet,
+      // then store them so we can return the same number ID later on.
+      
+      this._idCount += 1;
+      var n = this._idCount;
+      
+      this._ids[blockId] = n;
+
+      return this.getGGM3SafeID(n);
     }
   }
 
@@ -1091,7 +1115,7 @@ class BlockCompilerInstance {
         //This will return null if it isn't a hat block.
         output.push({
           code: blockCode,
-          id: block.id,
+          id: this.getBlockID(block),
           block,
         });
       }
@@ -1141,23 +1165,26 @@ class BlockCompilerInstance {
       }
 
       if (def.type !== CBlockType.STARTER_HAT) {
-        var code = _this.compileBlock(block, {
+        var opts = {
           useDummy: _this.useDummyDefClicked,
-        });
+        };
+        var code = _this.compileBlock(block, opts);
 
         if (code == null) {
           return null;
         }
 
+        var blockUtil = _this.getUtil(parentBlock, def, opts);
+
         if (def.type == CBlockType.OUTPUT) {
           //Output blocks are handled slightly differently compared to hats below.
           //They need to set an output value on the thread.
-          return CoreFunctions.getClickedOutputBlockLogic(parentBlock, code);
+          return CoreFunctions.getClickedOutputBlockLogic(blockUtil, code);
         } else {
           //These are mostly the same as normal hat block scripts.
           //Except that we have to also set a thread value to tell
           // the editor this block is was ran from being clicked.
-          return CoreFunctions.getClickedBlockLogic(parentBlock, code);
+          return CoreFunctions.getClickedBlockLogic(blockUtil, code);
         }
       }
 
@@ -1174,14 +1201,8 @@ class BlockCompilerInstance {
     return loop(parentBlock);
   }
 
-  compileBlock(block, opts = {}) {
-    var def = this.getBlockDefinition(block.type, opts.useDummy);
-
-    if (!def) {
-      return null;
-    }
-
-    var util = new CBlockUtil({
+  getUtil(block, def, opts) {
+    return new CBlockUtil({
       compiler: this.compiler,
       instance: this,
       block,
@@ -1190,6 +1211,16 @@ class BlockCompilerInstance {
       useDummy: opts.useDummy,
       options: opts,
     });
+  }
+
+  compileBlock(block, opts = {}) {
+    var def = this.getBlockDefinition(block.type, opts.useDummy);
+
+    if (!def) {
+      return null;
+    }
+
+    var util = this.getUtil(block, def, opts);
 
     var isHat = def.type == CBlockType.STARTER_HAT;
 
@@ -2762,12 +2793,15 @@ BlockCompiler.defineBlock("procedures_call", {
 
     var code = "";
     var valuesCode = "{" + valuesCodeContent + "}";
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
 
+    code += ALIVE_CHECK;
     code += `await sprite.callCustom(`;
     code += `${JSON.stringify(procCode)}, `;
     code += `${valuesCode}, `;
     code += `thread`;
     code += `);`;
+    code += ALIVE_CHECK;
 
     return code;
   },
@@ -4430,10 +4464,9 @@ BlockCompiler.defineBlock("looks_visible", {
 /***/ 1287:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-//Register the blocks here.
-
 __webpack_require__(5669);
 __webpack_require__(8621);
+__webpack_require__(6033);
 __webpack_require__(2914);
 __webpack_require__(441);
 __webpack_require__(685);
@@ -4443,10 +4476,12 @@ __webpack_require__(6828);
 __webpack_require__(4523);
 __webpack_require__(9851);
 __webpack_require__(4402);
-__webpack_require__(8215);
-
+__webpack_require__(5116);
+__webpack_require__(1463);
 __webpack_require__(8594);
-
+//require("./property/");
+//require("./sprite-master/");
+//require("./tweening/");
 
 /***/ }),
 
@@ -4629,6 +4664,21 @@ Blockly.WorkspaceSvg.prototype.registerToolboxCategoryCallback(
   },
 );
 
+
+/***/ }),
+
+/***/ 1463:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+__webpack_require__(5173);
+__webpack_require__(4777);
+__webpack_require__(6633);
+__webpack_require__(3384);
+__webpack_require__(5588);
+__webpack_require__(8126);
+__webpack_require__(4351);
+__webpack_require__(6935);
+__webpack_require__(5579);
 
 /***/ }),
 
@@ -5123,6 +5173,26 @@ BlockCompiler.defineBlock("json_array_push", {
 
 /***/ }),
 
+/***/ 1848:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("event_ggm3_frame_broadcast", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var BROADCAST_NAME = utils.getInput("BROADCAST_NAME", "");
+    var BROADCAST_NAME_STRING = CoreFunctions.castToString(BROADCAST_NAME, false);
+
+    return `engine.broadcastOnNextFrame(${BROADCAST_NAME});`;
+  },
+});
+
+
+/***/ }),
+
 /***/ 1939:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -5568,14 +5638,14 @@ BlockCompiler.defineBlock("control_while", {
     var SUBSTACK = utils.getInput("SUBSTACK", "");
     var CONDITION = utils.getInput("CONDITION", "false");
 
-    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
 
     var code = "";
     code += `while (${CONDITION}) {`;
     code += ALIVE_CHECK;
 
     code += SUBSTACK; //The inside code is the input.
-    code += `if (thread.screenRefresh) {${CoreFunctions.threadWaitFrame(utils.block)}};`;
+    code += `if (thread.screenRefresh) {${CoreFunctions.threadWaitFrame(utils)}};`;
 
     code += ALIVE_CHECK;
     code += "}";
@@ -6407,7 +6477,6 @@ gameSettingOptions.start = function () {
 
   widthInput.addEventListener("change", () => {
     engine.gameWidth = +widthInput.value || 1;
-    engine.updateCanvasSize();
   });
 
   frameRateInput.addEventListener("change", () => {
@@ -6416,7 +6485,6 @@ gameSettingOptions.start = function () {
 
   heightInput.addEventListener("change", () => {
     engine.gameHeight = +heightInput.value || 1;
-    engine.updateCanvasSize();
   });
 
   function updateGameInfo() {
@@ -7546,7 +7614,7 @@ BlockCompiler.defineBlock("control_if", {
     var SUBSTACK = utils.getInput("SUBSTACK", "");
     var CONDITION = utils.getInput("CONDITION", "false");
 
-    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
 
     var code = "";
     code += `if (${CONDITION}) {`;
@@ -7717,7 +7785,7 @@ function init(state, deps) {
     div.remove();
   }
 
-  function compileSpriteXMLToString(spr) {
+  function compileSpriteXMLToString(spr, compilerInstance = deps.compilerInstance) {
     var functions = {};
     var div = document.createElement("div");
     document.body.append(div);
@@ -7737,11 +7805,11 @@ function init(state, deps) {
       Blockly.Xml.domToWorkspace(spr.blocklyXML, tempWorkspace);
     }
 
-    var blocks = tempWorkspace.getTopBlocks(true);
-    for (var block of blocks) {
-      compileRoot(block.getRootBlock());
+    var compiledBlocks = compilerInstance.compileWorkspace(tempWorkspace);
+    for (var compiledBlock of compiledBlocks) {
+      functions[compiledBlock.id] = compiledBlock.code;
     }
-
+    
     tempWorkspace.dispose();
     div.remove();
 
@@ -7749,22 +7817,6 @@ function init(state, deps) {
   }
 
   async function compileAllSprites() {
-    async function compileRoot(rootBlock, spr) {
-      if (!rootBlock) return;
-      if (deps.compiler.isStarterBlock(rootBlock)) {
-        try {
-          var code = deps.compiler.compileBlock(rootBlock);
-          var allSprs = [spr].concat(spr.clones);
-          for (var cspr of allSprs) {
-            cspr.removeSpriteFunction(rootBlock.id);
-            cspr.addFunction(code, rootBlock.id);
-            cspr.runFunctionID(rootBlock.id);
-          }
-        } catch (e) {
-          return;
-        }
-      }
-    }
     var div = document.createElement("div");
     document.body.append(div);
     var tempWorkspace = Blockly.inject(div, {
@@ -7788,9 +7840,11 @@ function init(state, deps) {
         Blockly.Xml.domToWorkspace(spr.blocklyXML, tempWorkspace);
       }
 
-      var blocks = tempWorkspace.getTopBlocks(true);
-      for (var block of blocks) {
-        compileRoot(block.getRootBlock(), spr);
+      var compiledBlocks = deps.compilerInstance.compileWorkspace(tempWorkspace);
+      //console.log(compiledBlocks);
+      var allSprs = [spr].concat(spr.clones);
+      for (var cspr of allSprs) {
+        deps.compilerInstance.applyCompiledToEditorSprite(cspr, compiledBlocks);
         await new Promise((r) => setTimeout(r, 2));
       }
       await new Promise((r) => setTimeout(r, 2));
@@ -8247,6 +8301,38 @@ module.exports = {
 
 /***/ }),
 
+/***/ 2503:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("event_ggm3_whenbroadcasted", {
+  type: CBlockType.STARTER_HAT,
+  func: function (utils) {
+    var insideCode = utils.getHatContents("");
+    var fullInsideCode = CoreFunctions.putThreadStack(utils, insideCode);
+
+    var BLOCK_ID = JSON.stringify(utils.getID());
+
+    var BROADCAST_NAME = utils.getField("BROADCAST_NAME", "");
+
+    var code = "";
+    code += `sprite.addBroadcastListener(`;
+    code += JSON.stringify(BROADCAST_NAME) + ",";
+    code += BLOCK_ID + ",";
+    code += `async function () {`;
+    code += fullInsideCode;
+    code += `});`;
+
+    return code;
+  },
+});
+
+
+/***/ }),
+
 /***/ 2515:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -8609,7 +8695,7 @@ BlockCompiler.defineBlock("control_wait", {
     var DURATION = utils.getInput("DURATION", "0");
     var DURATION_NUM = CoreFunctions.castToNumber(DURATION, true);
 
-    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
 
     return `${ALIVE_CHECK}await thread.waitSeconds(${DURATION_NUM});${ALIVE_CHECK}`;
   },
@@ -9296,6 +9382,25 @@ BlockCompiler.defineBlock("looks_xskew_to", {
     var VALUE_NUMBER = CoreFunctions.castToNumber(VALUE, false);
 
     return `sprite.skewX = ${VALUE_NUMBER};`;
+  },
+});
+
+
+/***/ }),
+
+/***/ 3384:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("sound_stopsound", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var SOUND_MENU = utils.getInput("SOUND_MENU", "0");
+    
+    return `sprite.stopSound(${SOUND_MENU});`;
   },
 });
 
@@ -10354,7 +10459,7 @@ BlockCompiler.defineBlock("control_delete_this_clone", {
   func: function (utils) {
     utils.doNext = false; //Don't compile anything after this.
 
-    return `thread.deleteClone();${CoreFunctions.aliveCheck(utils.block)}`;
+    return `thread.deleteClone();${CoreFunctions.aliveCheck(utils)}`;
   },
 });
 
@@ -10967,6 +11072,26 @@ module.exports = {
 
 /***/ }),
 
+/***/ 4082:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("event_ggm3_broadcast", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var BROADCAST_NAME = utils.getInput("BROADCAST_NAME", "");
+    var BROADCAST_NAME_STRING = CoreFunctions.castToString(BROADCAST_NAME, false);
+
+    return `engine.broadcast(${BROADCAST_NAME_STRING});`;
+  },
+});
+
+
+/***/ }),
+
 /***/ 4129:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -11030,6 +11155,7 @@ var EventEmitter = __webpack_require__(228);
 var FromTo = __webpack_require__(7405);
 var DataURL = __webpack_require__(8570);
 var { getSpriteFunctionsCode } = __webpack_require__(7802);
+var compiler = __webpack_require__(264);
 
 const ENGINE_FILE_URL = "engine.js?v=" + Date.now();
 const ASSET_PATH = "assets/";
@@ -11128,6 +11254,11 @@ class ExportMainGenerator extends EventEmitter {
     this._libraryJS = [];
     this.useDataURL = true;
     this.uniqueIDCounter = 0;
+    this.compilerInstance = compiler.newInstance({
+      useExportCompile: true,
+      useBlockNumIDs: true,
+      useDummyDef: false,
+    });
     this._spriteAssets = [];
   }
 
@@ -11294,11 +11425,14 @@ class ExportMainGenerator extends EventEmitter {
 
     baseObject.costumes = costumeList;
     baseObject.sounds = soundList;
-
-    var functionsCode = getSpriteFunctionsCode(sprite);
+    
+    var functionsCode = getSpriteFunctionsCode(sprite, this.compilerInstance);
     var exportableFunctions = {};
     for (var id of Object.keys(functionsCode)) {
-      exportableFunctions[id] = sprite.getFunctionCode(functionsCode[id]);
+      var functionInside = functionsCode[id];
+      var spriteFunction = sprite.getFunctionCode(functionInside);
+
+      exportableFunctions[id] = spriteFunction;
     }
 
     var middleCodeStuff = [];
@@ -11418,6 +11552,30 @@ BlockCompiler.defineBlock("operator_tostring", {
     var VALUE = utils.getInput("VALUE", JSON.stringify(""));
 
     return CoreFunctions.castToString(VALUE, true);
+  },
+});
+
+
+/***/ }),
+
+/***/ 4351:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("sound_ggm3effect_set", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var SOUND_MENU = utils.getInput("SOUND_MENU", "0");
+    
+    var EFFECT = utils.getField("EFFECT", "_effect");
+    var EFFECT_JS_STRING = JSON.stringify(EFFECT);
+
+    var VALUE = utils.getInput("VALUE", "0");
+    
+    return `sprite.setSoundEffect(${SOUND_MENU}, ${EFFECT_JS_STRING}, ${VALUE});`;
   },
 });
 
@@ -22163,7 +22321,8 @@ class EngineRenderer {
 
   updateCanvasSize() {
     var canvas = this.canvas;
-    var { gameWidth, gameHeight, screenScale } = this.engine;
+    var engine = this.engine;
+    var { gameWidth, gameHeight, screenScale } = engine;
     var cwidth = gameWidth * screenScale;
     var cheight = gameHeight * screenScale;
 
@@ -22172,7 +22331,7 @@ class EngineRenderer {
       canvas.width = cwidth;
       canvas.height = cheight;
       this.glCalculation();
-      this.engine.emit(this.RESOLUTION_UPDATED);
+      engine.emit(engine.RESOLUTION_UPDATED);
     }
   }
 
@@ -22657,49 +22816,6 @@ __webpack_require__(8409);
 
 /***/ }),
 
-/***/ 4551:
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
-var BlockCompiler = __webpack_require__(2391);
-var CBlockType = __webpack_require__(7561);
-var CoreFunctions = __webpack_require__(5619);
-
-BlockCompiler.defineBlock("globaldata_get", {
-  type: CBlockType.OUTPUT,
-  func: function (utils) {
-    var VARIABLE = utils.getField("VARIABLE", "");
-
-    return `engine.globalVariables[${JSON.stringify(VARIABLE)}]`;
-  },
-});
-
-
-/***/ }),
-
-/***/ 4570:
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
-var BlockCompiler = __webpack_require__(2391);
-var CBlockType = __webpack_require__(7561);
-var CoreFunctions = __webpack_require__(5619);
-
-BlockCompiler.defineBlock("globaldata_changeby", {
-  type: CBlockType.COMMAND,
-  func: function (utils) {
-    var VARIABLE = utils.getField("VARIABLE", "");
-    var VARIABLE_CODE = `engine.globalVariables[${JSON.stringify(VARIABLE)}]`;
-    var VARIABLE_NUM = CoreFunctions.castToNumber(VARIABLE_CODE, true);
-
-    var VALUE = utils.getInput("VALUE", "0");
-    var VALUE_NUM = CoreFunctions.castToNumber(VALUE, true);
-
-    return `${VARIABLE} = ${VARIABLE_NUM} + ${VALUE_NUM};`;
-  },
-});
-
-
-/***/ }),
-
 /***/ 4604:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -22854,6 +22970,63 @@ BlockCompiler.defineBlock("looks_xstretch_to", {
     var VALUE_NUMBER = CoreFunctions.castToNumber(VALUE, true);
 
     return `sprite.scaleX = ${VALUE_NUMBER} / 100;`;
+  },
+});
+
+
+/***/ }),
+
+/***/ 4710:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("event_ggm3_broadcast_menu", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var BROADCAST_NAME = utils.getField("BROADCAST_NAME", "");
+
+    return JSON.stringify(BROADCAST_NAME);
+  },
+});
+
+
+/***/ }),
+
+/***/ 4777:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("sound_play", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var SOUND_MENU = utils.getInput("SOUND_MENU", "0");
+
+    return `sprite.playSound(${SOUND_MENU});`;
+  },
+});
+
+
+/***/ }),
+
+/***/ 4794:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("globaldata_get", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var VARIABLE = utils.getField("VARIABLE", "");
+
+    return `engine.globalVariables[${JSON.stringify(VARIABLE)}]`;
   },
 });
 
@@ -23256,15 +23429,36 @@ BlockCompiler.defineBlock("control_wait_until", {
   type: CBlockType.COMMAND,
   func: function (utils) {
     var CONDITION = utils.getInput("CONDITION", "false");
-    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
 
     var code = "";
     code += `while (!(${CONDITION})) {`;
     code += ALIVE_CHECK;
-    code += CoreFunctions.threadWaitFrame(utils.block);
+    code += CoreFunctions.threadWaitFrame(utils);
     code += "}";
 
     return code;
+  },
+});
+
+
+/***/ }),
+
+/***/ 5078:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("globaldata_set", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var VARIABLE = utils.getField("VARIABLE", "");
+    var VARIABLE_CODE = `engine.globalVariables[${JSON.stringify(VARIABLE)}]`;
+    var VALUE = utils.getInput("VALUE", "null");
+
+    return `${VARIABLE_CODE} = ${VALUE};`;
   },
 });
 
@@ -23288,6 +23482,16 @@ BlockCompiler.defineBlock("looks_yskew", {
 
 /***/ }),
 
+/***/ 5116:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+__webpack_require__(4794);
+__webpack_require__(5078);
+__webpack_require__(5297);
+
+
+/***/ }),
+
 /***/ 5145:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -23301,6 +23505,25 @@ BlockCompiler.defineBlock("json_keys", {
     var OBJECT = utils.getInput("OBJECT", "{}");
 
     return `Object.keys(${OBJECT})`;
+  },
+});
+
+
+/***/ }),
+
+/***/ 5173:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("sound_sounds_menu", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var SOUND_MENU = utils.getField("SOUND_MENU", "");
+
+    return JSON.stringify(SOUND_MENU);
   },
 });
 
@@ -23365,6 +23588,30 @@ BlockCompiler.defineBlock("looks_change_effect_by", {
 
 /***/ }),
 
+/***/ 5297:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("globaldata_changeby", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var VARIABLE = utils.getField("VARIABLE", "");
+    var VARIABLE_CODE = `engine.globalVariables[${JSON.stringify(VARIABLE)}]`;
+    var VARIABLE_NUM = CoreFunctions.castToNumber(VARIABLE_CODE, true);
+
+    var VALUE = utils.getInput("VALUE", "0");
+    var VALUE_NUM = CoreFunctions.castToNumber(VALUE, true);
+
+    return `${VARIABLE_CODE} = ${VARIABLE_NUM} + ${VALUE_NUM};`;
+  },
+});
+
+
+/***/ }),
+
 /***/ 5334:
 /***/ (() => {
 
@@ -23385,14 +23632,14 @@ BlockCompiler.defineBlock("control_repeat_until", {
     var SUBSTACK = utils.getInput("SUBSTACK", "");
     var CONDITION = utils.getInput("CONDITION", "false");
 
-    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
 
     var code = "";
     code += `while (!(${CONDITION})) {`;
     code += ALIVE_CHECK;
 
     code += SUBSTACK; //The inside code is the input.
-    code += `if (thread.screenRefresh) {${CoreFunctions.threadWaitFrame(utils.block)}};`;
+    code += `if (thread.screenRefresh) {${CoreFunctions.threadWaitFrame(utils)}};`;
 
     code += ALIVE_CHECK;
     code += "}";
@@ -24682,20 +24929,39 @@ module.exports = ExportOptionsEvents;
 
 /***/ }),
 
-/***/ 5587:
+/***/ 5579:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 var BlockCompiler = __webpack_require__(2391);
 var CBlockType = __webpack_require__(7561);
 var CoreFunctions = __webpack_require__(5619);
 
-BlockCompiler.defineBlock("globaldata_set", {
+BlockCompiler.defineBlock("sound_ggm3effect_get", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var SOUND_MENU = utils.getInput("SOUND_MENU", "0");
+    
+    var EFFECT = utils.getField("EFFECT", "_effect");
+    var EFFECT_JS_STRING = JSON.stringify(EFFECT);
+    
+    return `sprite.getSoundEffect(${SOUND_MENU}, ${EFFECT_JS_STRING})`;
+  },
+});
+
+
+/***/ }),
+
+/***/ 5588:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("sound_stopallsounds", {
   type: CBlockType.COMMAND,
   func: function (utils) {
-    var VARIABLE = utils.getField("VARIABLE", "");
-    var VALUE = utils.getInput("VALUE", "null");
-
-    return `engine.globalVariables[${JSON.stringify(VARIABLE)}] = ${VALUE};`;
+    return `engine.stopAllSounds();`;
   },
 });
 
@@ -24714,7 +24980,7 @@ BlockCompiler.defineBlock("loader_loadcostume", {
   func: function (utils) {
     var COSTUME = utils.getInput("COSTUME", "null");
 
-    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
 
     return `${ALIVE_CHECK}await sprite.blockLoadCostume(${COSTUME});${ALIVE_CHECK}`;
   },
@@ -25508,33 +25774,33 @@ module.exports = {
 /***/ ((module) => {
 
 //Function for starting a threads code, this should only be used internally, for blocks use putThreadStack instead.
-function startThreadStack(block) {
-  var id = JSON.stringify(block.id);
-  return `var thread = sprite.createThread(${id});try {${aliveCheck(block)}`;
+function startThreadStack(blockUtil) {
+  var id = JSON.stringify(blockUtil.getID());
+  return `var thread = sprite.createThread(${id});try {${aliveCheck(blockUtil)}`;
 }
 
 //Function for ending a threads code, this should only be used internally, for blocks use putThreadStack instead.
-function endThreadStack(block) {
+function endThreadStack(blockUtil) {
   return `thread.stop();}catch(e){thread.hadError = true;thread.output = e;thread.stop();return thread;}`;
 }
 
 //Stops the thread, use aliveCheck right after for best results in blocks.
-function stopThisThread(block) {
+function stopThisThread(blockUtil) {
   return `thread.stop();`;
 }
 
 //Tells the thread to wait for the next frame
-function threadWaitFrame(block) {
+function threadWaitFrame(blockUtil) {
   return `await thread.waitForNextFrame();`;
 }
 
 //Tells the code to exit if the thread stops.
-function aliveCheck() {
+function aliveCheck(blockUtil) {
   return `try{if (!thread.running) {thread.stop();return thread;}}catch(e){}`;
 }
 
 //Turns on a feature used by the editor to tell if its been clicked.
-function enableThreadPreview() {
+function enableThreadPreview(blockUtil) {
   return `thread.isPreviewMode = true;`;
 }
 
@@ -25544,15 +25810,15 @@ function setThreadOutput(code) {
 }
 
 //Return the thread, this is probably not used but whatever.
-function returnThread() {
+function returnThread(blockUtil) {
   return `return thread;`;
 }
 
 //Used by the compiler to get the normal clicked block logic for the editor.
-function getClickedBlockLogic(block, code) {
+function getClickedBlockLogic(blockUtil, code) {
   var fullCode = "";
   //Start the thread
-  fullCode += startThreadStack(block);
+  fullCode += startThreadStack(blockUtil);
 
   //This tells the editor that this thread is running because it was clicked.
   fullCode += enableThreadPreview();
@@ -25561,36 +25827,36 @@ function getClickedBlockLogic(block, code) {
   fullCode += code;
 
   //End the thread
-  fullCode += endThreadStack(block);
+  fullCode += endThreadStack(blockUtil);
 
   return fullCode;
 }
 
 //Used by the compiler to get the output block clicked logic for the editor.
-function getClickedOutputBlockLogic(block, code) {
+function getClickedOutputBlockLogic(blockUtil, code) {
   var fullCode = "";
   //Start the thread
-  fullCode += startThreadStack(block);
+  fullCode += startThreadStack(blockUtil);
 
   //This tells the editor that this thread is running because it was clicked.
-  fullCode += enableThreadPreview();
+  fullCode += enableThreadPreview(blockUtil);
 
   //This will return the output of the code.
   fullCode += setThreadOutput(code);
 
   //End the thread
-  fullCode += endThreadStack(block);
+  fullCode += endThreadStack(blockUtil);
 
   //Return the thread, not sure if this is required.
   //Still good to have it if I ever use it later.
-  fullCode += returnThread();
+  fullCode += returnThread(blockUtil);
 
   return fullCode;
 }
 
 //Used by hat blocks to add the thread identifier to the code.
-function putThreadStack(block, code) {
-  return startThreadStack(block) + code + endThreadStack(block);
+function putThreadStack(blockUtil, code) {
+  return startThreadStack(blockUtil) + code + endThreadStack(blockUtil);
 }
 
 //Cast a value to number
@@ -25644,7 +25910,7 @@ BlockCompiler.defineBlock("control_repeat", {
     var SUBSTACK = utils.getInput("SUBSTACK", "");
     var TIMES = utils.getInput("TIMES", "0");
 
-    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
 
     var code = "";
     code += ALIVE_CHECK;
@@ -26207,7 +26473,7 @@ BlockCompiler.defineBlock("control_stop", {
   type: CBlockType.COMMAND,
   func: function (utils) {
     var STOP_OPTION = utils.getField("STOP_OPTION", "");
-    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
 
     if (STOP_OPTION == "this script") {
       return `thread.stop();${ALIVE_CHECK}`;
@@ -26281,6 +26547,28 @@ BlockCompiler.defineBlock("operator_add", {
     var NUM2_NUM = CoreFunctions.castToNumber(NUM2, true);
 
     return `(${NUM1_NUM} + ${NUM2_NUM})`;
+  },
+});
+
+
+/***/ }),
+
+/***/ 5806:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("event_ggm3_broadcast_and_wait", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var BROADCAST_NAME = utils.getInput("BROADCAST_NAME", "");
+    var BROADCAST_NAME_STRING = CoreFunctions.castToString(BROADCAST_NAME, false);
+
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
+
+    return `${ALIVE_CHECK}await engine.broadcastAndWait(${BROADCAST_NAME_STRING});${ALIVE_CHECK}`;
   },
 });
 
@@ -26545,6 +26833,17 @@ BlockCompiler.defineBlock("json_array_contains", {
 
 /***/ }),
 
+/***/ 6033:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+__webpack_require__(2503);
+__webpack_require__(4082);
+__webpack_require__(5806);
+__webpack_require__(1848);
+__webpack_require__(4710);
+
+/***/ }),
+
 /***/ 6049:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -26803,7 +27102,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("(function () {\n  //////////////////////////////////////////////////////////////////\n\n  var Game = (window.Game = {});\n  var GameEvents = {};\n\n  Game.content = \"|%GGM3Game%|\"; //String makes the beautifier not break the code. This is replaced with the actual game code when generating the game.\n\n  //////////////////////////////////////////////////////////////////\n\n  GameEvents.progress = [];\n  GameEvents.loaded = [];\n  GameEvents.error = [];\n\n  Game.events = GameEvents;\n\n  function _game_removeEventListener(eventName, func) {\n    if (typeof eventName !== \"string\") {\n      throw new Error(\"Event name isn't a string.\");\n      return;\n    }\n    var eventArray = GameEvents[eventName];\n    if (eventArray) {\n      GameEvents[eventName] = eventArray.filter((f) => !(func == f));\n    } else {\n      throw new Error(\"Event doesn't exist\");\n      return;\n    }\n  }\n\n  function _game_addEventListener(eventName, func, options = {}) {\n    if (typeof eventName !== \"string\") {\n      throw new Error(\"Event name isn't a string.\");\n      return;\n    }\n    var safeOptions = options || {};\n    var eventArray = GameEvents[eventName];\n    if (eventArray) {\n      if (safeOptions.once) {\n        var wrapper = function (...incomingArgs) {\n          var result = func(...incomingArgs);\n          _game_removeEventListener(eventName, wrapper);\n          return result;\n        };\n        eventArray.push(wrapper);\n      } else {\n        eventArray.push(func);\n      }\n    } else {\n      throw new Error(\"Event doesn't exist\");\n      return;\n    }\n  }\n\n  function _callEvent(eventName, ...args) {\n    var eventArray = GameEvents[eventName];\n    if (!eventArray) {\n      return;\n    }\n    eventArray.forEach((f) => f(...args));\n  }\n\n  Game.addEventListener = _game_addEventListener;\n  Game.removeEventListener = _game_removeEventListener;\n\n  //////////////////////////////////////////////////////////////////\n\n  var engine = null;\n  var progressMonitor = {};\n\n  function getEngine() {\n    return Game.engine;\n  }\n\n  function attachEngine(eng) {\n    if (engine) {\n      throw new Error(\"GGM3Engine was already attached.\");\n      return;\n    }\n    if (!eng) {\n      throw new Error(\"No GGM3Engine provided.\");\n      return;\n    }\n    if (typeof eng !== \"object\") {\n      throw new Error(\"Engine provided isn't a GGM3Engine.\");\n      return;\n    }\n    engine = eng;\n  }\n\n  Game.getEngine = getEngine;\n  Game.attachEngine = attachEngine;\n\n  //////////////////////////////////////////////////////////////////\n\n  //Most of these used from from-to.js\n\n  function _fromEnginePropertyNames(from) {\n    engine.propertyVariables = {};\n    for (var name of from || []) {\n      engine.propertyVariables[name] = true;\n    }\n  }\n\n  function fromEngineJSON(mainJSON) {\n    Object.assign(engine, {\n      globalVariables: mainJSON.globalVariables || {},\n      broadcastNames: mainJSON.broadcastNames || [],\n      frameRate: mainJSON.frameRate || 60,\n      gameWidth: mainJSON.gameWidth || engine.DEFAULT_WIDTH,\n      gameHeight: mainJSON.gameHeight || engine.DEFAULT_HEIGHT,\n    });\n    _fromEnginePropertyNames(mainJSON.spriteProperties);\n    engine.updateCanvasSize();\n  }\n\n  function fromLibraryJSON(library, libraryJson) {\n    Object.assign(library, {\n      name: \"\" + libraryJson.name,\n      id: libraryJson.id,\n    });\n  }\n\n  function fromLibraryCostumeJSON(libCostume, libCostumeJson) {\n    Object.assign(libCostume, {\n      name: \"\" + libCostumeJson.name,\n      id: libCostumeJson.id,\n      mimeType: libCostumeJson.mimeType,\n    });\n  }\n\n  function fromLibrarySoundJSON(libSound, libSoundJson) {\n    Object.assign(libSound, {\n      name: \"\" + libSoundJson.name,\n      id: libSoundJson.id,\n    });\n  }\n\n  function fromSpriteJSON(sprite, spriteJson) {\n    Object.assign(sprite, {\n      x: spriteJson.x,\n      y: spriteJson.y,\n      angle: spriteJson.angle,\n      scaleX: spriteJson.scaleX,\n      scaleY: spriteJson.scaleY,\n      skewX: spriteJson.skewX || 0,\n      skewY: spriteJson.skewY || 0,\n      size: spriteJson.size,\n      blocklyXML: spriteJson.blocklyXML\n        ? Blockly.Xml.textToDom(spriteJson.blocklyXML)\n        : null,\n      name: spriteJson.name,\n      costumeIndex: spriteJson.costumeIndex,\n      zIndex: spriteJson.zIndex,\n      variables: spriteJson.variables,\n      hidden: spriteJson.hidden,\n      spriteProperties: spriteJson.properties || {},\n    });\n  }\n\n  function fromCostumeJSON(costume, costumeJson) {\n    Object.assign(costume, {\n      id: costumeJson.id,\n      rotationCenterX: costumeJson.rotationCenterX,\n      rotationCenterY: costumeJson.rotationCenterY,\n      preferedScale: costumeJson.preferedScale,\n      willPreload: costumeJson.willPreload,\n      mimeType: costumeJson.mimeType,\n      linkID: costumeJson.linkID,\n    });\n  }\n\n  function fromSoundJSON(sound, soundJson) {\n    Object.assign(sound, {\n      id: soundJson.id,\n      willPreload: soundJson.willPreload,\n      mimeType: soundJson.mimeType,\n      linkID: soundJson.linkID,\n    });\n  }\n\n  //////////////////////////////////////////////////////////////////\n\n  function determineLoadSize(content) {\n    var max = 0;\n\n    for (var library of content.libraries) {\n      max += library.costumes.length;\n      max += library.sounds.length;\n    }\n\n    for (var spriteData of content.sprites) {\n      max += spriteData.sprite.costumes.length;\n      max += spriteData.sprite.sounds.length;\n    }\n\n    progressMonitor.max = max;\n    progressMonitor.current = 0;\n    sendProgress();\n  }\n\n  function sendProgress() {\n    _callEvent(\"progress\", progressMonitor.current, progressMonitor.max);\n  }\n\n  async function loadLibraries(libraries) {\n    for (var libraryJson of libraries) {\n      var library = engine.createEmptyLibrary();\n      fromLibraryJSON(library, libraryJson);\n\n      for (var costumeJson of libraryJson.costumes) {\n        var libCostume = library.addCostume(\n          costumeJson.url,\n          costumeJson.name,\n          costumeJson.mimeType,\n          costumeJson.id,\n        );\n\n        fromLibraryCostumeJSON(libCostume, costumeJson);\n\n        progressMonitor.current += 1;\n        sendProgress();\n      }\n\n      for (var soundJson of libraryJson.sounds) {\n        var libSound = library.addSound(\n          soundJson.url,\n          soundJson.name,\n          soundJson.mimeType,\n          soundJson.id,\n        );\n\n        fromLibrarySoundJSON(libSound, soundJson);\n\n        progressMonitor.current += 1;\n        sendProgress();\n      }\n    }\n  }\n\n  async function loadSprites(sprites) {\n    var functions = [];\n    for (var spriteData of sprites) {\n      await (async function (spriteData) {\n        var spriteJson = spriteData.sprite;\n        var sprite = engine.createEmptySprite();\n        fromSpriteJSON(sprite, spriteJson);\n\n        var funcIds = [];\n\n        for (var blockid of Object.keys(spriteData.functions)) {\n          sprite.spriteFunctions[blockid] = spriteData.functions[blockid];\n          funcIds.push(blockid);\n        }\n\n        function addFunc() {\n          for (var blockid of funcIds) {\n            sprite.runFunctionID(blockid);\n          }\n        }\n        functions.push(addFunc); //We'll fire them off at the end where all the sprites are actually ready.\n\n        for (var costumeJson of spriteJson.costumes) {\n          var source = costumeJson.url;\n          if (costumeJson.isLinked) {\n            source = engine.findLibraryCostume(costumeJson.linkID);\n          }\n\n          var costume = null;\n          if (costumeJson.willPreload) {\n            costume = await sprite.addCostume(source, costumeJson.name);\n          } else {\n            costume = sprite.addCostumeWithoutLoading(source, costumeJson.name);\n          }\n\n          fromCostumeJSON(costume, costumeJson);\n\n          progressMonitor.current += 1;\n          sendProgress();\n        }\n\n        for (var soundJson of spriteJson.sounds) {\n          var source = soundJson.url;\n          if (soundJson.isLinked) {\n            source = engine.findLibrarySound(soundJson.linkID);\n          }\n\n          var sound = null;\n          if (soundJson.willPreload) {\n            sound = await sprite.addSound(source, soundJson.name);\n          } else {\n            sound = sprite.addSoundWithoutLoading(source, soundJson.name);\n          }\n\n          fromSoundJSON(sound, soundJson);\n\n          progressMonitor.current += 1;\n          sendProgress();\n        }\n      })(spriteData);\n    }\n\n    //Run the functions to add them to the sprite.\n    functions.forEach((f) => f());\n  }\n\n  async function loadGame() {\n    if (!engine) {\n      throw new Error(\"There is no attached GGM3Engine to load the game into.\");\n      return;\n    }\n\n    try {\n      var content = Game.content;\n      engine.emptyProject();\n      fromEngineJSON(content.engineProps);\n      determineLoadSize(content);\n      await loadLibraries(content.libraries);\n      await loadSprites(content.sprites);\n    } catch (e) {\n      _callEvent(\"error\", e);\n      throw e;\n      return;\n    }\n    _callEvent(\"loaded\");\n  }\n\n  Game.loadGame = loadGame;\n\n  //////////////////////////////////////////////////////////////////\n})();\n");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("(function () {\n  //////////////////////////////////////////////////////////////////\n\n  var Game = (window.Game = {});\n  var GameEvents = {};\n\n  Game.content = \"|%GGM3Game%|\"; //String makes the beautifier not break the code. This is replaced with the actual game code when generating the game.\n\n  //////////////////////////////////////////////////////////////////\n\n  GameEvents.progress = [];\n  GameEvents.loaded = [];\n  GameEvents.error = [];\n\n  Game.events = GameEvents;\n\n  function _game_removeEventListener(eventName, func) {\n    if (typeof eventName !== \"string\") {\n      throw new Error(\"Event name isn't a string.\");\n      return;\n    }\n    var eventArray = GameEvents[eventName];\n    if (eventArray) {\n      GameEvents[eventName] = eventArray.filter((f) => !(func == f));\n    } else {\n      throw new Error(\"Event doesn't exist\");\n      return;\n    }\n  }\n\n  function _game_addEventListener(eventName, func, options = {}) {\n    if (typeof eventName !== \"string\") {\n      throw new Error(\"Event name isn't a string.\");\n      return;\n    }\n    var safeOptions = options || {};\n    var eventArray = GameEvents[eventName];\n    if (eventArray) {\n      if (safeOptions.once) {\n        var wrapper = function (...incomingArgs) {\n          var result = func(...incomingArgs);\n          _game_removeEventListener(eventName, wrapper);\n          return result;\n        };\n        eventArray.push(wrapper);\n      } else {\n        eventArray.push(func);\n      }\n    } else {\n      throw new Error(\"Event doesn't exist\");\n      return;\n    }\n  }\n\n  function _callEvent(eventName, ...args) {\n    var eventArray = GameEvents[eventName];\n    if (!eventArray) {\n      return;\n    }\n    eventArray.forEach((f) => f(...args));\n  }\n\n  Game.addEventListener = _game_addEventListener;\n  Game.removeEventListener = _game_removeEventListener;\n\n  //////////////////////////////////////////////////////////////////\n\n  var engine = null;\n  var progressMonitor = {};\n\n  function getEngine() {\n    return engine;\n  }\n\n  function attachEngine(eng) {\n    if (engine) {\n      throw new Error(\"GGM3Engine was already attached.\");\n      return;\n    }\n    if (!eng) {\n      throw new Error(\"No GGM3Engine provided.\");\n      return;\n    }\n    if (typeof eng !== \"object\") {\n      throw new Error(\"Engine provided isn't a GGM3Engine.\");\n      return;\n    }\n    engine = eng;\n  }\n\n  Game.getEngine = getEngine;\n  Game.attachEngine = attachEngine;\n\n  //////////////////////////////////////////////////////////////////\n\n  //Most of these used from from-to.js\n\n  function _fromEnginePropertyNames(from) {\n    engine.propertyVariables = {};\n    for (var name of from || []) {\n      engine.propertyVariables[name] = true;\n    }\n  }\n\n  function fromEngineJSON(mainJSON) {\n    Object.assign(engine, {\n      globalVariables: mainJSON.globalVariables || {},\n      broadcastNames: mainJSON.broadcastNames || [],\n      frameRate: mainJSON.frameRate || 60,\n      gameWidth: mainJSON.gameWidth || engine.DEFAULT_WIDTH,\n      gameHeight: mainJSON.gameHeight || engine.DEFAULT_HEIGHT,\n    });\n    _fromEnginePropertyNames(mainJSON.spriteProperties);\n  }\n\n  function fromLibraryJSON(library, libraryJson) {\n    Object.assign(library, {\n      name: \"\" + libraryJson.name,\n      id: libraryJson.id,\n    });\n  }\n\n  function fromLibraryCostumeJSON(libCostume, libCostumeJson) {\n    Object.assign(libCostume, {\n      name: \"\" + libCostumeJson.name,\n      id: libCostumeJson.id,\n      mimeType: libCostumeJson.mimeType,\n    });\n  }\n\n  function fromLibrarySoundJSON(libSound, libSoundJson) {\n    Object.assign(libSound, {\n      name: \"\" + libSoundJson.name,\n      id: libSoundJson.id,\n    });\n  }\n\n  function fromSpriteJSON(sprite, spriteJson) {\n    Object.assign(sprite, {\n      x: spriteJson.x,\n      y: spriteJson.y,\n      angle: spriteJson.angle,\n      scaleX: spriteJson.scaleX,\n      scaleY: spriteJson.scaleY,\n      skewX: spriteJson.skewX || 0,\n      skewY: spriteJson.skewY || 0,\n      size: spriteJson.size,\n      blocklyXML: spriteJson.blocklyXML\n        ? Blockly.Xml.textToDom(spriteJson.blocklyXML)\n        : null,\n      name: spriteJson.name,\n      costumeIndex: spriteJson.costumeIndex,\n      zIndex: spriteJson.zIndex,\n      variables: spriteJson.variables,\n      hidden: spriteJson.hidden,\n      spriteProperties: spriteJson.properties || {},\n    });\n  }\n\n  function fromCostumeJSON(costume, costumeJson) {\n    Object.assign(costume, {\n      id: costumeJson.id,\n      rotationCenterX: costumeJson.rotationCenterX,\n      rotationCenterY: costumeJson.rotationCenterY,\n      preferedScale: costumeJson.preferedScale,\n      willPreload: costumeJson.willPreload,\n      mimeType: costumeJson.mimeType,\n      linkID: costumeJson.linkID,\n    });\n  }\n\n  function fromSoundJSON(sound, soundJson) {\n    Object.assign(sound, {\n      id: soundJson.id,\n      willPreload: soundJson.willPreload,\n      mimeType: soundJson.mimeType,\n      linkID: soundJson.linkID,\n    });\n  }\n\n  //////////////////////////////////////////////////////////////////\n\n  function determineLoadSize(content) {\n    var max = 0;\n\n    for (var library of content.libraries) {\n      max += library.costumes.length;\n      max += library.sounds.length;\n    }\n\n    for (var spriteData of content.sprites) {\n      max += spriteData.sprite.costumes.length;\n      max += spriteData.sprite.sounds.length;\n    }\n\n    progressMonitor.max = max;\n    progressMonitor.current = 0;\n    sendProgress();\n  }\n\n  function sendProgress() {\n    _callEvent(\"progress\", progressMonitor.current, progressMonitor.max);\n  }\n\n  async function loadLibraries(libraries) {\n    for (var libraryJson of libraries) {\n      var library = engine.createEmptyLibrary();\n      fromLibraryJSON(library, libraryJson);\n\n      for (var costumeJson of libraryJson.costumes) {\n        var libCostume = library.addCostume(\n          costumeJson.url,\n          costumeJson.name,\n          costumeJson.mimeType,\n          costumeJson.id,\n        );\n\n        fromLibraryCostumeJSON(libCostume, costumeJson);\n\n        progressMonitor.current += 1;\n        sendProgress();\n      }\n\n      for (var soundJson of libraryJson.sounds) {\n        var libSound = library.addSound(\n          soundJson.url,\n          soundJson.name,\n          soundJson.mimeType,\n          soundJson.id,\n        );\n\n        fromLibrarySoundJSON(libSound, soundJson);\n\n        progressMonitor.current += 1;\n        sendProgress();\n      }\n    }\n  }\n\n  async function loadSprites(sprites) {\n    var functions = [];\n    for (var spriteData of sprites) {\n      await (async function (spriteData) {\n        var spriteJson = spriteData.sprite;\n        var sprite = engine.createEmptySprite();\n        fromSpriteJSON(sprite, spriteJson);\n\n        var funcIds = [];\n\n        for (var blockid of Object.keys(spriteData.functions)) {\n          sprite.spriteFunctions[blockid] = spriteData.functions[blockid];\n          funcIds.push(blockid);\n        }\n\n        function addFunc() {\n          for (var blockid of funcIds) {\n            sprite.runFunctionID(blockid);\n          }\n        }\n        functions.push(addFunc); //We'll fire them off at the end where all the sprites are actually ready.\n\n        for (var costumeJson of spriteJson.costumes) {\n          var source = costumeJson.url;\n          if (costumeJson.isLinked) {\n            source = engine.findLibraryCostume(costumeJson.linkID);\n          }\n\n          var costume = null;\n          if (costumeJson.willPreload) {\n            costume = await sprite.addCostume(source, costumeJson.name);\n          } else {\n            costume = sprite.addCostumeWithoutLoading(source, costumeJson.name);\n          }\n\n          fromCostumeJSON(costume, costumeJson);\n\n          progressMonitor.current += 1;\n          sendProgress();\n        }\n\n        for (var soundJson of spriteJson.sounds) {\n          var source = soundJson.url;\n          if (soundJson.isLinked) {\n            source = engine.findLibrarySound(soundJson.linkID);\n          }\n\n          var sound = null;\n          if (soundJson.willPreload) {\n            sound = await sprite.addSound(source, soundJson.name);\n          } else {\n            sound = sprite.addSoundWithoutLoading(source, soundJson.name);\n          }\n\n          fromSoundJSON(sound, soundJson);\n\n          progressMonitor.current += 1;\n          sendProgress();\n        }\n      })(spriteData);\n    }\n\n    //Run the functions to add them to the sprite.\n    functions.forEach((f) => f());\n  }\n\n  async function loadGame() {\n    if (!engine) {\n      throw new Error(\"There is no attached GGM3Engine to load the game into.\");\n      return;\n    }\n\n    try {\n      var content = Game.content;\n      engine.emptyProject();\n      fromEngineJSON(content.engineProps);\n      determineLoadSize(content);\n      await loadLibraries(content.libraries);\n      await loadSprites(content.sprites);\n    } catch (e) {\n      _callEvent(\"error\", e);\n      throw e;\n      return;\n    }\n    _callEvent(\"loaded\");\n  }\n\n  Game.loadGame = loadGame;\n\n  //////////////////////////////////////////////////////////////////\n})();\n");
 
 /***/ }),
 
@@ -26855,7 +27154,7 @@ BlockCompiler.defineBlock("event_beforegamestarts", {
   type: CBlockType.STARTER_HAT,
   func: function (utils) {
     var insideCode = utils.getHatContents("");
-    var fullInsideCode = CoreFunctions.putThreadStack(utils.block, insideCode);
+    var fullInsideCode = CoreFunctions.putThreadStack(utils, insideCode);
 
     var BLOCK_ID = JSON.stringify(utils.getID());
 
@@ -27300,7 +27599,7 @@ BlockCompiler.defineBlock("event_whengamestarts", {
   type: CBlockType.STARTER_HAT,
   func: function (utils) {
     var insideCode = utils.getHatContents("");
-    var fullInsideCode = CoreFunctions.putThreadStack(utils.block, insideCode);
+    var fullInsideCode = CoreFunctions.putThreadStack(utils, insideCode);
 
     var BLOCK_ID = JSON.stringify(utils.getID());
 
@@ -27435,7 +27734,7 @@ BlockCompiler.defineBlock("procedures_definition", {
     });
 
     var fullInsideCode = CoreFunctions.putThreadStack(
-      utils.block,
+      utils,
       threadModifierCode + insideCode,
     );
 
@@ -27616,6 +27915,26 @@ BlockCompiler.defineBlock("json_pretty_print", {
 
 /***/ }),
 
+/***/ 6633:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("sound_playuntildone", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var SOUND_MENU = utils.getInput("SOUND_MENU", "0");
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
+
+    return `${ALIVE_CHECK}await sprite.playSoundUntilDone(${SOUND_MENU});${ALIVE_CHECK}`;
+  },
+});
+
+
+/***/ }),
+
 /***/ 6672:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -27628,7 +27947,7 @@ BlockCompiler.defineBlock("loader_deloadcostume", {
   func: function (utils) {
     var COSTUME = utils.getInput("COSTUME", "null");
 
-    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
 
     return `${ALIVE_CHECK}await sprite.blockDeloadCostume(${COSTUME});${ALIVE_CHECK}`;
   },
@@ -28072,6 +28391,30 @@ class TextureCanvas {
 }
 
 module.exports = { TextureCanvas };
+
+
+/***/ }),
+
+/***/ 6935:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("sound_ggm3effect_change", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var SOUND_MENU = utils.getInput("SOUND_MENU", "0");
+    
+    var EFFECT = utils.getField("EFFECT", "_effect");
+    var EFFECT_JS_STRING = JSON.stringify(EFFECT);
+
+    var BY = utils.getInput("BY", "0");
+    
+    return `sprite.changeSoundEffect(${SOUND_MENU}, ${EFFECT_JS_STRING}, ${BY});`;
+  },
+});
 
 
 /***/ }),
@@ -29867,7 +30210,6 @@ function fromEngineJSON(mainJSON) {
     gameHeight: mainJSON.gameHeight || engine.DEFAULT_HEIGHT,
   });
   _fromEnginePropertyNames(mainJSON.spriteProperties);
-  engine.updateCanvasSize();
 }
 
 function toEngineJSON() {
@@ -30895,8 +31237,9 @@ class GGM3Engine extends EventEmitter {
 
     var sprs = this.getAllTopSprites();
     var sprsReversed = sprs.reverse();
+    var _this = this;
     sprsReversed.forEach((spr) => {
-      engine.tickSprite(spr);
+      _this.tickSprite(spr);
     });
     this.tween.update(this.time.totalTime * 1000);
 
@@ -31569,8 +31912,8 @@ function compileSprite(sprite) {
   compileSpriteXML(sprite);
 }
 
-function getSpriteFunctionsCode(sprite) {
-  return compileSpriteXMLToString(sprite);
+function getSpriteFunctionsCode(sprite, instance) {
+  return compileSpriteXMLToString(sprite, instance);
 }
 
 module.exports = {
@@ -32186,7 +32529,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("(function () {\n  ///////////////////////////////////////////////////////////\n\n  //Check that we have everything before running\n  if (!window.Game || !window.GGM3Engine) {\n    window.alert(\n      \"Couldn't find either GGM3Engine or the Game object,\" +\n        \"you may have to include the scripts.\",\n    );\n    return;\n  }\n\n  ///////////////////////////////////////////////////////////\n\n  const QuickStart = false;\n\n  ///////////////////////////////////////////////////////////\n\n  //Error handling in case the game is bad quality or something broken\n\n  window.addEventListener(\n    \"error\",\n    (event) => {\n      window.alert(event.message);\n    },\n    false,\n  );\n\n  window.addEventListener(\"unhandledrejection\", (event) => {\n    window.alert(event.reason);\n  });\n\n  ///////////////////////////////////////////////////////////\n\n  //Find elements\n\n  var Game = window.Game;\n  var GGM3Engine = window.GGM3Engine;\n\n  var loadingScreen = document.getElementById(\"loadingscreen\");\n  var loadingBarInner = document.getElementById(\"loadingbar-inner\");\n  var loadingBarInnerText = document.getElementById(\"loadingbar-innertext\");\n  var gameContent = document.getElementById(\"gameContent\");\n  var gameCanvas = document.getElementById(\"gameCanvas\");\n  var clickToStart = document.getElementById(\"clicktostart\");\n  var clickToStartButton = document.getElementById(\"clicktostart-button\");\n\n  ///////////////////////////////////////////////////////////\n\n  //Make sure the elements are proper.\n  loadingScreen.hidden = false;\n  gameContent.hidden = true;\n  clickToStart.hidden = true;\n\n  ///////////////////////////////////////////////////////////\n\n  var engine = new GGM3Engine(gameCanvas);\n  Game.attachEngine(engine);\n\n  ///////////////////////////////////////////////////////////\n\n  function setProgress(current, max) {\n    var percent = (current / max) * 100;\n\n    loadingBarInner.style.width = Math.round(percent).toFixed(5) + \"%\";\n    loadingBarInnerText.textContent = `Loading... ${percent.toFixed(2)}%`;\n  }\n\n  setProgress(0, 100);\n  Game.addEventListener(\"progress\", setProgress);\n\n  ///////////////////////////////////////////////////////////\n\n  Game.addEventListener(\"error\", (err) => {\n    loadingBarInnerText.setAttribute(\"error\", \"\");\n    loadingBarInnerText.textContent =\n      \"Error! Check browser developer tools for more info.\";\n  });\n\n  ///////////////////////////////////////////////////////////\n\n  Game.addEventListener(\"loaded\", () => {\n    if (QuickStart) {\n      startGame();\n    } else {\n      loadingScreen.hidden = true;\n      gameContent.hidden = true;\n\n      clickToStart.hidden = false;\n      var launched = false;\n      clickToStartButton.addEventListener(\"click\", () => {\n        if (launched) return;\n        startGame();\n        launched = true;\n      });\n    }\n  });\n\n  ///////////////////////////////////////////////////////////\n\n  //Resize handling so that when the window resizes the game fits the entire screen.\n  function handleResize() {\n    var scale = window.innerHeight / engine.gameHeight;\n    var scaleHorizontal = window.innerWidth / engine.gameWidth;\n    if (scale > scaleHorizontal) {\n      scale = scaleHorizontal;\n    }\n    gameCanvas.style.width = scale * engine.gameWidth + \"px\";\n    gameCanvas.style.height = scale * engine.gameHeight + \"px\";\n    engine.screenScale = scale;\n    engine.updateCanvasSize();\n  }\n\n  window.addEventListener(\"resize\", handleResize);\n\n  ///////////////////////////////////////////////////////////\n\n  //Function to retrieve mouse position based on element size and the target size.\n  function getMousePosition(event, onElement, size) {\n    var client = onElement.getBoundingClientRect();\n\n    var relativeX = event.x - client.x;\n    var relativeY = event.y - client.y;\n\n    var scaleX = client.width / size[0];\n    var realX = relativeX * scaleX;\n\n    var scaleY = client.height / size[1];\n    var realY = relativeY * scaleY;\n\n    if (realX < 0) {\n      realX = 0;\n    }\n    if (realY < 0) {\n      realY = 0;\n    }\n\n    if (realX > size[0]) {\n      realX = size[0];\n    }\n    if (realY > size[1]) {\n      realY = size[1];\n    }\n\n    var pos = {\n      x: realX,\n      y: realY,\n    };\n    return pos;\n  }\n\n  ///////////////////////////////////////////////////////////\n\n  //Feed the user input into the engine.\n\n  function startInputHandling() {\n    document.addEventListener(\"mousemove\", (event) => {\n      var pos = getMousePosition(event, gameCanvas, [\n        gameCanvas.width,\n        gameCanvas.height,\n      ]);\n      engine.changeMousePosition(pos.x, pos.y);\n    });\n\n    gameCanvas.addEventListener(\"mousedown\", (event) => {\n      engine.changeMouseDown(true);\n    });\n\n    document.addEventListener(\"mouseup\", (event) => {\n      engine.changeMouseDown(false);\n    });\n\n    document.addEventListener(\"keydown\", (event) => {\n      if (document.activeElement == document.body) {\n        engine.changeKeyPressed(event.key, true);\n        event.preventDefault();\n      }\n    });\n\n    document.addEventListener(\"keyup\", (event) => {\n      engine.changeKeyPressed(event.key, false);\n    });\n  }\n\n  ///////////////////////////////////////////////////////////\n\n  //Start game loop handler\n\n  function startGame() {\n    handleResize();\n    startInputHandling();\n    engine.startGame();\n\n    loadingScreen.hidden = true;\n    clickToStart.hidden = true;\n\n    engine.once(engine.FRAME_RENDERED, () => {\n      //This waits for the next frame so that\n      // it doesn't show the stopped frame of the game briefly.\n      gameContent.hidden = false;\n    });\n  }\n\n  ///////////////////////////////////////////////////////////\n\n  //Finally start preloading the game.\n  Game.loadGame();\n})();\n");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("(function () {\n  ///////////////////////////////////////////////////////////\n\n  //Check that we have everything before running\n  if (!window.Game || !window.GGM3Engine) {\n    window.alert(\n      \"Couldn't find either GGM3Engine or the Game object,\" +\n        \"you may have to include the scripts.\",\n    );\n    return;\n  }\n\n  ///////////////////////////////////////////////////////////\n\n  const QuickStart = false;\n\n  ///////////////////////////////////////////////////////////\n\n  //Error handling in case the game is bad quality or something broken\n\n  window.addEventListener(\n    \"error\",\n    (event) => {\n      window.alert(event.message);\n    },\n    false,\n  );\n\n  window.addEventListener(\"unhandledrejection\", (event) => {\n    window.alert(event.reason);\n  });\n\n  ///////////////////////////////////////////////////////////\n\n  //Find elements\n\n  var Game = window.Game;\n  var GGM3Engine = window.GGM3Engine;\n\n  var loadingScreen = document.getElementById(\"loadingscreen\");\n  var loadingBarInner = document.getElementById(\"loadingbar-inner\");\n  var loadingBarInnerText = document.getElementById(\"loadingbar-innertext\");\n  var gameContent = document.getElementById(\"gameContent\");\n  var gameCanvas = document.getElementById(\"gameCanvas\");\n  var clickToStart = document.getElementById(\"clicktostart\");\n  var clickToStartButton = document.getElementById(\"clicktostart-button\");\n\n  ///////////////////////////////////////////////////////////\n\n  //Make sure the elements are proper.\n  loadingScreen.hidden = false;\n  gameContent.hidden = true;\n  clickToStart.hidden = true;\n\n  ///////////////////////////////////////////////////////////\n\n  var engine = new GGM3Engine(gameCanvas);\n  Game.attachEngine(engine);\n\n  ///////////////////////////////////////////////////////////\n\n  function setProgress(current, max) {\n    var percent = (current / max) * 100;\n\n    loadingBarInner.style.width = Math.round(percent).toFixed(5) + \"%\";\n    loadingBarInnerText.textContent = `Loading... ${percent.toFixed(2)}%`;\n  }\n\n  setProgress(0, 100);\n  Game.addEventListener(\"progress\", setProgress);\n\n  ///////////////////////////////////////////////////////////\n\n  Game.addEventListener(\"error\", (err) => {\n    loadingBarInnerText.setAttribute(\"error\", \"\");\n    loadingBarInnerText.textContent =\n      \"Error! Check browser developer tools for more info.\";\n  });\n\n  ///////////////////////////////////////////////////////////\n\n  Game.addEventListener(\"loaded\", () => {\n    if (QuickStart) {\n      startGame();\n    } else {\n      loadingScreen.hidden = true;\n      gameContent.hidden = true;\n\n      clickToStart.hidden = false;\n      var launched = false;\n      clickToStartButton.addEventListener(\"click\", () => {\n        if (launched) return;\n        startGame();\n        launched = true;\n      });\n    }\n  });\n\n  ///////////////////////////////////////////////////////////\n\n  //Resize handling so that when the window resizes the game fits the entire screen.\n  function handleResize() {\n    var scale = window.innerHeight / engine.gameHeight;\n    var scaleHorizontal = window.innerWidth / engine.gameWidth;\n    if (scale > scaleHorizontal) {\n      scale = scaleHorizontal;\n    }\n    gameCanvas.style.width = scale * engine.gameWidth + \"px\";\n    gameCanvas.style.height = scale * engine.gameHeight + \"px\";\n    engine.screenScale = scale;\n  }\n\n  window.addEventListener(\"resize\", handleResize);\n\n  ///////////////////////////////////////////////////////////\n\n  //Function to retrieve mouse position based on element size and the target size.\n  function getMousePosition(event, onElement, size) {\n    var client = onElement.getBoundingClientRect();\n\n    var relativeX = event.x - client.x;\n    var relativeY = event.y - client.y;\n\n    var scaleX = client.width / size[0];\n    var realX = relativeX * scaleX;\n\n    var scaleY = client.height / size[1];\n    var realY = relativeY * scaleY;\n\n    if (realX < 0) {\n      realX = 0;\n    }\n    if (realY < 0) {\n      realY = 0;\n    }\n\n    if (realX > size[0]) {\n      realX = size[0];\n    }\n    if (realY > size[1]) {\n      realY = size[1];\n    }\n\n    var pos = {\n      x: realX,\n      y: realY,\n    };\n    return pos;\n  }\n\n  ///////////////////////////////////////////////////////////\n\n  //Feed the user input into the engine.\n\n  function startInputHandling() {\n    document.addEventListener(\"mousemove\", (event) => {\n      var pos = getMousePosition(event, gameCanvas, [\n        gameCanvas.width,\n        gameCanvas.height,\n      ]);\n      engine.changeMousePosition(pos.x, pos.y);\n    });\n\n    gameCanvas.addEventListener(\"mousedown\", (event) => {\n      engine.changeMouseDown(true);\n    });\n\n    document.addEventListener(\"mouseup\", (event) => {\n      engine.changeMouseDown(false);\n    });\n\n    document.addEventListener(\"keydown\", (event) => {\n      if (document.activeElement == document.body) {\n        engine.changeKeyPressed(event.key, true);\n        event.preventDefault();\n      }\n    });\n\n    document.addEventListener(\"keyup\", (event) => {\n      engine.changeKeyPressed(event.key, false);\n    });\n  }\n\n  ///////////////////////////////////////////////////////////\n\n  //Start game loop handler\n\n  function startGame() {\n    handleResize();\n    startInputHandling();\n    engine.startGame();\n\n    loadingScreen.hidden = true;\n    clickToStart.hidden = true;\n\n    engine.once(engine.FRAME_RENDERED, () => {\n      //This waits for the next frame so that\n      // it doesn't show the stopped frame of the game briefly.\n      gameContent.hidden = false;\n    });\n  }\n\n  ///////////////////////////////////////////////////////////\n\n  //Finally start preloading the game.\n  Game.loadGame();\n})();\n");
+
+/***/ }),
+
+/***/ 8126:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("sound_stopallsoundsinsprite", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    return `sprite.stopAllSounds();`;
+  },
+});
+
 
 /***/ }),
 
@@ -32258,7 +32618,7 @@ BlockCompiler.defineBlock("control_start_as_clone", {
   type: CBlockType.STARTER_HAT,
   func: function (utils) {
     var insideCode = utils.getHatContents("");
-    var fullInsideCode = CoreFunctions.putThreadStack(utils.block, insideCode);
+    var fullInsideCode = CoreFunctions.putThreadStack(utils, insideCode);
 
     var BLOCK_ID = JSON.stringify(utils.getID());
 
@@ -32371,16 +32731,6 @@ function calculateMatrix(sprite, dst) {
 }
 
 module.exports = calculateMatrix;
-
-
-/***/ }),
-
-/***/ 8215:
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
-
-__webpack_require__(4551);
-__webpack_require__(5587);
-__webpack_require__(4570);
 
 
 /***/ }),
@@ -32639,7 +32989,7 @@ function setWorkspaceVisibility(visible) {
     workspace.getToolbox().refreshSelection();
     setTimeout(function () {
       Blockly.svgResize(workspace);
-    }, 0);
+    }, 1);
   } else {
     workspace.setVisible(false);
   }
@@ -32706,7 +33056,7 @@ BlockCompiler.defineBlock("loader_deloadsound", {
   func: function (utils) {
     var SOUND = utils.getInput("SOUND", "");
 
-    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
     return `${ALIVE_CHECK}await sprite.blockDeloadSound(${SOUND});${ALIVE_CHECK}`;
   },
 });
@@ -33745,6 +34095,7 @@ document.body.append(gameViewportStyles);
 
 function updateGameViewportStyles() {
   gameViewportStyles.textContent = `:root { --game-viewport-width: ${engine.gameWidth}px; --game-viewport-height: ${engine.gameHeight}px; }`;
+  tabs.updateTabs();
 }
 
 function switchFullscreenMode() {
@@ -34196,8 +34547,10 @@ class CBlockUtil {
     }
 
     return {
+      variable,
       name: variable.name,
-      id: variable.getId(),
+      vID: variable.getId(),
+      id: this.instance.getVariableID(variable)
     };
   }
 
@@ -35048,7 +35401,7 @@ BlockCompiler.defineBlock("control_forever", {
   type: CBlockType.COMMAND,
   func: function (utils) {
     var SUBSTACK = utils.getInput("SUBSTACK", "");
-    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
 
     var code = "";
     code += "while (true) {"; //Loops infinitely.
@@ -35060,7 +35413,7 @@ BlockCompiler.defineBlock("control_forever", {
     // some people may use this as an alternative while loop,
     // and use it for some tasks.
     // they exit the loop through a stopping block.
-    code += `if (thread.screenRefresh) {${CoreFunctions.threadWaitFrame(utils.block)}};`;
+    code += `if (thread.screenRefresh) {${CoreFunctions.threadWaitFrame(utils)}};`;
 
     code += ALIVE_CHECK;
     code += "}";
@@ -35121,7 +35474,7 @@ BlockCompiler.defineBlock("loader_loadsound", {
   func: function (utils) {
     var SOUND = utils.getInput("SOUND", "");
 
-    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
     return `${ALIVE_CHECK}await sprite.blockLoadSound(${SOUND});${ALIVE_CHECK}`;
   },
 });

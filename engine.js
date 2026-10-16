@@ -14541,7 +14541,8 @@ class EngineRenderer {
 
   updateCanvasSize() {
     var canvas = this.canvas;
-    var { gameWidth, gameHeight, screenScale } = this.engine;
+    var engine = this.engine;
+    var { gameWidth, gameHeight, screenScale } = engine;
     var cwidth = gameWidth * screenScale;
     var cheight = gameHeight * screenScale;
 
@@ -14550,7 +14551,7 @@ class EngineRenderer {
       canvas.width = cwidth;
       canvas.height = cheight;
       this.glCalculation();
-      this.engine.emit(this.RESOLUTION_UPDATED);
+      engine.emit(engine.RESOLUTION_UPDATED);
     }
   }
 
@@ -16427,8 +16428,9 @@ class GGM3Engine extends EventEmitter {
 
     var sprs = this.getAllTopSprites();
     var sprsReversed = sprs.reverse();
+    var _this = this;
     sprsReversed.forEach((spr) => {
-      engine.tickSprite(spr);
+      _this.tickSprite(spr);
     });
     this.tween.update(this.time.totalTime * 1000);
 
