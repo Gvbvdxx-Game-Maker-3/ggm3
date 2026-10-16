@@ -2161,9 +2161,6 @@ class Sprite {
 
     this.name = name || "Sprite";
 
-    this.blocklyXML = null; //This is used by the editor to save the blockly workspace for this sprite.
-    this.editorData = {}; //Used to hold information for the editor.
-
     this.scaleX = 1;
     this.scaleY = 1;
     this.size = 100;

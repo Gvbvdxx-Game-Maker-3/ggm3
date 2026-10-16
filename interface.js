@@ -3342,6 +3342,7 @@ __webpack_require__(9352);
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 var engine = __webpack_require__(9940);
+var EditorData = __webpack_require__(6565);
 var helpers = {
   //overriden by selectedsprite.js
   loadWorkspaceFromSprite: function (func) {},
@@ -3422,15 +3423,9 @@ function loadGlobalVariableBlocks(spr) {
                     if (sprite.id !== spr.id) {
                       if (sprite) {
                         tempWorkspace.clear();
-                        if (sprite.blocklyXML) {
-                          Blockly.Xml.domToWorkspace(
-                            sprite.blocklyXML,
-                            tempWorkspace,
-                          );
-                        }
+                        EditorData.loadSpriteEditorData(sprite, tempWorkspace);
                         deleteBlocksInWorkspace(tempWorkspace);
-                        sprite.blocklyXML =
-                          Blockly.Xml.workspaceToDom(tempWorkspace);
+                        EditorData.saveSpriteEditorData(sprite, tempWorkspace);
                       }
                     }
                   }
@@ -3617,15 +3612,9 @@ function loadPropertyVariableBlocks(spr) {
                     if (sprite.id !== spr.id) {
                       if (sprite) {
                         tempWorkspace.clear();
-                        if (sprite.blocklyXML) {
-                          Blockly.Xml.domToWorkspace(
-                            sprite.blocklyXML,
-                            tempWorkspace,
-                          );
-                        }
+                        EditorData.loadSpriteEditorData(sprite, tempWorkspace);
                         deleteBlocksInWorkspace(tempWorkspace);
-                        sprite.blocklyXML =
-                          Blockly.Xml.workspaceToDom(tempWorkspace);
+                        EditorData.saveSpriteEditorData(sprite, tempWorkspace);
                       }
                     }
                   }
@@ -6595,9 +6584,6 @@ class Sprite {
 
     this.name = name || "Sprite";
 
-    this.blocklyXML = null; //This is used by the editor to save the blockly workspace for this sprite.
-    this.editorData = {}; //Used to hold information for the editor.
-
     this.scaleX = 1;
     this.scaleY = 1;
     this.size = 100;
@@ -7826,9 +7812,7 @@ function init(state, deps) {
       sounds: false,
     });
 
-    if (spr.blocklyXML) {
-      Blockly.Xml.domToWorkspace(spr.blocklyXML, tempWorkspace);
-    }
+    deps.EditorData.loadSpriteEditorData(spr, tempWorkspace);
 
     var compiledBlocks = deps.compilerInstance.compileWorkspace(tempWorkspace);
     //console.log(compiledBlocks);
@@ -7857,9 +7841,7 @@ function init(state, deps) {
       sounds: false,
     });
 
-    if (spr.blocklyXML) {
-      Blockly.Xml.domToWorkspace(spr.blocklyXML, tempWorkspace);
-    }
+    deps.EditorData.loadSpriteEditorData(spr, tempWorkspace);
 
     var compiledBlocks = compilerInstance.compileWorkspace(tempWorkspace);
     for (var compiledBlock of compiledBlocks) {
@@ -7892,9 +7874,7 @@ function init(state, deps) {
     for (var spr of deps.engine.sprites) {
       tempWorkspace.clear();
 
-      if (spr.blocklyXML) {
-        Blockly.Xml.domToWorkspace(spr.blocklyXML, tempWorkspace);
-      }
+      deps.EditorData.loadSpriteEditorData(spr, tempWorkspace);
 
       var compiledBlocks = deps.compilerInstance.compileWorkspace(tempWorkspace);
       //console.log(compiledBlocks);
@@ -7926,9 +7906,7 @@ function init(state, deps) {
       sounds: false,
     });
 
-    if (spr.blocklyXML) {
-      Blockly.Xml.domToWorkspace(spr.blocklyXML, tempWorkspace);
-    }
+    deps.EditorData.loadSpriteEditorData(spr, tempWorkspace);
 
     return tempWorkspace;
   }
@@ -8064,6 +8042,7 @@ function loadProjectFile(file) {
   elements.setInnerJSON(loadingScreenContent, []);
   var reader = new FileReader();
   reader.onload = async function () {
+    var err = null;
     try {
       var monitor = new projectSaver.ProgressMonitor();
 
@@ -8083,10 +8062,14 @@ function loadProjectFile(file) {
           e.message +
           "\nA default project has been loaded instead.",
       );
+      err = e;
     }
     selectedSprite.setCurrentSprite(0, true, true);
     library.projectLoadHandler();
     loadingScreenContainer.hidden = true;
+    if (err) {
+      throw err;
+    }
   };
   reader.readAsArrayBuffer(file);
 }
@@ -8844,7 +8827,7 @@ var uiModule = __webpack_require__(5651);
 var compileModule = __webpack_require__(2456);
 var workspaceModule = __webpack_require__(6280);
 
-var wjson = __webpack_require__(8476);
+var EditorData = __webpack_require__(6565);
 var engine = __webpack_require__(9940);
 var blocks = __webpack_require__(9436);
 var costumeViewer = __webpack_require__(5604);
@@ -8873,6 +8856,7 @@ var deps = {
     useExportCompile: false,
     useBlockNumberIDs: false,
   }),
+  EditorData,
   valueReport,
   makeSortable,
   loadBlockMenus,
@@ -8903,12 +8887,7 @@ function setCurrentSprite(index, forced, dontSave) {
     if (workspace) {
       workspace.saveScroll();
       if (!dontSave) {
-        try {
-          window.alert(JSON.stringify(wjson.workspaceToJSON(blocks.getCurrentWorkspace())));
-          state.currentSelectedSprite.blocklyXML = Blockly.Xml.workspaceToDom(
-            blocks.getCurrentWorkspace(),
-          );
-        } catch (e) {}
+        EditorData.saveSpriteEditorData(state.currentSelectedSprite, blocks.getCurrentWorkspace());
       }
     }
   }
@@ -10477,6 +10456,53 @@ class Thread {
 
 module.exports = Thread;
 
+
+/***/ }),
+
+/***/ 3607:
+/***/ ((module) => {
+
+
+class EditorUtils {
+
+    static findBlocks(workspaceData, targetBlockTypes) {
+        var found = [];
+        function loop(block) {
+            var match = false;
+            for (var type of targetBlockTypes) {
+                if (block.type == type) {
+                    match = true;
+                }
+            }
+            if (match) {
+                found.push(block);
+            }
+            if (block.inputs) {
+                for (var input of block.inputs) {
+                    if (input.block) {
+                        loop(input.block);
+                    }
+                }
+            }
+            if (block.next) {
+                loop(block.next);
+            }
+        }
+        for (var block of workspaceData.blocks) {
+            found.push(loop(block));
+        }
+        return found;
+    }
+
+    static getField(name, blockData) {
+        for (var field of (blockData.fields || [])) {
+            
+        }
+        return null;
+    }
+}
+
+module.exports = EditorUtils;
 
 /***/ }),
 
@@ -24798,6 +24824,46 @@ module.exports = [
 
 /***/ }),
 
+/***/ 5409:
+/***/ ((module) => {
+
+
+function variablesToJSON(variableList) {
+    var array = [];
+    for (var variable of variableList) {
+        var json = {};
+        json.name = variable.name;
+        json.id = variable.getId();
+        json.type = variable.type;
+        json.isLocal = variable.isLocal;
+        json.isCloud = variable.isCloud;
+
+        array.push(json);
+    }
+
+    return array;
+}
+
+function JSONToVariables(jsonArray, workspace) {
+    for (var json of jsonArray) {
+        var name = json.name;
+        var id = json.id;
+        var type = json.type;
+        var isLocal = json.isLocal;
+        var isCloud = json.isCloud;
+        
+
+        workspace.createVariable(name, type, id, isLocal, isCloud);
+    }
+}
+
+module.exports = {
+    variablesToJSON,
+    JSONToVariables
+};
+
+/***/ }),
+
 /***/ 5411:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -26188,9 +26254,7 @@ function init(state, deps) {
                     sounds: false,
                   });
 
-                  if (spr.blocklyXML) {
-                    Blockly.Xml.domToWorkspace(spr.blocklyXML, tempWorkspace);
-                  }
+                  deps.EditorData.loadSpriteEditorData(spr, tempWorkspace);
 
                   var xmlBlock = Blockly.Xml.blockToDom(root);
                   Blockly.Xml.domToBlock(xmlBlock, tempWorkspace);
@@ -26231,7 +26295,7 @@ function init(state, deps) {
                     );
                   }
 
-                  spr.blocklyXML = Blockly.Xml.workspaceToDom(tempWorkspace);
+                  deps.EditorData.saveSpriteEditorData(spr, tempWorkspace);
 
                   tempWorkspace.dispose();
                   div.remove();
@@ -26274,13 +26338,13 @@ function init(state, deps) {
                 {
                   event: "click",
                   func: function (elm) {
-                    try {
+                    //try {
                       if (typeof deps.onSetCurrentSprite === "function") {
                         deps.onSetCurrentSprite(i);
                       }
-                    } catch (e) {
-                      window.alert("Error selecting sprite: " + e.message);
-                    }
+                    //} catch (e) {
+                    //  window.alert("Error selecting sprite: " + e.message);
+                    //}
                   },
                 },
               ],
@@ -26332,13 +26396,7 @@ function init(state, deps) {
                     deps.workspace.saveCurrentSpriteCode();
                     var newSprite = deps.engine.duplicateSprite(spr);
                     if (spr && spr.blocklyXML) {
-                      try {
-                        newSprite.blocklyXML = Blockly.Xml.textToDom(
-                          Blockly.Xml.domToText(spr.blocklyXML),
-                        );
-                      } catch (e) {
-                        console.warn("Failed to copy blockly XML:", e);
-                      }
+                      deps.EditorData.copySpriteEditorData(spr, newSprite);
                     }
                     deps.compile.compileSpriteXML(newSprite);
                     deps.engine.makeUniqueSpriteNames();
@@ -27329,9 +27387,9 @@ function init(state, deps) {
     Blockly.Events.disable();
     deps.blocks.createFreshWorkspace(spr);
     workspace = deps.blocks.getCurrentWorkspace();
-    if (spr.blocklyXML) {
-      Blockly.Xml.domToWorkspace(spr.blocklyXML, workspace);
-    }
+
+    deps.EditorData.loadSpriteEditorData(spr, workspace);
+    
     var currentBlocks = {};
     var currentBlockParentIDs = {};
 
@@ -27933,6 +27991,55 @@ BlockCompiler.defineBlock("operator_not", {
   },
 });
 
+
+/***/ }),
+
+/***/ 6565:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var wjson = __webpack_require__(8476);
+
+function loadSpriteEditorData(sprite, workspace) {
+    if (!sprite.editorData) { //No data to load.
+        return;
+    }
+    var data = sprite.editorData;
+    if (data.xml) {
+        //Legacy implementation.
+        var dom = Blockly.Xml.textToDom(data.xml);
+        Blockly.Xml.domToWorkspace(dom, workspace);
+    } else if (data.blocks) {
+        //Use the modern JSON implementation.
+        wjson.JSONToWorkspace(data.blocks, workspace);
+    }
+}
+
+function saveSpriteEditorData(sprite, workspace) {
+    if (!sprite.editorData) {
+        sprite.editorData = {};
+    }
+    var data = sprite.editorData;
+    
+    if (data.xml) {
+        //Remove the XML property since we're converting
+        // it to the modern format.
+        data.xml = "";
+        delete data.xml;
+    }
+
+    var workspaceJson = wjson.workspaceToJSON(workspace);
+    data.blocks = workspaceJson;
+}
+
+function copySpriteEditorData(sourceSprite, targetSprite) {
+    targetSprite.editorData = JSON.parse(JSON.stringify(sourceSprite.editorData || {}));
+}
+
+module.exports = {
+    loadSpriteEditorData,
+    saveSpriteEditorData,
+    copySpriteEditorData
+};
 
 /***/ }),
 
@@ -30242,6 +30349,7 @@ var {
   getSaveableVariables,
   getSaveableVariablesGlobal,
 } = __webpack_require__(6185);
+var EditorUtils = __webpack_require__(3607);
 var engine = __webpack_require__(9940);
 
 //Engine property names
@@ -30305,9 +30413,6 @@ function fromSpriteJSON(sprite, spriteJson, isImport) {
     skewX: spriteJson.skewX || 0,
     skewY: spriteJson.skewY || 0,
     size: spriteJson.size,
-    blocklyXML: spriteJson.blocklyXML
-      ? Blockly.Xml.textToDom(spriteJson.blocklyXML)
-      : null,
     name: spriteJson.name,
     costumeIndex: spriteJson.costumeIndex,
     zIndex: spriteJson.zIndex,
@@ -30315,6 +30420,19 @@ function fromSpriteJSON(sprite, spriteJson, isImport) {
     hidden: spriteJson.hidden,
     spriteProperties: spriteJson.properties || {},
   });
+
+  
+  if (spriteJson.blocklyXML) {
+    //We're dealing with legacy block information, the editor will automatically convert this.
+    sprite.editorData = {
+      xml: spriteJson.blocklyXML
+    };
+  } else if (spriteJson.editorData) {
+    //Modern editor JSON format.
+    //This is automatically safe for JSON.stringify(),
+    // so we can just copy the values over.
+    sprite.editorData = spriteJson.editorData;
+  }
 
   if (!isImport) {
     return; //Stop here if not importing a sprite from a sprite file.
@@ -30334,6 +30452,19 @@ function fromSpriteJSON(sprite, spriteJson, isImport) {
   }
 }
 
+function _listSpriteUsedBroadcasts(sprite) {
+  if (!sprite.editorData) {
+    return engine.broadcastNames;
+  }
+  if (sprite.editorData.xml) {
+    return engine.broadcastNames;
+  }
+
+  var blocks = EditorUtils.findBlocks(sprite.editorData.blocks, [
+    "event_ggm3_broadcast_menu"
+  ]);
+}
+
 function toSpriteJSON(sprite, isExport) {
   var spriteJson = {
     x: sprite.x,
@@ -30344,9 +30475,7 @@ function toSpriteJSON(sprite, isExport) {
     skewX: sprite.skewX,
     skewY: sprite.skewY,
     size: sprite.size,
-    blocklyXML: sprite.blocklyXML
-      ? Blockly.Xml.domToText(sprite.blocklyXML)
-      : null,
+    editorData: sprite.editorData,
     name: sprite.name,
     zIndex: sprite.zIndex,
     costumeIndex: sprite.costumeIndex,
@@ -30360,6 +30489,9 @@ function toSpriteJSON(sprite, isExport) {
   }
 
   //Return additional properties for importing from sprites.
+  
+  //Broadcast names will now only be added if the sprite actually uses them.
+  
   spriteJson.broadcastNames = engine.broadcastNames;
 
   return spriteJson; //return with additional properties.
@@ -32520,11 +32652,53 @@ function blockCommentToJSON(block) {
     }
 }
 
+function JSONToCommentSVG(jsonComment, workspace) {
+    Blockly.Events.disable();
+
+    var comment = new Blockly.WorkspaceCommentSvg(workspace,
+        jsonComment.text, jsonComment.height || 100, jsonComment.width || 100, !!jsonComment.minimized, jsonComment.id);
+
+    if (workspace.rendered) {
+        comment.initSvg();
+        comment.render(false);
+    }
+
+    if (!isNaN(jsonComment.x) && !isNaN(jsonComment.y)) {
+        if (workspace.RTL) {
+            var wsWidth = opt_wsWidth || workspace.getWidth();
+            comment.moveBy(wsWidth - jsonComment.x, jsonComment.y);
+        } else {
+            comment.moveBy(jsonComment.x, jsonComment.y);
+        }
+    }
+
+    Blockly.Events.enable();
+    Blockly.WorkspaceComment.fireCreateEvent(comment);
+    return comment;
+}
+
+function JSONToComment(jsonComment, workspace) {
+    if (workspace.rendered) {
+        return JSONToCommentSVG(jsonComment, workspace);
+    }
+
+    var comment = new Blockly.WorkspaceComment(
+      workspace, jsonComment.text, jsonComment.height || 100, jsonComment.width || 100, !!jsonComment.minimized, jsonComment.id);
+
+    if (!isNaN(jsonComment.x) && !isNaN(jsonComment.y)) {
+        comment.moveBy(jsonComment.x, jsonComment.y);
+    }
+
+    Blockly.WorkspaceComment.fireCreateEvent(comment);
+    return comment;
+}
+
 module.exports = {
     commentsToJSON,
     commentToJSON,
     commentToJSONWithPosition,
-    blockCommentToJSON
+    blockCommentToJSON,
+    JSONToComment
 }
 
 /***/ }),
@@ -33256,15 +33430,17 @@ module.exports = PlaceholderExportOption;
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 
-var {commentsToJSON} = __webpack_require__(7888);
+var {commentsToJSON, JSONToComment} = __webpack_require__(7888);
 var {blocksToJSON, JSONToBlock} = __webpack_require__(9412);
+var {variablesToJSON, JSONToVariables} = __webpack_require__(5409);
 
 function workspaceToJSON(workspace) {
     var commentsJSON = commentsToJSON(workspace);
     var blocks = blocksToJSON(workspace);
     return {
         comments: commentsJSON,
-        blocks: blocks
+        blocks: blocks,
+        variables: variablesToJSON(workspace.getAllVariables())
     };
 }
 
@@ -33274,7 +33450,6 @@ function JSONToWorkspace(json, workspace) {
         width = workspace.getWidth();
     }
     var newBlockIds = [];
-    var childCount = xml.childNodes.length;
     var existingGroup = Blockly.Events.getGroup();
     if (!existingGroup) {
         Blockly.Events.setGroup(true);
@@ -33282,13 +33457,28 @@ function JSONToWorkspace(json, workspace) {
     if (workspace.setResizesEnabled) {
         workspace.setResizesEnabled(false);
     }
-    var variablesFirst = true;
+
+
+    JSONToVariables(json.variables, workspace);
 
     for (var blockJSON of json.blocks) {
         var block = JSONToBlock(blockJSON, workspace);
         newBlockIds.push(block.id);
         var blockX = +blockJSON.x;
         var blockY = +blockJSON.y;
+
+        if (!isNaN(blockX) && !isNaN(blockY)) {
+            block.moveBy(workspace.RTL ? width - blockX : blockX, blockY);
+            if (block.comment && typeof block.comment === 'object') {
+                var commentXY = block.comment.getXY();
+                var commentWidth = block.comment.getBubbleSize().width;
+                block.comment.moveTo(block.workspace.RTL ? width - commentXY.x - commentWidth : commentXY.x, commentXY.y);
+            }
+        }
+    }
+
+    for (var commentJson of json.comments) {
+        JSONToComment(commentJson, workspace);
     }
 
     if (workspace.setResizesEnabled) {
@@ -33560,7 +33750,30 @@ function JSONToField(block, fieldJson) {
 
     var workspace = block.workspace;
     var text = fieldJson.value;
+    if (field.referencesVariables()) {
+        if (!fieldJson.variable) {
+            return;
+        }
 
+        var variable = null;
+        var type = fieldJson.type;
+        var variableId = fieldJson.id;
+
+        if (!workspace.getPotentialVariableMap() && !workspace.isFlyout &&
+            workspace.getFlyout()) {
+            var flyoutWs = workspace.getFlyout().getWorkspace();
+            variable = Blockly.Variables.realizePotentialVar(text, type, flyoutWs, true);
+        }
+
+        if (!variable) {
+            variable = Blockly.Variables.getOrCreateVariablePackage(workspace, variableId, text, type);
+        }
+
+        field.setValue(variableId);
+
+    } else {
+        field.setValue(text);
+    }
 }
 
 module.exports = {
@@ -34808,8 +35021,7 @@ class CBlockUtil {
     return {
       variable,
       name: variable.name,
-      vID: variable.getId(),
-      id: this.instance.getVariableID(variable)
+      id: variable.getId(),
     };
   }
 
@@ -35042,8 +35254,18 @@ function blockToJSON(block) {
             } else if (input.type == Blockly.NEXT_STATEMENT) {
                 inputJSON.type = "statement";
             }
+            var shadow = input.connection.getShadowDom();
+            var shadowMutation = null;
+            if (shadow && (!childBlock || !childBlock.isShadow())) {
+                var shadowClone = Blockly.Xml.cloneShadow_(shadow);
+                
+                shadowMutation = mutationToJSON(shadowClone, true);
+            }
             if (childBlock) {
                 inputJSON.block = blockToJSON(childBlock);
+                if (shadowMutation) {
+                    inputJSON.shadowDom = shadowMutation;
+                }
             }
             json.inputs.push(inputJSON);
         }
@@ -35058,6 +35280,9 @@ function blockToJSON(block) {
     if (block.disabled) {
         json.disabled = true;
     }
+    json.deletable = true;
+    json.movable = true;
+    json.editable = true;
     if (!block.isDeletable() && !block.isShadow()) {
         json.deletable = false;
     }
@@ -35106,20 +35331,20 @@ function JSONToBlockHeadless(jsonBlock, workspace) {
         }
     }
 
-    if (json.comment) {
-        var commentId = json.comment.id;
-        var bubbleX = +json.comment.x;
-        var bubbleY = +json.comment.y;
-        var minimized = !!json.comment.minimized;
+    if (jsonBlock.comment) {
+        var commentId = jsonBlock.comment.id;
+        var bubbleX = +jsonBlock.comment.x;
+        var bubbleY = +jsonBlock.comment.y;
+        var minimized = !!jsonBlock.comment.minimized;
         block.setCommentText(
-            json.comment.text,
+            jsonBlock.comment.text,
             commentId,
             bubbleX,
             bubbleY,
             minimized
         );
 
-        var visible = json.comment.pinned;
+        var visible = jsonBlock.comment.pinned;
         if (visible && !block.isInFlyout) {
             setTimeout(function() {
                 if (block.comment && block.comment.setVisible) {
@@ -35127,8 +35352,8 @@ function JSONToBlockHeadless(jsonBlock, workspace) {
                 }
             }, 1);
         }
-        var bubbleW = +json.comment.width;
-        var bubbleH = +json.comment.height;
+        var bubbleW = +jsonBlock.comment.width;
+        var bubbleH = +jsonBlock.comment.height;
         if (
             !isNaN(bubbleW) &&
             !isNaN(bubbleH) &&
@@ -35143,11 +35368,15 @@ function JSONToBlockHeadless(jsonBlock, workspace) {
         }
     }
 
-    if (json.data) {
-        block.data = json.data;
+    if (jsonBlock.data) {
+        block.data = jsonBlock.data;
     }
 
-    
+    for (var fieldJson of jsonBlock.fields) {
+        JSONToField(block, fieldJson);
+    }
+
+    if (jsonInput)
 
     for (var jsonInput of jsonBlock.inputs) {
         var input = block.getInput(jsonInput.name);
@@ -35161,10 +35390,72 @@ function JSONToBlockHeadless(jsonBlock, workspace) {
             }
         }
     }
+
+    if (jsonBlock.next) {
+        var blockChild = JSONToBlockHeadless(jsonBlock.next, workspace);
+        block.nextConnection.connect(blockChild.previousConnection);
+    }
+
+    block.setInputsInline(!!jsonBlock.inline);
+    block.setDisabled(!!jsonBlock.disabled);
+    block.setDeletable(!!jsonBlock.deletable);
+    block.setMovable(!!jsonBlock.movable);
+    block.setEditable(!!jsonBlock.editable);
+    block.setCollapsed(!!jsonBlock.collapsed);
+    if (jsonBlock.shadow) {
+        block.setShadow(true);
+    }
+
+    return block;
 }
 
 function JSONToBlock(jsonBlock, workspace) {
+    Blockly.Events.disable();
+    var variablesBeforeCreation = workspace.getAllVariables();
 
+    var topBlock = JSONToBlockHeadless(jsonBlock, workspace);
+    
+    var blocks = topBlock.getDescendants(false);
+
+    if (workspace.rendered) {
+        topBlock.setConnectionsHidden(true);
+        for (var i = blocks.length - 1; i >= 0; i--) {
+            blocks[i].initSvg();
+        }
+        for (var i = blocks.length - 1; i >= 0; i--) {
+            blocks[i].render(false);
+        }
+
+        if (!workspace.isFlyout) {
+            setTimeout(function() {
+                if (topBlock.workspace) {  // Check that the block hasn't been deleted.
+                    topBlock.setConnectionsHidden(false);
+                }
+            }, 1);
+        }
+
+        topBlock.updateDisabled();
+
+        workspace.resizeContents();
+    } else {
+        for (var i = blocks.length - 1; i >= 0; i--) {
+            blocks[i].initModel();
+        }
+    }
+
+    Blockly.Events.enable();
+
+    var newVariables = Blockly.Variables.getAddedVariables(workspace,
+        variablesBeforeCreation);
+    
+    for (var i = 0; i < newVariables.length; i++) {
+        var thisVariable = newVariables[i];
+        Blockly.Events.fire(new Blockly.Events.VarCreate(thisVariable));
+    }
+
+    Blockly.Events.fire(new Blockly.Events.BlockCreate(topBlock));
+
+    return topBlock;
 }
 
 module.exports = {
