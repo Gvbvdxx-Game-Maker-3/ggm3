@@ -4,6 +4,7 @@ var EventEmitter = require("eventemitter3");
 var FromTo = require("./from-to.js");
 var DataURL = require("./dataurl.js");
 var { getSpriteFunctionsCode } = require("./spritestuff.js");
+var compiler = require("../../compilerv2");
 
 const ENGINE_FILE_URL = "engine.js?v=" + Date.now();
 const ASSET_PATH = "assets/";
@@ -102,6 +103,11 @@ class ExportMainGenerator extends EventEmitter {
     this._libraryJS = [];
     this.useDataURL = true;
     this.uniqueIDCounter = 0;
+    this.compilerInstance = compiler.newInstance({
+      useExportCompile: true,
+      useBlockNumIDs: true,
+      useDummyDef: false,
+    });
     this._spriteAssets = [];
   }
 
@@ -268,11 +274,14 @@ class ExportMainGenerator extends EventEmitter {
 
     baseObject.costumes = costumeList;
     baseObject.sounds = soundList;
-
-    var functionsCode = getSpriteFunctionsCode(sprite);
+    
+    var functionsCode = getSpriteFunctionsCode(sprite, this.compilerInstance);
     var exportableFunctions = {};
     for (var id of Object.keys(functionsCode)) {
-      exportableFunctions[id] = sprite.getFunctionCode(functionsCode[id]);
+      var functionInside = functionsCode[id];
+      var spriteFunction = sprite.getFunctionCode(functionInside);
+
+      exportableFunctions[id] = spriteFunction;
     }
 
     var middleCodeStuff = [];

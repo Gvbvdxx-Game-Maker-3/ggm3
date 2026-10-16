@@ -8,7 +8,7 @@ BlockCompiler.defineBlock("control_repeat", {
     var SUBSTACK = utils.getInput("SUBSTACK", "");
     var TIMES = utils.getInput("TIMES", "0");
 
-    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
 
     var code = "";
     code += ALIVE_CHECK;

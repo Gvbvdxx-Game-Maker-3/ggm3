@@ -8,7 +8,7 @@ BlockCompiler.defineBlock("control_if", {
     var SUBSTACK = utils.getInput("SUBSTACK", "");
     var CONDITION = utils.getInput("CONDITION", "false");
 
-    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
 
     var code = "";
     code += `if (${CONDITION}) {`;

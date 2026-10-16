@@ -1,7 +1,6 @@
-//Register the blocks here.
-
 require("./common/");
 require("./events/");
+require("./broadcasting/");
 require("./motion/");
 require("./control/");
 require("./sensing/");
@@ -11,6 +10,9 @@ require("./looks/");
 require("./loader/");
 require("./custom/");
 require("./json/");
-require("./globaldata/");
-
+require("./global_data/");
+require("./sound/");
 require("./engine/");
+//require("./property/");
+//require("./sprite-master/");
+//require("./tweening/");

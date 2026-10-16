@@ -2,12 +2,9 @@ var BlockCompiler = require("../../compiler/compiler.js");
 var CBlockType = require("../../compiler/types.js");
 var CoreFunctions = require("../../compiler/corefunc.js");
 
-BlockCompiler.defineBlock("globaldata_set", {
+BlockCompiler.defineBlock("sound_stopallsounds", {
   type: CBlockType.COMMAND,
   func: function (utils) {
-    var VARIABLE = utils.getField("VARIABLE", "");
-    var VALUE = utils.getInput("VALUE", "null");
-
-    return `engine.globalVariables[${JSON.stringify(VARIABLE)}] = ${VALUE};`;
+    return `engine.stopAllSounds();`;
   },
 });

@@ -108,7 +108,6 @@
     gameCanvas.style.width = scale * engine.gameWidth + "px";
     gameCanvas.style.height = scale * engine.gameHeight + "px";
     engine.screenScale = scale;
-    engine.updateCanvasSize();
   }
 
   window.addEventListener("resize", handleResize);

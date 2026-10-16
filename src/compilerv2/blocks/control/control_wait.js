@@ -8,7 +8,7 @@ BlockCompiler.defineBlock("control_wait", {
     var DURATION = utils.getInput("DURATION", "0");
     var DURATION_NUM = CoreFunctions.castToNumber(DURATION, true);
 
-    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
 
     return `${ALIVE_CHECK}await thread.waitSeconds(${DURATION_NUM});${ALIVE_CHECK}`;
   },

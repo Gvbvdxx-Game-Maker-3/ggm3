@@ -28,7 +28,6 @@ function fromEngineJSON(mainJSON) {
     gameHeight: mainJSON.gameHeight || engine.DEFAULT_HEIGHT,
   });
   _fromEnginePropertyNames(mainJSON.spriteProperties);
-  engine.updateCanvasSize();
 }
 
 function toEngineJSON() {

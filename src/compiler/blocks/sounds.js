@@ -81,7 +81,7 @@ JavascriptTranslation["sound_ggm3effect_get"] = function (
 ) {
   var SOUND_MENU = utils.getInput(jsonblock, "SOUND_MENU", options, "0");
   var EFFECT = utils.getField(jsonblock, "EFFECT", options);
-  return `sprite.getSoundEffect(${SOUND_MENU}, ${JSON.stringify(EFFECT)});`;
+  return `sprite.getSoundEffect(${SOUND_MENU}, ${JSON.stringify(EFFECT)})`;
 };
 
 module.exports = JavascriptTranslation;

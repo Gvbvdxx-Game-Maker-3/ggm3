@@ -17,6 +17,7 @@ document.body.append(gameViewportStyles);
 
 function updateGameViewportStyles() {
   gameViewportStyles.textContent = `:root { --game-viewport-width: ${engine.gameWidth}px; --game-viewport-height: ${engine.gameHeight}px; }`;
+  tabs.updateTabs();
 }
 
 function switchFullscreenMode() {

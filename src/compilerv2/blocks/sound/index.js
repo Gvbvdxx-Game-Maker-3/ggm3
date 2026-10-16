@@ -1,0 +1,9 @@
+require("./sound_sounds_menu.js");
+require("./sound_play.js");
+require("./sound_playuntildone.js");
+require("./sound_stopsound.js");
+require("./sound_stopallsounds.js");
+require("./sound_stopallsoundsinsprite.js");
+require("./sound_ggm3effect_set.js");
+require("./sound_ggm3effect_change.js");
+require("./sound_ggm3effect_get.js");

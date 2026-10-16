@@ -24,12 +24,15 @@ BlockCompiler.defineBlock("procedures_call", {
 
     var code = "";
     var valuesCode = "{" + valuesCodeContent + "}";
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
 
+    code += ALIVE_CHECK;
     code += `await sprite.callCustom(`;
     code += `${JSON.stringify(procCode)}, `;
     code += `${valuesCode}, `;
     code += `thread`;
     code += `);`;
+    code += ALIVE_CHECK;
 
     return code;
   },

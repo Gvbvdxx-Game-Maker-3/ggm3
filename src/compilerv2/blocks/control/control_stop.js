@@ -6,7 +6,7 @@ BlockCompiler.defineBlock("control_stop", {
   type: CBlockType.COMMAND,
   func: function (utils) {
     var STOP_OPTION = utils.getField("STOP_OPTION", "");
-    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
 
     if (STOP_OPTION == "this script") {
       return `thread.stop();${ALIVE_CHECK}`;

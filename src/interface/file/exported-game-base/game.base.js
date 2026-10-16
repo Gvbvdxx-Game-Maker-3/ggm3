@@ -69,7 +69,7 @@
   var progressMonitor = {};
 
   function getEngine() {
-    return Game.engine;
+    return engine;
   }
 
   function attachEngine(eng) {
@@ -111,7 +111,6 @@
       gameHeight: mainJSON.gameHeight || engine.DEFAULT_HEIGHT,
     });
     _fromEnginePropertyNames(mainJSON.spriteProperties);
-    engine.updateCanvasSize();
   }
 
   function fromLibraryJSON(library, libraryJson) {

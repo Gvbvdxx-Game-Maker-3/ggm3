@@ -648,8 +648,9 @@ class GGM3Engine extends EventEmitter {
 
     var sprs = this.getAllTopSprites();
     var sprsReversed = sprs.reverse();
+    var _this = this;
     sprsReversed.forEach((spr) => {
-      engine.tickSprite(spr);
+      _this.tickSprite(spr);
     });
     this.tween.update(this.time.totalTime * 1000);
 

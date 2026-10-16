@@ -38,7 +38,8 @@ class EngineRenderer {
 
   updateCanvasSize() {
     var canvas = this.canvas;
-    var { gameWidth, gameHeight, screenScale } = this.engine;
+    var engine = this.engine;
+    var { gameWidth, gameHeight, screenScale } = engine;
     var cwidth = gameWidth * screenScale;
     var cheight = gameHeight * screenScale;
 
@@ -47,7 +48,7 @@ class EngineRenderer {
       canvas.width = cwidth;
       canvas.height = cheight;
       this.glCalculation();
-      this.engine.emit(this.RESOLUTION_UPDATED);
+      engine.emit(engine.RESOLUTION_UPDATED);
     }
   }
 

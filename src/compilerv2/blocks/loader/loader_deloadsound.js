@@ -7,7 +7,7 @@ BlockCompiler.defineBlock("loader_deloadsound", {
   func: function (utils) {
     var SOUND = utils.getInput("SOUND", "");
 
-    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
     return `${ALIVE_CHECK}await sprite.blockDeloadSound(${SOUND});${ALIVE_CHECK}`;
   },
 });

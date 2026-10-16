@@ -108,7 +108,6 @@ gameSettingOptions.start = function () {
 
   widthInput.addEventListener("change", () => {
     engine.gameWidth = +widthInput.value || 1;
-    engine.updateCanvasSize();
   });
 
   frameRateInput.addEventListener("change", () => {
@@ -117,7 +116,6 @@ gameSettingOptions.start = function () {
 
   heightInput.addEventListener("change", () => {
     engine.gameHeight = +heightInput.value || 1;
-    engine.updateCanvasSize();
   });
 
   function updateGameInfo() {

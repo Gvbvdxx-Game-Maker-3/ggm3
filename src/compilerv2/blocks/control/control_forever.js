@@ -6,7 +6,7 @@ BlockCompiler.defineBlock("control_forever", {
   type: CBlockType.COMMAND,
   func: function (utils) {
     var SUBSTACK = utils.getInput("SUBSTACK", "");
-    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
 
     var code = "";
     code += "while (true) {"; //Loops infinitely.
@@ -18,7 +18,7 @@ BlockCompiler.defineBlock("control_forever", {
     // some people may use this as an alternative while loop,
     // and use it for some tasks.
     // they exit the loop through a stopping block.
-    code += `if (thread.screenRefresh) {${CoreFunctions.threadWaitFrame(utils.block)}};`;
+    code += `if (thread.screenRefresh) {${CoreFunctions.threadWaitFrame(utils)}};`;
 
     code += ALIVE_CHECK;
     code += "}";

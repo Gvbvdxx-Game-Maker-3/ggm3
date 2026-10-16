@@ -8,14 +8,14 @@ BlockCompiler.defineBlock("control_repeat_until", {
     var SUBSTACK = utils.getInput("SUBSTACK", "");
     var CONDITION = utils.getInput("CONDITION", "false");
 
-    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
 
     var code = "";
     code += `while (!(${CONDITION})) {`;
     code += ALIVE_CHECK;
 
     code += SUBSTACK; //The inside code is the input.
-    code += `if (thread.screenRefresh) {${CoreFunctions.threadWaitFrame(utils.block)}};`;
+    code += `if (thread.screenRefresh) {${CoreFunctions.threadWaitFrame(utils)}};`;
 
     code += ALIVE_CHECK;
     code += "}";

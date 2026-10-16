@@ -9,8 +9,8 @@ function compileSprite(sprite) {
   compileSpriteXML(sprite);
 }
 
-function getSpriteFunctionsCode(sprite) {
-  return compileSpriteXMLToString(sprite);
+function getSpriteFunctionsCode(sprite, instance) {
+  return compileSpriteXMLToString(sprite, instance);
 }
 
 module.exports = {

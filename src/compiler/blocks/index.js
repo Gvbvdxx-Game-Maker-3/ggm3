@@ -11,7 +11,7 @@ var JavascriptTranslation = {
   ...require("./custom.js"), //done
   ...require("./json.js"), //done
   ...require("./global_data.js"), //done
-  ...require("./sounds.js"),
+  ...require("./sounds.js"), //done
   ...require("./engine.js"), //done
   ...require("./property.js"),
   ...require("./sprite-master.js"),

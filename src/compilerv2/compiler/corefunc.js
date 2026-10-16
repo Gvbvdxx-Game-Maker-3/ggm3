@@ -1,31 +1,31 @@
 //Function for starting a threads code, this should only be used internally, for blocks use putThreadStack instead.
-function startThreadStack(block) {
-  var id = JSON.stringify(block.id);
-  return `var thread = sprite.createThread(${id});try {${aliveCheck(block)}`;
+function startThreadStack(blockUtil) {
+  var id = JSON.stringify(blockUtil.getID());
+  return `var thread = sprite.createThread(${id});try {${aliveCheck(blockUtil)}`;
 }
 
 //Function for ending a threads code, this should only be used internally, for blocks use putThreadStack instead.
-function endThreadStack(block) {
+function endThreadStack(blockUtil) {
   return `thread.stop();}catch(e){thread.hadError = true;thread.output = e;thread.stop();return thread;}`;
 }
 
 //Stops the thread, use aliveCheck right after for best results in blocks.
-function stopThisThread(block) {
+function stopThisThread(blockUtil) {
   return `thread.stop();`;
 }
 
 //Tells the thread to wait for the next frame
-function threadWaitFrame(block) {
+function threadWaitFrame(blockUtil) {
   return `await thread.waitForNextFrame();`;
 }
 
 //Tells the code to exit if the thread stops.
-function aliveCheck() {
+function aliveCheck(blockUtil) {
   return `try{if (!thread.running) {thread.stop();return thread;}}catch(e){}`;
 }
 
 //Turns on a feature used by the editor to tell if its been clicked.
-function enableThreadPreview() {
+function enableThreadPreview(blockUtil) {
   return `thread.isPreviewMode = true;`;
 }
 
@@ -35,15 +35,15 @@ function setThreadOutput(code) {
 }
 
 //Return the thread, this is probably not used but whatever.
-function returnThread() {
+function returnThread(blockUtil) {
   return `return thread;`;
 }
 
 //Used by the compiler to get the normal clicked block logic for the editor.
-function getClickedBlockLogic(block, code) {
+function getClickedBlockLogic(blockUtil, code) {
   var fullCode = "";
   //Start the thread
-  fullCode += startThreadStack(block);
+  fullCode += startThreadStack(blockUtil);
 
   //This tells the editor that this thread is running because it was clicked.
   fullCode += enableThreadPreview();
@@ -52,36 +52,36 @@ function getClickedBlockLogic(block, code) {
   fullCode += code;
 
   //End the thread
-  fullCode += endThreadStack(block);
+  fullCode += endThreadStack(blockUtil);
 
   return fullCode;
 }
 
 //Used by the compiler to get the output block clicked logic for the editor.
-function getClickedOutputBlockLogic(block, code) {
+function getClickedOutputBlockLogic(blockUtil, code) {
   var fullCode = "";
   //Start the thread
-  fullCode += startThreadStack(block);
+  fullCode += startThreadStack(blockUtil);
 
   //This tells the editor that this thread is running because it was clicked.
-  fullCode += enableThreadPreview();
+  fullCode += enableThreadPreview(blockUtil);
 
   //This will return the output of the code.
   fullCode += setThreadOutput(code);
 
   //End the thread
-  fullCode += endThreadStack(block);
+  fullCode += endThreadStack(blockUtil);
 
   //Return the thread, not sure if this is required.
   //Still good to have it if I ever use it later.
-  fullCode += returnThread();
+  fullCode += returnThread(blockUtil);
 
   return fullCode;
 }
 
 //Used by hat blocks to add the thread identifier to the code.
-function putThreadStack(block, code) {
-  return startThreadStack(block) + code + endThreadStack(block);
+function putThreadStack(blockUtil, code) {
+  return startThreadStack(blockUtil) + code + endThreadStack(blockUtil);
 }
 
 //Cast a value to number

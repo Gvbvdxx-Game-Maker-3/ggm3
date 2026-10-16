@@ -7,7 +7,7 @@ BlockCompiler.defineBlock("loader_loadcostume", {
   func: function (utils) {
     var COSTUME = utils.getInput("COSTUME", "null");
 
-    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils.block);
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
 
     return `${ALIVE_CHECK}await sprite.blockLoadCostume(${COSTUME});${ALIVE_CHECK}`;
   },

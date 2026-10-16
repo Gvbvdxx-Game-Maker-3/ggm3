@@ -32,7 +32,7 @@ BlockCompiler.defineBlock("procedures_definition", {
     });
 
     var fullInsideCode = CoreFunctions.putThreadStack(
-      utils.block,
+      utils,
       threadModifierCode + insideCode,
     );
 

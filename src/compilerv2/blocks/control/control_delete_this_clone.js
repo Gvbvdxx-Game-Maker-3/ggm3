@@ -7,6 +7,6 @@ BlockCompiler.defineBlock("control_delete_this_clone", {
   func: function (utils) {
     utils.doNext = false; //Don't compile anything after this.
 
-    return `thread.deleteClone();${CoreFunctions.aliveCheck(utils.block)}`;
+    return `thread.deleteClone();${CoreFunctions.aliveCheck(utils)}`;
   },
 });

@@ -23,18 +23,42 @@ class BlockCompilerInstance {
     this._ids = {};
   }
 
+  getGGM3SafeID(id) {
+    //GGM3 expects strings to be used instead of numbers.
+    //GGM3 may not properly handle things if they aren't numbers.
+    return `script.${id}`;
+  }
+
   getBlockID(block) {
-    if (this.useBlockNumberIDs) {
-      var numId = this._ids[block.id];
-      if (typeof numId !== "undefined") {
-        return numId;
-      } else {
-        this._idCount += 1;
-        this._ids[block.id] = this._idCount;
-        return this._idCount;
-      }
+    var blockId = block.id;
+    if (!this.useBlockNumIDs) {
+      //No obfuscation, this is likely the editor so it needs the raw block IDs.
+      return blockId;
+    }
+
+    //Some level of obfuscation for exporting games.
+    //I'm avoiding adding local variables because of how the editor saves them in export.
+    //Though these variables use IDs and aren't names directly.
+    var numId = this._ids[blockId]; //Try to look up for this block's ID.
+
+    if (typeof numId !== "undefined") {
+      //We already have this ID registered.
+      //In that case, just return the same one.
+      //GGM3 needs this for identifying the difference between blocks.
+      return this.getGGM3SafeID(numId);
     } else {
-      return block.id;
+      //Note that we don't generate an new id for every getBlockID() call,
+      // this is because GGM3 needs this for identifiying the different blocks running.
+      
+      //Generate a new ID for blocks that we don't know about yet,
+      // then store them so we can return the same number ID later on.
+      
+      this._idCount += 1;
+      var n = this._idCount;
+      
+      this._ids[blockId] = n;
+
+      return this.getGGM3SafeID(n);
     }
   }
 
@@ -56,7 +80,7 @@ class BlockCompilerInstance {
         //This will return null if it isn't a hat block.
         output.push({
           code: blockCode,
-          id: block.id,
+          id: this.getBlockID(block),
           block,
         });
       }
@@ -106,23 +130,26 @@ class BlockCompilerInstance {
       }
 
       if (def.type !== CBlockType.STARTER_HAT) {
-        var code = _this.compileBlock(block, {
+        var opts = {
           useDummy: _this.useDummyDefClicked,
-        });
+        };
+        var code = _this.compileBlock(block, opts);
 
         if (code == null) {
           return null;
         }
 
+        var blockUtil = _this.getUtil(parentBlock, def, opts);
+
         if (def.type == CBlockType.OUTPUT) {
           //Output blocks are handled slightly differently compared to hats below.
           //They need to set an output value on the thread.
-          return CoreFunctions.getClickedOutputBlockLogic(parentBlock, code);
+          return CoreFunctions.getClickedOutputBlockLogic(blockUtil, code);
         } else {
           //These are mostly the same as normal hat block scripts.
           //Except that we have to also set a thread value to tell
           // the editor this block is was ran from being clicked.
-          return CoreFunctions.getClickedBlockLogic(parentBlock, code);
+          return CoreFunctions.getClickedBlockLogic(blockUtil, code);
         }
       }
 
@@ -139,14 +166,8 @@ class BlockCompilerInstance {
     return loop(parentBlock);
   }
 
-  compileBlock(block, opts = {}) {
-    var def = this.getBlockDefinition(block.type, opts.useDummy);
-
-    if (!def) {
-      return null;
-    }
-
-    var util = new CBlockUtil({
+  getUtil(block, def, opts) {
+    return new CBlockUtil({
       compiler: this.compiler,
       instance: this,
       block,
@@ -155,6 +176,16 @@ class BlockCompilerInstance {
       useDummy: opts.useDummy,
       options: opts,
     });
+  }
+
+  compileBlock(block, opts = {}) {
+    var def = this.getBlockDefinition(block.type, opts.useDummy);
+
+    if (!def) {
+      return null;
+    }
+
+    var util = this.getUtil(block, def, opts);
 
     var isHat = def.type == CBlockType.STARTER_HAT;
 

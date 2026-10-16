@@ -29,7 +29,7 @@ function init(state, deps) {
     div.remove();
   }
 
-  function compileSpriteXMLToString(spr) {
+  function compileSpriteXMLToString(spr, compilerInstance = deps.compilerInstance) {
     var functions = {};
     var div = document.createElement("div");
     document.body.append(div);
@@ -49,11 +49,11 @@ function init(state, deps) {
       Blockly.Xml.domToWorkspace(spr.blocklyXML, tempWorkspace);
     }
 
-    var blocks = tempWorkspace.getTopBlocks(true);
-    for (var block of blocks) {
-      compileRoot(block.getRootBlock());
+    var compiledBlocks = compilerInstance.compileWorkspace(tempWorkspace);
+    for (var compiledBlock of compiledBlocks) {
+      functions[compiledBlock.id] = compiledBlock.code;
     }
-
+    
     tempWorkspace.dispose();
     div.remove();
 
@@ -61,22 +61,6 @@ function init(state, deps) {
   }
 
   async function compileAllSprites() {
-    async function compileRoot(rootBlock, spr) {
-      if (!rootBlock) return;
-      if (deps.compiler.isStarterBlock(rootBlock)) {
-        try {
-          var code = deps.compiler.compileBlock(rootBlock);
-          var allSprs = [spr].concat(spr.clones);
-          for (var cspr of allSprs) {
-            cspr.removeSpriteFunction(rootBlock.id);
-            cspr.addFunction(code, rootBlock.id);
-            cspr.runFunctionID(rootBlock.id);
-          }
-        } catch (e) {
-          return;
-        }
-      }
-    }
     var div = document.createElement("div");
     document.body.append(div);
     var tempWorkspace = Blockly.inject(div, {
@@ -100,9 +84,11 @@ function init(state, deps) {
         Blockly.Xml.domToWorkspace(spr.blocklyXML, tempWorkspace);
       }
 
-      var blocks = tempWorkspace.getTopBlocks(true);
-      for (var block of blocks) {
-        compileRoot(block.getRootBlock(), spr);
+      var compiledBlocks = deps.compilerInstance.compileWorkspace(tempWorkspace);
+      //console.log(compiledBlocks);
+      var allSprs = [spr].concat(spr.clones);
+      for (var cspr of allSprs) {
+        deps.compilerInstance.applyCompiledToEditorSprite(cspr, compiledBlocks);
         await new Promise((r) => setTimeout(r, 2));
       }
       await new Promise((r) => setTimeout(r, 2));
