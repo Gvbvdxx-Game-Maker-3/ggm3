@@ -53,8 +53,20 @@ function fieldsToJSON(block) {
     return array;
 }
 
+function JSONToField(block, fieldJson) {
+    var field = block.getField(fieldJson.name);
+    if (!field) {
+        return;
+    }
+
+    var workspace = block.workspace;
+    var text = fieldJson.value;
+
+}
+
 module.exports = {
     fieldsToJSON,
     fieldToJSON,
-    variableFieldToJSON
+    variableFieldToJSON,
+    JSONToField
 };
