@@ -33552,10 +33552,22 @@ function fieldsToJSON(block) {
     return array;
 }
 
+function JSONToField(block, fieldJson) {
+    var field = block.getField(fieldJson.name);
+    if (!field) {
+        return;
+    }
+
+    var workspace = block.workspace;
+    var text = fieldJson.value;
+
+}
+
 module.exports = {
     fieldsToJSON,
     fieldToJSON,
-    variableFieldToJSON
+    variableFieldToJSON,
+    JSONToField
 };
 
 /***/ }),
@@ -34990,8 +35002,8 @@ BlockCompiler.defineBlock("data_changevariableby", {
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 
-var { mutationToJSON } = __webpack_require__(2369);
-var { fieldsToJSON } = __webpack_require__(8863);
+var { mutationToJSON, JSONToMutation } = __webpack_require__(2369);
+var { fieldsToJSON, JSONToField } = __webpack_require__(8863);
 var { blockCommentToJSON } = __webpack_require__(7888);
 
 function blockToJSON(block) {
@@ -35080,10 +35092,86 @@ function blocksToJSON(workspace) {
     return json;
 }
 
+function JSONToBlockHeadless(jsonBlock, workspace) {
+    var block = workspace.newBlock(jsonBlock.type, jsonBlock.id);
+
+    if (jsonBlock.mutation) {
+        var mutation = JSONToMutation(jsonBlock.mutation);
+        if (block.domToMutation) {
+          block.domToMutation(mutation);
+          if (block.initSvg) {
+            // Mutation may have added some elements that need initializing.
+            block.initSvg();
+          }
+        }
+    }
+
+    if (json.comment) {
+        var commentId = json.comment.id;
+        var bubbleX = +json.comment.x;
+        var bubbleY = +json.comment.y;
+        var minimized = !!json.comment.minimized;
+        block.setCommentText(
+            json.comment.text,
+            commentId,
+            bubbleX,
+            bubbleY,
+            minimized
+        );
+
+        var visible = json.comment.pinned;
+        if (visible && !block.isInFlyout) {
+            setTimeout(function() {
+                if (block.comment && block.comment.setVisible) {
+                    block.comment.setVisible(visible);
+                }
+            }, 1);
+        }
+        var bubbleW = +json.comment.width;
+        var bubbleH = +json.comment.height;
+        if (
+            !isNaN(bubbleW) &&
+            !isNaN(bubbleH) &&
+            block.comment &&
+            block.comment.setVisible
+        ) {
+            if (block.comment instanceof Blockly.ScratchBlockComment) {
+                block.comment.setSize(bubbleW, bubbleH);
+            } else {
+                block.comment.setBubbleSize(bubbleW, bubbleH);
+            }
+        }
+    }
+
+    if (json.data) {
+        block.data = json.data;
+    }
+
+    
+
+    for (var jsonInput of jsonBlock.inputs) {
+        var input = block.getInput(jsonInput.name);
+        var jsonChildBlock = jsonInput.block;
+        if (jsonChildBlock && input) {
+            var blockChild = JSONToBlockHeadless(jsonChildBlock, workspace);
+            if (blockChild.outputConnection) {
+                input.connection.connect(blockChild.outputConnection);
+            } else if (blockChild.previousConnection) {
+                input.connection.connect(blockChild.previousConnection);
+            }
+        }
+    }
+}
+
+function JSONToBlock(jsonBlock, workspace) {
+
+}
+
 module.exports = {
     blockToJSON,
     blockToJSONWithPosition,
-    blocksToJSON
+    blocksToJSON,
+    JSONToBlock
 };
 
 /***/ }),
