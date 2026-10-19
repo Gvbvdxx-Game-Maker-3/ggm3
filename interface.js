@@ -992,6 +992,25 @@ BlockCompiler.defineBlock("engine_framerate", {
 
 /***/ }),
 
+/***/ 374:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("propertydata_sprite", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var TARGET_SPRITE = utils.getField("TARGET_SPRITE", "");
+
+    return JSON.stringify(TARGET_SPRITE);
+  },
+});
+
+
+/***/ }),
+
 /***/ 389:
 /***/ ((module) => {
 
@@ -1007,6 +1026,30 @@ class LibrarySound {
 }
 
 module.exports = LibrarySound;
+
+
+/***/ }),
+
+/***/ 396:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var SpriteMasterConsts = __webpack_require__(1065);
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("spritemaster_getclonecountofsprite", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var SPRITE = utils.getInput("SPRITE", "sprite");
+    
+    if (SPRITE == '"__myself__"') {
+        return `sprite.clones.length`;
+    }
+    return `spriteMaster.getCloneCountOf(${SPRITE})`;
+  },
+});
 
 
 /***/ }),
@@ -2727,6 +2770,32 @@ BlockCompiler.defineBlock("loader_costume", {
 
 /***/ }),
 
+/***/ 538:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("propertydata_changeby", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var TARGET_SPRITE = utils.getInput("TARGET_SPRITE", "null");
+    var VARIABLE = utils.getField("VARIABLE", "");
+    var VALUE = utils.getInput("VALUE", "null");
+
+    if (TARGET_SPRITE == '"__myself__"') {
+        var val = `sprite.spriteProperties[${JSON.stringify(VARIABLE)}]`;
+        return `${val} = ${CoreFunctions.castToNumber(val, true)} + ${CoreFunctions.castToNumber(VALUE, true)};`;
+    } else {
+        return `sprite.setSProperty(${TARGET_SPRITE}, ${JSON.stringify(VARIABLE)}, ${VALUE});`;
+    }
+  },
+});
+
+
+/***/ }),
+
 /***/ 563:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -3147,6 +3216,30 @@ BlockCompiler.defineBlock("looks_xstretch", {
 
 /***/ }),
 
+/***/ 612:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("tween_to_object", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var SOURCE = utils.getInput("SOURCE", "0");
+    var TARGET = utils.getInput("TARGET", "0");
+    var SECONDS = utils.getInput("SECONDS", "0");
+    var EASING = utils.getField("EASING", "linear");
+    
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
+
+    return `${ALIVE_CHECK}await thread.tweenToSource(${SOURCE}, ${TARGET}, +(${SECONDS}) || 0, ${JSON.stringify(EASING)});${ALIVE_CHECK}`;
+  },
+});
+
+
+/***/ }),
+
 /***/ 649:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -3322,6 +3415,30 @@ BlockCompiler.defineBlock("looks_xskew_by", {
     var VALUE_NUMBER = CoreFunctions.castToNumber(VALUE, false);
 
     return `sprite.skewX += ${VALUE_NUMBER};`;
+  },
+});
+
+
+/***/ }),
+
+/***/ 785:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var SpriteMasterConsts = __webpack_require__(1065);
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("spritemaster_spriteobjectof", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var SPRITE = utils.getInput("SPRITE", "sprite");
+
+    if (SPRITE == '"__myself__"') {
+        return `sprite`;
+    }
+    return `spriteMaster.findSpriteByName(${SPRITE})`;
   },
 });
 
@@ -3972,6 +4089,32 @@ module.exports = { loadBlockMenus, helpers };
 
 /***/ }),
 
+/***/ 943:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var SpriteMasterConsts = __webpack_require__(1065);
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("spritemaster_checktouchingsprite_equals_propertyvalue", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var SPRITE = utils.getInput("SPRITE", "sprite");
+    var VARIABLE = utils.getField("VARIABLE", "null");
+    var VALUE = utils.getInput("VALUE", "null");
+    
+    if (SPRITE == '"__myself__"') {
+        return `true`;
+    }
+    return `spriteMaster.isTouchingSpriteWithPropertySet(${SPRITE}, ${JSON.stringify(VARIABLE)}, ${VALUE})`;
+  },
+});
+
+
+/***/ }),
+
 /***/ 961:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -4468,9 +4611,9 @@ __webpack_require__(4402);
 __webpack_require__(5116);
 __webpack_require__(1463);
 __webpack_require__(8594);
-//require("./property/");
-//require("./sprite-master/");
-//require("./tweening/");
+__webpack_require__(4213);
+__webpack_require__(8506);
+__webpack_require__(8181);
 
 /***/ }),
 
@@ -6538,6 +6681,30 @@ BlockCompiler.defineBlock("argument_reporter_boolean", {
     var field = utils.getField("VALUE", "");
 
     return `thread.customBlockValues[${JSON.stringify(field)}]`;
+  },
+});
+
+
+/***/ }),
+
+/***/ 2215:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("tween_to_global_variable", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var VARIABLE = utils.getField("VARIABLE", "0");
+    var TARGET = utils.getInput("TARGET", "0");
+    var SECONDS = utils.getInput("SECONDS", "0");
+    var EASING = utils.getField("EASING", "linear");
+    
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
+
+    return `${ALIVE_CHECK}await thread.tweenToGlobalVariable(${JSON.stringify(VARIABLE)}, ${TARGET}, +(${SECONDS}) || 0, ${JSON.stringify(EASING)});${ALIVE_CHECK}`;
   },
 });
 
@@ -9351,6 +9518,30 @@ BlockCompiler.defineBlock("sensing_mousex", {
 
 /***/ }),
 
+/***/ 3365:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("tween_to_skew", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var X = utils.getInput("X", "0");
+    var Y = utils.getInput("Y", "0");
+    var SECONDS = utils.getInput("SECONDS", "0");
+    var EASING = utils.getField("EASING", "linear");
+    
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
+
+    return `${ALIVE_CHECK}await thread.tweenToSkewXY(${X}, ${Y}, ${SECONDS}, ${JSON.stringify(EASING)});${ALIVE_CHECK}`;
+  },
+});
+
+
+/***/ }),
+
 /***/ 3377:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -10185,6 +10376,10 @@ class Thread {
     }
   }
 
+  startTweenMovement(movement) {
+    return movement.start(this.sprite.engine.time.totalTime * 1000);
+  }
+
   tweenToXY(targetX, targetY, duration, easing) {
     return this.tweenTo(
       {
@@ -10253,7 +10448,7 @@ class Thread {
           resolve();
         }
       });
-      movement.start(_this.sprite.engine._iTime * 1000);
+      _this.startTweenMovement(movement);
     });
   }
 
@@ -10291,7 +10486,7 @@ class Thread {
           resolve();
         }
       });
-      movement.start(_this.sprite.engine._iTime * 1000);
+      _this.startTweenMovement(movement);
     });
   }
 
@@ -10331,7 +10526,7 @@ class Thread {
           resolve();
         }
       });
-      movement.start(_this.sprite.engine._iTime * 1000);
+      _this.startTweenMovement(movement);
     });
   }
 
@@ -10405,6 +10600,37 @@ module.exports = Thread;
 
 /***/ }),
 
+/***/ 3606:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var SpriteMasterConsts = __webpack_require__(1065);
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("spritemaster_spriteproperty", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var SPRITE = utils.getInput("SPRITE", "sprite");
+    var PROPERTY_OPTION = utils.getField("PROPERTY_OPTION", "");
+
+    var propertyCode = SpriteMasterConsts.SPRITE_MASTER_CODE[PROPERTY_OPTION];
+    if (propertyCode) {
+        if (SPRITE == '"__myself__"') {
+            return `sprite.${propertyCode}`;
+        }
+        var output = `(spriteMaster.getSpriteSafe(${SPRITE})).${propertyCode}`;
+        return output;
+    } else {
+        return `(0)`;
+    }
+  },
+});
+
+
+/***/ }),
+
 /***/ 3607:
 /***/ ((module) => {
 
@@ -10413,6 +10639,7 @@ class EditorUtils {
 
     static findBlocks(workspaceData, targetBlockTypes) {
         var found = [];
+        var foundIDs = [];
         function loop(block) {
             var match = false;
             for (var type of targetBlockTypes) {
@@ -10420,7 +10647,8 @@ class EditorUtils {
                     match = true;
                 }
             }
-            if (match) {
+            if (match && foundIDs.indexOf(block.id) == -1) {
+                foundIDs.push(block.id);
                 found.push(block);
             }
             if (block.inputs) {
@@ -10434,15 +10662,19 @@ class EditorUtils {
                 loop(block.next);
             }
         }
+
         for (var block of workspaceData.blocks) {
-            found.push(loop(block));
+            loop(block);
         }
+        
         return found;
     }
 
     static getField(name, blockData) {
         for (var field of (blockData.fields || [])) {
-            
+            if (field.name == name) {
+                return field;
+            }
         }
         return null;
     }
@@ -10755,6 +10987,31 @@ BlockCompiler.defineBlock("looks_seteffectto", {
     var VALUE_NUMBER = CoreFunctions.castToNumber(VALUE, true);
 
     return `sprite.effects[${JSON.stringify(EFFECT)}] = ${VALUE_NUMBER};`;
+  },
+});
+
+
+/***/ }),
+
+/***/ 3939:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("propertydata_set", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var TARGET_SPRITE = utils.getInput("TARGET_SPRITE", "null");
+    var VARIABLE = utils.getField("VARIABLE", "");
+    var VALUE = utils.getInput("VALUE", "null");
+
+    if (TARGET_SPRITE == '"__myself__"') {
+        return `sprite.spriteProperties[${JSON.stringify(VARIABLE)}] = ${VALUE};`;
+    } else {
+        return `sprite.setSProperty(${TARGET_SPRITE}, ${JSON.stringify(VARIABLE)}, ${VALUE});`;
+    }
   },
 });
 
@@ -11112,7 +11369,7 @@ var CoreFunctions = __webpack_require__(5619);
 BlockCompiler.defineBlock("event_ggm3_broadcast", {
   type: CBlockType.COMMAND,
   func: function (utils) {
-    var BROADCAST_NAME = utils.getInput("BROADCAST_NAME", "");
+    var BROADCAST_NAME = utils.getInput("BROADCAST_NAME", "null");
     var BROADCAST_NAME_STRING = CoreFunctions.castToString(BROADCAST_NAME, false);
 
     return `engine.broadcast(${BROADCAST_NAME_STRING});`;
@@ -11159,6 +11416,16 @@ module.exports = {
 
 /***/ }),
 
+/***/ 4213:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+__webpack_require__(538);
+__webpack_require__(6199);
+__webpack_require__(3939);
+__webpack_require__(374);
+
+/***/ }),
+
 /***/ 4234:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -11172,6 +11439,30 @@ Blockly.WorkspaceSvg.prototype.cleanUp = function () {
 __webpack_require__(4619);
 __webpack_require__(4926);
 __webpack_require__(3235);
+
+
+/***/ }),
+
+/***/ 4242:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("tween_to_property", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var VARIABLE = utils.getField("VARIABLE", "0");
+    var TARGET = utils.getInput("TARGET", "0");
+    var SECONDS = utils.getInput("SECONDS", "0");
+    var EASING = utils.getField("EASING", "linear");
+    
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
+
+    return `${ALIVE_CHECK}await thread.tweenToProperty(${JSON.stringify(VARIABLE)}, ${TARGET}, +(${SECONDS}) || 0, ${JSON.stringify(EASING)});${ALIVE_CHECK}`;
+  },
+});
 
 
 /***/ }),
@@ -22828,6 +23119,30 @@ module.exports = CollisionSprite;
 
 /***/ }),
 
+/***/ 4490:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var SpriteMasterConsts = __webpack_require__(1065);
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("spritemaster_getclonesofsprite", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var SPRITE = utils.getInput("SPRITE", "sprite");
+    
+    if (SPRITE == '"__myself__"') {
+        return `Array.from(sprite.clones)`;
+    }
+    return `(spriteMaster.getClonesOf(${SPRITE}))`;
+  },
+});
+
+
+/***/ }),
+
 /***/ 4523:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -23506,6 +23821,27 @@ BlockCompiler.defineBlock("looks_yskew", {
   type: CBlockType.OUTPUT,
   func: function (utils) {
     return `sprite.skewY`;
+  },
+});
+
+
+/***/ }),
+
+/***/ 5107:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var SpriteMasterConsts = __webpack_require__(1065);
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("spritemaster_sprite", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var SPRITE = utils.getField("SPRITE", "");
+
+    return JSON.stringify(SPRITE);
   },
 });
 
@@ -25996,6 +26332,30 @@ BlockCompiler.defineBlock("control_repeat", {
 
 /***/ }),
 
+/***/ 5648:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("tween_to_xy", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var X = utils.getInput("X", "0");
+    var Y = utils.getInput("Y", "0");
+    var SECONDS = utils.getInput("SECONDS", "0");
+    var EASING = utils.getField("EASING", "linear");
+    
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
+
+    return `${ALIVE_CHECK}await thread.tweenToXY(${X}, ${Y}, ${SECONDS}, ${JSON.stringify(EASING)});${ALIVE_CHECK}`;
+  },
+});
+
+
+/***/ }),
+
 /***/ 5651:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -26842,6 +27202,29 @@ module.exports = SoundManager;
 
 /***/ }),
 
+/***/ 5930:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("tween_to_size", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var VALUE = utils.getInput("VALUE", "0");
+    var SECONDS = utils.getInput("SECONDS", "0");
+    var EASING = utils.getField("EASING", "linear");
+    
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
+
+    return `${ALIVE_CHECK}await thread.tweenToSize(${VALUE}, ${SECONDS}, ${JSON.stringify(EASING)});${ALIVE_CHECK}`;
+  },
+});
+
+
+/***/ }),
+
 /***/ 5939:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -27045,6 +27428,30 @@ module.exports = Drawable;
 
 /***/ }),
 
+/***/ 6070:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("tween_to_stretch", {
+  type: CBlockType.COMMAND,
+  func: function (utils) {
+    var X = utils.getInput("X", "0");
+    var Y = utils.getInput("Y", "0");
+    var SECONDS = utils.getInput("SECONDS", "0");
+    var EASING = utils.getField("EASING", "linear");
+    
+    var ALIVE_CHECK = CoreFunctions.aliveCheck(utils);
+
+    return `${ALIVE_CHECK}await thread.tweenToStretchXY(${X}, ${Y}, ${SECONDS}, ${JSON.stringify(EASING)});${ALIVE_CHECK}`;
+  },
+});
+
+
+/***/ }),
+
 /***/ 6091:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -27201,6 +27608,30 @@ module.exports = {
   getSaveableVariables,
   getSaveableVariablesGlobal,
 };
+
+
+/***/ }),
+
+/***/ 6199:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+var BlockCompiler = __webpack_require__(2391);
+var CBlockType = __webpack_require__(7561);
+var CoreFunctions = __webpack_require__(5619);
+
+BlockCompiler.defineBlock("propertydata_get", {
+  type: CBlockType.OUTPUT,
+  func: function (utils) {
+    var TARGET_SPRITE = utils.getInput("TARGET_SPRITE", "null");
+    var VARIABLE = utils.getField("VARIABLE", "");
+
+    if (TARGET_SPRITE == '"__myself__"') {
+        return `sprite.spriteProperties[${JSON.stringify(VARIABLE)}]`;
+    } else {
+        return `sprite.getSProperty(${TARGET_SPRITE}, ${JSON.stringify(VARIABLE)})`;
+    }
+  },
+});
 
 
 /***/ }),
@@ -27611,10 +28042,7 @@ function init(state, deps) {
 
   function saveCurrentSpriteCode() {
     if (state.currentSelectedSprite && workspace) {
-      try {
-        state.currentSelectedSprite.blocklyXML =
-          Blockly.Xml.workspaceToDom(workspace);
-      } catch (e) {}
+      deps.EditorData.saveSpriteEditorData(state.currentSelectedSprite, workspace);
       deps.markProjectDirty();
     }
   }
@@ -27950,6 +28378,7 @@ function loadSpriteEditorData(sprite, workspace) {
         return;
     }
     var data = sprite.editorData;
+
     if (data.xml) {
         //Legacy implementation.
         var dom = Blockly.Xml.textToDom(data.xml);
@@ -27957,6 +28386,21 @@ function loadSpriteEditorData(sprite, workspace) {
     } else if (data.blocks) {
         //Use the modern JSON implementation.
         wjson.JSONToWorkspace(data.blocks, workspace);
+    }
+
+    var flyoutWorkspace = workspace.getFlyout().getWorkspace();
+
+    var scrollPos = data.scroll;
+    var scrollFlyoutPos = data.flyoutScroll;
+    if (scrollPos) {
+        workspace.scrollX = scrollPos.x;
+        workspace.scrollY = scrollPos.y;
+        workspace.scale = scrollPos.scale;
+    }
+    if (scrollFlyoutPos) {
+        flyoutWorkspace.scrollX = scrollFlyoutPos.x;
+        flyoutWorkspace.scrollY = scrollFlyoutPos.y;
+        flyoutWorkspace.scale = scrollFlyoutPos.scale;
     }
 }
 
@@ -27975,6 +28419,19 @@ function saveSpriteEditorData(sprite, workspace) {
 
     var workspaceJson = wjson.workspaceToJSON(workspace);
     data.blocks = workspaceJson;
+
+    var flyoutWorkspace = workspace.getFlyout().getWorkspace();
+    data.flyoutScroll = {
+        x: flyoutWorkspace.scrollX,
+        y: flyoutWorkspace.scrollY,
+        scale: flyoutWorkspace.scale
+    };
+    
+    data.scroll = {
+        x: workspace.scrollX,
+        y: workspace.scrollY,
+        scale: workspace.scale
+    };
 }
 
 function copySpriteEditorData(sourceSprite, targetSprite) {
@@ -30295,8 +30752,8 @@ var {
   getSaveableVariables,
   getSaveableVariablesGlobal,
 } = __webpack_require__(6185);
-var EditorUtils = __webpack_require__(3607);
 var engine = __webpack_require__(9940);
+var SpriteUtils = __webpack_require__(7802);
 
 //Engine property names
 
@@ -30398,19 +30855,6 @@ function fromSpriteJSON(sprite, spriteJson, isImport) {
   }
 }
 
-function _listSpriteUsedBroadcasts(sprite) {
-  if (!sprite.editorData) {
-    return engine.broadcastNames;
-  }
-  if (sprite.editorData.xml) {
-    return engine.broadcastNames;
-  }
-
-  var blocks = EditorUtils.findBlocks(sprite.editorData.blocks, [
-    "event_ggm3_broadcast_menu"
-  ]);
-}
-
 function toSpriteJSON(sprite, isExport) {
   var spriteJson = {
     x: sprite.x,
@@ -30438,7 +30882,8 @@ function toSpriteJSON(sprite, isExport) {
   
   //Broadcast names will now only be added if the sprite actually uses them.
   
-  spriteJson.broadcastNames = engine.broadcastNames;
+  var broadcastNames = SpriteUtils.listUsedBroadcasts(sprite);
+  spriteJson.broadcastNames = broadcastNames;
 
   return spriteJson; //return with additional properties.
 }
@@ -32043,6 +32488,7 @@ var {
   saveCurrentSpriteCode,
   compileAllSprites,
 } = __webpack_require__(3010);
+var EditorUtils = __webpack_require__(3607);
 
 function compileSprite(sprite) {
   compileSpriteXML(sprite);
@@ -32052,11 +32498,41 @@ function getSpriteFunctionsCode(sprite, instance) {
   return compileSpriteXMLToString(sprite, instance);
 }
 
+function listUsedBroadcasts(sprite) {
+  if (!sprite.editorData) {
+    return engine.broadcastNames;
+  }
+  if (sprite.editorData.xml) {
+    return engine.broadcastNames;
+  }
+
+  var blocks = EditorUtils.findBlocks(sprite.editorData.blocks, [
+    "event_ggm3_broadcast_menu",
+    "event_ggm3_whenbroadcasted"
+  ]);
+
+  var broadcastNames = [];
+
+  for (var block of blocks) {
+    var field = EditorUtils.getField("BROADCAST_NAME", block);
+
+    if (field) {
+      var name = field.value;
+      if (broadcastNames.indexOf(name) == -1) {
+        broadcastNames.push(name);
+      }
+    }
+  }
+
+  return broadcastNames;
+}
+
 module.exports = {
   compileSprite,
   saveCurrentSpriteCode,
   compileAllSprites,
   getSpriteFunctionsCode,
+  listUsedBroadcasts
 };
 
 
@@ -32853,6 +33329,19 @@ __webpack_require__(3529);
 
 /***/ }),
 
+/***/ 8181:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+__webpack_require__(5648);
+__webpack_require__(6070);
+__webpack_require__(5930);
+__webpack_require__(3365);
+__webpack_require__(612);
+__webpack_require__(4242);
+__webpack_require__(2215);
+
+/***/ }),
+
 /***/ 8188:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -33459,6 +33948,18 @@ BlockCompiler.defineBlock("looks_costume", {
   },
 });
 
+
+/***/ }),
+
+/***/ 8506:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+__webpack_require__(5107);
+__webpack_require__(785);
+__webpack_require__(3606);
+__webpack_require__(4490);
+__webpack_require__(396);
+__webpack_require__(943);
 
 /***/ }),
 
@@ -35188,6 +35689,9 @@ function blockToJSON(block) {
     }
 
     json.fields = fieldsToJSON(block);
+    if (json.fields.length < 1) {
+        json.fields = [];
+    }
 
     json.inputs = [];
     for (var input of block.inputList) {
@@ -35244,6 +35748,9 @@ function blockToJSON(block) {
 
             json.inputs.push(inputJSON);
         }
+    }
+    if (json.inputs.length < 1) {
+        json.inputs = [];
     }
 
     if (block.inputsInlineDefault != block.inputsInline) {
@@ -35347,11 +35854,11 @@ function JSONToBlockHeadless(jsonBlock, workspace) {
         block.data = jsonBlock.data;
     }
 
-    for (var fieldJson of jsonBlock.fields) {
+    for (var fieldJson of (jsonBlock.fields || [])) {
         JSONToField(block, fieldJson);
     }
 
-    for (var jsonInput of jsonBlock.inputs) {
+    for (var jsonInput of (jsonBlock.inputs || [])) {
         var input = block.getInput(jsonInput.name);
         var jsonChildBlock = jsonInput.block;
         var sh = jsonInput.shadow || jsonInput.shadowDom;
@@ -35388,9 +35895,7 @@ function JSONToBlockHeadless(jsonBlock, workspace) {
     block.setMovable(!!jsonBlock.movable);
     block.setEditable(!!jsonBlock.editable);
     block.setCollapsed(!!jsonBlock.collapsed);
-    if (jsonBlock.shadow) {
-        block.setShadow(true);
-    }
+    block.setShadow(!!jsonBlock.shadow);
 
     return block;
 }
