@@ -1,5 +1,5 @@
 
-var { mutationToJSON, JSONToMutation } = require("./mutation.js");
+var { domToJSON, JSONToDom } = require("./jsonxml.js");
 var { fieldsToJSON, JSONToField } = require("./fields.js");
 var { blockCommentToJSON } = require("./comments.js");
 
@@ -18,7 +18,7 @@ function blockToJSON(block) {
     if (block.mutationToDom) {
         var mutation = block.mutationToDom();
         if (mutation) {
-            json.mutation = mutationToJSON(mutation);
+            json.mutation = domToJSON(mutation);
         }
     }
 
@@ -40,18 +40,47 @@ function blockToJSON(block) {
                 inputJSON.type = "statement";
             }
             var shadow = input.connection.getShadowDom();
-            var shadowMutation = null;
+            var shadowJSON = null;
             if (shadow && (!childBlock || !childBlock.isShadow())) {
-                var shadowClone = Blockly.Xml.cloneShadow_(shadow);
+                var shadowClone = shadow.cloneNode(true);
+
+                //We'll try to find the block manually from the workspace first.
+
+                var shadowID = shadowClone.getAttribute("id");
+                var shadowDomBlock = null;
+                var removeShadowBlock = false; //We don't want to remove it since there is probably a reason why its there.
+                if (shadowID && block.workspace.getBlockByID) {
+                    shadowDomBlock = block.workspace.getBlockByID(shadowID);
+                }
+
+                //If we don't have it, then just make it from the XML.
+
+                if (!shadowDomBlock) {
+                    removeShadowBlock = true; //Once we clone it, we need to remove it to avoid issues.
+                    shadowDomBlock = Blockly.Xml.domToBlockHeadless_(shadowClone, block.workspace);
+                }
                 
-                shadowMutation = mutationToJSON(shadowClone, true);
-            }
-            if (childBlock) {
-                inputJSON.block = blockToJSON(childBlock);
-                if (shadowMutation) {
-                    inputJSON.shadowDom = shadowMutation;
+                //Now convert that to JSON.
+
+                if (shadowDomBlock) {
+                    shadowJSON = blockToJSON(shadowDomBlock);
+                }
+
+                //Remove it if we need it removed.
+
+                if (removeShadowBlock) {
+                    shadowDomBlock.dispose(true);
                 }
             }
+
+            if (childBlock) {
+                if (shadowJSON) {
+                    inputJSON.shadow = shadowJSON;
+                }
+
+                inputJSON.block = blockToJSON(childBlock);
+            }
+
             json.inputs.push(inputJSON);
         }
     }
@@ -106,7 +135,7 @@ function JSONToBlockHeadless(jsonBlock, workspace) {
     var block = workspace.newBlock(jsonBlock.type, jsonBlock.id);
 
     if (jsonBlock.mutation) {
-        var mutation = JSONToMutation(jsonBlock.mutation);
+        var mutation = JSONToDom(jsonBlock.mutation);
         if (block.domToMutation) {
           block.domToMutation(mutation);
           if (block.initSvg) {
@@ -161,11 +190,22 @@ function JSONToBlockHeadless(jsonBlock, workspace) {
         JSONToField(block, fieldJson);
     }
 
-    if (jsonInput)
-
     for (var jsonInput of jsonBlock.inputs) {
         var input = block.getInput(jsonInput.name);
         var jsonChildBlock = jsonInput.block;
+        var sh = jsonInput.shadow || jsonInput.shadowDom;
+        if (sh) {
+            var shadowDom = null;
+            if (sh.tag || sh.tagName) {
+                shadowDom = JSONToDom(sh);
+            } else {
+                var shadowBlock = JSONToBlock(sh, workspace);
+                shadowDom = Blockly.Xml.blockToDom(shadowBlock, workspace);
+                shadowBlock.dispose(true);
+            }
+
+            input.connection.setShadowDom(shadowDom);
+        }
         if (jsonChildBlock && input) {
             var blockChild = JSONToBlockHeadless(jsonChildBlock, workspace);
             if (blockChild.outputConnection) {
