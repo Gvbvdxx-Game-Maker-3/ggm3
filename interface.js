@@ -7661,62 +7661,6 @@ module.exports = CBlockDummyDefinition;
 
 /***/ }),
 
-/***/ 2369:
-/***/ ((module) => {
-
-
-function mutationToJSON(dom) {
-    //Rather then us try to make manual implementations for each advanced block,
-    // we can just convert the dom into a json object.
-    var json = {};
-    var attributeNames = dom.getAttributeNames();
-    var children = Array.from(dom.children);
-
-    json.attr = {};
-    for (var name of attributeNames) {
-        json.attr[name] = dom.getAttribute(name);
-    }
-
-    json.tag = dom.tagName;
-    if (children.length > 0) {
-        json.children = [];
-        for (var child of children) {
-            json.children.push(mutationToJSON(child));
-        }
-    } else {
-        json.text = dom.textContent;
-    }
-
-    return json;
-}
-
-function JSONToMutation(json) {
-    var dom = document.createElement(json.tagName);
-    var attr = json.attributes || json.attr;
-    if (attr) {
-        for (var name in attr) {
-            dom.setAttribute(name, attr[name]);
-        }
-    }
-    var children = json.children;
-    if (children) {
-        for (var childJSON of children) {
-            var childDom = JSONToMutation(childJSON);
-            dom.appendChild(childDom);
-        }
-    } else if (json.text || json.textContent) {
-        dom.textContent = json.text || json.textContent;
-    }
-    return dom;
-}
-
-module.exports = {
-    mutationToJSON,
-    JSONToMutation
-};
-
-/***/ }),
-
 /***/ 2391:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -35216,7 +35160,7 @@ BlockCompiler.defineBlock("data_changevariableby", {
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 
-var { mutationToJSON, JSONToMutation } = __webpack_require__(2369);
+var { domToJSON, JSONToDom } = __webpack_require__(9475);
 var { fieldsToJSON, JSONToField } = __webpack_require__(8863);
 var { blockCommentToJSON } = __webpack_require__(7888);
 
@@ -35235,7 +35179,7 @@ function blockToJSON(block) {
     if (block.mutationToDom) {
         var mutation = block.mutationToDom();
         if (mutation) {
-            json.mutation = mutationToJSON(mutation);
+            json.mutation = domToJSON(mutation);
         }
     }
 
@@ -35257,18 +35201,47 @@ function blockToJSON(block) {
                 inputJSON.type = "statement";
             }
             var shadow = input.connection.getShadowDom();
-            var shadowMutation = null;
+            var shadowJSON = null;
             if (shadow && (!childBlock || !childBlock.isShadow())) {
-                var shadowClone = Blockly.Xml.cloneShadow_(shadow);
+                var shadowClone = shadow.cloneNode(true);
+
+                //We'll try to find the block manually from the workspace first.
+
+                var shadowID = shadowClone.getAttribute("id");
+                var shadowDomBlock = null;
+                var removeShadowBlock = false; //We don't want to remove it since there is probably a reason why its there.
+                if (shadowID && block.workspace.getBlockByID) {
+                    shadowDomBlock = block.workspace.getBlockByID(shadowID);
+                }
+
+                //If we don't have it, then just make it from the XML.
+
+                if (!shadowDomBlock) {
+                    removeShadowBlock = true; //Once we clone it, we need to remove it to avoid issues.
+                    shadowDomBlock = Blockly.Xml.domToBlockHeadless_(shadowClone, block.workspace);
+                }
                 
-                shadowMutation = mutationToJSON(shadowClone, true);
-            }
-            if (childBlock) {
-                inputJSON.block = blockToJSON(childBlock);
-                if (shadowMutation) {
-                    inputJSON.shadowDom = shadowMutation;
+                //Now convert that to JSON.
+
+                if (shadowDomBlock) {
+                    shadowJSON = blockToJSON(shadowDomBlock);
+                }
+
+                //Remove it if we need it removed.
+
+                if (removeShadowBlock) {
+                    shadowDomBlock.dispose(true);
                 }
             }
+
+            if (childBlock) {
+                if (shadowJSON) {
+                    inputJSON.shadow = shadowJSON;
+                }
+
+                inputJSON.block = blockToJSON(childBlock);
+            }
+
             json.inputs.push(inputJSON);
         }
     }
@@ -35323,7 +35296,7 @@ function JSONToBlockHeadless(jsonBlock, workspace) {
     var block = workspace.newBlock(jsonBlock.type, jsonBlock.id);
 
     if (jsonBlock.mutation) {
-        var mutation = JSONToMutation(jsonBlock.mutation);
+        var mutation = JSONToDom(jsonBlock.mutation);
         if (block.domToMutation) {
           block.domToMutation(mutation);
           if (block.initSvg) {
@@ -35378,11 +35351,22 @@ function JSONToBlockHeadless(jsonBlock, workspace) {
         JSONToField(block, fieldJson);
     }
 
-    if (jsonInput)
-
     for (var jsonInput of jsonBlock.inputs) {
         var input = block.getInput(jsonInput.name);
         var jsonChildBlock = jsonInput.block;
+        var sh = jsonInput.shadow || jsonInput.shadowDom;
+        if (sh) {
+            var shadowDom = null;
+            if (sh.tag || sh.tagName) {
+                shadowDom = JSONToDom(sh);
+            } else {
+                var shadowBlock = JSONToBlock(sh, workspace);
+                shadowDom = Blockly.Xml.blockToDom(shadowBlock, workspace);
+                shadowBlock.dispose(true);
+            }
+
+            input.connection.setShadowDom(shadowDom);
+        }
         if (jsonChildBlock && input) {
             var blockChild = JSONToBlockHeadless(jsonChildBlock, workspace);
             if (blockChild.outputConnection) {
@@ -36152,6 +36136,70 @@ BlockCompiler.defineBlock("control_forever", {
   },
 });
 
+
+/***/ }),
+
+/***/ 9475:
+/***/ ((module) => {
+
+
+function domToJSON(dom) {
+    //Rather then us try to make manual implementations for each advanced block,
+    // we can just convert the dom into a json object.
+
+    var json = {};
+    var attributeNames = dom.getAttributeNames();
+    var children = Array.from(dom.children);
+
+    json.tag = dom.tagName;
+
+    if (attributeNames.length > 0) {
+        json.attr = {};
+        for (var name of attributeNames) {
+            json.attr[name] = dom.getAttribute(name);
+        }
+    }
+
+    if (children.length > 0) {
+        json.children = [];
+        for (var child of children) {
+            json.children.push(domToJSON(child));
+        }
+    } else if (dom.textContent) {
+        json.text = dom.textContent;
+    }
+
+    return json;
+}
+
+function JSONToDom(json) {
+    var tag = json.tag || json.tagName;
+    var dom = document.createElement(tag || "");
+
+    var attr = json.attributes || json.attr;
+    if (attr) {
+        for (var name in attr) {
+            dom.setAttribute(name, attr[name]);
+        }
+    }
+
+    var children = json.children;
+    if (children) {
+        for (var childJSON of children) {
+            var childDom = JSONToDom(childJSON);
+            dom.appendChild(childDom);
+        }
+    } else if (json.text || json.textContent) {
+        dom.textContent = json.text || json.textContent;
+    }
+
+    return dom;
+}
+
+module.exports = {
+    domToJSON,
+    JSONToDom
+};
 
 /***/ }),
 
