@@ -27,6 +27,9 @@ function blockToJSON(block) {
     }
 
     json.fields = fieldsToJSON(block);
+    if (json.fields.length < 1) {
+        json.fields = [];
+    }
 
     json.inputs = [];
     for (var input of block.inputList) {
@@ -83,6 +86,9 @@ function blockToJSON(block) {
 
             json.inputs.push(inputJSON);
         }
+    }
+    if (json.inputs.length < 1) {
+        json.inputs = [];
     }
 
     if (block.inputsInlineDefault != block.inputsInline) {
@@ -186,11 +192,11 @@ function JSONToBlockHeadless(jsonBlock, workspace) {
         block.data = jsonBlock.data;
     }
 
-    for (var fieldJson of jsonBlock.fields) {
+    for (var fieldJson of (jsonBlock.fields || [])) {
         JSONToField(block, fieldJson);
     }
 
-    for (var jsonInput of jsonBlock.inputs) {
+    for (var jsonInput of (jsonBlock.inputs || [])) {
         var input = block.getInput(jsonInput.name);
         var jsonChildBlock = jsonInput.block;
         var sh = jsonInput.shadow || jsonInput.shadowDom;
@@ -227,9 +233,7 @@ function JSONToBlockHeadless(jsonBlock, workspace) {
     block.setMovable(!!jsonBlock.movable);
     block.setEditable(!!jsonBlock.editable);
     block.setCollapsed(!!jsonBlock.collapsed);
-    if (jsonBlock.shadow) {
-        block.setShadow(true);
-    }
+    block.setShadow(!!jsonBlock.shadow);
 
     return block;
 }

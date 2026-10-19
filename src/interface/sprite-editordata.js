@@ -5,6 +5,7 @@ function loadSpriteEditorData(sprite, workspace) {
         return;
     }
     var data = sprite.editorData;
+
     if (data.xml) {
         //Legacy implementation.
         var dom = Blockly.Xml.textToDom(data.xml);
@@ -12,6 +13,21 @@ function loadSpriteEditorData(sprite, workspace) {
     } else if (data.blocks) {
         //Use the modern JSON implementation.
         wjson.JSONToWorkspace(data.blocks, workspace);
+    }
+
+    var flyoutWorkspace = workspace.getFlyout().getWorkspace();
+
+    var scrollPos = data.scroll;
+    var scrollFlyoutPos = data.flyoutScroll;
+    if (scrollPos) {
+        workspace.scrollX = scrollPos.x;
+        workspace.scrollY = scrollPos.y;
+        workspace.scale = scrollPos.scale;
+    }
+    if (scrollFlyoutPos) {
+        flyoutWorkspace.scrollX = scrollFlyoutPos.x;
+        flyoutWorkspace.scrollY = scrollFlyoutPos.y;
+        flyoutWorkspace.scale = scrollFlyoutPos.scale;
     }
 }
 
@@ -30,6 +46,19 @@ function saveSpriteEditorData(sprite, workspace) {
 
     var workspaceJson = wjson.workspaceToJSON(workspace);
     data.blocks = workspaceJson;
+
+    var flyoutWorkspace = workspace.getFlyout().getWorkspace();
+    data.flyoutScroll = {
+        x: flyoutWorkspace.scrollX,
+        y: flyoutWorkspace.scrollY,
+        scale: flyoutWorkspace.scale
+    };
+    
+    data.scroll = {
+        x: workspace.scrollX,
+        y: workspace.scrollY,
+        scale: workspace.scale
+    };
 }
 
 function copySpriteEditorData(sourceSprite, targetSprite) {

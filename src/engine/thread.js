@@ -177,6 +177,10 @@ class Thread {
     }
   }
 
+  startTweenMovement(movement) {
+    return movement.start(this.sprite.engine.time.totalTime * 1000);
+  }
+
   tweenToXY(targetX, targetY, duration, easing) {
     return this.tweenTo(
       {
@@ -245,7 +249,7 @@ class Thread {
           resolve();
         }
       });
-      movement.start(_this.sprite.engine._iTime * 1000);
+      _this.startTweenMovement(movement);
     });
   }
 
@@ -283,7 +287,7 @@ class Thread {
           resolve();
         }
       });
-      movement.start(_this.sprite.engine._iTime * 1000);
+      _this.startTweenMovement(movement);
     });
   }
 
@@ -323,7 +327,7 @@ class Thread {
           resolve();
         }
       });
-      movement.start(_this.sprite.engine._iTime * 1000);
+      _this.startTweenMovement(movement);
     });
   }
 

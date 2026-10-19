@@ -2,8 +2,8 @@ var {
   getSaveableVariables,
   getSaveableVariablesGlobal,
 } = require("./saveable-vars.js");
-var EditorUtils = require("../wjson/editorutil.js");
 var engine = require("../curengine.js");
+var SpriteUtils = require("./spritestuff.js");
 
 //Engine property names
 
@@ -105,19 +105,6 @@ function fromSpriteJSON(sprite, spriteJson, isImport) {
   }
 }
 
-function _listSpriteUsedBroadcasts(sprite) {
-  if (!sprite.editorData) {
-    return engine.broadcastNames;
-  }
-  if (sprite.editorData.xml) {
-    return engine.broadcastNames;
-  }
-
-  var blocks = EditorUtils.findBlocks(sprite.editorData.blocks, [
-    "event_ggm3_broadcast_menu"
-  ]);
-}
-
 function toSpriteJSON(sprite, isExport) {
   var spriteJson = {
     x: sprite.x,
@@ -145,7 +132,8 @@ function toSpriteJSON(sprite, isExport) {
   
   //Broadcast names will now only be added if the sprite actually uses them.
   
-  spriteJson.broadcastNames = engine.broadcastNames;
+  var broadcastNames = SpriteUtils.listUsedBroadcasts(sprite);
+  spriteJson.broadcastNames = broadcastNames;
 
   return spriteJson; //return with additional properties.
 }

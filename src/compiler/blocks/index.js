@@ -13,9 +13,9 @@ var JavascriptTranslation = {
   ...require("./global_data.js"), //done
   ...require("./sounds.js"), //done
   ...require("./engine.js"), //done
-  ...require("./property.js"),
-  ...require("./sprite-master.js"),
-  ...require("./tweening.js"),
+  ...require("./property.js"), //done
+  ...require("./sprite-master.js"), //done
+  ...require("./tweening.js"), //done
 };
 
 module.exports = JavascriptTranslation;

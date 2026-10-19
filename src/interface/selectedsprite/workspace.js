@@ -371,10 +371,7 @@ function init(state, deps) {
 
   function saveCurrentSpriteCode() {
     if (state.currentSelectedSprite && workspace) {
-      try {
-        state.currentSelectedSprite.blocklyXML =
-          Blockly.Xml.workspaceToDom(workspace);
-      } catch (e) {}
+      deps.EditorData.saveSpriteEditorData(state.currentSelectedSprite, workspace);
       deps.markProjectDirty();
     }
   }
