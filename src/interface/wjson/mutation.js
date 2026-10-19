@@ -6,19 +6,19 @@ function mutationToJSON(dom) {
     var attributeNames = dom.getAttributeNames();
     var children = Array.from(dom.children);
 
-    json.attributes = {};
+    json.attr = {};
     for (var name of attributeNames) {
-        json.attributes[name] = dom.getAttribute(name);
+        json.attr[name] = dom.getAttribute(name);
     }
 
-    json.tagName = dom.tagName;
+    json.tag = dom.tagName;
     if (children.length > 0) {
         json.children = [];
         for (var child of children) {
             json.children.push(mutationToJSON(child));
         }
     } else {
-        json.textContent = dom.textContent;
+        json.text = dom.textContent;
     }
 
     return json;
@@ -26,18 +26,20 @@ function mutationToJSON(dom) {
 
 function JSONToMutation(json) {
     var dom = document.createElement(json.tagName);
-    if (json.attributes) {
-        for (var name in json.attributes) {
-            dom.setAttribute(name, json.attributes[name]);
+    var attr = json.attributes || json.attr;
+    if (attr) {
+        for (var name in attr) {
+            dom.setAttribute(name, attr[name]);
         }
     }
-    if (json.children) {
-        for (var childJSON of json.children) {
+    var children = json.children;
+    if (children) {
+        for (var childJSON of children) {
             var childDom = JSONToMutation(childJSON);
             dom.appendChild(childDom);
         }
-    } else if (json.textContent) {
-        dom.textContent = json.textContent;
+    } else if (json.text || json.textContent) {
+        dom.textContent = json.text || json.textContent;
     }
     return dom;
 }
