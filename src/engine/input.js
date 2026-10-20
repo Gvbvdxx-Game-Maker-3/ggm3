@@ -1,19 +1,17 @@
+var MouseState = require("./mousestate.js");
+var KeyboardState = require("./keyboardstate.js");
 
 class GGM3Input {
     constructor (engine) {
         this.engine = engine;
-        this.keysPressed = {};
+        this.mouse = new MouseState(this);
+        this.keyboard = new KeyboardState(this);
     }
 
-    setKeyPressed(key, down) {
-        var keyName = key.toLowerCase();
-        if (this.keyNames[key]) {
-            keyName = this.keyNames[key];
-        }
-        if (down) {
-            this.keysPressed[keyName] = true;
-        } else {
-            delete this.keysPressed[keyName];
-        }
+    update() {
+        this.mouse.update();
+        this.keyboard.update();
     }
 }
+
+module.exports = GGM3Input;

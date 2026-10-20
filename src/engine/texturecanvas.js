@@ -16,6 +16,21 @@ class TextureCanvas {
     ctx.clearRect(0, 0, 1, 1);
   }
 
+  static render1x1PixelMask() {
+    canvas.width = 1;
+    canvas.height = 1;
+    ctx.fillStyle = "#ff0000";
+    ctx.fillRect(0, 0, 1, 1);
+    var result = new TextureCanvasRenderResult(
+      0,
+      0,
+      canvas.width,
+      canvas.height,
+    );
+    this.clearCanvas();
+    return result;
+  }
+
   static renderScaledImage(img, scale) {
     canvas.width = img.width * scale;
     canvas.height = img.height * scale;
