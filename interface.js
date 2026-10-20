@@ -1092,6 +1092,7 @@ class BlockCompilerInstance {
     this.useBlockNumIDs = options.useBlockNumIDs || false;
     this.useDummyDef = options.useDummyDef || false;
     this.useDummyDefClicked = options.useDummyDefClicked || true;
+    this.engine = options.engine || null;
 
     this.resetBlockIDCount();
   }
@@ -4125,7 +4126,7 @@ var CoreFunctions = __webpack_require__(5619);
 BlockCompiler.defineBlock("sensing_mousey", {
   type: CBlockType.OUTPUT,
   func: function (utils) {
-    return `engine.mouseY`;
+    return `engine.input.mouseY`;
   },
 });
 
@@ -4530,7 +4531,28 @@ BlockCompiler.defineBlock("sensing_keyoptions", {
   func: function (utils) {
     var KEY_OPTION = utils.getField("KEY_OPTION", "");
 
-    return JSON.stringify(KEY_OPTION);
+    if (utils.engine) {
+
+      var engine = utils.engine;
+      if (!engine.KeyCode[KEY_OPTION]) {
+
+        //Try to look up the key name since usually we can fall back on that.
+        for (var keyArray of engine.KeyCode.ALL_KEYS) {
+          var key = engine.KeyCode.getKeyObject(keyArray);
+          if (key.friendlyName == KEY_OPTION) {
+            return `${key.keyCode}`;
+          }
+        }
+
+      }
+
+    }
+
+    if (CoreFunctions.isJavaScriptSafe(KEY_OPTION)) {
+      return `engine.KeyCode.${KEY_OPTION}`;
+    } else {
+      return `engine.KeyCode[${JSON.stringify(KEY_OPTION)}]`;
+    }
   },
 });
 
@@ -6810,8 +6832,8 @@ class Sprite {
 
   goTo(target) {
     if (target == "__mouse_pointer__") {
-      this.x = this.engine.mouseX;
-      this.y = this.engine.mouseY;
+      this.x = this.engine.input.mouseX;
+      this.y = this.engine.input.mouseY;
       return;
     }
     var targetSprite = this.findSpriteByName(target);
@@ -6949,14 +6971,8 @@ class Sprite {
   }
 
   isTouchingMouse() {
-    if (!this.mask) {
-      return false;
-    }
     this.alignMask();
-    if (this.engine.mouseMask.collisionTest(this.mask)) {
-      return true;
-    }
-    return false;
+    return this.engine.input.mouse.isTouching(this);
   }
 
   isTouchingSprite(otherSpriteName) {
@@ -8913,6 +8929,173 @@ BlockCompiler.defineBlock("engine_estimated_fps", {
 
 /***/ }),
 
+/***/ 2980:
+/***/ ((module) => {
+
+
+class KeyCode {
+
+    static UP_ARROW = [38, "up arrow", "UP_ARROW"];
+    static DOWN_ARROW = [40, "down arrow", "DOWN_ARROW"];
+    static LEFT_ARROW = [37, "left arrow", "LEFT_ARROW"];
+    static RIGHT_ARROW = [39, "right arrow", "RIGHT_ARROW"];
+
+    static SPACE = [32, "space", "SPACE"];
+    static CONTROL = [17, "control (CTRL)", "CONTROL"];
+    static ALT = [18, "alt", "ALT"];
+    static SHIFT = [16, "shift", "SHIFT"];
+    //static META = [91, "meta", "META"]; //Should i use this? This will open the OS menu when pressed so there might be no point for this.
+    static ENTER = [13, "enter", "ENTER"];
+    static TAB = [9, "tab", "TAB"];
+    static ESCAPE = [27, "ESC", "ESCAPE"];
+    static BACKSPACE = [8, "backspace", "BACKSPACE"];
+
+    static BACKQUOTE = [192, "`", "BACKQUOTE"];
+    static NUM_1 = [49, "1", "NUM_1"];
+    static NUM_2 = [50, "2", "NUM_2"];
+    static NUM_3 = [51, "3", "NUM_3"];
+    static NUM_4 = [52, "4", "NUM_4"];
+    static NUM_5 = [53, "5", "NUM_5"];
+    static NUM_6 = [54, "6", "NUM_6"];
+    static NUM_7 = [55, "7", "NUM_7"];
+    static NUM_8 = [56, "8", "NUM_8"];
+    static NUM_9 = [57, "9", "NUM_9"];
+    static NUM_0 = [48, "0", "NUM_0"];
+
+    static MINUS = [189, "-", "MINUS"];
+    static EQUALS = [187, "=", "EQUALS"];
+
+    static BRACKETLEFT = [219, "[", "BRACKETLEFT"];
+    static BRACKETRIGHT = [221, "]", "BRACKETRIGHT"];
+    static BACKSLASH = [220, '\\', "BACKSLASH"];
+    static SEMICOLON = [186, ";", "SEMICOLON"];
+    static QUOTE = [222, "\"", "QUOTE"];
+    static COMMA = [188, ",", "COMMA"];
+    static PERIOD = [190, ".", "PERIOD"];
+    static SLASH = [191, "/", "SLASH"];
+
+    static LETTER_A = [65, "a", "LETTER_A"];
+    static LETTER_B = [66, "b", "LETTER_B"];
+    static LETTER_C = [67, "c", "LETTER_C"];
+    static LETTER_D = [68, "d", "LETTER_D"];
+    static LETTER_E = [69, "e", "LETTER_E"];
+    static LETTER_F = [70, "f", "LETTER_F"];
+    static LETTER_G = [71, "g", "LETTER_G"];
+    static LETTER_H = [72, "h", "LETTER_H"];
+    static LETTER_I = [73, "i", "LETTER_I"];
+    static LETTER_J = [74, "j", "LETTER_J"];
+    static LETTER_K = [75, "k", "LETTER_K"];
+    static LETTER_L = [76, "l", "LETTER_L"];
+    static LETTER_M = [77, "m", "LETTER_M"];
+    static LETTER_N = [78, "n", "LETTER_N"];
+    static LETTER_O = [79, "o", "LETTER_O"];
+    static LETTER_P = [80, "p", "LETTER_P"];
+    static LETTER_Q = [81, "q", "LETTER_Q"];
+    static LETTER_R = [82, "r", "LETTER_R"];
+    static LETTER_S = [83, "s", "LETTER_S"];
+    static LETTER_T = [84, "t", "LETTER_T"];
+    static LETTER_U = [85, "u", "LETTER_U"];
+    static LETTER_V = [86, "v", "LETTER_V"];
+    static LETTER_W = [87, "w", "LETTER_W"];
+    static LETTER_X = [88, "x", "LETTER_X"];
+    static LETTER_Y = [89, "y", "LETTER_Y"];
+    static LETTER_Z = [90, "z", "LETTER_Z"];
+
+    static ALL_KEYS = [
+        KeyCode.UP_ARROW,
+        KeyCode.DOWN_ARROW,
+        KeyCode.LEFT_ARROW,
+        KeyCode.RIGHT_ARROW,
+
+        KeyCode.SPACE,
+        KeyCode.CONTROL,
+        KeyCode.ALT,
+        KeyCode.SHIFT,
+        KeyCode.ENTER,
+        KeyCode.TAB,
+        KeyCode.ESCAPE,
+        KeyCode.BACKSPACE,
+
+        KeyCode.BACKQUOTE,
+        KeyCode.NUM_1,
+        KeyCode.NUM_2,
+        KeyCode.NUM_3,
+        KeyCode.NUM_4,
+        KeyCode.NUM_5,
+        KeyCode.NUM_6,
+        KeyCode.NUM_7,
+        KeyCode.NUM_8,
+        KeyCode.NUM_9,
+        KeyCode.NUM_0,
+
+        KeyCode.MINUS,
+        KeyCode.EQUALS,
+        KeyCode.BRACKETLEFT,
+        KeyCode.BRACKETRIGHT,
+        KeyCode.BACKSLASH,
+        KeyCode.SEMICOLON,
+        KeyCode.QUOTE,
+        KeyCode.COMMA,
+        KeyCode.PERIOD,
+        KeyCode.SLASH,
+
+        KeyCode.LETTER_A,
+        KeyCode.LETTER_B,
+        KeyCode.LETTER_C,
+        KeyCode.LETTER_D,
+        KeyCode.LETTER_E,
+        KeyCode.LETTER_F,
+        KeyCode.LETTER_G,
+        KeyCode.LETTER_H,
+        KeyCode.LETTER_I,
+        KeyCode.LETTER_J,
+        KeyCode.LETTER_K,
+        KeyCode.LETTER_L,
+        KeyCode.LETTER_M,
+        KeyCode.LETTER_N,
+        KeyCode.LETTER_O,
+        KeyCode.LETTER_P,
+        KeyCode.LETTER_Q,
+        KeyCode.LETTER_R,
+        KeyCode.LETTER_S,
+        KeyCode.LETTER_T,
+        KeyCode.LETTER_U,
+        KeyCode.LETTER_V,
+        KeyCode.LETTER_W,
+        KeyCode.LETTER_X,
+        KeyCode.LETTER_Y,
+        KeyCode.LETTER_Z,
+    ];
+
+    static getKeyObject(key) {
+        return {
+            keyCode: key[0],
+            friendlyName: key[1],
+            codeName: key[2],
+        };
+    }
+
+    static hasKey(codeName) {
+        var allKeys = KeyCode.ALL_KEYS;
+        for (var keyArray of allKeys) {
+            var key = KeyCode.getKeyObject(keyArray);
+            if (key.codeName == codeName) {
+                return keyArray;
+            }
+        }
+
+        return false;
+    }
+
+    static allCodeNumbers(codeName) {
+        return KeyCode.ALL_KEYS.map((keyArray) => KeyCode.getKeyObject(keyArray).keyCode);
+    }
+}
+
+module.exports = KeyCode;
+
+/***/ }),
+
 /***/ 2987:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -8968,6 +9151,7 @@ var deps = {
   compilerInstance: compiler.newInstance({
     useExportCompile: false,
     useBlockNumberIDs: false,
+    engine
   }),
   EditorData,
   valueReport,
@@ -9179,6 +9363,63 @@ module.exports = SpriteMaster;
 
 /***/ }),
 
+/***/ 3147:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var MouseState = __webpack_require__(9371);
+var KeyboardState = __webpack_require__(4449);
+
+class GGM3Input {
+    constructor (engine) {
+        this.engine = engine;
+        this.mouse = new MouseState(this);
+        this.keyboard = new KeyboardState(this);
+    }
+
+    sendInput(eventName, data) {
+        if (eventName == "keyboard") {
+            this.keyboard.write(data);
+            return;
+        }
+        if (eventName == "mouse") {
+            this.mouse.write(data);
+            return;
+        }
+
+        throw new Error(`Invalid event name: ${eventName}. Use one of these: "keyboard", "mouse"`);
+    }
+
+    getMouseMask() {
+        return this.mouse.mask;
+    }
+
+    runFrame() {
+        this.mouse.update();
+        this.keyboard.update();
+    }
+
+    get mouseX() {
+        return this.mouse.mouseX;
+    }
+    get mouseY() {
+        return this.mouse.mouseY;
+    }
+    get mouseDown() {
+        return this.mouse.mouseDown;
+    }
+    get mouseClicked() {
+        return this.mouse.mouseClicked;
+    }
+
+    isKeyPressed(keyCode) {
+        return this.keyboard.isPressed(keyCode);
+    }
+}
+
+module.exports = GGM3Input;
+
+/***/ }),
+
 /***/ 3180:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -9189,7 +9430,7 @@ var CoreFunctions = __webpack_require__(5619);
 BlockCompiler.defineBlock("sensing_mousedown", {
   type: CBlockType.OUTPUT,
   func: function (utils) {
-    return `engine.mouseIsDown`;
+    return `engine.input.mouseDown`;
   },
 });
 
@@ -9511,7 +9752,7 @@ var CoreFunctions = __webpack_require__(5619);
 BlockCompiler.defineBlock("sensing_mousex", {
   type: CBlockType.OUTPUT,
   func: function (utils) {
-    return `engine.mouseX`;
+    return `engine.input.mouseX`;
   },
 });
 
@@ -11579,6 +11820,7 @@ class ExportMainGenerator extends EventEmitter {
       useExportCompile: true,
       useBlockNumIDs: true,
       useDummyDef: false,
+      engine
     });
     this._spriteAssets = [];
   }
@@ -22828,6 +23070,10 @@ BlockCompiler.defineBlock("operator_null", {
 /***/ 4447:
 /***/ ((module) => {
 
+/**
+ * CollisionSprite code was written by ChatGPT and optimized with Google Gemini.
+ */
+
 class CollisionSprite {
   constructor(
     imageData,
@@ -23116,6 +23362,84 @@ class CollisionSprite {
 }
 module.exports = CollisionSprite;
 
+
+/***/ }),
+
+/***/ 4449:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+
+var KeyCode = __webpack_require__(2980);
+
+class KeyboardState {
+    constructor (input) {
+        this.input = input;
+        this.engine = input.engine;
+
+        this.init();
+    }
+
+    update() {
+        var states = this.keyStates;
+        var countStates = this.keyCountStates;
+        for (var keyCode of Object.keys(states)) {
+            if (states[keyCode]) {
+                countStates[keyCode] += 1;
+            } else {
+                countStates[keyCode] = 0;
+            }
+        }
+    }
+
+    init() {
+        this.keyStates = {};
+        this.keyCountStates = {};
+        var codeNumbers = KeyCode.allCodeNumbers();
+
+        for (var codeNum of codeNumbers) {
+            this.keyStates[codeNum] = false;
+            this.keyCountStates[codeNum] = 0;
+        }
+    }
+
+    isPressed(keyArray) {
+        var key = KeyCode.getKeyObject(keyArray);
+        return (+this.keyCountStates[key.keyCode] || 0) !== 0;
+    }
+
+    write(data) {
+        if (!data) {
+            return;
+        }
+
+        var keyCode = null;
+        if (typeof data.keyCode == "number") {
+            keyCode = data.keyCode;
+        }
+        if (data.event) {
+            var event = data.event;
+            if (typeof event.keyCode == "number") {
+                keyCode = event.keyCode;
+            }
+        }
+
+        if (!keyCode) {
+            return;
+        }
+
+        var state = false;
+        if (data.state || data.isDown || data.down || data.pressed) {
+            state = true;
+        }
+
+        var states = this.keyStates;
+        if (typeof states[keyCode] !== "undefined") {
+            states[keyCode] = state;
+        }
+    }
+}
+
+module.exports = KeyboardState;
 
 /***/ }),
 
@@ -26283,6 +26607,38 @@ function castToBoolean(code, surround = false) {
   return surround ? `(${c})` : c;
 }
 
+//Used to tell if a string is javascript safe or
+// if it should be wrapped in a string and brackets.
+//Used for getters like "engine.KeyCode.LETTER_A".
+function isJavaScriptSafe(str) {
+  var safeChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_";
+  var safeNums = "1234567890";
+
+  if (typeof str !== "string") {
+    //Not even a string.
+    return false;
+  }
+
+  if (str.length < 1) {
+    //Has to not be empty.
+    return false;
+  }
+
+  if (safeNums.indexOf(str[0]) !== -1) {
+    //The first character can't be a number.
+    return false;
+  }
+
+  for (var char of str) {
+    if (safeNums.indexOf(char) == -1 && safeChars.indexOf(char) == -1) {
+      //This character is not safe for javascript directly.
+      return false;
+    }
+  }
+
+  return true;
+}
+
 module.exports = {
   startThreadStack,
   endThreadStack,
@@ -26298,6 +26654,7 @@ module.exports = {
   castToNumber,
   castToString,
   castToBoolean,
+  isJavaScriptSafe
 };
 
 
@@ -28930,6 +29287,21 @@ class TextureCanvas {
     ctx.clearRect(0, 0, 1, 1);
   }
 
+  static render1x1PixelMask() {
+    canvas.width = 1;
+    canvas.height = 1;
+    ctx.fillStyle = "#ff0000";
+    ctx.fillRect(0, 0, 1, 1);
+    var result = new TextureCanvasRenderResult(
+      0,
+      0,
+      canvas.width,
+      canvas.height,
+    );
+    this.clearCanvas();
+    return result;
+  }
+
   static renderScaledImage(img, scale) {
     canvas.width = img.width * scale;
     canvas.height = img.height * scale;
@@ -31181,11 +31553,12 @@ var Drawable = __webpack_require__(6065);
 var Sprite = __webpack_require__(2242);
 var sMath = __webpack_require__(4912);
 var EventEmitter = __webpack_require__(228);
-var CollisionSprite = __webpack_require__(4447);
 var Library = __webpack_require__(3728);
 
 var { EngineRenderer } = __webpack_require__(4428);
 var GameTime = __webpack_require__(8024);
+var KeyCode = __webpack_require__(2980);
+var GGM3Input = __webpack_require__(3147);
 
 var created = false;
 
@@ -31278,6 +31651,7 @@ class GGM3Engine extends EventEmitter {
     this._frameRate = this.frameRate;
     this.frameTimestamps = [];
     this.sMath = sMath;
+    this.KeyCode = KeyCode;
     this.exportMode = false;
     this.activeTextures = 0;
     this.tween = new TWEEN.Group();
@@ -31290,7 +31664,6 @@ class GGM3Engine extends EventEmitter {
     };
     this.keysPressed = {};
     this.renderer = new EngineRenderer(this, this.canvas);
-    this.generateMouseMask();
     this.spriteMap = {};
     this.globalVariables = {};
     this.propertyVariables = {};
@@ -31306,6 +31679,7 @@ class GGM3Engine extends EventEmitter {
     this.changeCursorStyle(this.DEFAULT_CURSOR_STYLE);
 
     this.time = new GameTime(this);
+    this.input = new GGM3Input(this);
     this.stopGame();
     this.time.startLoop();
   }
@@ -31568,31 +31942,6 @@ class GGM3Engine extends EventEmitter {
   }
 
   /**
-   * Gets the x-coordinate of the mouse position.
-   * @returns {Number} The x-coordinate of the mouse position.
-   * @type {Number}
-   */
-  get mouseX() {
-    return this.mouseMask.x;
-  }
-  /**
-   * Gets the y-coordinate of the mouse position.
-   * @returns {Number} The y-coordinate of the mouse position.
-   * @type {Number}
-   */
-  get mouseY() {
-    return -this.mouseMask.y;
-  }
-  /**
-   * Gets whether the mouse is down.
-   * @returns {Boolean} True if the mouse is down, false otherwise.
-   * @type {Boolean}
-   */
-  get mouseIsDown() {
-    return this.mouseMask.isDown;
-  }
-
-  /**
    * Stops the game by stopping all scripts, deleting all clones, and resetting all effects for every sprite in the game.
    */
   stopGame() {
@@ -31816,12 +32165,15 @@ class GGM3Engine extends EventEmitter {
       this.time.totalTime,
     );
 
+    this.input.runFrame();
+
     var sprs = this.getAllTopSprites();
     var sprsReversed = sprs.reverse();
     var _this = this;
     sprsReversed.forEach((spr) => {
       _this.tickSprite(spr);
     });
+    
     this.tween.update(this.time.totalTime * 1000);
 
     this.renderer.drawGameFrame({
@@ -31884,24 +32236,6 @@ class GGM3Engine extends EventEmitter {
   }
 
   /**
-   * Generates a simple 1x1 white pixel mouse mask for detecting mouse interactions with sprites.
-   * @returns {void}
-   */
-  generateMouseMask() {
-    var c = document.createElement("canvas");
-    var ctx = c.getContext("2d");
-    c.width = 1;
-    c.height = 1;
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, 1, 1);
-    this.mouseMask = new CollisionSprite(ctx.getImageData(0, 0, 1, 1));
-    this.mouseMask.isDown = false;
-    c.width = 0;
-    c.height = 0;
-    c.remove();
-  }
-
-  /**
    * Finds a sprite by its name.
    * @param {String} name The name of the sprite to find.
    * @returns {Sprite|null} The found sprite or null if not found.
@@ -31920,44 +32254,6 @@ class GGM3Engine extends EventEmitter {
       }
     }
     return null;
-  }
-
-  /**
-   * Changes the mouse position.
-   * @param {Number} cx The x-coordinate of the mouse position.
-   * @param {Number} cy The y-coordinate of the mouse position.
-   * @returns {void}
-   */
-  changeMousePosition(cx, cy) {
-    this.mouseMask.x = (+cx || 0) / this.screenScale - this.gameWidth / 2;
-    this.mouseMask.y = (+cy || 0) / this.screenScale - this.gameHeight / 2;
-  }
-
-  /**
-   * Changes the mouse down state.
-   * @param {Boolean} down The new mouse down state.
-   * @returns {void}
-   */
-  changeMouseDown(down) {
-    this.mouseMask.isDown = !!down;
-  }
-
-  /**
-   * Changes the key pressed state.
-   * @param {String} key The key to change.
-   * @param {Boolean} down The new key pressed state.
-   * @returns {void}
-   */
-  changeKeyPressed(key, down) {
-    var keyName = key.toLowerCase();
-    if (this.keyNames[key]) {
-      keyName = this.keyNames[key];
-    }
-    if (down) {
-      this.keysPressed[keyName] = true;
-    } else {
-      delete this.keysPressed[keyName];
-    }
   }
 
   /**
@@ -32016,10 +32312,10 @@ class GGM3Engine extends EventEmitter {
    */
   tickEditMode() {
     if (this._editDragging) {
-      if (this.mouseIsDown) {
+      if (this.input.mouseDown) {
         var { sprite, offsetx, offsety } = this._editDragging;
-        sprite.x = this.mouseX + offsetx;
-        sprite.y = this.mouseY + offsety;
+        sprite.x = this.input.mouseX + offsetx;
+        sprite.y = this.input.mouseY + offsety;
         this.canvas.style.cursor = "grabbing";
       } else {
         this._editDragging = null;
@@ -32031,7 +32327,7 @@ class GGM3Engine extends EventEmitter {
         .filter((s) => !s.hidden)
         .filter((s) => s.alpha > 70);
       var touchedSprite = null;
-      var mouseMask = this.mouseMask;
+      var mouseMask = this.input.getMouseMask();
       for (var sprite of topSprites) {
         sprite.alignMask();
         var mask = sprite.mask;
@@ -32045,13 +32341,13 @@ class GGM3Engine extends EventEmitter {
       if (touchedSprite) {
         this.canvas.style.cursor = "grab";
       }
-      if (this.mouseIsDown) {
+      if (this.input.mouseDown) {
         if (!this._previousMouseDown) {
           this._previousMouseDown = true;
           if (touchedSprite) {
             this._editDragging = {
-              offsetx: touchedSprite.x - this.mouseX,
-              offsety: touchedSprite.y - this.mouseY,
+              offsetx: touchedSprite.x - this.input.mouseX,
+              offsety: touchedSprite.y - this.input.mouseY,
               sprite: touchedSprite,
             };
           }
@@ -32060,6 +32356,16 @@ class GGM3Engine extends EventEmitter {
         this._previousMouseDown = false;
       }
     }
+  }
+
+  /**
+   * Sends a game input event to the engine.
+   * @param {string} eventName Input type, this has to be either "mouse", "keyboard", or "touch".
+   * @param {object} data JSON arguments for the input to be processed.
+   * @returns {void}
+   */
+  sendInput(eventName, data) {
+    this.input.sendInput(eventName, data);
   }
 
   /**
@@ -34465,7 +34771,7 @@ BlockCompiler.defineBlock("sensing_keypressed", {
   func: function (utils) {
     var KEY_OPTION = utils.getInput("KEY_OPTION", "");
 
-    return `!!engine.keysPressed[${KEY_OPTION}]`;
+    return `engine.input.isKeyPressed(${KEY_OPTION})`;
   },
 });
 
@@ -35202,83 +35508,60 @@ elements.setInnerJSON(projectControls, [
     ],
   },
 ]);
-var projectMouseCoordinates = elements.getGPId("projectMouseCoordinates");
 
-function getMousePosition(event, onElement, size) {
-  var client = onElement.getBoundingClientRect();
-
-  var relativeX = event.x - client.x;
-  var relativeY = event.y - client.y;
-
-  var scaleX = client.width / size[0];
-  var realX = relativeX * scaleX;
-
-  var scaleY = client.height / size[1];
-  var realY = relativeY * scaleY;
-
-  if (realX < 0) {
-    realX = 0;
-  }
-  if (realY < 0) {
-    realY = 0;
-  }
-
-  if (realX > size[0]) {
-    realX = size[0];
-  }
-  if (realY > size[1]) {
-    realY = size[1];
-  }
-
-  var pos = {
-    x: realX,
-    y: realY,
-  };
-  return pos;
-}
+var mousePos = elements.getGPId("projectMouseCoordinates");
 
 function updateCoordinates() {
-  projectMouseCoordinates.textContent = `X: ${Math.round(engine.mouseMask.x)} Y: ${Math.round(engine.mouseMask.y)} Down: ${engine.mouseMask.isDown}`;
+  var text = `X: ${Math.round(engine.input.mouseX)} Y: ${Math.round(engine.input.mouseY)} Down: ${engine.input.mouseDown}`;
+  if (mousePos.textContent !== text) {
+    mousePos.textContent = text;
+  }
 }
 
 document.addEventListener("mousemove", (event) => {
-  var pos = getMousePosition(event, canvas, [canvas.width, canvas.height]);
-  engine.changeMousePosition(pos.x, pos.y);
-  updateCoordinates();
+  engine.sendInput("mouse", {
+    event
+  });
 });
 
 canvas.addEventListener("mousedown", (event) => {
-  var pos = getMousePosition(event, canvas, [canvas.width, canvas.height]);
-  engine.changeMousePosition(pos.x, pos.y);
-  engine.changeMouseDown(true);
-  updateCoordinates();
+  engine.sendInput("mouse", {
+    down: true
+  });
   event.preventDefault();
 });
 
 document.addEventListener("mouseup", (event) => {
-  var pos = getMousePosition(event, canvas, [canvas.width, canvas.height]);
-  engine.changeMousePosition(pos.x, pos.y);
-  engine.changeMouseDown(false);
-  updateCoordinates();
+  engine.sendInput("mouse", {
+    down: false
+  });
 });
 
 document.addEventListener("keydown", (event) => {
   if (document.activeElement == document.body) {
-    engine.changeKeyPressed(event.key, true);
+    engine.sendInput("keyboard", {
+      event,
+      down: true
+    });
     event.preventDefault();
   }
 });
 
 document.addEventListener("keyup", (event) => {
-  engine.changeKeyPressed(event.key, false);
+  engine.sendInput("keyboard", {
+    event,
+    down: false
+  });
 });
-
-updateCoordinates();
 
 updateGameViewportStyles();
 
 engine.on(engine.RESOLUTION_UPDATED, () => {
   updateGameViewportStyles();
+});
+
+engine.on(engine.FRAME_RENDERED, () => {
+  updateCoordinates();
 });
 
 
@@ -35324,6 +35607,7 @@ class CBlockUtil {
   }) {
     this.compiler = compiler;
     this.instance = instance;
+    this.engine = instance.engine;
     this.def = def;
     this.block = block;
     this.useDummy = useDummy;
@@ -35625,6 +35909,234 @@ module.exports = {
   },
 };
 
+
+/***/ }),
+
+/***/ 9371:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var CollisionSprite = __webpack_require__(4447);
+var { TextureCanvas } = __webpack_require__(6836);
+
+class MouseState {
+    constructor (input) {
+        this.input = input;
+        this.engine = input.engine;
+        
+        this.init();
+    }
+
+    get mouseX() {
+        return this.state.x;
+    }
+    get mouseY() {
+        return this.state.y;
+    }
+    get mouseDown() {
+        return this.state.down;
+    }
+    get mouseClicked() {
+        return this.state.downCount == 1;
+    }
+
+    update() {
+        var state = this.state;
+        var latest = this.latest;
+
+        if (latest.down) {
+            state.downCount += 1;
+            state.down = true;
+        } else {
+            state.downCount = 0;
+            state.down = false;
+        }
+
+        state.x = latest.x;
+        state.y = latest.y;
+
+        this.updateMask();
+    }
+
+    updateMask() {
+        var mask = this.mask;
+        mask.x = this.mouseX;
+        mask.y = -this.mouseY; //This is inverted in GGM3 coordinates so that positive is up and negative is down.
+        mask.angle = 0;
+        mask.scaleX = 1;
+        mask.scaleY = 1;
+    }
+
+    isTouching(sprite) {
+        var mask = this.mask;
+        var spriteMask = sprite.mask;
+
+        if (!spriteMask) {
+            return false;
+        }
+
+        return mask.collisionTest(spriteMask);
+    }
+
+    init() {
+        this.initLatest();
+        this.initState();
+        this.initMask();
+        this.update();
+    }
+
+    initLatest() {
+        //Direct event data, we actually use this.state for
+        // reading the mouse positions for the frame.
+
+        var latest = {};
+        latest.x = 0;
+        latest.y = 0;
+        latest.down = false;
+
+        this.latest = latest;
+    }
+
+    initState() {
+        var state = {};
+        state.x = 0;
+        state.y = 0;
+        state.down = false;
+        state.downCount = 0;
+
+        this.state = state;
+    }
+
+    initMask() {
+        //Create a mask so that we can do
+        // collision checks for when hovering over sprites.
+
+        var mask1x1 = TextureCanvas.render1x1PixelMask();
+        this.mask1x1 = mask1x1;
+        
+        this.mask = new CollisionSprite(mask1x1.imageData);
+    }
+
+    getEventPosition(event, onElement, expectedSize) {
+        var client = onElement.getBoundingClientRect();
+        var expectedWidth = expectedSize.width;
+        var expectedHeight = expectedSize.height;
+
+        var eventX = event.x || event.clientX;
+        var eventY = event.y || event.clientY;
+
+        var relativeX = eventX - client.x;
+        var relativeY = eventY - client.y;
+
+        var scaleX = client.width / expectedWidth;
+        var realX = relativeX * scaleX;
+
+        var scaleY = client.height / expectedHeight;
+        var realY = relativeY * scaleY;
+
+        if (realX < 0) {
+            realX = 0;
+        }
+        if (realY < 0) {
+            realY = 0;
+        }
+
+        if (realX > expectedWidth) {
+            realX = expectedWidth;
+        }
+        if (realY > expectedHeight) {
+            realY = expectedHeight;
+        }
+
+        var pos = {
+            x: realX,
+            y: realY,
+        };
+        return pos;
+    }
+
+    positionToGamePosition(cx,cy) {
+        var engine = this.engine;
+        
+        var scaledX = cx / engine.screenScale;
+        var scaledY = cy / engine.screenScale;
+
+        var halfWidth = engine.gameWidth / 2;
+        var halfHeight = engine.gameHeight / 2
+
+        var x = scaledX - halfWidth;
+        var y = scaledY - halfHeight;
+
+        y = -y; //Above center: positive, Below center: negative.
+
+        return {x,y};
+    }
+
+    write(data) {
+        if (!data) {
+            return;
+        }
+
+        var x = null;
+        var y = null;
+        var down = null;
+        var engine = this.engine;
+
+        if (typeof data.directX == "number" && typeof data.directY == "number") {
+            //Directly provides game mouse coordinates.
+            x = data.directX;
+            y = data.directY;
+        } else if (typeof data.x == "number" && typeof data.y == "number") {
+            //Directly provides canvas mouse coordinates.
+            var gamePos = this.positionToGamePosition(data.x, data.y);
+
+            x = gamePos.x;
+            y = gamePos.y;
+        } else if (typeof data.event !== "undefined") {
+            //Auto detect the position of the mouse.
+            //Optionally can provide its own element for mouse detection.
+
+            //This element must be layered on top of the canvas and match
+            // its size for proper detection.
+
+            var sourceElement = data.detectElement || engine.canvas;
+
+            var elementBounding = sourceElement.getBoundingClientRect();
+            var elementWidth = sourceElement.width || elementBounding.width;
+            var elementHeight = sourceElement.height || elementBounding.height;
+
+            var pos = this.getEventPosition(
+                data.event,
+                data.detectElement || engine.canvas,
+                {
+                    width: elementWidth,
+                    height: elementHeight
+                }
+            );
+
+            var gamePos = this.positionToGamePosition(pos.x, pos.y);
+
+            x = gamePos.x;
+            y = gamePos.y;
+        }
+
+        if (typeof data.down !== "undefined") {
+            down = !!data.down;
+        }
+
+        var latest = this.latest;
+
+        if (typeof x == "number" && typeof y == "number") {
+            latest.x = x;
+            latest.y = y;
+        }
+
+        if (typeof down == "boolean") {
+            latest.down = down;
+        }
+    }
+}
+
+module.exports = MouseState;
 
 /***/ }),
 
