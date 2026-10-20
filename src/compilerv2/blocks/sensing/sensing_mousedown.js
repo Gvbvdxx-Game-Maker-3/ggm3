@@ -5,6 +5,6 @@ var CoreFunctions = require("../../compiler/corefunc.js");
 BlockCompiler.defineBlock("sensing_mousedown", {
   type: CBlockType.OUTPUT,
   func: function (utils) {
-    return `engine.mouseIsDown`;
+    return `engine.input.mouseDown`;
   },
 });

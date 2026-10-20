@@ -94,8 +94,8 @@ class Sprite {
 
   goTo(target) {
     if (target == "__mouse_pointer__") {
-      this.x = this.engine.mouseX;
-      this.y = this.engine.mouseY;
+      this.x = this.engine.input.mouseX;
+      this.y = this.engine.input.mouseY;
       return;
     }
     var targetSprite = this.findSpriteByName(target);
@@ -233,14 +233,8 @@ class Sprite {
   }
 
   isTouchingMouse() {
-    if (!this.mask) {
-      return false;
-    }
     this.alignMask();
-    if (this.engine.mouseMask.collisionTest(this.mask)) {
-      return true;
-    }
-    return false;
+    return this.engine.input.mouse.isTouching(this);
   }
 
   isTouchingSprite(otherSpriteName) {

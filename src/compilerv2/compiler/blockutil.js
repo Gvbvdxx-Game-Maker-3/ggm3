@@ -12,6 +12,7 @@ class CBlockUtil {
   }) {
     this.compiler = compiler;
     this.instance = instance;
+    this.engine = instance.engine;
     this.def = def;
     this.block = block;
     this.useDummy = useDummy;

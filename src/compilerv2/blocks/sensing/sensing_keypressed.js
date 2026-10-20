@@ -7,6 +7,6 @@ BlockCompiler.defineBlock("sensing_keypressed", {
   func: function (utils) {
     var KEY_OPTION = utils.getInput("KEY_OPTION", "");
 
-    return `!!engine.keysPressed[${KEY_OPTION}]`;
+    return `engine.input.isKeyPressed(${KEY_OPTION})`;
   },
 });

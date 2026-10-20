@@ -30,6 +30,7 @@ var deps = {
   compilerInstance: compiler.newInstance({
     useExportCompile: false,
     useBlockNumberIDs: false,
+    engine
   }),
   EditorData,
   valueReport,

@@ -102,6 +102,38 @@ function castToBoolean(code, surround = false) {
   return surround ? `(${c})` : c;
 }
 
+//Used to tell if a string is javascript safe or
+// if it should be wrapped in a string and brackets.
+//Used for getters like "engine.KeyCode.LETTER_A".
+function isJavaScriptSafe(str) {
+  var safeChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_";
+  var safeNums = "1234567890";
+
+  if (typeof str !== "string") {
+    //Not even a string.
+    return false;
+  }
+
+  if (str.length < 1) {
+    //Has to not be empty.
+    return false;
+  }
+
+  if (safeNums.indexOf(str[0]) !== -1) {
+    //The first character can't be a number.
+    return false;
+  }
+
+  for (var char of str) {
+    if (safeNums.indexOf(char) == -1 && safeChars.indexOf(char) == -1) {
+      //This character is not safe for javascript directly.
+      return false;
+    }
+  }
+
+  return true;
+}
+
 module.exports = {
   startThreadStack,
   endThreadStack,
@@ -117,4 +149,5 @@ module.exports = {
   castToNumber,
   castToString,
   castToBoolean,
+  isJavaScriptSafe
 };

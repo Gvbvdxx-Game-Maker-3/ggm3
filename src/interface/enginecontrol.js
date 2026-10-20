@@ -205,81 +205,58 @@ elements.setInnerJSON(projectControls, [
     ],
   },
 ]);
-var projectMouseCoordinates = elements.getGPId("projectMouseCoordinates");
 
-function getMousePosition(event, onElement, size) {
-  var client = onElement.getBoundingClientRect();
-
-  var relativeX = event.x - client.x;
-  var relativeY = event.y - client.y;
-
-  var scaleX = client.width / size[0];
-  var realX = relativeX * scaleX;
-
-  var scaleY = client.height / size[1];
-  var realY = relativeY * scaleY;
-
-  if (realX < 0) {
-    realX = 0;
-  }
-  if (realY < 0) {
-    realY = 0;
-  }
-
-  if (realX > size[0]) {
-    realX = size[0];
-  }
-  if (realY > size[1]) {
-    realY = size[1];
-  }
-
-  var pos = {
-    x: realX,
-    y: realY,
-  };
-  return pos;
-}
+var mousePos = elements.getGPId("projectMouseCoordinates");
 
 function updateCoordinates() {
-  projectMouseCoordinates.textContent = `X: ${Math.round(engine.mouseMask.x)} Y: ${Math.round(engine.mouseMask.y)} Down: ${engine.mouseMask.isDown}`;
+  var text = `X: ${Math.round(engine.input.mouseX)} Y: ${Math.round(engine.input.mouseY)} Down: ${engine.input.mouseDown}`;
+  if (mousePos.textContent !== text) {
+    mousePos.textContent = text;
+  }
 }
 
 document.addEventListener("mousemove", (event) => {
-  var pos = getMousePosition(event, canvas, [canvas.width, canvas.height]);
-  engine.changeMousePosition(pos.x, pos.y);
-  updateCoordinates();
+  engine.sendInput("mouse", {
+    event
+  });
 });
 
 canvas.addEventListener("mousedown", (event) => {
-  var pos = getMousePosition(event, canvas, [canvas.width, canvas.height]);
-  engine.changeMousePosition(pos.x, pos.y);
-  engine.changeMouseDown(true);
-  updateCoordinates();
+  engine.sendInput("mouse", {
+    down: true
+  });
   event.preventDefault();
 });
 
 document.addEventListener("mouseup", (event) => {
-  var pos = getMousePosition(event, canvas, [canvas.width, canvas.height]);
-  engine.changeMousePosition(pos.x, pos.y);
-  engine.changeMouseDown(false);
-  updateCoordinates();
+  engine.sendInput("mouse", {
+    down: false
+  });
 });
 
 document.addEventListener("keydown", (event) => {
   if (document.activeElement == document.body) {
-    engine.changeKeyPressed(event.key, true);
+    engine.sendInput("keyboard", {
+      event,
+      down: true
+    });
     event.preventDefault();
   }
 });
 
 document.addEventListener("keyup", (event) => {
-  engine.changeKeyPressed(event.key, false);
+  engine.sendInput("keyboard", {
+    event,
+    down: false
+  });
 });
-
-updateCoordinates();
 
 updateGameViewportStyles();
 
 engine.on(engine.RESOLUTION_UPDATED, () => {
   updateGameViewportStyles();
+});
+
+engine.on(engine.FRAME_RENDERED, () => {
+  updateCoordinates();
 });

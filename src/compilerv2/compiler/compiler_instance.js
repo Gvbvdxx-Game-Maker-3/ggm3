@@ -14,6 +14,7 @@ class BlockCompilerInstance {
     this.useBlockNumIDs = options.useBlockNumIDs || false;
     this.useDummyDef = options.useDummyDef || false;
     this.useDummyDefClicked = options.useDummyDefClicked || true;
+    this.engine = options.engine || null;
 
     this.resetBlockIDCount();
   }

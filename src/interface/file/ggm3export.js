@@ -107,6 +107,7 @@ class ExportMainGenerator extends EventEmitter {
       useExportCompile: true,
       useBlockNumIDs: true,
       useDummyDef: false,
+      engine
     });
     this._spriteAssets = [];
   }

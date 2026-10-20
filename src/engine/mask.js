@@ -1,3 +1,7 @@
+/**
+ * CollisionSprite code was written by ChatGPT and optimized with Google Gemini.
+ */
+
 class CollisionSprite {
   constructor(
     imageData,

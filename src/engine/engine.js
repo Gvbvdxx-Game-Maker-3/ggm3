@@ -11,11 +11,12 @@ var Drawable = require("./drawable.js");
 var Sprite = require("./sprite.js");
 var sMath = require("./smath.js");
 var EventEmitter = require("eventemitter3");
-var CollisionSprite = require("./mask.js");
 var Library = require("./library.js");
 
 var { EngineRenderer } = require("./renderer.js");
 var GameTime = require("./gametime.js");
+var KeyCode = require("./keycodes.js");
+var GGM3Input = require("./input.js");
 
 var created = false;
 
@@ -108,6 +109,7 @@ class GGM3Engine extends EventEmitter {
     this._frameRate = this.frameRate;
     this.frameTimestamps = [];
     this.sMath = sMath;
+    this.KeyCode = KeyCode;
     this.exportMode = false;
     this.activeTextures = 0;
     this.tween = new TWEEN.Group();
@@ -120,7 +122,6 @@ class GGM3Engine extends EventEmitter {
     };
     this.keysPressed = {};
     this.renderer = new EngineRenderer(this, this.canvas);
-    this.generateMouseMask();
     this.spriteMap = {};
     this.globalVariables = {};
     this.propertyVariables = {};
@@ -136,6 +137,7 @@ class GGM3Engine extends EventEmitter {
     this.changeCursorStyle(this.DEFAULT_CURSOR_STYLE);
 
     this.time = new GameTime(this);
+    this.input = new GGM3Input(this);
     this.stopGame();
     this.time.startLoop();
   }
@@ -398,31 +400,6 @@ class GGM3Engine extends EventEmitter {
   }
 
   /**
-   * Gets the x-coordinate of the mouse position.
-   * @returns {Number} The x-coordinate of the mouse position.
-   * @type {Number}
-   */
-  get mouseX() {
-    return this.mouseMask.x;
-  }
-  /**
-   * Gets the y-coordinate of the mouse position.
-   * @returns {Number} The y-coordinate of the mouse position.
-   * @type {Number}
-   */
-  get mouseY() {
-    return -this.mouseMask.y;
-  }
-  /**
-   * Gets whether the mouse is down.
-   * @returns {Boolean} True if the mouse is down, false otherwise.
-   * @type {Boolean}
-   */
-  get mouseIsDown() {
-    return this.mouseMask.isDown;
-  }
-
-  /**
    * Stops the game by stopping all scripts, deleting all clones, and resetting all effects for every sprite in the game.
    */
   stopGame() {
@@ -646,12 +623,15 @@ class GGM3Engine extends EventEmitter {
       this.time.totalTime,
     );
 
+    this.input.runFrame();
+
     var sprs = this.getAllTopSprites();
     var sprsReversed = sprs.reverse();
     var _this = this;
     sprsReversed.forEach((spr) => {
       _this.tickSprite(spr);
     });
+    
     this.tween.update(this.time.totalTime * 1000);
 
     this.renderer.drawGameFrame({
@@ -714,24 +694,6 @@ class GGM3Engine extends EventEmitter {
   }
 
   /**
-   * Generates a simple 1x1 white pixel mouse mask for detecting mouse interactions with sprites.
-   * @returns {void}
-   */
-  generateMouseMask() {
-    var c = document.createElement("canvas");
-    var ctx = c.getContext("2d");
-    c.width = 1;
-    c.height = 1;
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, 1, 1);
-    this.mouseMask = new CollisionSprite(ctx.getImageData(0, 0, 1, 1));
-    this.mouseMask.isDown = false;
-    c.width = 0;
-    c.height = 0;
-    c.remove();
-  }
-
-  /**
    * Finds a sprite by its name.
    * @param {String} name The name of the sprite to find.
    * @returns {Sprite|null} The found sprite or null if not found.
@@ -750,44 +712,6 @@ class GGM3Engine extends EventEmitter {
       }
     }
     return null;
-  }
-
-  /**
-   * Changes the mouse position.
-   * @param {Number} cx The x-coordinate of the mouse position.
-   * @param {Number} cy The y-coordinate of the mouse position.
-   * @returns {void}
-   */
-  changeMousePosition(cx, cy) {
-    this.mouseMask.x = (+cx || 0) / this.screenScale - this.gameWidth / 2;
-    this.mouseMask.y = (+cy || 0) / this.screenScale - this.gameHeight / 2;
-  }
-
-  /**
-   * Changes the mouse down state.
-   * @param {Boolean} down The new mouse down state.
-   * @returns {void}
-   */
-  changeMouseDown(down) {
-    this.mouseMask.isDown = !!down;
-  }
-
-  /**
-   * Changes the key pressed state.
-   * @param {String} key The key to change.
-   * @param {Boolean} down The new key pressed state.
-   * @returns {void}
-   */
-  changeKeyPressed(key, down) {
-    var keyName = key.toLowerCase();
-    if (this.keyNames[key]) {
-      keyName = this.keyNames[key];
-    }
-    if (down) {
-      this.keysPressed[keyName] = true;
-    } else {
-      delete this.keysPressed[keyName];
-    }
   }
 
   /**
@@ -846,10 +770,10 @@ class GGM3Engine extends EventEmitter {
    */
   tickEditMode() {
     if (this._editDragging) {
-      if (this.mouseIsDown) {
+      if (this.input.mouseDown) {
         var { sprite, offsetx, offsety } = this._editDragging;
-        sprite.x = this.mouseX + offsetx;
-        sprite.y = this.mouseY + offsety;
+        sprite.x = this.input.mouseX + offsetx;
+        sprite.y = this.input.mouseY + offsety;
         this.canvas.style.cursor = "grabbing";
       } else {
         this._editDragging = null;
@@ -861,7 +785,7 @@ class GGM3Engine extends EventEmitter {
         .filter((s) => !s.hidden)
         .filter((s) => s.alpha > 70);
       var touchedSprite = null;
-      var mouseMask = this.mouseMask;
+      var mouseMask = this.input.getMouseMask();
       for (var sprite of topSprites) {
         sprite.alignMask();
         var mask = sprite.mask;
@@ -875,13 +799,13 @@ class GGM3Engine extends EventEmitter {
       if (touchedSprite) {
         this.canvas.style.cursor = "grab";
       }
-      if (this.mouseIsDown) {
+      if (this.input.mouseDown) {
         if (!this._previousMouseDown) {
           this._previousMouseDown = true;
           if (touchedSprite) {
             this._editDragging = {
-              offsetx: touchedSprite.x - this.mouseX,
-              offsety: touchedSprite.y - this.mouseY,
+              offsetx: touchedSprite.x - this.input.mouseX,
+              offsety: touchedSprite.y - this.input.mouseY,
               sprite: touchedSprite,
             };
           }
@@ -890,6 +814,16 @@ class GGM3Engine extends EventEmitter {
         this._previousMouseDown = false;
       }
     }
+  }
+
+  /**
+   * Sends a game input event to the engine.
+   * @param {string} eventName Input type, this has to be either "mouse", "keyboard", or "touch".
+   * @param {object} data JSON arguments for the input to be processed.
+   * @returns {void}
+   */
+  sendInput(eventName, data) {
+    this.input.sendInput(eventName, data);
   }
 
   /**

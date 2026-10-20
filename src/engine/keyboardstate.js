@@ -32,8 +32,9 @@ class KeyboardState {
         }
     }
 
-    isPressed(keyCode) {
-        return (+this.keyCountStates[keyCode] || 0) !== 0;
+    isPressed(keyArray) {
+        var key = KeyCode.getKeyObject(keyArray);
+        return (+this.keyCountStates[key.keyCode] || 0) !== 0;
     }
 
     write(data) {
